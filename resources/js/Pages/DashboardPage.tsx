@@ -76,16 +76,16 @@ export default function DashboardPage() {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-xl p-8 border-2 border-[#1F6E4A] shadow-sm"
+        className="bg-card rounded-xl p-8 border-2 border-[#1F6E4A] shadow-sm"
       >
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-[#1F2937] mb-2">Welcome back!</h1>
-            <p className="text-[#6b7280]">Here's what's happening with your work today</p>
+            <h1 className="text-foreground mb-2">Welcome back!</h1>
+            <p className="text-muted-foreground">Here's what's happening with your work today</p>
           </div>
           <div className="text-right">
-            <p className="text-sm text-[#6b7280]">Wednesday</p>
-            <p className="text-xl text-[#1F2937]">November 5, 2025</p>
+            <p className="text-sm text-muted-foreground">Wednesday</p>
+            <p className="text-xl text-foreground">November 5, 2025</p>
           </div>
         </div>
       </motion.div>
@@ -102,7 +102,7 @@ export default function DashboardPage() {
               transition={{ delay: index * 0.1 }}
             >
               <Card
-                className={`bg-white border-2 shadow-sm hover:shadow-md transition-all ${stat.action ? 'cursor-pointer' : ''}`}
+                className={`bg-card border-2 shadow-sm hover:shadow-md transition-all ${stat.action ? 'cursor-pointer' : ''}`}
                 style={{ borderColor: stat.color }}
                 onClick={() => stat.action && onNavigate(stat.action)}
               >
@@ -112,12 +112,12 @@ export default function DashboardPage() {
                       <Icon className="w-6 h-6" style={{ color: stat.color }} />
                     </div>
                     {stat.action && (
-                      <ArrowRight className="w-5 h-5 text-[#6b7280]" />
+                      <ArrowRight className="w-5 h-5 text-muted-foreground" />
                     )}
                   </div>
-                  <p className="text-sm text-[#6b7280] mb-1">{stat.title}</p>
-                  <p className="text-3xl text-[#1F2937] mb-2">{stat.value}</p>
-                  <p className="text-sm text-[#6b7280] mb-3">{stat.subtitle}</p>
+                  <p className="text-sm text-muted-foreground mb-1">{stat.title}</p>
+                  <p className="text-3xl text-foreground mb-2">{stat.value}</p>
+                  <p className="text-sm text-muted-foreground mb-3">{stat.subtitle}</p>
                   <Progress value={stat.progress} className="h-2" />
                 </CardContent>
               </Card>
@@ -131,10 +131,10 @@ export default function DashboardPage() {
         {/* Left Column - Tasks & Activity */}
         <div className="lg:col-span-2 space-y-6">
           {/* Quick Actions */}
-          <Card className="bg-white shadow-sm border-2 border-[#e5e7eb]">
+          <Card className="bg-card shadow-sm border-2 border-border">
             <CardHeader>
-              <CardTitle className="text-[#1F2937]">Quick Actions</CardTitle>
-              <CardDescription className="text-[#6b7280]">
+              <CardTitle className="text-foreground">Quick Actions</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 Common tasks and shortcuts
               </CardDescription>
             </CardHeader>
@@ -157,8 +157,8 @@ export default function DashboardPage() {
                 >
                   <CheckSquare className="w-5 h-5 mr-3 text-[#1F6E4A]" />
                   <div className="text-left">
-                    <p className="text-sm text-[#1F2937]">View Tasks</p>
-                    <p className="text-xs text-[#6b7280]">3 pending</p>
+                    <p className="text-sm text-foreground">View Tasks</p>
+                    <p className="text-xs text-muted-foreground">3 pending</p>
                   </div>
                 </Button>
                 <Button
@@ -168,8 +168,8 @@ export default function DashboardPage() {
                 >
                   <Calendar className="w-5 h-5 mr-3 text-[#FFD400]" />
                   <div className="text-left">
-                    <p className="text-sm text-[#1F2937]">Request Leave</p>
-                    <p className="text-xs text-[#6b7280]">12 days left</p>
+                    <p className="text-sm text-foreground">Request Leave</p>
+                    <p className="text-xs text-muted-foreground">12 days left</p>
                   </div>
                 </Button>
                 <Button
@@ -179,8 +179,8 @@ export default function DashboardPage() {
                 >
                   <MessageSquare className="w-5 h-5 mr-3 text-[#1F6E4A]" />
                   <div className="text-left">
-                    <p className="text-sm text-[#1F2937]">Team Chat</p>
-                    <p className="text-xs text-[#6b7280]">3 unread</p>
+                    <p className="text-sm text-foreground">Team Chat</p>
+                    <p className="text-xs text-muted-foreground">3 unread</p>
                   </div>
                 </Button>
               </div>
@@ -188,15 +188,15 @@ export default function DashboardPage() {
           </Card>
 
           {/* My Tasks */}
-          <Card className="bg-white shadow-sm border-2 border-[#e5e7eb]">
+          <Card className="bg-card shadow-sm border-2 border-border">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-[#1F2937] flex items-center gap-2">
+                  <CardTitle className="text-foreground flex items-center gap-2">
                     <CheckSquare className="w-5 h-5 text-[#1F6E4A]" />
                     My Tasks
                   </CardTitle>
-                  <CardDescription className="text-[#6b7280]">
+                  <CardDescription className="text-muted-foreground">
                     Tasks assigned to you
                   </CardDescription>
                 </div>
@@ -217,11 +217,11 @@ export default function DashboardPage() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="p-4 border-2 border-[#e5e7eb] rounded-lg hover:shadow-md hover:border-[#1F6E4A] transition-all cursor-pointer"
+                    className="p-4 border-2 border-border rounded-lg hover:shadow-md hover:border-[#1F6E4A] transition-all cursor-pointer"
                     onClick={() => onNavigate("tasks")}
                   >
                     <div className="flex items-start justify-between mb-2">
-                      <h4 className="text-[#1F2937] flex-1">{task.title}</h4>
+                      <h4 className="text-foreground flex-1">{task.title}</h4>
                       <Badge
                         variant="outline"
                         style={{ borderColor: getPriorityColor(task.priority), color: getPriorityColor(task.priority) }}
@@ -231,13 +231,13 @@ export default function DashboardPage() {
                       </Badge>
                     </div>
                     <div className="flex items-center gap-4 mb-2">
-                      <div className="flex items-center gap-1 text-xs text-[#6b7280]">
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
                         <Clock className="w-3 h-3" />
                         <span>Due {task.due}</span>
                       </div>
                       <div className="flex items-center gap-2 flex-1">
                         <Progress value={task.progress} className="h-1.5 flex-1" />
-                        <span className="text-xs text-[#6b7280]">{task.progress}%</span>
+                        <span className="text-xs text-muted-foreground">{task.progress}%</span>
                       </div>
                     </div>
                   </motion.div>
@@ -247,15 +247,15 @@ export default function DashboardPage() {
           </Card>
 
           {/* Peer Review Status */}
-          <Card className="bg-white border-2 border-[#1F6E4A] shadow-sm">
+          <Card className="bg-card border-2 border-[#1F6E4A] shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-lg bg-[#1F6E4A]/10 flex items-center justify-center">
                   <Users className="w-6 h-6 text-[#1F6E4A]" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-[#1F2937] mb-1">Peer Review</h3>
-                  <p className="text-sm text-[#6b7280]">Share feedback on your teammates</p>
+                  <h3 className="text-foreground mb-1">Peer Review</h3>
+                  <p className="text-sm text-muted-foreground">Share feedback on your teammates</p>
                 </div>
                 <Button
                   onClick={() => onNavigate("peer-review")}
@@ -274,7 +274,7 @@ export default function DashboardPage() {
           <DepartmentSpotlight />
 
           {/* Leaderboard Position */}
-          <Card className="bg-white border-2 border-[#FFD400] shadow-sm">
+          <Card className="bg-card border-2 border-[#FFD400] shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="w-12 h-12 rounded-lg bg-[#FFD400]/10 flex items-center justify-center">
@@ -284,8 +284,8 @@ export default function DashboardPage() {
                   #5
                 </Badge>
               </div>
-              <h3 className="text-[#1F2937] mb-1">Your Ranking</h3>
-              <p className="text-sm text-[#6b7280] mb-4">Team engagement leaderboard</p>
+              <h3 className="text-foreground mb-1">Your Ranking</h3>
+              <p className="text-sm text-muted-foreground mb-4">Team engagement leaderboard</p>
               <Button
                 variant="outline"
                 className="w-full"
@@ -297,9 +297,9 @@ export default function DashboardPage() {
           </Card>
 
           {/* Recent Announcements */}
-          <Card className="bg-white shadow-sm border-2 border-[#e5e7eb]">
+          <Card className="bg-card shadow-sm border-2 border-border">
             <CardHeader>
-              <CardTitle className="text-[#1F2937]">Announcements</CardTitle>
+              <CardTitle className="text-foreground">Announcements</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -311,18 +311,18 @@ export default function DashboardPage() {
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="flex items-start gap-3 p-3 border-2 border-[#e5e7eb] rounded-lg hover:shadow-sm hover:border-[#1F6E4A] transition-all cursor-pointer"
+                      className="flex items-start gap-3 p-3 border-2 border-border rounded-lg hover:shadow-sm hover:border-[#1F6E4A] transition-all cursor-pointer"
                     >
                       <div className="w-8 h-8 rounded-lg bg-[#1F6E4A]/10 flex items-center justify-center flex-shrink-0">
                         <Icon className="w-4 h-4 text-[#1F6E4A]" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm text-[#1F2937] mb-1">{announcement.title}</p>
+                        <p className="text-sm text-foreground mb-1">{announcement.title}</p>
                         <div className="flex items-center gap-2">
                           <Badge variant="secondary" className="text-xs">
                             {announcement.type}
                           </Badge>
-                          <span className="text-xs text-[#6b7280]">{announcement.date}</span>
+                          <span className="text-xs text-muted-foreground">{announcement.date}</span>
                         </div>
                       </div>
                     </motion.div>

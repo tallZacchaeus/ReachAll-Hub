@@ -90,14 +90,14 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-[#1F2937] mb-2">Settings</h1>
-        <p className="text-[#6b7280]">
+        <h1 className="text-foreground mb-2">Settings</h1>
+        <p className="text-muted-foreground">
           {isAdmin ? "Manage system and account settings" : "Manage your account and preferences"}
         </p>
       </div>
 
       <Tabs defaultValue="profile" className="space-y-6">
-        <TabsList className="bg-white border-2 border-[#e5e7eb]">
+        <TabsList className="bg-card border-2 border-border">
           <TabsTrigger value="profile" className="data-[state=active]:bg-[#1F6E4A] data-[state=active]:text-white">
             <User className="w-4 h-4 mr-2" />
             Profile
@@ -130,10 +130,10 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
 
         {/* Profile Tab */}
         <TabsContent value="profile" className="space-y-6">
-          <Card className="bg-white shadow-sm border-2 border-[#e5e7eb]">
+          <Card className="bg-card shadow-sm border-2 border-border">
             <CardHeader>
-              <CardTitle className="text-[#1F2937]">Personal Information</CardTitle>
-              <CardDescription className="text-[#6b7280]">
+              <CardTitle className="text-foreground">Personal Information</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 Update your personal details
               </CardDescription>
             </CardHeader>
@@ -157,7 +157,7 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                   <Input
                     value={profileData.fullName}
                     onChange={(e) => setProfileData({ ...profileData, fullName: e.target.value })}
-                    className="bg-white"
+                    className="bg-card"
                   />
                 </div>
 
@@ -167,7 +167,7 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                     type="email"
                     value={profileData.email}
                     onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
-                    className="bg-white"
+                    className="bg-card"
                   />
                 </div>
 
@@ -176,14 +176,14 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                   <Input
                     value={profileData.staffId}
                     disabled
-                    className="bg-[#f3f4f6]"
+                    className="bg-muted"
                   />
                 </div>
 
                 <div className="space-y-2">
                   <Label>Department</Label>
                   <Select value={profileData.department} onValueChange={(value) => setProfileData({ ...profileData, department: value })}>
-                    <SelectTrigger className="bg-white">
+                    <SelectTrigger className="bg-card">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -201,7 +201,7 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                   <Input
                     value={profileData.role}
                     onChange={(e) => setProfileData({ ...profileData, role: e.target.value })}
-                    className="bg-white"
+                    className="bg-card"
                   />
                 </div>
 
@@ -211,7 +211,7 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                     type="tel"
                     value={profileData.phone}
                     onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-                    className="bg-white"
+                    className="bg-card"
                   />
                 </div>
               </div>
@@ -226,19 +226,19 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
 
         {/* Notifications Tab */}
         <TabsContent value="notifications" className="space-y-6">
-          <Card className="bg-white shadow-sm border-2 border-[#e5e7eb]">
+          <Card className="bg-card shadow-sm border-2 border-border">
             <CardHeader>
-              <CardTitle className="text-[#1F2937]">Notification Preferences</CardTitle>
-              <CardDescription className="text-[#6b7280]">
+              <CardTitle className="text-foreground">Notification Preferences</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 Choose what notifications you want to receive
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border-2 border-[#e5e7eb] rounded-lg">
+                <div className="flex items-center justify-between p-4 border-2 border-border rounded-lg">
                   <div>
-                    <p className="text-sm text-[#1F2937]">Email Notifications</p>
-                    <p className="text-xs text-[#6b7280]">Receive email updates</p>
+                    <p className="text-sm text-foreground">Email Notifications</p>
+                    <p className="text-xs text-muted-foreground">Receive email updates</p>
                   </div>
                   <Switch
                     checked={notifications.emailNotifications}
@@ -247,10 +247,10 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                 </div>
 
                 {!isAdmin && (
-                  <div className="flex items-center justify-between p-4 border-2 border-[#e5e7eb] rounded-lg">
+                  <div className="flex items-center justify-between p-4 border-2 border-border rounded-lg">
                     <div>
-                      <p className="text-sm text-[#1F2937]">Evaluation Reminders</p>
-                      <p className="text-xs text-[#6b7280]">Get reminded about pending evaluations</p>
+                      <p className="text-sm text-foreground">Evaluation Reminders</p>
+                      <p className="text-xs text-muted-foreground">Get reminded about pending evaluations</p>
                     </div>
                     <Switch
                       checked={notifications.evaluationReminders}
@@ -260,10 +260,10 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                 )}
 
                 {isAdmin && (
-                  <div className="flex items-center justify-between p-4 border-2 border-[#e5e7eb] rounded-lg">
+                  <div className="flex items-center justify-between p-4 border-2 border-border rounded-lg">
                     <div>
-                      <p className="text-sm text-[#1F2937]">Leave Approvals</p>
-                      <p className="text-xs text-[#6b7280]">Notify about pending leave requests</p>
+                      <p className="text-sm text-foreground">Leave Approvals</p>
+                      <p className="text-xs text-muted-foreground">Notify about pending leave requests</p>
                     </div>
                     <Switch
                       checked={notifications.leaveApprovals}
@@ -273,10 +273,10 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                 )}
 
                 {isAdmin && (
-                  <div className="flex items-center justify-between p-4 border-2 border-[#e5e7eb] rounded-lg">
+                  <div className="flex items-center justify-between p-4 border-2 border-border rounded-lg">
                     <div>
-                      <p className="text-sm text-[#1F2937]">New Submissions</p>
-                      <p className="text-xs text-[#6b7280]">Alert on new evaluation submissions</p>
+                      <p className="text-sm text-foreground">New Submissions</p>
+                      <p className="text-xs text-muted-foreground">Alert on new evaluation submissions</p>
                     </div>
                     <Switch
                       checked={notifications.newSubmissions}
@@ -285,10 +285,10 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                   </div>
                 )}
 
-                <div className="flex items-center justify-between p-4 border-2 border-[#e5e7eb] rounded-lg">
+                <div className="flex items-center justify-between p-4 border-2 border-border rounded-lg">
                   <div>
-                    <p className="text-sm text-[#1F2937]">Task Assignments</p>
-                    <p className="text-xs text-[#6b7280]">Notify about task updates</p>
+                    <p className="text-sm text-foreground">Task Assignments</p>
+                    <p className="text-xs text-muted-foreground">Notify about task updates</p>
                   </div>
                   <Switch
                     checked={notifications.taskAssignments}
@@ -296,10 +296,10 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                   />
                 </div>
 
-                <div className="flex items-center justify-between p-4 border-2 border-[#e5e7eb] rounded-lg">
+                <div className="flex items-center justify-between p-4 border-2 border-border rounded-lg">
                   <div>
-                    <p className="text-sm text-[#1F2937]">Chat Messages</p>
-                    <p className="text-xs text-[#6b7280]">Get notified of new messages</p>
+                    <p className="text-sm text-foreground">Chat Messages</p>
+                    <p className="text-xs text-muted-foreground">Get notified of new messages</p>
                   </div>
                   <Switch
                     checked={notifications.chatMessages}
@@ -307,10 +307,10 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                   />
                 </div>
 
-                <div className="flex items-center justify-between p-4 border-2 border-[#e5e7eb] rounded-lg">
+                <div className="flex items-center justify-between p-4 border-2 border-border rounded-lg">
                   <div>
-                    <p className="text-sm text-[#1F2937]">Announcements</p>
-                    <p className="text-xs text-[#6b7280]">Receive company announcements</p>
+                    <p className="text-sm text-foreground">Announcements</p>
+                    <p className="text-xs text-muted-foreground">Receive company announcements</p>
                   </div>
                   <Switch
                     checked={notifications.announcements}
@@ -319,10 +319,10 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                 </div>
 
                 {isAdmin && (
-                  <div className="flex items-center justify-between p-4 border-2 border-[#e5e7eb] rounded-lg">
+                  <div className="flex items-center justify-between p-4 border-2 border-border rounded-lg">
                     <div>
-                      <p className="text-sm text-[#1F2937]">Weekly Reports</p>
-                      <p className="text-xs text-[#6b7280]">Receive weekly analytics summaries</p>
+                      <p className="text-sm text-foreground">Weekly Reports</p>
+                      <p className="text-xs text-muted-foreground">Receive weekly analytics summaries</p>
                     </div>
                     <Switch
                       checked={notifications.weeklyReports}
@@ -342,10 +342,10 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
 
         {/* Preferences Tab */}
         <TabsContent value="preferences" className="space-y-6">
-          <Card className="bg-white shadow-sm border-2 border-[#e5e7eb]">
+          <Card className="bg-card shadow-sm border-2 border-border">
             <CardHeader>
-              <CardTitle className="text-[#1F2937]">General Preferences</CardTitle>
-              <CardDescription className="text-[#6b7280]">
+              <CardTitle className="text-foreground">General Preferences</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 Customize your experience
               </CardDescription>
             </CardHeader>
@@ -354,7 +354,7 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                 <div className="space-y-2">
                   <Label>Language</Label>
                   <Select value={preferences.language} onValueChange={(value) => setPreferences({ ...preferences, language: value })}>
-                    <SelectTrigger className="bg-white">
+                    <SelectTrigger className="bg-card">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -368,7 +368,7 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                 <div className="space-y-2">
                   <Label>Timezone</Label>
                   <Select value={preferences.timezone} onValueChange={(value) => setPreferences({ ...preferences, timezone: value })}>
-                    <SelectTrigger className="bg-white">
+                    <SelectTrigger className="bg-card">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -383,7 +383,7 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                 <div className="space-y-2">
                   <Label>Theme</Label>
                   <Select value={preferences.theme} onValueChange={(value) => setPreferences({ ...preferences, theme: value })}>
-                    <SelectTrigger className="bg-white">
+                    <SelectTrigger className="bg-card">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -397,7 +397,7 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                 <div className="space-y-2">
                   <Label>Date Format</Label>
                   <Select value={preferences.dateFormat} onValueChange={(value) => setPreferences({ ...preferences, dateFormat: value })}>
-                    <SelectTrigger className="bg-white">
+                    <SelectTrigger className="bg-card">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -420,10 +420,10 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
         {/* Privacy Tab - Staff Only */}
         {!isAdmin && (
           <TabsContent value="privacy" className="space-y-6">
-            <Card className="bg-white shadow-sm border-2 border-[#e5e7eb]">
+            <Card className="bg-card shadow-sm border-2 border-border">
               <CardHeader>
-                <CardTitle className="text-[#1F2937]">Privacy Settings</CardTitle>
-                <CardDescription className="text-[#6b7280]">
+                <CardTitle className="text-foreground">Privacy Settings</CardTitle>
+                <CardDescription className="text-muted-foreground">
                   Control your privacy and visibility
                 </CardDescription>
               </CardHeader>
@@ -431,7 +431,7 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                 <div className="space-y-2">
                   <Label>Profile Visibility</Label>
                   <Select value={privacy.profileVisibility} onValueChange={(value) => setPrivacy({ ...privacy, profileVisibility: value })}>
-                    <SelectTrigger className="bg-white">
+                    <SelectTrigger className="bg-card">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -445,10 +445,10 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                 <Separator />
 
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 border-2 border-[#e5e7eb] rounded-lg">
+                  <div className="flex items-center justify-between p-4 border-2 border-border rounded-lg">
                     <div>
-                      <p className="text-sm text-[#1F2937]">Show Email Address</p>
-                      <p className="text-xs text-[#6b7280]">Display email on profile</p>
+                      <p className="text-sm text-foreground">Show Email Address</p>
+                      <p className="text-xs text-muted-foreground">Display email on profile</p>
                     </div>
                     <Switch
                       checked={privacy.showEmail}
@@ -456,10 +456,10 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                     />
                   </div>
 
-                  <div className="flex items-center justify-between p-4 border-2 border-[#e5e7eb] rounded-lg">
+                  <div className="flex items-center justify-between p-4 border-2 border-border rounded-lg">
                     <div>
-                      <p className="text-sm text-[#1F2937]">Show Phone Number</p>
-                      <p className="text-xs text-[#6b7280]">Display phone on profile</p>
+                      <p className="text-sm text-foreground">Show Phone Number</p>
+                      <p className="text-xs text-muted-foreground">Display phone on profile</p>
                     </div>
                     <Switch
                       checked={privacy.showPhone}
@@ -467,10 +467,10 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                     />
                   </div>
 
-                  <div className="flex items-center justify-between p-4 border-2 border-[#e5e7eb] rounded-lg">
+                  <div className="flex items-center justify-between p-4 border-2 border-border rounded-lg">
                     <div>
-                      <p className="text-sm text-[#1F2937]">Allow Peer Reviews</p>
-                      <p className="text-xs text-[#6b7280]">Enable colleagues to review you</p>
+                      <p className="text-sm text-foreground">Allow Peer Reviews</p>
+                      <p className="text-xs text-muted-foreground">Enable colleagues to review you</p>
                     </div>
                     <Switch
                       checked={privacy.allowPeerReviews}
@@ -491,19 +491,19 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
         {/* System Tab - Admin Only */}
         {isAdmin && (
           <TabsContent value="system" className="space-y-6">
-            <Card className="bg-white shadow-sm border-2 border-[#e5e7eb]">
+            <Card className="bg-card shadow-sm border-2 border-border">
               <CardHeader>
-                <CardTitle className="text-[#1F2937]">System Settings</CardTitle>
-                <CardDescription className="text-[#6b7280]">
+                <CardTitle className="text-foreground">System Settings</CardTitle>
+                <CardDescription className="text-muted-foreground">
                   Configure platform-wide settings
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 border-2 border-[#e5e7eb] rounded-lg">
+                  <div className="flex items-center justify-between p-4 border-2 border-border rounded-lg">
                     <div>
-                      <p className="text-sm text-[#1F2937]">Auto-Approve Leave Requests</p>
-                      <p className="text-xs text-[#6b7280]">Automatically approve leave under 2 days</p>
+                      <p className="text-sm text-foreground">Auto-Approve Leave Requests</p>
+                      <p className="text-xs text-muted-foreground">Automatically approve leave under 2 days</p>
                     </div>
                     <Switch
                       checked={systemSettings.autoApproveLeave}
@@ -511,10 +511,10 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                     />
                   </div>
 
-                  <div className="flex items-center justify-between p-4 border-2 border-[#e5e7eb] rounded-lg">
+                  <div className="flex items-center justify-between p-4 border-2 border-border rounded-lg">
                     <div>
-                      <p className="text-sm text-[#1F2937]">Require Task Approval</p>
-                      <p className="text-xs text-[#6b7280]">Tasks must be approved before completion</p>
+                      <p className="text-sm text-foreground">Require Task Approval</p>
+                      <p className="text-xs text-muted-foreground">Tasks must be approved before completion</p>
                     </div>
                     <Switch
                       checked={systemSettings.requireTaskApproval}
@@ -522,10 +522,10 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                     />
                   </div>
 
-                  <div className="flex items-center justify-between p-4 border-2 border-[#e5e7eb] rounded-lg">
+                  <div className="flex items-center justify-between p-4 border-2 border-border rounded-lg">
                     <div>
-                      <p className="text-sm text-[#1F2937]">Anonymous Reviews</p>
-                      <p className="text-xs text-[#6b7280]">Allow anonymous peer reviews</p>
+                      <p className="text-sm text-foreground">Anonymous Reviews</p>
+                      <p className="text-xs text-muted-foreground">Allow anonymous peer reviews</p>
                     </div>
                     <Switch
                       checked={systemSettings.enableAnonymousReviews}
@@ -539,7 +539,7 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                       value={systemSettings.maxFileUploadSize} 
                       onValueChange={(value) => setSystemSettings({ ...systemSettings, maxFileUploadSize: value })}
                     >
-                      <SelectTrigger className="bg-white">
+                      <SelectTrigger className="bg-card">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -563,10 +563,10 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
 
         {/* Security Tab */}
         <TabsContent value="security" className="space-y-6">
-          <Card className="bg-white shadow-sm border-2 border-[#e5e7eb]">
+          <Card className="bg-card shadow-sm border-2 border-border">
             <CardHeader>
-              <CardTitle className="text-[#1F2937]">Security</CardTitle>
-              <CardDescription className="text-[#6b7280]">
+              <CardTitle className="text-foreground">Security</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 Manage your password and security settings
               </CardDescription>
             </CardHeader>
@@ -574,28 +574,28 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label>Current Password</Label>
-                  <Input type="password" placeholder="Enter current password" className="bg-white" />
+                  <Input type="password" placeholder="Enter current password" className="bg-card" />
                 </div>
 
                 <div className="space-y-2">
                   <Label>New Password</Label>
-                  <Input type="password" placeholder="Enter new password" className="bg-white" />
+                  <Input type="password" placeholder="Enter new password" className="bg-card" />
                 </div>
 
                 <div className="space-y-2">
                   <Label>Confirm New Password</Label>
-                  <Input type="password" placeholder="Confirm new password" className="bg-white" />
+                  <Input type="password" placeholder="Confirm new password" className="bg-card" />
                 </div>
               </div>
 
               <Separator />
 
-              <div className="p-4 bg-[#f0fdf4] border-2 border-[#1F6E4A] rounded-lg">
+              <div className="p-4 bg-[#f0fdf4] dark:bg-muted border-2 border-[#1F6E4A] rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <Shield className="w-5 h-5 text-[#1F6E4A]" />
-                  <p className="text-sm text-[#1F2937]">Two-Factor Authentication</p>
+                  <p className="text-sm text-foreground">Two-Factor Authentication</p>
                 </div>
-                <p className="text-xs text-[#6b7280] mb-3">
+                <p className="text-xs text-muted-foreground mb-3">
                   Add an extra layer of security to your account
                 </p>
                 <Button variant="outline" className="border-2 border-[#1F6E4A] text-[#1F6E4A]">

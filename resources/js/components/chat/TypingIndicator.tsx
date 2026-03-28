@@ -19,7 +19,7 @@ export function TypingIndicator({ users }: TypingIndicatorProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="px-6 py-2 text-sm text-[#6b7280] italic"
+            className="px-6 py-2 text-sm text-muted-foreground italic"
         >
             {displayText}
             <span className="inline-flex ml-1">

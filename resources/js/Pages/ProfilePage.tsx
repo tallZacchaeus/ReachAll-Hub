@@ -45,7 +45,7 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
 
   const handleUpdateProfile = (e: React.FormEvent) => {
     e.preventDefault();
-    post((window as any).route("profile.update"), {
+    post((window as any).route("profile.request-update"), {
       onSuccess: () => {
         setShowEditModal(false);
         reset();
@@ -86,8 +86,8 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-[#1F2937] mb-2">My Profile</h1>
-          <p className="text-[#6b7280]">View and manage your profile information</p>
+          <h1 className="text-foreground mb-2">My Profile</h1>
+          <p className="text-muted-foreground">View and manage your profile information</p>
         </div>
 
         {flash.success && (
@@ -122,7 +122,7 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Profile Card */}
         <div className="lg:col-span-1">
-          <Card className="bg-white shadow-sm border-2 border-[#e5e7eb]">
+          <Card className="bg-card shadow-sm border-2 border-border">
             <CardContent className="p-6">
               <div className="text-center mb-6">
                 <Avatar className="w-24 h-24 mx-auto mb-4">
@@ -130,35 +130,35 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
                     {user.name.charAt(0)}{user.name.split(" ")[1]?.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
-                <h2 className="text-[#1F2937] mb-1">{user.name}</h2>
-                <p className="text-[#6b7280] mb-2">{user.role}</p>
+                <h2 className="text-foreground mb-1">{user.name}</h2>
+                <p className="text-muted-foreground mb-2">{user.role}</p>
                 <Badge className="bg-[#1F6E4A] text-white uppercase">{user.employee_id}</Badge>
               </div>
 
-              <div className="space-y-4 border-t border-[#e5e7eb] pt-6">
-                <div className="flex items-center gap-3 text-[#6b7280]">
+              <div className="space-y-4 border-t border-border pt-6">
+                <div className="flex items-center gap-3 text-muted-foreground">
                   <Mail className="w-4 h-4" />
                   <span className="text-sm">{user.email}</span>
                 </div>
                 {user.phone && (
-                  <div className="flex items-center gap-3 text-[#6b7280]">
+                  <div className="flex items-center gap-3 text-muted-foreground">
                     <Phone className="w-4 h-4" />
                     <span className="text-sm">{user.phone}</span>
                   </div>
                 )}
                 {user.location && (
-                  <div className="flex items-center gap-3 text-[#6b7280]">
+                  <div className="flex items-center gap-3 text-muted-foreground">
                     <MapPin className="w-4 h-4" />
                     <span className="text-sm">{user.location}</span>
                   </div>
                 )}
                 {user.department && (
-                  <div className="flex items-center gap-3 text-[#6b7280]">
+                  <div className="flex items-center gap-3 text-muted-foreground">
                     <UserIcon className="w-4 h-4" />
                     <span className="text-sm">{user.department}</span>
                   </div>
                 )}
-                <div className="flex items-center gap-3 text-[#6b7280]">
+                <div className="flex items-center gap-3 text-muted-foreground">
                   <Calendar className="w-4 h-4" />
                   <span className="text-sm">Joined {new Date(user.created_at).toLocaleDateString("en-US", { month: "long", year: "numeric" })}</span>
                 </div>
@@ -173,8 +173,8 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[500px]">
                     <DialogHeader>
-                      <DialogTitle className="text-[#1F2937]">Edit Profile Details</DialogTitle>
-                      <DialogDescription className="text-[#6b7280]">
+                      <DialogTitle className="text-foreground">Edit Profile Details</DialogTitle>
+                      <DialogDescription className="text-muted-foreground">
                         Changes to your profile (except password) require approval from HR or Super Admin.
                       </DialogDescription>
                     </DialogHeader>
@@ -225,18 +225,18 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
 
                 <Dialog open={showBadgesModal} onOpenChange={setShowBadgesModal}>
                   <DialogTrigger asChild>
-                    <Button className="w-full bg-[#FFD400] hover:bg-[#e6c000] text-[#1F2937]">
+                    <Button className="w-full bg-[#FFD400] hover:bg-[#e6c000] text-foreground">
                       <Sparkles className="w-4 h-4 mr-2" />
                       View Badges
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
                     <DialogHeader>
-                      <DialogTitle className="flex items-center gap-2 text-[#1F2937]">
+                      <DialogTitle className="flex items-center gap-2 text-foreground">
                         <Trophy className="w-6 h-6 text-[#FFD400]" />
                         My Badges & Milestones
                       </DialogTitle>
-                      <DialogDescription className="text-[#6b7280]">
+                      <DialogDescription className="text-muted-foreground">
                         {allBadges.filter(b => b.earned).length} of {allBadges.length} badges earned • Track your achievements and progress
                       </DialogDescription>
                     </DialogHeader>
@@ -248,9 +248,9 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
               </div>
 
               {/* Badges Preview */}
-              <div className="mt-6 pt-6 border-t border-[#e5e7eb]">
+              <div className="mt-6 pt-6 border-t border-border">
                 <div className="flex items-center justify-between mb-3">
-                  <h4 className="text-sm text-[#1F2937]">Recent Badges</h4>
+                  <h4 className="text-sm text-foreground">Recent Badges</h4>
                   <Badge variant="outline" className="border-[#FFD400] text-[#FFD400]">
                     {allBadges.filter(b => b.earned).length}
                   </Badge>
@@ -272,13 +272,13 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="bg-white shadow-sm border-2 hover:shadow-md transition-all" style={{ borderColor: stat.color }}>
+                <Card className="bg-card shadow-sm border-2 hover:shadow-md transition-all" style={{ borderColor: stat.color }}>
                   <CardContent className="p-4 text-center">
                     <div className="w-10 h-10 mx-auto mb-2 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${stat.color}15` }}>
                       <Trophy className="w-5 h-5" style={{ color: stat.color }} />
                     </div>
-                    <p className="text-2xl text-[#1F2937] mb-1">{stat.value}</p>
-                    <p className="text-xs text-[#6b7280]">{stat.label}</p>
+                    <p className="text-2xl text-foreground mb-1">{stat.value}</p>
+                    <p className="text-xs text-muted-foreground">{stat.label}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -286,13 +286,13 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
           </div>
 
           {/* Achievements */}
-          <Card className="bg-white shadow-sm border-2 border-[#e5e7eb]">
+          <Card className="bg-card shadow-sm border-2 border-border">
             <CardHeader>
-              <CardTitle className="text-[#1F2937] flex items-center gap-2">
+              <CardTitle className="text-foreground flex items-center gap-2">
                 <Award className="w-5 h-5 text-[#FFD400]" />
                 Recent Achievements
               </CardTitle>
-              <CardDescription className="text-[#6b7280]">
+              <CardDescription className="text-muted-foreground">
                 Awards and recognitions you've received
               </CardDescription>
             </CardHeader>
@@ -304,14 +304,14 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="flex items-center gap-4 p-4 border-2 border-[#e5e7eb] rounded-lg hover:shadow-md hover:border-[#FFD400] transition-all"
+                    className="flex items-center gap-4 p-4 border-2 border-border rounded-lg hover:shadow-md hover:border-[#FFD400] transition-all"
                   >
                     <div className="w-12 h-12 bg-gradient-to-br from-[#FFD400] to-[#f59e0b] rounded-lg flex items-center justify-center text-2xl shadow-md">
                       {achievement.icon}
                     </div>
                     <div className="flex-1">
-                      <h4 className="text-[#1F2937] mb-1">{achievement.title}</h4>
-                      <p className="text-sm text-[#6b7280]">{achievement.month}</p>
+                      <h4 className="text-foreground mb-1">{achievement.title}</h4>
+                      <p className="text-sm text-muted-foreground">{achievement.month}</p>
                     </div>
                     <Trophy className="w-5 h-5 text-[#FFD400]" />
                   </motion.div>
@@ -321,10 +321,10 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
           </Card>
 
           {/* Recent Activity */}
-          <Card className="bg-white shadow-sm border-2 border-[#e5e7eb]">
+          <Card className="bg-card shadow-sm border-2 border-border">
             <CardHeader>
-              <CardTitle className="text-[#1F2937]">Recent Activity</CardTitle>
-              <CardDescription className="text-[#6b7280]">
+              <CardTitle className="text-foreground">Recent Activity</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 Your recent actions and milestones
               </CardDescription>
             </CardHeader>
@@ -336,12 +336,12 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="flex items-start gap-3 pb-4 border-b border-[#e5e7eb] last:border-b-0 last:pb-0"
+                    className="flex items-start gap-3 pb-4 border-b border-border last:border-b-0 last:pb-0"
                   >
                     <div className="w-2 h-2 rounded-full bg-[#1F6E4A] mt-2"></div>
                     <div className="flex-1">
-                      <p className="text-sm text-[#1F2937] mb-1">{activity.action}</p>
-                      <p className="text-xs text-[#6b7280]">{activity.date}</p>
+                      <p className="text-sm text-foreground mb-1">{activity.action}</p>
+                      <p className="text-xs text-muted-foreground">{activity.date}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -355,4 +355,3 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
 }
 
 ProfilePage.layout = (page: React.ReactNode) => <MainLayout children={page} />;
-

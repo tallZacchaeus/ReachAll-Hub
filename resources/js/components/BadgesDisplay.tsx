@@ -49,7 +49,7 @@ export function BadgesDisplay({ badges, compact = false }: BadgesDisplayProps) {
           );
         })}
         {badges.filter(b => b.earned).length > 3 && (
-          <span className="text-xs text-[#6b7280]">
+          <span className="text-xs text-muted-foreground">
             +{badges.filter(b => b.earned).length - 3} more
           </span>
         )}
@@ -108,8 +108,8 @@ export function BadgesDisplay({ badges, compact = false }: BadgesDisplayProps) {
                     </motion.div>
                   )}
                 </div>
-                <h4 className="text-sm text-[#1F2937] mb-1">{badge.name}</h4>
-                <p className="text-xs text-[#6b7280] mb-2">{badge.description}</p>
+                <h4 className="text-sm text-foreground mb-1">{badge.name}</h4>
+                <p className="text-xs text-muted-foreground mb-2">{badge.description}</p>
                 {badge.earned && badge.earnedDate && (
                   <Badge 
                     variant="outline" 
@@ -120,7 +120,7 @@ export function BadgesDisplay({ badges, compact = false }: BadgesDisplayProps) {
                   </Badge>
                 )}
                 {!badge.earned && (
-                  <Badge variant="outline" className="text-xs border-[#e5e7eb] text-[#9ca3af]">
+                  <Badge variant="outline" className="text-xs border-border text-[#9ca3af]">
                     Not earned
                   </Badge>
                 )}

@@ -391,47 +391,47 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[#1F2937] mb-2">Results Overview</h1>
-          <p className="text-[#6b7280]">Real-time evaluation results by category</p>
+          <h1 className="text-foreground mb-2">Results Overview</h1>
+          <p className="text-muted-foreground">Real-time evaluation results by category</p>
         </div>
         <div className="flex items-center gap-3">
           <Badge variant="outline" className="flex items-center gap-2">
             <Activity className="w-3 h-3 text-[#1F6E4A]" />
             <span className="text-[#1F6E4A]">Live</span>
           </Badge>
-          <span className="text-xs text-[#6b7280]">Updated: {lastUpdated}</span>
+          <span className="text-xs text-muted-foreground">Updated: {lastUpdated}</span>
         </div>
       </div>
 
       {/* Overall Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="bg-white shadow-sm">
+        <Card className="bg-card shadow-sm">
           <CardContent className="p-6">
-            <p className="text-sm text-[#6b7280] mb-2">Total Votes Cast</p>
-            <p className="text-[#1F2937]" style={{ fontSize: "2rem", fontWeight: "600" }}>
+            <p className="text-sm text-muted-foreground mb-2">Total Votes Cast</p>
+            <p className="text-foreground" style={{ fontSize: "2rem", fontWeight: "600" }}>
               {totalVotesAllCategories.toLocaleString()}
             </p>
-            <Badge className="bg-[#f0fdf4] text-[#1F6E4A] hover:bg-[#f0fdf4] mt-2">
+            <Badge className="bg-[#f0fdf4] dark:bg-muted text-[#1F6E4A] hover:bg-muted mt-2">
               <TrendingUp className="w-3 h-3 mr-1" />
               Across {awardResults.length} categories
             </Badge>
           </CardContent>
         </Card>
-        <Card className="bg-white shadow-sm">
+        <Card className="bg-card shadow-sm">
           <CardContent className="p-6">
-            <p className="text-sm text-[#6b7280] mb-2">Current Category</p>
-            <p className="text-[#1F2937]" style={{ fontSize: "2rem", fontWeight: "600" }}>
+            <p className="text-sm text-muted-foreground mb-2">Current Category</p>
+            <p className="text-foreground" style={{ fontSize: "2rem", fontWeight: "600" }}>
               {currentIndex + 1}/{awardResults.length}
             </p>
-            <Badge className="bg-[#fff9e6] text-[#1F2937] hover:bg-[#fff9e6] mt-2">
+            <Badge className="bg-[#fff9e6] text-foreground hover:bg-[#fff9e6] mt-2">
               {currentAward.title}
             </Badge>
           </CardContent>
         </Card>
-        <Card className="bg-white shadow-sm">
+        <Card className="bg-card shadow-sm">
           <CardContent className="p-6">
-            <p className="text-sm text-[#6b7280] mb-2">Current Leader</p>
-            <p className="text-[#1F2937]" style={{ fontSize: "1.5rem", fontWeight: "600" }}>
+            <p className="text-sm text-muted-foreground mb-2">Current Leader</p>
+            <p className="text-foreground" style={{ fontSize: "1.5rem", fontWeight: "600" }}>
               {currentAward.winner.name}
             </p>
             <Badge className="bg-[#1F6E4A] text-white hover:bg-[#1F6E4A] mt-2">
@@ -450,8 +450,8 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
           exit={{ opacity: 0, x: -100 }}
           transition={{ duration: 0.3 }}
         >
-          <Card className="bg-white shadow-lg rounded-2xl">
-            <CardHeader className="border-b border-[#e5e7eb]">
+          <Card className="bg-card shadow-lg rounded-2xl">
+            <CardHeader className="border-b border-border">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div
@@ -461,14 +461,14 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
                     <Icon className="w-8 h-8" style={{ color: currentAward.color }} />
                   </div>
                   <div>
-                    <CardTitle className="text-[#1F2937]">{currentAward.title}</CardTitle>
-                    <CardDescription className="text-[#6b7280]">
+                    <CardTitle className="text-foreground">{currentAward.title}</CardTitle>
+                    <CardDescription className="text-muted-foreground">
                       {currentAward.totalVotes} total votes received
                     </CardDescription>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="text-[#6b7280]">
+                  <Badge variant="outline" className="text-muted-foreground">
                     {currentIndex + 1} of {awardResults.length}
                   </Badge>
                   <div className="flex items-center gap-1">
@@ -506,7 +506,7 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
               >
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-[#1F2937] flex items-center gap-2">
+                    <h3 className="text-foreground flex items-center gap-2">
                       <Trophy className="w-5 h-5" style={{ color: currentAward.color }} />
                       Current Winner
                     </h3>
@@ -527,17 +527,17 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
-                      <p className="text-[#1F2937] text-xl">{currentAward.winner.name}</p>
-                      <p className="text-sm text-[#6b7280]">{currentAward.winner.staffId}</p>
+                      <p className="text-foreground text-xl">{currentAward.winner.name}</p>
+                      <p className="text-sm text-muted-foreground">{currentAward.winner.staffId}</p>
                     </div>
                     <div className="text-right">
                       <p
-                        className="text-[#1F2937]"
+                        className="text-foreground"
                         style={{ fontSize: "2rem", fontWeight: "600" }}
                       >
                         {currentAward.winner.votes}
                       </p>
-                      <p className="text-sm text-[#6b7280]">votes</p>
+                      <p className="text-sm text-muted-foreground">votes</p>
                     </div>
                   </div>
                 </CardContent>
@@ -545,10 +545,10 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
 
               {/* Vote Distribution Bar Chart (Admin/HR/Management Only) */}
               {isAdmin && (
-                <Card className="bg-[#F5F7F8] rounded-2xl">
+                <Card className="bg-muted rounded-2xl">
                   <CardHeader>
-                    <CardTitle className="text-[#1F2937]">Vote Distribution</CardTitle>
-                    <CardDescription className="text-[#6b7280]">
+                    <CardTitle className="text-foreground">Vote Distribution</CardTitle>
+                    <CardDescription className="text-muted-foreground">
                       Top 6 nominees for {currentAward.title}
                     </CardDescription>
                   </CardHeader>
@@ -568,8 +568,8 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
                           content={({ active, payload }) => {
                             if (active && payload && payload.length) {
                               return (
-                                <div className="bg-white p-3 rounded-lg shadow-lg border-2 border-[#1F6E4A]">
-                                  <p className="text-sm text-[#1F2937]">{payload[0].payload.fullName}</p>
+                                <div className="bg-card p-3 rounded-lg shadow-lg border-2 border-[#1F6E4A]">
+                                  <p className="text-sm text-foreground">{payload[0].payload.fullName}</p>
                                   <p className="text-lg text-[#1F6E4A]">{payload[0].value} votes</p>
                                 </div>
                               );
@@ -586,7 +586,7 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
 
               {/* Top 5 Ranking */}
               <div>
-                <h3 className="text-[#1F2937] mb-4">Top 5 Rankings</h3>
+                <h3 className="text-foreground mb-4">Top 5 Rankings</h3>
                 <div className="space-y-3">
                   {currentAward.topFive.map((staff, index) => (
                     <motion.div
@@ -595,7 +595,7 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
                     >
-                      <Card className="bg-white hover:shadow-md transition-all rounded-xl">
+                      <Card className="bg-card hover:shadow-md transition-all rounded-xl">
                         <CardContent className="p-4">
                           <div className="flex items-center gap-4">
                             <div
@@ -605,19 +605,19 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
                             >
                               #{index + 1}
                             </div>
-                            <Avatar className="w-12 h-12 border-2 border-[#e5e7eb]">
+                            <Avatar className="w-12 h-12 border-2 border-border">
                               <AvatarFallback className="bg-[#1F6E4A] text-white">
                                 {staff.avatar}
                               </AvatarFallback>
                             </Avatar>
                             <div className="flex-1">
-                              <p className="text-[#1F2937]">{staff.name}</p>
-                              <p className="text-sm text-[#6b7280]">{staff.staffId}</p>
+                              <p className="text-foreground">{staff.name}</p>
+                              <p className="text-sm text-muted-foreground">{staff.staffId}</p>
                             </div>
                             <div className="text-right flex items-center gap-3">
                               <div>
-                                <p className="text-[#1F2937] text-xl">{staff.votes}</p>
-                                <p className="text-xs text-[#6b7280]">votes</p>
+                                <p className="text-foreground text-xl">{staff.votes}</p>
+                                <p className="text-xs text-muted-foreground">votes</p>
                               </div>
                               {isAdmin && staff.voters && (
                                 <Button
@@ -629,7 +629,7 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
                                       voters: staff.voters || [],
                                     })
                                   }
-                                  className="border-[#1F6E4A] text-[#1F6E4A] hover:bg-[#f0fdf4]"
+                                  className="border-[#1F6E4A] text-[#1F6E4A] hover:bg-muted"
                                 >
                                   <Users className="w-4 h-4 mr-2" />
                                   View Voters
@@ -667,17 +667,17 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
       <Dialog open={!!selectedNominee} onOpenChange={() => setSelectedNominee(null)}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="text-[#1F2937]">
+            <DialogTitle className="text-foreground">
               Voters for {selectedNominee?.name}
             </DialogTitle>
-            <DialogDescription className="text-[#6b7280]">
+            <DialogDescription className="text-muted-foreground">
               {selectedNominee?.voters.length} staff members voted for this nominee
             </DialogDescription>
           </DialogHeader>
           <ScrollArea className="max-h-[500px] pr-4">
             <div className="space-y-2">
               {selectedNominee?.voters.map((voter) => (
-                <Card key={voter.id} className="bg-[#F5F7F8] border-none">
+                <Card key={voter.id} className="bg-muted border-none">
                   <CardContent className="p-3">
                     <div className="flex items-center gap-3">
                       <Avatar className="w-10 h-10">
@@ -686,12 +686,12 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1">
-                        <p className="text-sm text-[#1F2937]">{voter.name}</p>
-                        <p className="text-xs text-[#6b7280]">{voter.staffId}</p>
+                        <p className="text-sm text-foreground">{voter.name}</p>
+                        <p className="text-xs text-muted-foreground">{voter.staffId}</p>
                       </div>
                       <Badge
                         variant="outline"
-                        className="bg-white text-[#1F6E4A] border-[#1F6E4A]"
+                        className="bg-card text-[#1F6E4A] border-[#1F6E4A]"
                       >
                         {voter.department}
                       </Badge>

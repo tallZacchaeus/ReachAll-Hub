@@ -186,9 +186,9 @@ const DraggableTaskCard = ({
 
   const isOverdue = new Date(task.dueDate) < new Date();
   const priorityColors = {
-    high: "bg-[#fef2f2] text-[#ef4444] border-[#fecaca]",
-    medium: "bg-[#fef9c3] text-[#d97706] border-[#fde68a]",
-    low: "bg-[#f0f9ff] text-[#0284c7] border-[#bae6fd]",
+    high: "bg-[#fef2f2] dark:bg-red-950/30 text-[#ef4444] border-[#fecaca]",
+    medium: "bg-[#fef9c3] dark:bg-yellow-950/30 text-[#d97706] border-[#fde68a]",
+    low: "bg-[#f0f9ff] dark:bg-blue-950/30 text-[#0284c7] border-[#bae6fd]",
   };
 
   return (
@@ -203,12 +203,12 @@ const DraggableTaskCard = ({
       style={{ opacity: isDragging ? 0.5 : 1 }}
     >
       <Card
-        className="mb-3 border border-[#e5e7eb] hover:shadow-lg transition-all cursor-pointer group rounded-2xl"
+        className="mb-3 border border-border hover:shadow-lg transition-all cursor-pointer group rounded-2xl"
         onClick={() => onViewDetails(task)}
       >
         <CardContent className="p-5 space-y-3">
           <div className="flex items-start justify-between">
-            <h4 className="text-[#1F2937] flex-1 pr-2 line-clamp-2">{task.title}</h4>
+            <h4 className="text-foreground flex-1 pr-2 line-clamp-2">{task.title}</h4>
             <DropdownMenu>
               <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                 <Button
@@ -216,7 +216,7 @@ const DraggableTaskCard = ({
                   size="sm"
                   className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 hover:bg-[#f3f4f6]"
                 >
-                  <MoreVertical className="w-4 h-4 text-[#6b7280]" />
+                  <MoreVertical className="w-4 h-4 text-muted-foreground" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
@@ -266,15 +266,15 @@ const DraggableTaskCard = ({
               </AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <span className="text-xs text-[#1F2937]">{task.assignedToName}</span>
-              <span className="text-[10px] text-[#6b7280]">{task.assignedTo}</span>
+              <span className="text-xs text-foreground">{task.assignedToName}</span>
+              <span className="text-[10px] text-muted-foreground">{task.assignedTo}</span>
             </div>
           </div>
 
           {task.department && (
             <Badge
               variant="outline"
-              className="bg-[#f0fdf4] text-[#15803d] border-[#86efac] text-[10px]"
+              className="bg-[#f0fdf4] dark:bg-muted text-[#15803d] border-[#86efac] text-[10px]"
             >
               {task.department}
             </Badge>
@@ -283,12 +283,12 @@ const DraggableTaskCard = ({
           <div className="flex items-center gap-2">
             <Calendar
               className={`w-3.5 h-3.5 ${
-                isOverdue ? "text-[#ef4444]" : "text-[#6b7280]"
+                isOverdue ? "text-[#ef4444]" : "text-muted-foreground"
               }`}
             />
             <span
               className={`text-xs ${
-                isOverdue ? "text-[#ef4444]" : "text-[#6b7280]"
+                isOverdue ? "text-[#ef4444]" : "text-muted-foreground"
               }`}
             >
               {new Date(task.dueDate).toLocaleDateString("en-US", {
@@ -297,7 +297,7 @@ const DraggableTaskCard = ({
               })}
             </span>
             {isOverdue && (
-              <Badge className="bg-[#fef2f2] text-[#ef4444] border-[#fecaca] text-[10px] ml-auto">
+              <Badge className="bg-[#fef2f2] dark:bg-red-950/30 text-[#ef4444] border-[#fecaca] text-[10px] ml-auto">
                 Overdue
               </Badge>
             )}
@@ -310,7 +310,7 @@ const DraggableTaskCard = ({
           </Badge>
 
           {task.subtasks && task.subtasks.length > 0 && (
-            <div className="flex items-center gap-2 text-xs text-[#6b7280]">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <CheckSquare className="w-3.5 h-3.5" />
               <span>
                 {task.subtasks.filter((s) => s.completed).length}/{task.subtasks.length}{" "}
@@ -321,7 +321,7 @@ const DraggableTaskCard = ({
 
           <div className="space-y-1.5">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-[#6b7280]">Progress</span>
+              <span className="text-muted-foreground">Progress</span>
               <span className="text-[#1E3D34]">{task.progress}%</span>
             </div>
             <Progress value={task.progress} className="h-2" />
@@ -369,14 +369,14 @@ const DropZone = ({
         drop(node);
       }}
       className={`space-y-4 min-h-[600px] ${
-        isOver ? "bg-[#f0fdf4] rounded-2xl p-2 transition-colors" : ""
+        isOver ? "bg-[#f0fdf4] dark:bg-muted rounded-2xl p-2 transition-colors" : ""
       }`}
     >
-      <div className="flex items-center justify-between sticky top-0 bg-[#F5F7F8] pb-2 z-10">
+      <div className="flex items-center justify-between sticky top-0 bg-muted pb-2 z-10">
         <div className="flex items-center gap-2">
           <div className={`w-2 h-2 rounded-full ${color}`}></div>
-          <h3 className="text-[#1F2937]">{title}</h3>
-          <Badge variant="secondary" className="bg-white border border-[#e5e7eb]">
+          <h3 className="text-foreground">{title}</h3>
+          <Badge variant="secondary" className="bg-card border border-border">
             {tasks.length}
           </Badge>
         </div>
@@ -394,7 +394,7 @@ const DropZone = ({
           ))}
         </AnimatePresence>
         {tasks.length === 0 && (
-          <div className="text-center py-12 text-sm text-[#6b7280] bg-white rounded-2xl border-2 border-dashed border-[#e5e7eb]">
+          <div className="text-center py-12 text-sm text-muted-foreground bg-card rounded-2xl border-2 border-dashed border-border">
             <ListChecks className="w-8 h-8 mx-auto mb-2 opacity-30" />
             <p>No tasks in this column</p>
           </div>
@@ -718,13 +718,13 @@ export default function TasksPage({
     iconBg: string;
     percentage: number;
   }) => (
-    <Card className="border border-[#e5e7eb] rounded-2xl hover:shadow-lg transition-all">
+    <Card className="border border-border rounded-2xl hover:shadow-lg transition-all">
       <CardContent className="p-6">
         <div className="flex items-start justify-between">
           <div className="space-y-2 flex-1">
-            <p className="text-sm text-[#6b7280]">{title}</p>
+            <p className="text-sm text-muted-foreground">{title}</p>
             <div className="flex items-baseline gap-2">
-              <h3 className="text-[#1F2937]">{value}</h3>
+              <h3 className="text-foreground">{value}</h3>
               <span className={`text-xs ${color}`}>{percentage}%</span>
             </div>
           </div>
@@ -744,8 +744,8 @@ export default function TasksPage({
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-[#1F2937] mb-2">Tasks Management</h1>
-            <p className="text-sm text-[#6b7280]">
+            <h1 className="text-foreground mb-2">Tasks Management</h1>
+            <p className="text-sm text-muted-foreground">
               Track and manage project tasks across teams
             </p>
           </div>
@@ -758,8 +758,8 @@ export default function TasksPage({
             </DialogTrigger>
             <DialogContent className="max-w-md">
               <DialogHeader>
-                <DialogTitle className="text-[#1F2937]">Create New Task</DialogTitle>
-                <DialogDescription className="text-[#6b7280]">
+                <DialogTitle className="text-foreground">Create New Task</DialogTitle>
+                <DialogDescription className="text-muted-foreground">
                   {isManager
                     ? "Assign a task to a team member"
                     : "Create a task for yourself"}
@@ -772,7 +772,7 @@ export default function TasksPage({
                     placeholder="Enter task title"
                     value={newTask.title}
                     onChange={(e) => setNewTaskData("title", e.target.value)}
-                    className="bg-white"
+                    className="bg-card"
                   />
                   {createErrors.title && (
                     <p className="text-xs text-[#ef4444]">{createErrors.title}</p>
@@ -786,7 +786,7 @@ export default function TasksPage({
                       value={newTask.assignedTo || undefined}
                       onValueChange={(value) => setNewTaskData("assignedTo", value)}
                     >
-                      <SelectTrigger className="bg-white">
+                      <SelectTrigger className="bg-card">
                         <SelectValue placeholder="Select staff member" />
                       </SelectTrigger>
                       <SelectContent>
@@ -822,7 +822,7 @@ export default function TasksPage({
                         setNewTaskData("department", value === "none" ? "" : value)
                       }
                     >
-                      <SelectTrigger className="bg-white">
+                      <SelectTrigger className="bg-card">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -845,7 +845,7 @@ export default function TasksPage({
                       placeholder="Project name"
                       value={newTask.project}
                       onChange={(e) => setNewTaskData("project", e.target.value)}
-                      className="bg-white"
+                      className="bg-card"
                     />
                     {createErrors.project && (
                       <p className="text-xs text-[#ef4444]">{createErrors.project}</p>
@@ -862,7 +862,7 @@ export default function TasksPage({
                         setNewTaskData("priority", value)
                       }
                     >
-                      <SelectTrigger className="bg-white">
+                      <SelectTrigger className="bg-card">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -882,7 +882,7 @@ export default function TasksPage({
                       type="date"
                       value={newTask.dueDate}
                       onChange={(e) => setNewTaskData("dueDate", e.target.value)}
-                      className="bg-white"
+                      className="bg-card"
                     />
                     {createErrors.dueDate && (
                       <p className="text-xs text-[#ef4444]">{createErrors.dueDate}</p>
@@ -896,7 +896,7 @@ export default function TasksPage({
                     placeholder="Task details and requirements"
                     value={newTask.description}
                     onChange={(e) => setNewTaskData("description", e.target.value)}
-                    className="bg-white min-h-[80px]"
+                    className="bg-card min-h-[80px]"
                   />
                   {createErrors.description && (
                     <p className="text-xs text-[#ef4444]">{createErrors.description}</p>
@@ -937,7 +937,7 @@ export default function TasksPage({
             value={completedThisMonth}
             icon={Target}
             color="text-[#15803d]"
-            iconBg="bg-[#dcfce7]"
+            iconBg="bg-[#dcfce7] dark:bg-green-950/30"
             percentage={Math.round((completedThisMonth / totalTasks) * 100)}
           />
           <StatCard
@@ -950,22 +950,22 @@ export default function TasksPage({
           />
         </div>
 
-        <Card className="border border-[#e5e7eb] rounded-2xl">
+        <Card className="border border-border rounded-2xl">
           <CardContent className="p-4">
             <div className="flex flex-col lg:flex-row gap-3">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6b7280]" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   placeholder="Search tasks, staff, or projects..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 bg-white border-[#e5e7eb]"
+                  className="pl-10 bg-card border-border"
                 />
               </div>
               {isManager && (
                 <>
                   <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
-                    <SelectTrigger className="w-full lg:w-[180px] bg-white">
+                    <SelectTrigger className="w-full lg:w-[180px] bg-card">
                       <SelectValue placeholder="Department" />
                     </SelectTrigger>
                     <SelectContent>
@@ -978,7 +978,7 @@ export default function TasksPage({
                     </SelectContent>
                   </Select>
                   <Select value={selectedStaff} onValueChange={setSelectedStaff}>
-                    <SelectTrigger className="w-full lg:w-[180px] bg-white">
+                    <SelectTrigger className="w-full lg:w-[180px] bg-card">
                       <SelectValue placeholder="Staff" />
                     </SelectTrigger>
                     <SelectContent>
@@ -991,7 +991,7 @@ export default function TasksPage({
                     </SelectContent>
                   </Select>
                   <Select value={selectedProject} onValueChange={setSelectedProject}>
-                    <SelectTrigger className="w-full lg:w-[180px] bg-white">
+                    <SelectTrigger className="w-full lg:w-[180px] bg-card">
                       <SelectValue placeholder="Project" />
                     </SelectTrigger>
                     <SelectContent>
@@ -1006,7 +1006,7 @@ export default function TasksPage({
                 </>
               )}
               <Select value={selectedStatusFilter} onValueChange={setSelectedStatusFilter}>
-                <SelectTrigger className="w-full lg:w-[150px] bg-white">
+                <SelectTrigger className="w-full lg:w-[150px] bg-card">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -1020,7 +1020,7 @@ export default function TasksPage({
               {isManager && monthOptions.length > 0 && (
                 <>
                   <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-                    <SelectTrigger className="w-full lg:w-[180px] bg-white">
+                    <SelectTrigger className="w-full lg:w-[180px] bg-card">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -1034,7 +1034,7 @@ export default function TasksPage({
                   <Button
                     variant="outline"
                     onClick={handleDownloadReport}
-                    className="border-[#e5e7eb]"
+                    className="border-border"
                   >
                     <Download className="w-4 h-4 mr-2" />
                     Download Report
@@ -1089,12 +1089,12 @@ export default function TasksPage({
         </div>
 
         {isManager && (
-          <Card className="border border-[#e5e7eb] rounded-2xl">
+          <Card className="border border-border rounded-2xl">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-[#1F2937]">Monthly Performance Summary</h3>
-                  <p className="text-sm text-[#6b7280]">
+                  <h3 className="text-foreground">Monthly Performance Summary</h3>
+                  <p className="text-sm text-muted-foreground">
                     Track task completion trends over time
                   </p>
                 </div>
@@ -1105,7 +1105,7 @@ export default function TasksPage({
                       setChartView(value)
                     }
                   >
-                    <SelectTrigger className="w-[140px] bg-white">
+                    <SelectTrigger className="w-[140px] bg-card">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -1118,7 +1118,7 @@ export default function TasksPage({
                     variant="outline"
                     size="sm"
                     onClick={() => setChartType(chartType === "line" ? "bar" : "line")}
-                    className="border-[#e5e7eb]"
+                    className="border-border"
                   >
                     <BarChart3 className="w-4 h-4" />
                   </Button>
@@ -1126,7 +1126,7 @@ export default function TasksPage({
                     variant="outline"
                     size="sm"
                     onClick={handleDownloadReport}
-                    className="border-[#e5e7eb]"
+                    className="border-border"
                   >
                     <Download className="w-4 h-4" />
                   </Button>
@@ -1226,8 +1226,8 @@ export default function TasksPage({
         <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle className="text-[#1F2937]">Edit Task</DialogTitle>
-              <DialogDescription className="text-[#6b7280]">
+              <DialogTitle className="text-foreground">Edit Task</DialogTitle>
+              <DialogDescription className="text-muted-foreground">
                 Update task details
               </DialogDescription>
             </DialogHeader>
@@ -1240,7 +1240,7 @@ export default function TasksPage({
                     onChange={(e) =>
                       setEditingTask({ ...editingTask, title: e.target.value })
                     }
-                    className="bg-white"
+                    className="bg-card"
                   />
                 </div>
 
@@ -1253,7 +1253,7 @@ export default function TasksPage({
                         setEditingTask({ ...editingTask, priority: value })
                       }
                     >
-                      <SelectTrigger className="bg-white">
+                      <SelectTrigger className="bg-card">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -1272,7 +1272,7 @@ export default function TasksPage({
                       onChange={(e) =>
                         setEditingTask({ ...editingTask, dueDate: e.target.value })
                       }
-                      className="bg-white"
+                      className="bg-card"
                     />
                   </div>
                 </div>
@@ -1290,7 +1290,7 @@ export default function TasksPage({
                         progress: Number(e.target.value) || 0,
                       })
                     }
-                    className="bg-white"
+                    className="bg-card"
                   />
                 </div>
 
@@ -1301,7 +1301,7 @@ export default function TasksPage({
                     onChange={(e) =>
                       setEditingTask({ ...editingTask, description: e.target.value })
                     }
-                    className="bg-white min-h-[80px]"
+                    className="bg-card min-h-[80px]"
                   />
                 </div>
 
@@ -1328,10 +1328,10 @@ export default function TasksPage({
           >
             <SheetContent className="w-full sm:max-w-2xl overflow-y-auto">
               <SheetHeader>
-                <SheetTitle className="text-[#1F2937] pr-8">
+                <SheetTitle className="text-foreground pr-8">
                   {selectedTask.title}
                 </SheetTitle>
-                <SheetDescription className="text-[#6b7280]">
+                <SheetDescription className="text-muted-foreground">
                   Task Details and Activity
                 </SheetDescription>
               </SheetHeader>
@@ -1339,7 +1339,7 @@ export default function TasksPage({
               <div className="space-y-6 mt-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <Label className="text-xs text-[#6b7280]">Assigned To</Label>
+                    <Label className="text-xs text-muted-foreground">Assigned To</Label>
                     <div className="flex items-center gap-2">
                       <Avatar className="w-7 h-7">
                         <AvatarFallback className="bg-[#1E3D34] text-white text-xs">
@@ -1351,10 +1351,10 @@ export default function TasksPage({
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col">
-                        <span className="text-sm text-[#1F2937]">
+                        <span className="text-sm text-foreground">
                           {selectedTask.assignedToName}
                         </span>
-                        <span className="text-xs text-[#6b7280]">
+                        <span className="text-xs text-muted-foreground">
                           {selectedTask.assignedTo}
                         </span>
                       </div>
@@ -1362,21 +1362,21 @@ export default function TasksPage({
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-xs text-[#6b7280]">Assigned By</Label>
-                    <span className="text-sm text-[#1F2937] block">
+                    <Label className="text-xs text-muted-foreground">Assigned By</Label>
+                    <span className="text-sm text-foreground block">
                       {selectedTask.assignedByName}
                     </span>
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-xs text-[#6b7280]">Priority</Label>
+                    <Label className="text-xs text-muted-foreground">Priority</Label>
                     <Badge
                       className={`text-xs ${
                         selectedTask.priority === "high"
-                          ? "bg-[#fef2f2] text-[#ef4444] border-[#fecaca]"
+                          ? "bg-[#fef2f2] dark:bg-red-950/30 text-[#ef4444] border-[#fecaca]"
                           : selectedTask.priority === "medium"
-                            ? "bg-[#fef9c3] text-[#d97706] border-[#fde68a]"
-                            : "bg-[#f0f9ff] text-[#0284c7] border-[#bae6fd]"
+                            ? "bg-[#fef9c3] dark:bg-yellow-950/30 text-[#d97706] border-[#fde68a]"
+                            : "bg-[#f0f9ff] dark:bg-blue-950/30 text-[#0284c7] border-[#bae6fd]"
                       }`}
                     >
                       {selectedTask.priority === "high"
@@ -1387,8 +1387,8 @@ export default function TasksPage({
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-xs text-[#6b7280]">Due Date</Label>
-                    <span className="text-sm text-[#1F2937] block">
+                    <Label className="text-xs text-muted-foreground">Due Date</Label>
+                    <span className="text-sm text-foreground block">
                       {new Date(selectedTask.dueDate).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
@@ -1399,8 +1399,8 @@ export default function TasksPage({
 
                   {selectedTask.department && (
                     <div className="space-y-1">
-                      <Label className="text-xs text-[#6b7280]">Department</Label>
-                      <span className="text-sm text-[#1F2937] block">
+                      <Label className="text-xs text-muted-foreground">Department</Label>
+                      <span className="text-sm text-foreground block">
                         {selectedTask.department}
                       </span>
                     </div>
@@ -1408,24 +1408,24 @@ export default function TasksPage({
 
                   {selectedTask.project && (
                     <div className="space-y-1">
-                      <Label className="text-xs text-[#6b7280]">Project</Label>
-                      <span className="text-sm text-[#1F2937] block">
+                      <Label className="text-xs text-muted-foreground">Project</Label>
+                      <span className="text-sm text-foreground block">
                         {selectedTask.project}
                       </span>
                     </div>
                   )}
                 </div>
 
-                <div className="p-3 border border-[#e5e7eb] rounded-xl bg-[#f9fafb]">
-                  <p className="text-xs text-[#6b7280]">
+                <div className="p-3 border border-border rounded-xl bg-[#f9fafb]">
+                  <p className="text-xs text-muted-foreground">
                     Task assigned on {selectedTask.assignedTimestamp}
                   </p>
                 </div>
 
                 {selectedTask.description && (
                   <div className="space-y-2">
-                    <Label className="text-[#1F2937]">Description</Label>
-                    <p className="text-sm text-[#6b7280] p-4 border border-[#e5e7eb] rounded-xl bg-white">
+                    <Label className="text-foreground">Description</Label>
+                    <p className="text-sm text-muted-foreground p-4 border border-border rounded-xl bg-card">
                       {selectedTask.description}
                     </p>
                   </div>
@@ -1433,7 +1433,7 @@ export default function TasksPage({
 
                 {selectedTask.subtasks && selectedTask.subtasks.length > 0 && (
                   <div className="space-y-3">
-                    <Label className="text-[#1F2937]">
+                    <Label className="text-foreground">
                       Subtasks ({selectedTask.subtasks.filter((subtask) => subtask.completed).length}/
                       {selectedTask.subtasks.length})
                     </Label>
@@ -1441,13 +1441,13 @@ export default function TasksPage({
                       {selectedTask.subtasks.map((subtask) => (
                         <div
                           key={subtask.id}
-                          className="flex items-center gap-3 p-3 border border-[#e5e7eb] rounded-xl bg-white"
+                          className="flex items-center gap-3 p-3 border border-border rounded-xl bg-card"
                         >
                           <div
                             className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
                               subtask.completed
                                 ? "bg-[#1E3D34] border-[#1E3D34]"
-                                : "border-[#e5e7eb]"
+                                : "border-border"
                             }`}
                           >
                             {subtask.completed && (
@@ -1457,8 +1457,8 @@ export default function TasksPage({
                           <span
                             className={`text-sm ${
                               subtask.completed
-                                ? "text-[#6b7280] line-through"
-                                : "text-[#1F2937]"
+                                ? "text-muted-foreground line-through"
+                                : "text-foreground"
                             }`}
                           >
                             {subtask.title}
@@ -1471,7 +1471,7 @@ export default function TasksPage({
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label className="text-[#1F2937]">Progress</Label>
+                    <Label className="text-foreground">Progress</Label>
                     <span className="text-sm text-[#1E3D34]">
                       {selectedTask.progress}%
                     </span>
@@ -1480,7 +1480,7 @@ export default function TasksPage({
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-[#1F2937]">Status</Label>
+                  <Label className="text-foreground">Status</Label>
                   <Select
                     value={selectedTask.status}
                     onValueChange={(value: Task["status"]) => {
@@ -1492,7 +1492,7 @@ export default function TasksPage({
                       handleDrop(selectedTask, value);
                     }}
                   >
-                    <SelectTrigger className="bg-white">
+                    <SelectTrigger className="bg-card">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -1504,8 +1504,8 @@ export default function TasksPage({
                   </Select>
                 </div>
 
-                <div className="space-y-4 border-t border-[#e5e7eb] pt-6">
-                  <Label className="text-[#1F2937]">
+                <div className="space-y-4 border-t border-border pt-6">
+                  <Label className="text-foreground">
                     Activity & Comments ({selectedTask.comments.length})
                   </Label>
                   <div className="space-y-4">
@@ -1518,21 +1518,21 @@ export default function TasksPage({
                         </Avatar>
                         <div className="flex-1 space-y-1">
                           <div className="flex items-center gap-2">
-                            <span className="text-sm text-[#1F2937]">
+                            <span className="text-sm text-foreground">
                               {comment.author}
                             </span>
-                            <span className="text-xs text-[#6b7280]">
+                            <span className="text-xs text-muted-foreground">
                               {comment.timestamp}
                             </span>
                           </div>
-                          <p className="text-sm text-[#6b7280] border border-[#e5e7eb] rounded-xl p-3 bg-white">
+                          <p className="text-sm text-muted-foreground border border-border rounded-xl p-3 bg-card">
                             {comment.text}
                           </p>
                         </div>
                       </div>
                     ))}
                     {selectedTask.comments.length === 0 && (
-                      <div className="rounded-xl border border-dashed border-[#d1d5db] bg-white p-4 text-sm text-[#6b7280]">
+                      <div className="rounded-xl border border-dashed border-[#d1d5db] bg-card p-4 text-sm text-muted-foreground">
                         No comments yet.
                       </div>
                     )}
@@ -1543,7 +1543,7 @@ export default function TasksPage({
                       placeholder="Add a comment..."
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
-                      className="bg-white min-h-[60px] rounded-xl"
+                      className="bg-card min-h-[60px] rounded-xl"
                     />
                   </div>
                   <Button

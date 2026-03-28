@@ -31,7 +31,7 @@ export function ReactionDisplay({ reactions, onReactionClick }: ReactionDisplayP
                                 variant="secondary"
                                 className={`cursor-pointer transition-all hover:scale-105 ${reaction.hasReacted
                                         ? "bg-[#1F6E4A] text-white hover:bg-[#1a5a3d]"
-                                        : "bg-[#F5F7F8] text-[#1F2937] hover:bg-[#e5e7eb]"
+                                        : "bg-muted text-foreground hover:bg-[#e5e7eb]"
                                     }`}
                                 onClick={() => onReactionClick(reaction.emoji)}
                             >

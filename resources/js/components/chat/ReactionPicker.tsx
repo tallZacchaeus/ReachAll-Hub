@@ -30,7 +30,7 @@ export function ReactionPicker({ onReactionSelect }: ReactionPickerProps) {
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="h-7 px-2 text-[#6b7280] hover:text-[#1F2937] hover:bg-[#F5F7F8]"
+                    className="h-7 px-2 text-muted-foreground hover:text-foreground hover:bg-muted"
                 >
                     <Smile className="w-4 h-4" />
                 </Button>
@@ -41,7 +41,7 @@ export function ReactionPicker({ onReactionSelect }: ReactionPickerProps) {
                         <button
                             key={emoji}
                             onClick={() => handleSelect(emoji)}
-                            className="text-2xl p-2 hover:bg-[#F5F7F8] rounded transition-colors"
+                            className="text-2xl p-2 hover:bg-muted rounded transition-colors"
                             title={emoji}
                         >
                             {emoji}

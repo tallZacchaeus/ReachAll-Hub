@@ -153,8 +153,8 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-[#1F2937] mb-2">Peer Reviews</h1>
-        <p className="text-[#6b7280]">
+        <h1 className="text-foreground mb-2">Peer Reviews</h1>
+        <p className="text-muted-foreground">
           {canOnlyViewResults
             ? "View anonymous team feedback and peer evaluations"
             : "Submit anonymous peer evaluations to help improve team performance"}
@@ -163,13 +163,13 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
 
       {/* Submit New Review - Only for Staff */}
       {!canOnlyViewResults && (
-        <Card className="bg-white shadow-sm border-2 border-[#1F6E4A]">
+        <Card className="bg-card shadow-sm border-2 border-[#1F6E4A]">
         <CardHeader>
           <div className="flex items-center gap-2">
             <UserCheck className="w-5 h-5 text-[#1F6E4A]" />
-            <CardTitle className="text-[#1F2937]">Submit Peer Evaluation</CardTitle>
+            <CardTitle className="text-foreground">Submit Peer Evaluation</CardTitle>
           </div>
-          <CardDescription className="text-[#6b7280] flex items-center gap-2">
+          <CardDescription className="text-muted-foreground flex items-center gap-2">
             <Lock className="w-4 h-4" />
             Your review is completely anonymous and visible only to HR and Management
           </CardDescription>
@@ -182,7 +182,7 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
               Select Team Member to Review
             </Label>
             <Select value={selectedTeamMember} onValueChange={setSelectedTeamMember}>
-              <SelectTrigger className="bg-white">
+              <SelectTrigger className="bg-card">
                 <SelectValue placeholder="Choose a team member..." />
               </SelectTrigger>
               <SelectContent>
@@ -190,14 +190,14 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
                   <SelectItem key={member.id} value={member.id}>
                     <div className="flex items-center gap-2">
                       <span>{member.name}</span>
-                      <span className="text-xs text-[#6b7280]">• {member.role}</span>
+                      <span className="text-xs text-muted-foreground">• {member.role}</span>
                     </div>
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
             {selectedMember && (
-              <Card className="mt-2 bg-[#f0fdf4] border border-[#1F6E4A]">
+              <Card className="mt-2 bg-[#f0fdf4] dark:bg-muted border border-[#1F6E4A]">
                 <CardContent className="p-3">
                   <div className="flex items-center gap-3">
                     <Avatar className="w-10 h-10">
@@ -206,8 +206,8 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="text-sm text-[#1F2937]">{selectedMember.name}</p>
-                      <p className="text-xs text-[#6b7280]">
+                      <p className="text-sm text-foreground">{selectedMember.name}</p>
+                      <p className="text-xs text-muted-foreground">
                         {selectedMember.id} • {selectedMember.role}
                       </p>
                     </div>
@@ -228,7 +228,7 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
                 className="space-y-3"
               >
                 <div className="flex items-center justify-between">
-                  <Label className="text-[#1F2937]">{category.name}</Label>
+                  <Label className="text-foreground">{category.name}</Label>
                   <Badge
                     className="text-white"
                     style={{ backgroundColor: getRatingColor(category.value) }}
@@ -244,7 +244,7 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
                   step={1}
                   className="w-full"
                 />
-                <div className="flex justify-between text-xs text-[#6b7280]">
+                <div className="flex justify-between text-xs text-muted-foreground">
                   <span>Poor</span>
                   <span>Fair</span>
                   <span>Good</span>
@@ -263,7 +263,7 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
               placeholder="Share any additional feedback or observations..."
               value={additionalNotes}
               onChange={(e) => setAdditionalNotes(e.target.value)}
-              className="bg-white min-h-[100px]"
+              className="bg-card min-h-[100px]"
             />
           </div>
 
@@ -279,7 +279,7 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
                 placeholder="Enter confidential notes for super admin review..."
                 value={managerNotes}
                 onChange={(e) => setManagerNotes(e.target.value)}
-                className="bg-white min-h-[80px]"
+                className="bg-card min-h-[80px]"
               />
             </div>
           )}
@@ -297,19 +297,19 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
 
       {/* View Submitted Reviews (HR/Management Only) */}
       {canOnlyViewResults && (
-        <Card className="bg-white shadow-sm">
+        <Card className="bg-card shadow-sm">
           <CardHeader>
             <div className="flex items-center gap-2">
               <Eye className="w-5 h-5 text-[#1F6E4A]" />
-              <CardTitle className="text-[#1F2937]">Recent Peer Reviews</CardTitle>
+              <CardTitle className="text-foreground">Recent Peer Reviews</CardTitle>
             </div>
-            <CardDescription className="text-[#6b7280]">
+            <CardDescription className="text-muted-foreground">
               Anonymous feedback submitted by team members
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {submittedReviews.map((review) => (
-              <Card key={review.id} className="bg-[#F5F7F8]">
+              <Card key={review.id} className="bg-muted">
                 <CardContent className="p-4">
                   <div className="flex items-start gap-3 mb-4">
                     <Avatar className="w-10 h-10">
@@ -318,8 +318,8 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
-                      <p className="text-[#1F2937]">{review.targetName}</p>
-                      <p className="text-sm text-[#6b7280]">
+                      <p className="text-foreground">{review.targetName}</p>
+                      <p className="text-sm text-muted-foreground">
                         {review.targetStaff} • {review.submittedDate}
                       </p>
                     </div>
@@ -329,9 +329,9 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
                     {Object.entries(review.ratings).map(([key, value]) => (
                       <div
                         key={key}
-                        className="flex items-center justify-between p-2 bg-white rounded"
+                        className="flex items-center justify-between p-2 bg-card rounded"
                       >
-                        <span className="text-sm text-[#6b7280] capitalize">{key}</span>
+                        <span className="text-sm text-muted-foreground capitalize">{key}</span>
                         <Badge
                           className="text-white"
                           style={{ backgroundColor: getRatingColor(value) }}
@@ -342,8 +342,8 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
                     ))}
                   </div>
 
-                  <div className="p-3 bg-white rounded">
-                    <p className="text-sm text-[#6b7280]">{review.notes}</p>
+                  <div className="p-3 bg-card rounded">
+                    <p className="text-sm text-muted-foreground">{review.notes}</p>
                   </div>
                 </CardContent>
               </Card>

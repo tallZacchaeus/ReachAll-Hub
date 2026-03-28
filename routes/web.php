@@ -13,7 +13,11 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('LoginPage');
+    if (Auth::check()) {
+        return redirect()->route('dashboard');
+    }
+
+    return redirect()->route('login');
 })->name('home');
 
 Route::middleware(['auth'])->group(function () {
@@ -88,7 +92,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Profile Change Requests
-    Route::post('/profile/update', [\App\Http\Controllers\ProfileController::class, 'submitRequest'])->name('profile.update');
+    Route::post('/profile/update', [\App\Http\Controllers\ProfileController::class, 'submitRequest'])->name('profile.request-update');
     Route::get('/admin/profile-requests', [\App\Http\Controllers\ProfileController::class, 'adminIndex'])->name('admin.profile-requests');
     Route::post('/admin/profile-requests/{id}/approve', [\App\Http\Controllers\ProfileController::class, 'approveRequest'])->name('admin.profile-requests.approve');
     Route::post('/admin/profile-requests/{id}/reject', [\App\Http\Controllers\ProfileController::class, 'rejectRequest'])->name('admin.profile-requests.reject');

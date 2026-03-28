@@ -217,11 +217,11 @@ export default function StaffEnrollmentPage({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[#1F2937] mb-2 flex items-center gap-3">
+          <h1 className="text-foreground mb-2 flex items-center gap-3">
             <UserPlus className="w-10 h-10 text-[#1F6E4A]" />
             Staff Enrollment
           </h1>
-          <p className="text-[#6b7280]">
+          <p className="text-muted-foreground">
             Manage and enroll staff members in the Tech Staff Evaluation Platform
           </p>
         </div>
@@ -263,10 +263,10 @@ export default function StaffEnrollmentPage({
             </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle className="text-[#1F2937]">
+                <DialogTitle className="text-foreground">
                   {editingStaff ? "Edit Staff Information" : "Enroll New Staff Member"}
                 </DialogTitle>
-                <DialogDescription className="text-[#6b7280]">
+                <DialogDescription className="text-muted-foreground">
                   {editingStaff
                     ? "Update the staff member's information below"
                     : "Fill in the details to enroll a new staff member"}
@@ -275,7 +275,7 @@ export default function StaffEnrollmentPage({
               <form onSubmit={editingStaff ? handleUpdateStaff : handleAddStaff} className="space-y-6 mt-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="employeeId" className="text-[#1F2937]">
+                    <Label htmlFor="employeeId" className="text-foreground">
                       Employee ID <span className="text-red-500">*</span>
                     </Label>
                     <Input
@@ -288,7 +288,7 @@ export default function StaffEnrollmentPage({
                     {errors.employeeId && <p className="text-sm text-red-500">{errors.employeeId}</p>}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-[#1F2937]">
+                    <Label htmlFor="email" className="text-foreground">
                       Email Address <span className="text-red-500">*</span>
                     </Label>
                     <Input
@@ -305,7 +305,7 @@ export default function StaffEnrollmentPage({
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="firstName" className="text-[#1F2937]">
+                    <Label htmlFor="firstName" className="text-foreground">
                       First Name <span className="text-red-500">*</span>
                     </Label>
                     <Input
@@ -318,7 +318,7 @@ export default function StaffEnrollmentPage({
                     {errors.firstName && <p className="text-sm text-red-500">{errors.firstName}</p>}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="lastName" className="text-[#1F2937]">
+                    <Label htmlFor="lastName" className="text-foreground">
                       Last Name <span className="text-red-500">*</span>
                     </Label>
                     <Input
@@ -334,7 +334,7 @@ export default function StaffEnrollmentPage({
 
                 {!editingStaff && (
                   <div className="space-y-2">
-                    <Label htmlFor="password" className="text-[#1F2937]">
+                    <Label htmlFor="password" className="text-foreground">
                       Password <span className="text-red-500">*</span>
                     </Label>
                     <Input
@@ -346,7 +346,7 @@ export default function StaffEnrollmentPage({
                       required
                     />
                     {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
-                    <p className="text-xs text-[#6b7280]">
+                    <p className="text-xs text-muted-foreground">
                       Staff can change this password after first login
                     </p>
                   </div>
@@ -354,7 +354,7 @@ export default function StaffEnrollmentPage({
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="department" className="text-[#1F2937]">
+                    <Label htmlFor="department" className="text-foreground">
                       Department <span className="text-red-500">*</span>
                     </Label>
                     <Select
@@ -375,7 +375,7 @@ export default function StaffEnrollmentPage({
                     {errors.department && <p className="text-sm text-red-500">{errors.department}</p>}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="position" className="text-[#1F2937]">
+                    <Label htmlFor="position" className="text-foreground">
                       Position <span className="text-red-500">*</span>
                     </Label>
                     <Select
@@ -398,7 +398,7 @@ export default function StaffEnrollmentPage({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="role" className="text-[#1F2937]">
+                  <Label htmlFor="role" className="text-foreground">
                     Platform Role <span className="text-red-500">*</span>
                   </Label>
                   <Select
@@ -417,7 +417,7 @@ export default function StaffEnrollmentPage({
                     </SelectContent>
                   </Select>
                   {errors.role && <p className="text-sm text-red-500">{errors.role}</p>}
-                  <p className="text-xs text-[#6b7280]">
+                  <p className="text-xs text-muted-foreground">
                     This determines the staff member's access level in the platform
                   </p>
                 </div>
@@ -449,12 +449,12 @@ export default function StaffEnrollmentPage({
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="rounded-2xl border-2 border-[#e5e7eb]">
+        <Card className="rounded-2xl border-2 border-border">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#6b7280] mb-1">Total Staff</p>
-                <p className="text-3xl text-[#1F2937]">{staffMembers.length}</p>
+                <p className="text-sm text-muted-foreground mb-1">Total Staff</p>
+                <p className="text-3xl text-foreground">{staffMembers.length}</p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-[#1F6E4A]/10 flex items-center justify-center">
                 <UserPlus className="w-6 h-6 text-[#1F6E4A]" />
@@ -463,12 +463,12 @@ export default function StaffEnrollmentPage({
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-2 border-[#e5e7eb]">
+        <Card className="rounded-2xl border-2 border-border">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#6b7280] mb-1">Active</p>
-                <p className="text-3xl text-[#1F2937]">
+                <p className="text-sm text-muted-foreground mb-1">Active</p>
+                <p className="text-3xl text-foreground">
                   {staffMembers.filter((s) => s.status === "Active").length}
                 </p>
               </div>
@@ -479,12 +479,12 @@ export default function StaffEnrollmentPage({
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-2 border-[#e5e7eb]">
+        <Card className="rounded-2xl border-2 border-border">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#6b7280] mb-1">Inactive</p>
-                <p className="text-3xl text-[#1F2937]">
+                <p className="text-sm text-muted-foreground mb-1">Inactive</p>
+                <p className="text-3xl text-foreground">
                   {staffMembers.filter((s) => s.status === "Inactive").length}
                 </p>
               </div>
@@ -495,12 +495,12 @@ export default function StaffEnrollmentPage({
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-2 border-[#e5e7eb]">
+        <Card className="rounded-2xl border-2 border-border">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#6b7280] mb-1">Pending</p>
-                <p className="text-3xl text-[#1F2937]">
+                <p className="text-sm text-muted-foreground mb-1">Pending</p>
+                <p className="text-3xl text-foreground">
                   {staffMembers.filter((s) => s.status === "Pending").length}
                 </p>
               </div>
@@ -513,13 +513,13 @@ export default function StaffEnrollmentPage({
       </div>
 
       {/* Filters and Search */}
-      <Card className="rounded-2xl border-2 border-[#e5e7eb]">
+      <Card className="rounded-2xl border-2 border-border">
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label className="text-[#1F2937]">Search Staff</Label>
+              <Label className="text-foreground">Search Staff</Label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#6b7280]" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   placeholder="Search by ID, name or email..."
                   value={searchQuery}
@@ -529,7 +529,7 @@ export default function StaffEnrollmentPage({
               </div>
             </div>
             <div className="space-y-2">
-              <Label className="text-[#1F2937]">Filter by Department</Label>
+              <Label className="text-foreground">Filter by Department</Label>
               <Select value={filterDepartment} onValueChange={setFilterDepartment}>
                 <SelectTrigger>
                   <SelectValue />
@@ -545,7 +545,7 @@ export default function StaffEnrollmentPage({
               </Select>
             </div>
             <div className="space-y-2">
-              <Label className="text-[#1F2937]">Filter by Status</Label>
+              <Label className="text-foreground">Filter by Status</Label>
               <Select value={filterStatus} onValueChange={setFilterStatus}>
                 <SelectTrigger>
                   <SelectValue />
@@ -563,56 +563,56 @@ export default function StaffEnrollmentPage({
       </Card>
 
       {/* Staff Table */}
-      <Card className="rounded-2xl border-2 border-[#e5e7eb]">
+      <Card className="rounded-2xl border-2 border-border">
         <CardHeader>
-          <CardTitle className="text-[#1F2937]">Enrolled Staff Members</CardTitle>
-          <CardDescription className="text-[#6b7280]">
+          <CardTitle className="text-foreground">Enrolled Staff Members</CardTitle>
+          <CardDescription className="text-muted-foreground">
             Showing {filteredStaff.length} of {staffMembers.length} staff members
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="rounded-xl border border-[#e5e7eb] overflow-hidden">
+          <div className="rounded-xl border border-border overflow-hidden">
             <Table>
               <TableHeader>
-                <TableRow className="bg-[#F5F7F8] hover:bg-[#F5F7F8]">
-                  <TableHead className="text-[#1F2937]">Staff Member</TableHead>
-                  <TableHead className="text-[#1F2937]">Employee ID</TableHead>
-                  <TableHead className="text-[#1F2937]">Department</TableHead>
-                  <TableHead className="text-[#1F2937]">Position</TableHead>
-                  <TableHead className="text-[#1F2937]">Role</TableHead>
-                  <TableHead className="text-[#1F2937]">Enrollment Date</TableHead>
-                  <TableHead className="text-[#1F2937]">Status</TableHead>
-                  <TableHead className="text-[#1F2937] text-right">Actions</TableHead>
+                <TableRow className="bg-muted hover:bg-muted">
+                  <TableHead className="text-foreground">Staff Member</TableHead>
+                  <TableHead className="text-foreground">Employee ID</TableHead>
+                  <TableHead className="text-foreground">Department</TableHead>
+                  <TableHead className="text-foreground">Position</TableHead>
+                  <TableHead className="text-foreground">Role</TableHead>
+                  <TableHead className="text-foreground">Enrollment Date</TableHead>
+                  <TableHead className="text-foreground">Status</TableHead>
+                  <TableHead className="text-foreground text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredStaff.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8 text-[#6b7280]">
+                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                       No staff members found
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredStaff.map((staff) => (
-                    <TableRow key={staff.id} className="hover:bg-[#F5F7F8]/50">
+                    <TableRow key={staff.id} className="hover:bg-muted/50">
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <Avatar className="w-10 h-10 border-2 border-[#e5e7eb]">
+                          <Avatar className="w-10 h-10 border-2 border-border">
                             <AvatarFallback className="bg-[#1F6E4A] text-white text-sm">
                               {getInitials(staff.firstName, staff.lastName)}
                             </AvatarFallback>
                           </Avatar>
                           <div>
-                            <p className="text-[#1F2937]">
+                            <p className="text-foreground">
                               {staff.firstName} {staff.lastName}
                             </p>
-                            <p className="text-sm text-[#6b7280]">{staff.email}</p>
+                            <p className="text-sm text-muted-foreground">{staff.email}</p>
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell className="text-[#1F2937]">{staff.employeeId}</TableCell>
-                      <TableCell className="text-[#6b7280]">{staff.department}</TableCell>
-                      <TableCell className="text-[#6b7280]">{staff.position}</TableCell>
+                      <TableCell className="text-foreground">{staff.employeeId}</TableCell>
+                      <TableCell className="text-muted-foreground">{staff.department}</TableCell>
+                      <TableCell className="text-muted-foreground">{staff.position}</TableCell>
                       <TableCell>
                         <Badge
                           variant="outline"
@@ -627,7 +627,7 @@ export default function StaffEnrollmentPage({
                           {staff.role}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-[#6b7280]">{staff.enrollmentDate}</TableCell>
+                      <TableCell className="text-muted-foreground">{staff.enrollmentDate}</TableCell>
                       <TableCell>
                         <Badge
                           className={

@@ -265,8 +265,8 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[#1F2937] mb-2">Staff Evaluation</h1>
-          <p className="text-[#6b7280]">
+          <h1 className="text-foreground mb-2">Staff Evaluation</h1>
+          <p className="text-muted-foreground">
             {isStaff ? "Nominate up to 2 people per award" : "Vote for this month's award winners"}
           </p>
         </div>
@@ -280,8 +280,8 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle className="text-[#1F2937]">Add New Award Category</DialogTitle>
-                <DialogDescription className="text-[#6b7280]">
+                <DialogTitle className="text-foreground">Add New Award Category</DialogTitle>
+                <DialogDescription className="text-muted-foreground">
                   Create a custom award category for evaluation
                 </DialogDescription>
               </DialogHeader>
@@ -294,7 +294,7 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
                     onChange={(e) =>
                       setNewCategory({ ...newCategory, title: e.target.value })
                     }
-                    className="bg-white"
+                    className="bg-card"
                   />
                 </div>
                 <div className="space-y-2">
@@ -305,7 +305,7 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
                     onChange={(e) =>
                       setNewCategory({ ...newCategory, description: e.target.value })
                     }
-                    className="bg-white"
+                    className="bg-card"
                   />
                 </div>
                 <div className="space-y-2">
@@ -316,7 +316,7 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
                     onChange={(e) =>
                       setNewCategory({ ...newCategory, criteria: e.target.value })
                     }
-                    className="bg-white min-h-[120px]"
+                    className="bg-card min-h-[120px]"
                   />
                 </div>
                 <Button
@@ -332,12 +332,12 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
       </div>
 
       {/* Progress Card */}
-      <Card className="bg-white shadow-sm border-l-4 border-l-[#1F6E4A]">
+      <Card className="bg-card shadow-sm border-l-4 border-l-[#1F6E4A]">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <p className="text-[#1F2937]">Voting Progress</p>
-              <p className="text-sm text-[#6b7280] mt-1">
+              <p className="text-foreground">Voting Progress</p>
+              <p className="text-sm text-muted-foreground mt-1">
                 {votedCount} of {totalCategories} awards voted
               </p>
             </div>
@@ -345,7 +345,7 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
               className={`${
                 votedCount === totalCategories
                   ? "bg-[#1F6E4A] text-white"
-                  : "bg-[#FFD400] text-[#1F2937]"
+                  : "bg-[#FFD400] text-gray-900"
               }`}
             >
               {votedCount === totalCategories ? "Complete" : "In Progress"}
@@ -364,8 +364,8 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
           exit={{ opacity: 0, x: -100 }}
           transition={{ duration: 0.3 }}
         >
-          <Card className="bg-white shadow-lg">
-            <CardHeader className="border-b border-[#e5e7eb]">
+          <Card className="bg-card shadow-lg">
+            <CardHeader className="border-b border-border">
               <div className="flex items-start gap-4">
                 <div
                   className="w-16 h-16 rounded-lg flex items-center justify-center flex-shrink-0"
@@ -375,17 +375,17 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-start justify-between mb-2">
-                    <CardTitle className="text-[#1F2937]">
+                    <CardTitle className="text-foreground">
                       {currentCategory.title}
                     </CardTitle>
                     <Badge
                       variant="outline"
-                      className="text-[#6b7280]"
+                      className="text-muted-foreground"
                     >
                       {currentIndex + 1} of {totalCategories}
                     </Badge>
                   </div>
-                  <CardDescription className="text-[#6b7280]">
+                  <CardDescription className="text-muted-foreground">
                     {currentCategory.description}
                   </CardDescription>
                 </div>
@@ -394,17 +394,17 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
 
             <CardContent className="p-6 space-y-6">
               {/* Criteria Section */}
-              <Card className="bg-[#f0fdf4] border border-[#1F6E4A]">
+              <Card className="bg-[#f0fdf4] dark:bg-muted border border-[#1F6E4A]">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2 mb-3">
                     <Info className="w-5 h-5 text-[#1F6E4A]" />
-                    <h4 className="text-[#1F2937]">Award Criteria</h4>
+                    <h4 className="text-foreground">Award Criteria</h4>
                   </div>
                   <ul className="space-y-2">
                     {currentCategory.criteria.map((criterion, index) => (
                       <li
                         key={index}
-                        className="flex items-start gap-2 text-sm text-[#6b7280]"
+                        className="flex items-start gap-2 text-sm text-muted-foreground"
                       >
                         <span className="text-[#1F6E4A] mt-0.5">•</span>
                         <span>{criterion}</span>
@@ -417,11 +417,11 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
               {/* Nominee Selection Section */}
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-[#1F2937]">
+                  <h4 className="text-foreground">
                     {isStaff ? "Your Nominees (Max 2)" : "Select Nominees"}
                   </h4>
                   {isStaff && (
-                    <Badge variant="outline" className="text-[#6b7280]">
+                    <Badge variant="outline" className="text-muted-foreground">
                       {selectedStaff.length} / 2
                     </Badge>
                   )}
@@ -431,7 +431,7 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
                 {selectedStaff.length > 0 && (
                   <div className="space-y-2 mb-4">
                     {selectedStaff.map((staff) => (
-                      <Card key={staff.id} className="border-2 border-[#1F6E4A] bg-[#f0fdf4] shadow-md">
+                      <Card key={staff.id} className="border-2 border-[#1F6E4A] bg-[#f0fdf4] dark:bg-muted shadow-md">
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
@@ -441,11 +441,11 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
                                 </AvatarFallback>
                               </Avatar>
                               <div>
-                                <p className="text-[#1F2937]">{staff.name}</p>
-                                <p className="text-xs text-[#6b7280]">
+                                <p className="text-foreground">{staff.name}</p>
+                                <p className="text-xs text-muted-foreground">
                                   {staff.id} • {staff.department}
                                 </p>
-                                <p className="text-xs text-[#6b7280]">{staff.role}</p>
+                                <p className="text-xs text-muted-foreground">{staff.role}</p>
                               </div>
                             </div>
                             <Button
@@ -465,7 +465,7 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
 
                 {/* Staff Dropdown Selector */}
                 <Select onValueChange={handleAddNominee}>
-                  <SelectTrigger className="w-full bg-white h-auto min-h-[3rem]">
+                  <SelectTrigger className="w-full bg-card h-auto min-h-[3rem]">
                     <SelectValue placeholder="Select a staff member to nominate..." />
                   </SelectTrigger>
                   <SelectContent className="max-h-[400px]">
@@ -478,7 +478,7 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
                             <SelectItem key={staff.id} value={staff.id}>
                               <div className="flex items-center gap-2 py-1">
                                 <span>{staff.name}</span>
-                                <span className="text-xs text-[#6b7280]">
+                                <span className="text-xs text-muted-foreground">
                                   ({staff.id} • {staff.role})
                                 </span>
                               </div>
@@ -489,7 +489,7 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
                   </SelectContent>
                 </Select>
 
-                <p className="text-xs text-[#6b7280] mt-2 flex items-start gap-1">
+                <p className="text-xs text-muted-foreground mt-2 flex items-start gap-1">
                   <Info className="w-3 h-3 mt-0.5 flex-shrink-0" />
                   <span>
                     {isStaff 
@@ -500,12 +500,12 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
               </div>
 
               {/* Navigation */}
-              <div className="flex items-center justify-between pt-4 border-t border-[#e5e7eb]">
+              <div className="flex items-center justify-between pt-4 border-t border-border">
                 <Button
                   onClick={handlePrevious}
                   disabled={currentIndex === 0}
                   variant="outline"
-                  className="text-[#1F6E4A] border-[#1F6E4A] hover:bg-[#f0fdf4]"
+                  className="text-[#1F6E4A] border-[#1F6E4A] hover:bg-muted"
                 >
                   <ChevronLeft className="w-4 h-4 mr-2" />
                   Previous
@@ -520,7 +520,7 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
                           ? "bg-[#1F6E4A]"
                           : votes[categories[index].id] && votes[categories[index].id].length > 0
                           ? "bg-[#FFD400]"
-                          : "bg-[#e5e7eb]"
+                          : "bg-muted-foreground/30"
                       }`}
                     />
                   ))}
@@ -546,11 +546,11 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <Card className="bg-gradient-to-br from-[#f0fdf4] to-white border-2 border-[#1F6E4A] shadow-lg">
+          <Card className="bg-gradient-to-br from-[#f0fdf4] dark:from-muted to-card border-2 border-[#1F6E4A] shadow-lg">
             <CardContent className="p-6 text-center">
               <Award className="w-12 h-12 text-[#FFD400] mx-auto mb-3" />
-              <h3 className="text-[#1F2937] mb-2">All Votes Complete!</h3>
-              <p className="text-[#6b7280] mb-4">
+              <h3 className="text-foreground mb-2">All Votes Complete!</h3>
+              <p className="text-muted-foreground mb-4">
                 You've voted in all {totalCategories} award categories. Your votes have been recorded.
               </p>
               <Button

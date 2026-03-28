@@ -144,25 +144,25 @@ export default function PerformanceReviewPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-[#1F2937] mb-2">Performance Reviews</h1>
-        <p className="text-[#6b7280]">
+        <h1 className="text-foreground mb-2">Performance Reviews</h1>
+        <p className="text-muted-foreground">
           Monitor and evaluate staff performance metrics
         </p>
       </div>
 
       {/* Filters */}
-      <Card className="bg-white shadow-sm">
+      <Card className="bg-card shadow-sm">
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="md:col-span-2 space-y-2">
               <Label>Search Staff</Label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6b7280]" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   placeholder="Search by name or ID..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 bg-white"
+                  className="pl-10 bg-card"
                 />
               </div>
             </div>
@@ -170,7 +170,7 @@ export default function PerformanceReviewPage() {
             <div className="space-y-2">
               <Label>Department</Label>
               <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
-                <SelectTrigger className="bg-white">
+                <SelectTrigger className="bg-card">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -186,7 +186,7 @@ export default function PerformanceReviewPage() {
             <div className="space-y-2">
               <Label>Period</Label>
               <Select value={monthFilter} onValueChange={setMonthFilter}>
-                <SelectTrigger className="bg-white">
+                <SelectTrigger className="bg-card">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -212,7 +212,7 @@ export default function PerformanceReviewPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
             >
-              <Card className="bg-white shadow-sm hover:shadow-md transition-shadow">
+              <Card className="bg-card shadow-sm hover:shadow-md transition-shadow">
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
@@ -222,10 +222,10 @@ export default function PerformanceReviewPage() {
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <CardTitle className="text-[#1F2937] text-lg">
+                        <CardTitle className="text-foreground text-lg">
                           {staff.name}
                         </CardTitle>
-                        <CardDescription className="text-[#6b7280]">
+                        <CardDescription className="text-muted-foreground">
                           {staff.staffId} • {staff.department}
                         </CardDescription>
                       </div>
@@ -244,43 +244,43 @@ export default function PerformanceReviewPage() {
                   <div className="space-y-3">
                     <div className="space-y-1">
                       <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center gap-2 text-[#6b7280]">
+                        <div className="flex items-center gap-2 text-muted-foreground">
                           <Calendar className="w-4 h-4" />
                           <span>Attendance Rate</span>
                         </div>
-                        <span className="text-[#1F2937]">{staff.attendance}%</span>
+                        <span className="text-foreground">{staff.attendance}%</span>
                       </div>
                       <Progress value={staff.attendance} />
                     </div>
 
                     <div className="space-y-1">
                       <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center gap-2 text-[#6b7280]">
+                        <div className="flex items-center gap-2 text-muted-foreground">
                           <MessageSquare className="w-4 h-4" />
                           <span>Chat Engagement</span>
                         </div>
-                        <span className="text-[#1F2937]">{staff.chatEngagement}%</span>
+                        <span className="text-foreground">{staff.chatEngagement}%</span>
                       </div>
                       <Progress value={staff.chatEngagement} />
                     </div>
 
                     <div className="space-y-1">
                       <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center gap-2 text-[#6b7280]">
+                        <div className="flex items-center gap-2 text-muted-foreground">
                           <Award className="w-4 h-4" />
                           <span>Votes Received</span>
                         </div>
-                        <span className="text-[#1F2937]">{staff.votesReceived} votes</span>
+                        <span className="text-foreground">{staff.votesReceived} votes</span>
                       </div>
                     </div>
 
                     <div className="space-y-1">
                       <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center gap-2 text-[#6b7280]">
+                        <div className="flex items-center gap-2 text-muted-foreground">
                           <TrendingUp className="w-4 h-4" />
                           <span>Peer Rating</span>
                         </div>
-                        <span className="text-[#1F2937]">
+                        <span className="text-foreground">
                           {staff.peerRating.toFixed(1)}/5.0
                         </span>
                       </div>
@@ -288,8 +288,8 @@ export default function PerformanceReviewPage() {
                     </div>
                   </div>
 
-                  <div className="pt-3 border-t border-[#e5e7eb] flex items-center justify-between">
-                    <span className="text-xs text-[#6b7280]">
+                  <div className="pt-3 border-t border-border flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">
                       Last review: {staff.lastReview}
                     </span>
                     <div className="flex gap-2">
@@ -298,7 +298,7 @@ export default function PerformanceReviewPage() {
                           <Button
                             variant="outline"
                             size="sm"
-                            className="text-[#1F6E4A] border-[#1F6E4A] hover:bg-[#f0fdf4]"
+                            className="text-[#1F6E4A] border-[#1F6E4A] hover:bg-muted"
                           >
                             <FileText className="w-4 h-4 mr-1" />
                             History
@@ -306,10 +306,10 @@ export default function PerformanceReviewPage() {
                         </DialogTrigger>
                         <DialogContent className="max-w-2xl">
                           <DialogHeader>
-                            <DialogTitle className="text-[#1F2937]">
+                            <DialogTitle className="text-foreground">
                               Review History - {staff.name}
                             </DialogTitle>
-                            <DialogDescription className="text-[#6b7280]">
+                            <DialogDescription className="text-muted-foreground">
                               Past performance reviews and feedback
                             </DialogDescription>
                           </DialogHeader>
@@ -334,12 +334,12 @@ export default function PerformanceReviewPage() {
                                 score: 85,
                               },
                             ].map((review, idx) => (
-                              <Card key={idx} className="bg-[#F5F7F8]">
+                              <Card key={idx} className="bg-muted">
                                 <CardContent className="p-4">
                                   <div className="flex items-start justify-between mb-2">
                                     <div>
-                                      <p className="text-[#1F2937]">{review.date}</p>
-                                      <p className="text-sm text-[#6b7280]">
+                                      <p className="text-foreground">{review.date}</p>
+                                      <p className="text-sm text-muted-foreground">
                                         By {review.reviewer}
                                       </p>
                                     </div>
@@ -347,7 +347,7 @@ export default function PerformanceReviewPage() {
                                       {review.score}%
                                     </Badge>
                                   </div>
-                                  <p className="text-sm text-[#6b7280]">{review.notes}</p>
+                                  <p className="text-sm text-muted-foreground">{review.notes}</p>
                                 </CardContent>
                               </Card>
                             ))}
@@ -370,10 +370,10 @@ export default function PerformanceReviewPage() {
                         </DialogTrigger>
                         <DialogContent>
                           <DialogHeader>
-                            <DialogTitle className="text-[#1F2937]">
+                            <DialogTitle className="text-foreground">
                               Add Performance Review
                             </DialogTitle>
-                            <DialogDescription className="text-[#6b7280]">
+                            <DialogDescription className="text-muted-foreground">
                               Record a new performance review for {staff.name}
                             </DialogDescription>
                           </DialogHeader>
@@ -384,7 +384,7 @@ export default function PerformanceReviewPage() {
                                 placeholder="Enter performance review notes..."
                                 value={reviewNotes}
                                 onChange={(e) => setReviewNotes(e.target.value)}
-                                className="bg-white min-h-[120px]"
+                                className="bg-card min-h-[120px]"
                               />
                             </div>
                             <div className="flex gap-2">

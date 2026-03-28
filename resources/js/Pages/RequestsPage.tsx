@@ -251,8 +251,8 @@ export default function RequestsPage({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[#1F2937] mb-2">Requests</h1>
-          <p className="text-[#6b7280]">
+          <h1 className="text-foreground mb-2">Requests</h1>
+          <p className="text-muted-foreground">
             Submit and track invoices, funds, and equipment requests
           </p>
         </div>
@@ -339,7 +339,7 @@ export default function RequestsPage({
                     placeholder={projectOptions[0] ?? "Enter project name"}
                   />
                   {projectOptions.length > 0 && (
-                    <p className="text-xs text-[#6b7280]">
+                    <p className="text-xs text-muted-foreground">
                       Existing projects: {projectOptions.slice(0, 3).join(", ")}
                     </p>
                   )}
@@ -365,7 +365,7 @@ export default function RequestsPage({
                     ))}
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-[#6b7280]">
+                <p className="text-xs text-muted-foreground">
                   Attachments and receipts are tracked on the request after approval.
                 </p>
               </div>
@@ -392,8 +392,8 @@ export default function RequestsPage({
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#6b7280] mb-1">Pending</p>
-                <p className="text-2xl text-[#1F2937]">{pendingRequests.length}</p>
+                <p className="text-sm text-muted-foreground mb-1">Pending</p>
+                <p className="text-2xl text-foreground">{pendingRequests.length}</p>
               </div>
               <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
                 <Clock className="w-6 h-6 text-yellow-600" />
@@ -405,8 +405,8 @@ export default function RequestsPage({
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#6b7280] mb-1">Approved</p>
-                <p className="text-2xl text-[#1F2937]">{approvedRequests.length}</p>
+                <p className="text-sm text-muted-foreground mb-1">Approved</p>
+                <p className="text-2xl text-foreground">{approvedRequests.length}</p>
               </div>
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                 <CheckCircle className="w-6 h-6 text-green-600" />
@@ -418,8 +418,8 @@ export default function RequestsPage({
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#6b7280] mb-1">Declined</p>
-                <p className="text-2xl text-[#1F2937]">{declinedRequests.length}</p>
+                <p className="text-sm text-muted-foreground mb-1">Declined</p>
+                <p className="text-2xl text-foreground">{declinedRequests.length}</p>
               </div>
               <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
                 <XCircle className="w-6 h-6 text-red-600" />
@@ -431,7 +431,7 @@ export default function RequestsPage({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-[#1F2937]">All Requests</CardTitle>
+          <CardTitle className="text-foreground">All Requests</CardTitle>
           <CardDescription>
             {isAdmin ? "Review team requests and update their status" : "Track the status of your submitted requests"}
           </CardDescription>
@@ -439,7 +439,7 @@ export default function RequestsPage({
         <CardContent>
           <div className="space-y-3">
             {requests.length === 0 && (
-              <div className="rounded-lg border border-dashed border-[#d1d5db] p-8 text-center text-sm text-[#6b7280]">
+              <div className="rounded-lg border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
                 No requests have been submitted yet.
               </div>
             )}
@@ -467,7 +467,7 @@ export default function RequestsPage({
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2 flex-wrap">
-                            <h3 className="text-[#1F2937]">{request.title}</h3>
+                            <h3 className="text-foreground">{request.title}</h3>
                             <Badge className={getStatusColor(request.status)}>
                               {getStatusIcon(request.status)}
                               <span className="ml-1 capitalize">{request.status}</span>
@@ -476,36 +476,36 @@ export default function RequestsPage({
                               <span className="capitalize">{request.type}</span>
                             </Badge>
                           </div>
-                          <p className="text-sm text-[#6b7280] mb-3">{request.description}</p>
+                          <p className="text-sm text-muted-foreground mb-3">{request.description}</p>
                           <div className="flex items-center gap-6 text-sm flex-wrap">
                             <div className="flex items-center gap-2">
-                              <DollarSign className="w-4 h-4 text-[#6b7280]" />
-                              <span className="text-[#1F2937]">
+                              <DollarSign className="w-4 h-4 text-muted-foreground" />
+                              <span className="text-foreground">
                                 {request.amount ? `$${request.amount.toLocaleString()}` : "N/A"}
                               </span>
                             </div>
                             <div className="flex items-center gap-2">
-                              <FileText className="w-4 h-4 text-[#6b7280]" />
-                              <span className="text-[#6b7280]">{request.project}</span>
+                              <FileText className="w-4 h-4 text-muted-foreground" />
+                              <span className="text-muted-foreground">{request.project}</span>
                             </div>
                             {isAdmin && request.requesterName && (
                               <div className="flex items-center gap-2">
-                                <User className="w-4 h-4 text-[#6b7280]" />
-                                <span className="text-[#6b7280]">
+                                <User className="w-4 h-4 text-muted-foreground" />
+                                <span className="text-muted-foreground">
                                   {request.requesterName}
                                 </span>
                               </div>
                             )}
                             <div className="flex items-center gap-2">
-                              <Paperclip className="w-4 h-4 text-[#6b7280]" />
-                              <span className="text-[#6b7280]">
+                              <Paperclip className="w-4 h-4 text-muted-foreground" />
+                              <span className="text-muted-foreground">
                                 {request.attachments.length} attachment{request.attachments.length !== 1 ? "s" : ""}
                               </span>
                             </div>
                             {request.receipts.length > 0 && (
                               <div className="flex items-center gap-2">
-                                <Receipt className="w-4 h-4 text-[#6b7280]" />
-                                <span className="text-[#6b7280]">
+                                <Receipt className="w-4 h-4 text-muted-foreground" />
+                                <span className="text-muted-foreground">
                                   {request.receipts.length} receipt{request.receipts.length !== 1 ? "s" : ""}
                                 </span>
                               </div>
@@ -567,56 +567,56 @@ export default function RequestsPage({
 
               <div className="space-y-6">
                 <div>
-                  <h4 className="text-sm mb-2 text-[#1F2937]">Description</h4>
-                  <p className="text-sm text-[#6b7280]">{selectedRequest.description}</p>
+                  <h4 className="text-sm mb-2 text-foreground">Description</h4>
+                  <p className="text-sm text-muted-foreground">{selectedRequest.description}</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <h4 className="text-sm mb-2 text-[#1F2937]">Amount</h4>
-                    <p className="text-sm text-[#6b7280]">
+                    <h4 className="text-sm mb-2 text-foreground">Amount</h4>
+                    <p className="text-sm text-muted-foreground">
                       {selectedRequest.amount
                         ? `$${selectedRequest.amount.toLocaleString()}`
                         : "N/A"}
                     </p>
                   </div>
                   <div>
-                    <h4 className="text-sm mb-2 text-[#1F2937]">Project</h4>
-                    <p className="text-sm text-[#6b7280]">{selectedRequest.project}</p>
+                    <h4 className="text-sm mb-2 text-foreground">Project</h4>
+                    <p className="text-sm text-muted-foreground">{selectedRequest.project}</p>
                   </div>
                 </div>
 
                 {isAdmin && selectedRequest.requesterName && (
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <h4 className="text-sm mb-2 text-[#1F2937]">Requester</h4>
-                      <p className="text-sm text-[#6b7280]">{selectedRequest.requesterName}</p>
+                      <h4 className="text-sm mb-2 text-foreground">Requester</h4>
+                      <p className="text-sm text-muted-foreground">{selectedRequest.requesterName}</p>
                     </div>
                     <div>
-                      <h4 className="text-sm mb-2 text-[#1F2937]">Employee ID</h4>
-                      <p className="text-sm text-[#6b7280]">{selectedRequest.requesterEmployeeId || "-"}</p>
+                      <h4 className="text-sm mb-2 text-foreground">Employee ID</h4>
+                      <p className="text-sm text-muted-foreground">{selectedRequest.requesterEmployeeId || "-"}</p>
                     </div>
                   </div>
                 )}
 
                 {selectedRequest.taggedPerson && (
                   <div>
-                    <h4 className="text-sm mb-2 text-[#1F2937]">Person Involved</h4>
+                    <h4 className="text-sm mb-2 text-foreground">Person Involved</h4>
                     <div className="flex items-center gap-2 p-3 bg-[#1F6E4A]/5 border border-[#1F6E4A]/20 rounded-lg">
                       <User className="w-4 h-4 text-[#1F6E4A]" />
-                      <span className="text-sm text-[#1F2937]">{selectedRequest.taggedPerson}</span>
+                      <span className="text-sm text-foreground">{selectedRequest.taggedPerson}</span>
                     </div>
                   </div>
                 )}
 
                 <div>
-                  <h4 className="text-sm mb-2 text-[#1F2937]">Activity</h4>
-                  <div className="grid grid-cols-2 gap-4 text-sm text-[#6b7280]">
+                  <h4 className="text-sm mb-2 text-foreground">Activity</h4>
+                  <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
                     <p>Created: {new Date(selectedRequest.createdAt).toLocaleString()}</p>
                     <p>Updated: {new Date(selectedRequest.updatedAt).toLocaleString()}</p>
                   </div>
                   {selectedRequest.reviewerName && (
-                    <p className="text-sm text-[#6b7280] mt-2">
+                    <p className="text-sm text-muted-foreground mt-2">
                       Reviewed by: {selectedRequest.reviewerName}
                     </p>
                   )}
@@ -624,16 +624,16 @@ export default function RequestsPage({
 
                 {selectedRequest.attachments.length > 0 && (
                   <div>
-                    <h4 className="text-sm mb-2 text-[#1F2937]">Attachments</h4>
+                    <h4 className="text-sm mb-2 text-foreground">Attachments</h4>
                     <div className="space-y-2">
                       {selectedRequest.attachments.map((file) => (
                         <div
                           key={file}
-                          className="flex items-center justify-between p-3 bg-[#F5F7F8] rounded-lg"
+                          className="flex items-center justify-between p-3 bg-muted rounded-lg"
                         >
                           <div className="flex items-center gap-2">
-                            <Paperclip className="w-4 h-4 text-[#6b7280]" />
-                            <span className="text-sm text-[#1F2937]">{file}</span>
+                            <Paperclip className="w-4 h-4 text-muted-foreground" />
+                            <span className="text-sm text-foreground">{file}</span>
                           </div>
                           <Button size="sm" variant="ghost">
                             <Download className="w-4 h-4" />
@@ -646,7 +646,7 @@ export default function RequestsPage({
 
                 {selectedRequest.receipts.length > 0 && (
                   <div>
-                    <h4 className="text-sm mb-2 text-[#1F2937]">Receipts</h4>
+                    <h4 className="text-sm mb-2 text-foreground">Receipts</h4>
                     <div className="space-y-2">
                       {selectedRequest.receipts.map((file) => (
                         <div
@@ -655,7 +655,7 @@ export default function RequestsPage({
                         >
                           <div className="flex items-center gap-2">
                             <Receipt className="w-4 h-4 text-green-600" />
-                            <span className="text-sm text-[#1F2937]">{file}</span>
+                            <span className="text-sm text-foreground">{file}</span>
                           </div>
                           <Button size="sm" variant="ghost">
                             <Download className="w-4 h-4" />
@@ -667,26 +667,26 @@ export default function RequestsPage({
                 )}
 
                 {selectedRequest.status === "approved" && (
-                  <div className="rounded-lg border border-dashed border-[#d1d5db] p-4 text-sm text-[#6b7280]">
+                  <div className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">
                     Receipt uploads are not enabled in this workflow yet. Approved requests are stored and can still be commented on.
                   </div>
                 )}
 
                 <div>
-                  <h4 className="text-sm mb-3 text-[#1F2937]">Comments</h4>
+                  <h4 className="text-sm mb-3 text-foreground">Comments</h4>
                   <div className="space-y-3 mb-4">
                     {selectedRequest.comments.length === 0 ? (
-                      <p className="text-sm text-[#6b7280] text-center py-4">No comments yet</p>
+                      <p className="text-sm text-muted-foreground text-center py-4">No comments yet</p>
                     ) : (
                       selectedRequest.comments.map((comment) => (
-                        <div key={comment.id} className="bg-[#F5F7F8] p-4 rounded-lg">
+                        <div key={comment.id} className="bg-muted p-4 rounded-lg">
                           <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm text-[#1F2937]">{comment.author}</span>
-                            <span className="text-xs text-[#6b7280]">
+                            <span className="text-sm text-foreground">{comment.author}</span>
+                            <span className="text-xs text-muted-foreground">
                               {new Date(comment.timestamp).toLocaleString()}
                             </span>
                           </div>
-                          <p className="text-sm text-[#6b7280]">{comment.content}</p>
+                          <p className="text-sm text-muted-foreground">{comment.content}</p>
                         </div>
                       ))
                     )}

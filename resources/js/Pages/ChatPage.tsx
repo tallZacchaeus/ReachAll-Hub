@@ -547,18 +547,18 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
   return (
     <div className="flex flex-col h-[calc(100vh-220px)] gap-4">
       <div className="flex-shrink-0">
-        <h1 className="text-[#1F2937] mb-1">Team Chat</h1>
-        <p className="text-[#6b7280] text-sm">
+        <h1 className="text-foreground mb-1">Team Chat</h1>
+        <p className="text-muted-foreground text-sm">
           {isAdmin ? "Access all team communications" : "Communicate with your team"}
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 flex-1 min-h-0">
         {/* Sidebar - Chat Groups & Direct Messages */}
-        <Card className="bg-white shadow-sm lg:col-span-1 h-full !flex flex-col min-h-0 overflow-hidden gap-0">
-          <CardHeader className="border-b border-[#e5e7eb] pb-3 flex-shrink-0">
+        <Card className="bg-card shadow-sm lg:col-span-1 h-full !flex flex-col min-h-0 overflow-hidden gap-0">
+          <CardHeader className="border-b border-border pb-3 flex-shrink-0">
             <Tabs value={chatType} onValueChange={(v) => setChatType(v as "channels" | "direct")} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-[#F5F7F8]">
+              <TabsList className="grid w-full grid-cols-2 bg-muted">
                 <TabsTrigger value="channels" className="text-xs">
                   <Users className="w-4 h-4 mr-1" />
                   Channels
@@ -576,9 +576,9 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
               {chatType === "channels" ? (
                 <>
                   {isAdmin && (
-                    <div className="p-3 border-b border-[#e5e7eb]">
+                    <div className="p-3 border-b border-border">
                       <Select value={selectedDepartmentFilter} onValueChange={setSelectedDepartmentFilter}>
-                        <SelectTrigger className="bg-white h-9 text-xs">
+                        <SelectTrigger className="bg-card h-9 text-xs">
                           <SelectValue placeholder="Filter by department" />
                         </SelectTrigger>
                         <SelectContent>
@@ -600,7 +600,7 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                         }}
                         className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors text-left ${selectedConversation === conv.id && chatType === "channels"
                           ? "bg-[#1F6E4A] text-white"
-                          : "hover:bg-[#F5F7F8] text-[#1F2937]"
+                          : "hover:bg-muted text-foreground"
                           }`}
                       >
                         <div className="relative">
@@ -617,17 +617,17 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <p className={`text-sm font-medium truncate ${selectedConversation === conv.id && chatType === "channels" ? "text-white" : "text-[#1F2937]"}`}>
+                            <p className={`text-sm font-medium truncate ${selectedConversation === conv.id && chatType === "channels" ? "text-white" : "text-foreground"}`}>
                               {conv.name}
                             </p>
                             {conv.is_read_only && (
-                              <Lock className={`w-3 h-3 ${selectedConversation === conv.id && chatType === "channels" ? "text-white" : "text-[#6b7280]"}`} />
+                              <Lock className={`w-3 h-3 ${selectedConversation === conv.id && chatType === "channels" ? "text-white" : "text-muted-foreground"}`} />
                             )}
                             {conv.is_global && (
-                              <Bell className={`w-3 h-3 ${selectedConversation === conv.id && chatType === "channels" ? "text-white" : "text-[#6b7280]"}`} />
+                              <Bell className={`w-3 h-3 ${selectedConversation === conv.id && chatType === "channels" ? "text-white" : "text-muted-foreground"}`} />
                             )}
                           </div>
-                          <p className={`text-xs truncate ${selectedConversation === conv.id && chatType === "channels" ? "text-white/80" : "text-[#6b7280]"}`}>
+                          <p className={`text-xs truncate ${selectedConversation === conv.id && chatType === "channels" ? "text-white/80" : "text-muted-foreground"}`}>
                             {conv.last_message}
                           </p>
                         </div>
@@ -637,9 +637,9 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                 </>
               ) : (
                 <>
-                  <div className="p-3 border-b border-[#e5e7eb]">
+                  <div className="p-3 border-b border-border">
                     <div className="relative">
-                      <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6b7280]" />
+                      <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                       <Input
                         placeholder="Search staff..."
                         value={searchTerm}
@@ -659,7 +659,7 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                         }}
                         className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors text-left ${selectedDM === dm.conversation_id
                           ? "bg-[#1F6E4A] text-white"
-                          : "hover:bg-[#F5F7F8] text-[#1F2937]"
+                          : "hover:bg-muted text-foreground"
                           }`}
                       >
                         <div className="relative">
@@ -679,14 +679,14 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between">
-                            <p className={`text-sm font-medium truncate ${selectedDM === dm.conversation_id ? "text-white" : "text-[#1F2937]"}`}>
+                            <p className={`text-sm font-medium truncate ${selectedDM === dm.conversation_id ? "text-white" : "text-foreground"}`}>
                               {dm.name}
                             </p>
-                            <p className={`text-xs ${selectedDM === dm.conversation_id ? "text-white/70" : "text-[#6b7280]"}`}>
+                            <p className={`text-xs ${selectedDM === dm.conversation_id ? "text-white/70" : "text-muted-foreground"}`}>
                               {dm.timestamp}
                             </p>
                           </div>
-                          <p className={`text-xs truncate ${selectedDM === dm.conversation_id ? "text-white/80" : "text-[#6b7280]"}`}>
+                          <p className={`text-xs truncate ${selectedDM === dm.conversation_id ? "text-white/80" : "text-muted-foreground"}`}>
                             {dm.department} • {dm.position}
                           </p>
                         </div>
@@ -700,9 +700,9 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
         </Card>
 
         {/* Main Chat Area */}
-        <Card className="bg-white shadow-sm lg:col-span-3 h-full !flex flex-col min-h-0 overflow-hidden gap-0">
+        <Card className="bg-card shadow-sm lg:col-span-3 h-full !flex flex-col min-h-0 overflow-hidden gap-0">
           {/* Chat Header */}
-          <CardHeader className="border-b border-[#e5e7eb] flex-shrink-0">
+          <CardHeader className="border-b border-border flex-shrink-0">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="relative">
@@ -718,7 +718,7 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                   )}
                 </div>
                 <div>
-                  <CardTitle className="text-[#1F2937] flex items-center gap-2">
+                  <CardTitle className="text-foreground flex items-center gap-2">
                     {chatType === "direct" && currentDMData
                       ? currentDMData.name
                       : currentConvData?.name || "Select a conversation"}
@@ -735,19 +735,19 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                     )}
                   </CardTitle>
                   {chatType === "direct" && currentDMData ? (
-                    <p className="text-xs text-[#6b7280]">{currentDMData.position} • {currentDMData.department}</p>
+                    <p className="text-xs text-muted-foreground">{currentDMData.position} • {currentDMData.department}</p>
                   ) : currentConvData?.department ? (
-                    <p className="text-xs text-[#6b7280]">{currentConvData.department} Department</p>
+                    <p className="text-xs text-muted-foreground">{currentConvData.department} Department</p>
                   ) : null}
                 </div>
               </div>
               {chatType === "direct" && currentDMData && (
-                <Badge variant="secondary" className="bg-[#F5F7F8] text-[#6b7280]">
+                <Badge variant="secondary" className="bg-muted text-muted-foreground">
                   {currentDMData.department}
                 </Badge>
               )}
               {isAdmin && chatType === "channels" && currentConvData?.department && (
-                <Badge variant="secondary" className="bg-[#F5F7F8] text-[#6b7280]">
+                <Badge variant="secondary" className="bg-muted text-muted-foreground">
                   {currentConvData.department}
                 </Badge>
               )}
@@ -758,11 +758,11 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
           <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-6 space-y-4">
             {loading ? (
               <div className="flex items-center justify-center h-full py-20">
-                <p className="text-[#6b7280]">Loading messages...</p>
+                <p className="text-muted-foreground">Loading messages...</p>
               </div>
             ) : messages.length === 0 ? (
               <div className="flex items-center justify-center h-full py-20">
-                <p className="text-[#6b7280]">No messages yet. Start the conversation!</p>
+                <p className="text-muted-foreground">No messages yet. Start the conversation!</p>
               </div>
             ) : (
               <>
@@ -773,16 +773,16 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                     className={`flex gap-3 group ${message.isOwn ? "flex-row-reverse" : ""}`}
                   >
                     <Avatar className="w-8 h-8 flex-shrink-0">
-                      <AvatarFallback className={message.isOwn ? "bg-[#FFD400] text-[#1F2937]" : "bg-[#1F6E4A] text-white"}>
+                      <AvatarFallback className={message.isOwn ? "bg-[#FFD400] text-foreground" : "bg-[#1F6E4A] text-white"}>
                         {message.avatar}
                       </AvatarFallback>
                     </Avatar>
                     <div className={`flex-1 ${message.isOwn ? "flex flex-col items-end" : ""}`}>
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-sm font-medium text-[#1F2937]">{message.sender}</span>
-                        <span className="text-xs text-[#6b7280]">{message.timestamp}</span>
+                        <span className="text-sm font-medium text-foreground">{message.sender}</span>
+                        <span className="text-xs text-muted-foreground">{message.timestamp}</span>
                         {message.is_edited && (
-                          <span className="text-xs text-[#6b7280] italic">(edited)</span>
+                          <span className="text-xs text-muted-foreground italic">(edited)</span>
                         )}
                         {message.isOwn && (
                           <MessageActions
@@ -794,7 +794,7 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                       <div
                         className={`inline-block p-3 rounded-2xl max-w-lg ${message.isOwn
                           ? "bg-[#1F6E4A] text-white rounded-tr-none"
-                          : "bg-[#F5F7F8] text-[#1F2937] rounded-tl-none"
+                          : "bg-muted text-foreground rounded-tl-none"
                           }`}
                       >
                         <p className="text-sm break-words whitespace-pre-wrap leading-relaxed">{message.content}</p>
@@ -831,9 +831,9 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
           </div>
 
           {/* Message Input */}
-          <div className="border-t border-[#e5e7eb] p-4 flex-shrink-0">
+          <div className="border-t border-border p-4 flex-shrink-0">
             {currentConvData?.is_read_only && !isAdmin ? (
-              <div className="flex items-center justify-center gap-2 text-sm text-[#6b7280] py-2">
+              <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground py-2">
                 <Lock className="w-4 h-4" />
                 <span>This is a read-only channel</span>
               </div>
@@ -870,7 +870,7 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                       }
                     }}
                     disabled={sending || isUploading || (!selectedConversation && !selectedDM)}
-                    className="bg-white flex-1"
+                    className="bg-card flex-1"
                   />
                   <Button
                     onClick={selectedFile ? handleFileUpload : handleSendMessage}

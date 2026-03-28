@@ -42,10 +42,10 @@ export function SearchInterface({
     };
 
     return (
-        <div className="border-b border-[#e5e7eb] bg-white">
+        <div className="border-b border-border bg-card">
             <div className="p-3 flex items-center gap-2">
                 <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6b7280]" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
                         placeholder="Search messages..."
                         value={query}
@@ -67,9 +67,9 @@ export function SearchInterface({
             </div>
 
             {query.length >= 2 && (
-                <div className="border-t border-[#e5e7eb]">
+                <div className="border-t border-border">
                     {isSearching ? (
-                        <div className="p-4 text-center text-[#6b7280] text-sm">
+                        <div className="p-4 text-center text-muted-foreground text-sm">
                             Searching...
                         </div>
                     ) : results.length > 0 ? (
@@ -79,17 +79,17 @@ export function SearchInterface({
                                     <button
                                         key={result.id}
                                         onClick={() => onResultClick(result.id)}
-                                        className="w-full text-left p-3 hover:bg-[#F5F7F8] rounded-lg transition-colors"
+                                        className="w-full text-left p-3 hover:bg-muted rounded-lg transition-colors"
                                     >
                                         <div className="flex items-center justify-between mb-1">
-                                            <span className="text-sm font-medium text-[#1F2937]">
+                                            <span className="text-sm font-medium text-foreground">
                                                 {result.sender}
                                             </span>
-                                            <span className="text-xs text-[#6b7280]">
+                                            <span className="text-xs text-muted-foreground">
                                                 {result.timestamp}
                                             </span>
                                         </div>
-                                        <p className="text-sm text-[#6b7280] line-clamp-2">
+                                        <p className="text-sm text-muted-foreground line-clamp-2">
                                             {result.content}
                                         </p>
                                     </button>
@@ -97,7 +97,7 @@ export function SearchInterface({
                             </div>
                         </ScrollArea>
                     ) : (
-                        <div className="p-4 text-center text-[#6b7280] text-sm">
+                        <div className="p-4 text-center text-muted-foreground text-sm">
                             No messages found
                         </div>
                     )}

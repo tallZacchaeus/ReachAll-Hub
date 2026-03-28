@@ -68,8 +68,8 @@ export default function ProfileRequests({ requests: initialRequests }: ProfileRe
         <div className="space-y-8">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-[#1F2937] mb-2">Profile Change Requests</h1>
-                    <p className="text-[#6b7280]">Approve or reject staff profile updates</p>
+                    <h1 className="text-foreground mb-2">Profile Change Requests</h1>
+                    <p className="text-muted-foreground">Approve or reject staff profile updates</p>
                 </div>
 
                 {initialRequests.length > 0 && (
@@ -89,13 +89,13 @@ export default function ProfileRequests({ requests: initialRequests }: ProfileRe
             )}
 
             {initialRequests.length === 0 ? (
-                <Card className="bg-white shadow-sm border-2 border-dashed border-[#e5e7eb] py-12">
+                <Card className="bg-card shadow-sm border-2 border-dashed border-border py-12">
                     <CardContent className="flex flex-col items-center justify-center text-center">
                         <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
                             <UserIcon className="w-8 h-8 text-gray-300" />
                         </div>
-                        <h3 className="text-[#1F2937] mb-1">No pending requests</h3>
-                        <p className="text-[#6b7280]">All profile updates have been processed.</p>
+                        <h3 className="text-foreground mb-1">No pending requests</h3>
+                        <p className="text-muted-foreground">All profile updates have been processed.</p>
                     </CardContent>
                 </Card>
             ) : (
@@ -109,8 +109,8 @@ export default function ProfileRequests({ requests: initialRequests }: ProfileRe
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                             >
-                                <Card className="bg-white shadow-sm border-2 border-[#e5e7eb] hover:shadow-md transition-all">
-                                    <CardHeader className="p-6 border-b border-[#e5e7eb]">
+                                <Card className="bg-card shadow-sm border-2 border-border hover:shadow-md transition-all">
+                                    <CardHeader className="p-6 border-b border-border">
                                         <div className="flex items-center gap-4">
                                             <Avatar className="w-12 h-12">
                                                 <AvatarFallback className="bg-[#1F6E4A] text-white">
@@ -118,12 +118,12 @@ export default function ProfileRequests({ requests: initialRequests }: ProfileRe
                                                 </AvatarFallback>
                                             </Avatar>
                                             <div className="flex-1">
-                                                <CardTitle className="text-[#1F2937] text-lg">{request.user.name}</CardTitle>
+                                                <CardTitle className="text-foreground text-lg">{request.user.name}</CardTitle>
                                                 <CardDescription className="flex items-center gap-2">
                                                     <Badge variant="outline" className="text-[10px] uppercase font-bold tracking-wider">
                                                         {request.user.employee_id}
                                                     </Badge>
-                                                    <span className="text-xs text-[#6b7280]">
+                                                    <span className="text-xs text-muted-foreground">
                                                         Requested {new Date(request.created_at).toLocaleDateString()}
                                                     </span>
                                                 </CardDescription>
@@ -131,19 +131,19 @@ export default function ProfileRequests({ requests: initialRequests }: ProfileRe
                                         </div>
                                     </CardHeader>
                                     <CardContent className="p-6 space-y-4">
-                                        <h4 className="text-xs font-bold uppercase tracking-wider text-[#6b7280]">Proposed Changes</h4>
+                                        <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Proposed Changes</h4>
                                         <div className="space-y-2">
                                             {Object.entries(request.changes).map(([key, value]) => (
-                                                <div key={key} className="flex items-center justify-between p-2 bg-[#F5F7F8] rounded-lg border border-[#e5e7eb]">
+                                                <div key={key} className="flex items-center justify-between p-2 bg-muted rounded-lg border border-border">
                                                     <div className="flex items-center gap-2">
-                                                        <div className="w-6 h-6 rounded bg-white flex items-center justify-center text-[#6b7280]">
+                                                        <div className="w-6 h-6 rounded bg-card flex items-center justify-center text-muted-foreground">
                                                             {key === 'email' && <Mail className="w-3 h-3" />}
                                                             {key === 'phone' && <Phone className="w-3 h-3" />}
                                                             {key === 'location' && <MapPin className="w-3 h-3" />}
                                                             {key === 'department' && <UserIcon className="w-3 h-3" />}
                                                             {key === 'name' && <UserIcon className="w-3 h-3" />}
                                                         </div>
-                                                        <span className="text-xs font-medium capitalize text-[#1F2937]">{key}</span>
+                                                        <span className="text-xs font-medium capitalize text-foreground">{key}</span>
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-xs text-[#1F6E4A] font-medium truncate max-w-[150px]">{String(value)}</span>
@@ -187,7 +187,7 @@ export default function ProfileRequests({ requests: initialRequests }: ProfileRe
             <Dialog open={!!selectedRequest} onOpenChange={(open) => !open && setSelectedRequest(null)}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle className="text-[#1F2937]">
+                        <DialogTitle className="text-foreground">
                             {actionType === "approve" ? "Approve Profile Update" : "Reject Profile Update"}
                         </DialogTitle>
                         <DialogDescription>
@@ -205,7 +205,7 @@ export default function ProfileRequests({ requests: initialRequests }: ProfileRe
                                 placeholder={actionType === "reject" ? "Enter rejection reason..." : "Enter notes for the staff member..."}
                                 value={data.review_notes}
                                 onChange={(e) => setData("review_notes", e.target.value)}
-                                className="bg-white min-h-[100px]"
+                                className="bg-card min-h-[100px]"
                             />
                         </div>
 

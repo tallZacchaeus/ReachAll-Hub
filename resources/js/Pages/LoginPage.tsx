@@ -29,7 +29,7 @@ export default function LoginPage({
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F5F7F8] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-2 text-center">
           <div className="mx-auto w-16 h-16 bg-[#1F6E4A] rounded-full flex items-center justify-center mb-2">
@@ -47,8 +47,8 @@ export default function LoginPage({
               />
             </svg>
           </div>
-          <CardTitle className="text-[#1F2937]">Welcome Back!</CardTitle>
-          <CardDescription className="text-[#6b7280]">
+          <CardTitle className="text-foreground">Welcome Back!</CardTitle>
+          <CardDescription className="text-muted-foreground">
             Sign in with your employee ID or email address
           </CardDescription>
         </CardHeader>
@@ -60,7 +60,7 @@ export default function LoginPage({
           )}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="userId" className="text-[#1F2937]">
+              <Label htmlFor="userId" className="text-foreground">
                 Employee ID or Email
               </Label>
               <Input
@@ -69,14 +69,14 @@ export default function LoginPage({
                 placeholder="Enter your employee ID or email"
                 value={data.employee_id}
                 onChange={(e) => setData("employee_id", e.target.value)}
-                className="bg-white border-gray-200"
+                className="bg-card border-border"
               />
               {errors.employee_id && (
                 <p className="text-sm text-red-500 mt-1">{errors.employee_id}</p>
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-[#1F2937]">
+              <Label htmlFor="password" className="text-foreground">
                 Password
               </Label>
               <Input
@@ -85,7 +85,7 @@ export default function LoginPage({
                 placeholder="Enter your password"
                 value={data.password}
                 onChange={(e) => setData("password", e.target.value)}
-                className="bg-white border-gray-200"
+                className="bg-card border-border"
               />
               {errors.password && (
                 <p className="text-sm text-red-500 mt-1">{errors.password}</p>
@@ -113,7 +113,7 @@ export default function LoginPage({
               )}
             </div>
           )}
-          <p className="text-center text-sm text-[#6b7280] mt-6">
+          <p className="text-center text-sm text-muted-foreground mt-6">
             Need help? Contact your administrator
           </p>
         </CardContent>

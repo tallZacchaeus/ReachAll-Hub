@@ -130,9 +130,9 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
       case "high":
         return { bg: "bg-red-100", text: "text-red-800", border: "border-red-200" };
       case "medium":
-        return { bg: "bg-[#fff9e6]", text: "text-[#1F2937]", border: "border-[#FFD400]" };
+        return { bg: "bg-[#fff9e6]", text: "text-foreground", border: "border-[#FFD400]" };
       default:
-        return { bg: "bg-[#f0fdf4]", text: "text-[#1F6E4A]", border: "border-[#1F6E4A]" };
+        return { bg: "bg-[#f0fdf4] dark:bg-muted", text: "text-[#1F6E4A]", border: "border-[#1F6E4A]" };
     }
   };
 
@@ -141,8 +141,8 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-[#1F2937] mb-2">Announcements & Broadcasts</h1>
-        <p className="text-[#6b7280]">
+        <h1 className="text-foreground mb-2">Announcements & Broadcasts</h1>
+        <p className="text-muted-foreground">
           {isAdmin
             ? "Send important updates and announcements to your team"
             : "View company announcements and updates"}
@@ -151,12 +151,12 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="bg-white shadow-sm">
+        <Card className="bg-card shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#6b7280] mb-1">Total Sent</p>
-                <p className="text-[#1F2937]" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
+                <p className="text-sm text-muted-foreground mb-1">Total Sent</p>
+                <p className="text-foreground" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
                   {announcements.length}
                 </p>
               </div>
@@ -164,12 +164,12 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-white shadow-sm">
+        <Card className="bg-card shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#6b7280] mb-1">This Week</p>
-                <p className="text-[#1F2937]" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
+                <p className="text-sm text-muted-foreground mb-1">This Week</p>
+                <p className="text-foreground" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
                   3
                 </p>
               </div>
@@ -177,12 +177,12 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-white shadow-sm">
+        <Card className="bg-card shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#6b7280] mb-1">Recipients</p>
-                <p className="text-[#1F2937]" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
+                <p className="text-sm text-muted-foreground mb-1">Recipients</p>
+                <p className="text-foreground" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
                   124
                 </p>
               </div>
@@ -190,12 +190,12 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-white shadow-sm">
+        <Card className="bg-card shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#6b7280] mb-1">Delivered</p>
-                <p className="text-[#1F2937]" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
+                <p className="text-sm text-muted-foreground mb-1">Delivered</p>
+                <p className="text-foreground" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
                   100%
                 </p>
               </div>
@@ -207,13 +207,13 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
 
       {/* Create Announcement (Admin only) */}
       {isAdmin && (
-        <Card className="bg-white shadow-sm border-2 border-[#1F6E4A]">
+        <Card className="bg-card shadow-sm border-2 border-[#1F6E4A]">
           <CardHeader>
             <div className="flex items-center gap-2">
               <Megaphone className="w-5 h-5 text-[#1F6E4A]" />
-              <CardTitle className="text-[#1F2937]">Create New Announcement</CardTitle>
+              <CardTitle className="text-foreground">Create New Announcement</CardTitle>
             </div>
-            <CardDescription className="text-[#6b7280]">
+            <CardDescription className="text-muted-foreground">
               Broadcast important updates to your team
             </CardDescription>
           </CardHeader>
@@ -223,7 +223,7 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
                 <div className="space-y-2">
                   <Label htmlFor="audience">Audience</Label>
                   <Select value={audience} onValueChange={setAudience}>
-                    <SelectTrigger className="bg-white">
+                    <SelectTrigger className="bg-card">
                       <SelectValue placeholder="Select audience" />
                     </SelectTrigger>
                     <SelectContent>
@@ -239,7 +239,7 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
                 <div className="space-y-2">
                   <Label htmlFor="priority">Priority</Label>
                   <Select value={priority} onValueChange={setPriority}>
-                    <SelectTrigger className="bg-white">
+                    <SelectTrigger className="bg-card">
                       <SelectValue placeholder="Select priority" />
                     </SelectTrigger>
                     <SelectContent>
@@ -258,7 +258,7 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
                   placeholder="Enter announcement title..."
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="bg-white"
+                  className="bg-card"
                 />
               </div>
 
@@ -269,7 +269,7 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
                   placeholder="Enter your announcement message..."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="bg-white min-h-[120px]"
+                  className="bg-card min-h-[120px]"
                 />
               </div>
 
@@ -286,10 +286,10 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
       )}
 
       {/* Announcements History */}
-      <Card className="bg-white shadow-sm">
+      <Card className="bg-card shadow-sm">
         <CardHeader>
-          <CardTitle className="text-[#1F2937]">Recent Announcements</CardTitle>
-          <CardDescription className="text-[#6b7280]">
+          <CardTitle className="text-foreground">Recent Announcements</CardTitle>
+          <CardDescription className="text-muted-foreground">
             Latest company updates and broadcasts
           </CardDescription>
         </CardHeader>
@@ -315,7 +315,7 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
                             ? "bg-red-100"
                             : announcement.priority === "medium"
                             ? "bg-[#fff9e6]"
-                            : "bg-[#f0fdf4]"
+                            : "bg-[#f0fdf4] dark:bg-muted"
                         }`}
                       >
                         <Megaphone
@@ -332,13 +332,13 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
                       </div>
                       <div className="flex-1">
                         <div className="flex items-start justify-between mb-2">
-                          <h3 className="text-[#1F2937]">{announcement.title}</h3>
+                          <h3 className="text-foreground">{announcement.title}</h3>
                           <Badge className={`${priorityColors.bg} ${priorityColors.text} hover:${priorityColors.bg}`}>
                             {announcement.priority} priority
                           </Badge>
                         </div>
-                        <p className="text-[#6b7280] text-sm mb-3">{announcement.message}</p>
-                        <div className="flex items-center gap-4 text-xs text-[#6b7280]">
+                        <p className="text-muted-foreground text-sm mb-3">{announcement.message}</p>
+                        <div className="flex items-center gap-4 text-xs text-muted-foreground">
                           <span>👤 {announcement.sentBy}</span>
                           <span>•</span>
                           <span>📅 {announcement.sentDate}</span>

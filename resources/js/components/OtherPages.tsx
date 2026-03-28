@@ -24,17 +24,17 @@ export function OtherPages({ page, userRole = "staff" }: OtherPagesProps) {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-[#1F2937] mb-2">{config.title}</h1>
-        <p className="text-[#6b7280]">{config.description}</p>
+        <h1 className="text-foreground mb-2">{config.title}</h1>
+        <p className="text-muted-foreground">{config.description}</p>
       </div>
 
-      <Card className="bg-white shadow-sm">
+      <Card className="bg-card shadow-sm">
         <CardHeader>
-          <CardTitle className="text-[#1F2937]">{config.title}</CardTitle>
+          <CardTitle className="text-foreground">{config.title}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="w-16 h-16 bg-[#f0fdf4] rounded-full flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-[#f0fdf4] dark:bg-muted rounded-full flex items-center justify-center mb-4">
               <svg
                 className="w-8 h-8 text-[#1F6E4A]"
                 fill="none"
@@ -49,8 +49,8 @@ export function OtherPages({ page, userRole = "staff" }: OtherPagesProps) {
                 />
               </svg>
             </div>
-            <h3 className="text-[#1F2937] mb-2">Coming Soon</h3>
-            <p className="text-[#6b7280] max-w-md">
+            <h3 className="text-foreground mb-2">Coming Soon</h3>
+            <p className="text-muted-foreground max-w-md">
               This feature is under development and will be available soon.
             </p>
           </div>

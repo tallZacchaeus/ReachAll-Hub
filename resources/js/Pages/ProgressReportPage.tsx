@@ -97,8 +97,8 @@ export default function ProgressReportPage({ userRole }: ProgressReportPageProps
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[#1F2937] mb-2">Staff Progress Report</h1>
-          <p className="text-[#6b7280]">
+          <h1 className="text-foreground mb-2">Staff Progress Report</h1>
+          <p className="text-muted-foreground">
             Track individual staff performance, attendance, and engagement over time
           </p>
         </div>
@@ -126,7 +126,7 @@ export default function ProgressReportPage({ userRole }: ProgressReportPageProps
         <CardContent className="pt-6">
           <div className="flex gap-4">
             <div className="flex-1">
-              <label className="text-sm text-[#6b7280] mb-2 block">Select Staff Member</label>
+              <label className="text-sm text-muted-foreground mb-2 block">Select Staff Member</label>
               <Select value={selectedStaff} onValueChange={setSelectedStaff}>
                 <SelectTrigger>
                   <SelectValue />
@@ -141,7 +141,7 @@ export default function ProgressReportPage({ userRole }: ProgressReportPageProps
               </Select>
             </div>
             <div className="w-48">
-              <label className="text-sm text-[#6b7280] mb-2 block">Year</label>
+              <label className="text-sm text-muted-foreground mb-2 block">Year</label>
               <Select value={selectedYear} onValueChange={setSelectedYear}>
                 <SelectTrigger>
                   <SelectValue />
@@ -171,8 +171,8 @@ export default function ProgressReportPage({ userRole }: ProgressReportPageProps
                     {selectedStaffData.name.split(' ').map(n => n[0]).join('')}
                   </div>
                   <div>
-                    <h3 className="text-[#1F2937] mb-1">{selectedStaffData.name}</h3>
-                    <p className="text-sm text-[#6b7280] mb-2">{selectedStaffData.position}</p>
+                    <h3 className="text-foreground mb-1">{selectedStaffData.name}</h3>
+                    <p className="text-sm text-muted-foreground mb-2">{selectedStaffData.position}</p>
                     <Badge className="bg-[#1F6E4A] text-white">
                       {selectedStaffData.department}
                     </Badge>
@@ -181,19 +181,19 @@ export default function ProgressReportPage({ userRole }: ProgressReportPageProps
                 <div className="grid grid-cols-4 gap-6">
                   <div className="text-center">
                     <p className="text-2xl text-[#1F6E4A] mb-1">{avgTasksCompleted}</p>
-                    <p className="text-xs text-[#6b7280]">Avg Tasks/Month</p>
+                    <p className="text-xs text-muted-foreground">Avg Tasks/Month</p>
                   </div>
                   <div className="text-center">
                     <p className="text-2xl text-[#1F6E4A] mb-1">{avgAttendance}%</p>
-                    <p className="text-xs text-[#6b7280]">Avg Attendance</p>
+                    <p className="text-xs text-muted-foreground">Avg Attendance</p>
                   </div>
                   <div className="text-center">
                     <p className="text-2xl text-[#1F6E4A] mb-1">{avgEngagement}%</p>
-                    <p className="text-xs text-[#6b7280]">Avg Engagement</p>
+                    <p className="text-xs text-muted-foreground">Avg Engagement</p>
                   </div>
                   <div className="text-center">
                     <p className="text-2xl text-[#1F6E4A] mb-1">{avgScore}%</p>
-                    <p className="text-xs text-[#6b7280]">Overall Score</p>
+                    <p className="text-xs text-muted-foreground">Overall Score</p>
                   </div>
                 </div>
               </div>
@@ -204,7 +204,7 @@ export default function ProgressReportPage({ userRole }: ProgressReportPageProps
 
       {/* Charts */}
       <Tabs defaultValue="annual" className="space-y-6">
-        <TabsList className="bg-white border border-[#e5e7eb]">
+        <TabsList className="bg-card border border-border">
           <TabsTrigger value="annual">Annual Progress</TabsTrigger>
           <TabsTrigger value="tasks">Tasks Completed</TabsTrigger>
           <TabsTrigger value="attendance">Attendance</TabsTrigger>
@@ -216,7 +216,7 @@ export default function ProgressReportPage({ userRole }: ProgressReportPageProps
         <TabsContent value="annual">
           <Card>
             <CardHeader>
-              <CardTitle className="text-[#1F2937]">Annual Performance Overview</CardTitle>
+              <CardTitle className="text-foreground">Annual Performance Overview</CardTitle>
               <CardDescription>
                 Combined view of tasks, attendance, engagement, and overall score
               </CardDescription>
@@ -257,7 +257,7 @@ export default function ProgressReportPage({ userRole }: ProgressReportPageProps
         <TabsContent value="tasks">
           <Card>
             <CardHeader>
-              <CardTitle className="text-[#1F2937]">Tasks Completed Over Time</CardTitle>
+              <CardTitle className="text-foreground">Tasks Completed Over Time</CardTitle>
               <CardDescription>Monthly task completion trend</CardDescription>
             </CardHeader>
             <CardContent>
@@ -279,7 +279,7 @@ export default function ProgressReportPage({ userRole }: ProgressReportPageProps
         <TabsContent value="attendance">
           <Card>
             <CardHeader>
-              <CardTitle className="text-[#1F2937]">Attendance Record</CardTitle>
+              <CardTitle className="text-foreground">Attendance Record</CardTitle>
               <CardDescription>Monthly attendance percentage</CardDescription>
             </CardHeader>
             <CardContent>
@@ -308,7 +308,7 @@ export default function ProgressReportPage({ userRole }: ProgressReportPageProps
         <TabsContent value="engagement">
           <Card>
             <CardHeader>
-              <CardTitle className="text-[#1F2937]">Engagement Score</CardTitle>
+              <CardTitle className="text-foreground">Engagement Score</CardTitle>
               <CardDescription>Team engagement and participation metrics</CardDescription>
             </CardHeader>
             <CardContent>
@@ -337,7 +337,7 @@ export default function ProgressReportPage({ userRole }: ProgressReportPageProps
         <TabsContent value="quarterly">
           <Card>
             <CardHeader>
-              <CardTitle className="text-[#1F2937]">Quarterly Performance Review</CardTitle>
+              <CardTitle className="text-foreground">Quarterly Performance Review</CardTitle>
               <CardDescription>Performance metrics by quarter</CardDescription>
             </CardHeader>
             <CardContent>

@@ -54,7 +54,7 @@ export function SmartInsights() {
               transition={{ delay: index * 0.1 }}
               className="flex-shrink-0"
             >
-              <Card className="bg-white shadow-sm hover:shadow-md transition-shadow w-80">
+              <Card className="bg-card shadow-sm hover:shadow-md transition-shadow w-80">
                 <CardContent className="p-4">
                   <div className="flex items-start gap-3">
                     <div
@@ -65,7 +65,7 @@ export function SmartInsights() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between mb-1">
-                        <h4 className="text-[#1F2937] text-sm leading-tight">
+                        <h4 className="text-foreground text-sm leading-tight">
                           {insight.title}
                         </h4>
                         {insight.trend !== "neutral" && (
@@ -76,7 +76,7 @@ export function SmartInsights() {
                           />
                         )}
                       </div>
-                      <p className="text-xs text-[#6b7280]">{insight.description}</p>
+                      <p className="text-xs text-muted-foreground">{insight.description}</p>
                     </div>
                   </div>
                 </CardContent>

@@ -170,14 +170,14 @@ export default function AttendancePage({
     <div className="space-y-6 pb-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[#1F2937] mb-2">My Attendance</h1>
-          <p className="text-sm text-[#6b7280]">
+          <h1 className="text-foreground mb-2">My Attendance</h1>
+          <p className="text-sm text-muted-foreground">
             View your attendance records and track your presence
           </p>
         </div>
         <div className="flex items-center gap-3">
           <Select value={selectedMonth} onValueChange={handleMonthChange}>
-            <SelectTrigger className="w-[180px] bg-white border-[#e5e7eb]">
+            <SelectTrigger className="w-[180px] bg-card border-border">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -200,7 +200,7 @@ export default function AttendancePage({
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <Card className="rounded-2xl border-2 border-[#e5e7eb] hover:shadow-lg transition-all">
+          <Card className="rounded-2xl border-2 border-border hover:shadow-lg transition-all">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center">
@@ -210,17 +210,17 @@ export default function AttendancePage({
                   {summary.attendanceRate}%
                 </Badge>
               </div>
-              <p className="text-sm text-[#6b7280] mb-1">Attendance Rate</p>
-              <p className="text-3xl text-[#1F2937]">
+              <p className="text-sm text-muted-foreground mb-1">Attendance Rate</p>
+              <p className="text-3xl text-foreground">
                 {summary.presentDays}/{summary.totalDays}
               </p>
-              <p className="text-xs text-[#6b7280] mt-1">days present</p>
+              <p className="text-xs text-muted-foreground mt-1">days present</p>
             </CardContent>
           </Card>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <Card className="rounded-2xl border-2 border-[#e5e7eb] hover:shadow-lg transition-all">
+          <Card className="rounded-2xl border-2 border-border hover:shadow-lg transition-all">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
@@ -228,15 +228,15 @@ export default function AttendancePage({
                 </div>
                 <TrendingUp className="w-5 h-5 text-blue-600" />
               </div>
-              <p className="text-sm text-[#6b7280] mb-1">Total Hours</p>
-              <p className="text-3xl text-[#1F2937]">{summary.totalHours.toFixed(1)}</p>
-              <p className="text-xs text-[#6b7280] mt-1">hours worked</p>
+              <p className="text-sm text-muted-foreground mb-1">Total Hours</p>
+              <p className="text-3xl text-foreground">{summary.totalHours.toFixed(1)}</p>
+              <p className="text-xs text-muted-foreground mt-1">hours worked</p>
             </CardContent>
           </Card>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <Card className="rounded-2xl border-2 border-[#e5e7eb] hover:shadow-lg transition-all">
+          <Card className="rounded-2xl border-2 border-border hover:shadow-lg transition-all">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center">
@@ -246,15 +246,15 @@ export default function AttendancePage({
                   {summary.lateDays}
                 </Badge>
               </div>
-              <p className="text-sm text-[#6b7280] mb-1">Late Arrivals</p>
-              <p className="text-3xl text-[#1F2937]">{summary.lateDays}</p>
-              <p className="text-xs text-[#6b7280] mt-1">times late</p>
+              <p className="text-sm text-muted-foreground mb-1">Late Arrivals</p>
+              <p className="text-3xl text-foreground">{summary.lateDays}</p>
+              <p className="text-xs text-muted-foreground mt-1">times late</p>
             </CardContent>
           </Card>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <Card className="rounded-2xl border-2 border-[#e5e7eb] hover:shadow-lg transition-all">
+          <Card className="rounded-2xl border-2 border-border hover:shadow-lg transition-all">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center">
@@ -264,21 +264,21 @@ export default function AttendancePage({
                   {summary.absentDays}
                 </Badge>
               </div>
-              <p className="text-sm text-[#6b7280] mb-1">Absent Days</p>
-              <p className="text-3xl text-[#1F2937]">{summary.absentDays}</p>
-              <p className="text-xs text-[#6b7280] mt-1">days absent</p>
+              <p className="text-sm text-muted-foreground mb-1">Absent Days</p>
+              <p className="text-3xl text-foreground">{summary.absentDays}</p>
+              <p className="text-xs text-muted-foreground mt-1">days absent</p>
             </CardContent>
           </Card>
         </motion.div>
       </div>
 
-      <Card className="rounded-2xl border-2 border-[#e5e7eb]">
+      <Card className="rounded-2xl border-2 border-border">
         <CardHeader>
-          <CardTitle className="text-[#1F2937] flex items-center gap-2">
+          <CardTitle className="text-foreground flex items-center gap-2">
             <CalendarDays className="w-6 h-6 text-[#1F6E4A]" />
             Attendance Records
           </CardTitle>
-          <CardDescription className="text-[#6b7280]">
+          <CardDescription className="text-muted-foreground">
             Detailed daily attendance log for{" "}
             {new Date(`${selectedMonth}-01`).toLocaleDateString("en-US", {
               month: "long",
@@ -289,7 +289,7 @@ export default function AttendancePage({
         <CardContent>
           <div className="space-y-3">
             {attendanceRecords.length === 0 && (
-              <div className="rounded-xl border border-dashed border-[#d1d5db] bg-white p-8 text-center text-sm text-[#6b7280]">
+              <div className="rounded-xl border border-dashed border-[#d1d5db] bg-card p-8 text-center text-sm text-muted-foreground">
                 No attendance records were found for this month.
               </div>
             )}
@@ -313,13 +313,13 @@ export default function AttendancePage({
                         <div className="flex items-center gap-3 flex-shrink-0 w-32">
                           <Calendar className={`w-5 h-5 ${config.color}`} />
                           <div>
-                            <p className="text-sm text-[#1F2937]">
+                            <p className="text-sm text-foreground">
                               {new Date(record.date).toLocaleDateString("en-US", {
                                 month: "short",
                                 day: "numeric",
                               })}
                             </p>
-                            <p className="text-xs text-[#6b7280]">
+                            <p className="text-xs text-muted-foreground">
                               {new Date(record.date).toLocaleDateString("en-US", {
                                 weekday: "short",
                               })}
@@ -328,18 +328,18 @@ export default function AttendancePage({
                         </div>
 
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs text-[#6b7280] mb-1">Clock In</p>
-                          <p className="text-sm text-[#1F2937]">{record.clockIn}</p>
+                          <p className="text-xs text-muted-foreground mb-1">Clock In</p>
+                          <p className="text-sm text-foreground">{record.clockIn}</p>
                         </div>
 
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs text-[#6b7280] mb-1">Clock Out</p>
-                          <p className="text-sm text-[#1F2937]">{record.clockOut}</p>
+                          <p className="text-xs text-muted-foreground mb-1">Clock Out</p>
+                          <p className="text-sm text-foreground">{record.clockOut}</p>
                         </div>
 
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs text-[#6b7280] mb-1">Total Hours</p>
-                          <p className="text-sm text-[#1F2937]">
+                          <p className="text-xs text-muted-foreground mb-1">Total Hours</p>
+                          <p className="text-sm text-foreground">
                             {record.totalHours > 0 ? `${record.totalHours.toFixed(2)} hrs` : "-"}
                           </p>
                         </div>
@@ -353,7 +353,7 @@ export default function AttendancePage({
 
                         {record.notes && (
                           <div className="flex-1 min-w-0 max-w-xs">
-                            <p className="text-xs text-[#6b7280] italic truncate">
+                            <p className="text-xs text-muted-foreground italic truncate">
                               {record.notes}
                             </p>
                           </div>
@@ -375,8 +375,8 @@ export default function AttendancePage({
               <CheckCircle2 className="w-6 h-6 text-white" />
             </div>
             <div className="flex-1">
-              <h3 className="text-[#1F2937] mb-2">Attendance Tips</h3>
-              <ul className="space-y-1 text-sm text-[#6b7280]">
+              <h3 className="text-foreground mb-2">Attendance Tips</h3>
+              <ul className="space-y-1 text-sm text-muted-foreground">
                 <li>• Clock in before 9:00 AM to avoid being marked as late</li>
                 <li>• Ensure you clock out daily to get accurate hour tracking</li>
                 <li>• If you&apos;re absent, notify HR and submit leave request in advance</li>

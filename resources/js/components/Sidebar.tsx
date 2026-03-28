@@ -76,15 +76,15 @@ export function Sidebar({ activePage, userRole }: SidebarProps) {
   const menuItems = getMenuItems();
 
   return (
-    <div className="w-64 h-screen bg-white border-r border-[#e5e7eb] flex flex-col fixed left-0 top-0">
-      <div className="p-6 border-b border-[#e5e7eb]">
+    <div className="w-64 h-screen bg-card border-r border-border flex flex-col fixed left-0 top-0">
+      <div className="p-6 border-b border-border">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-[#1F6E4A] rounded-lg flex items-center justify-center">
-            <span className="text-white">RA</span>
+            <span className="text-white font-semibold text-sm">RA</span>
           </div>
           <div>
-            <h2 className="text-[#1F2937]">Tech Staff</h2>
-            <p className="text-xs text-[#6b7280]">Evaluation Platform</p>
+            <p className="font-semibold text-foreground text-sm">Tech Staff</p>
+            <p className="text-xs text-muted-foreground">Evaluation Platform</p>
           </div>
         </div>
       </div>
@@ -99,22 +99,22 @@ export function Sidebar({ activePage, userRole }: SidebarProps) {
               href={item.href}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive
                 ? "bg-[#1F6E4A] text-white"
-                : "text-[#1F2937] hover:bg-[#f0fdf4]"
+                : "text-foreground hover:bg-muted"
                 }`}
             >
-              <Icon className="w-5 h-5" />
-              <span>{item.label}</span>
+              <Icon className="w-5 h-5 flex-shrink-0" />
+              <span className="text-sm">{item.label}</span>
             </Link>
           );
         })}
       </nav>
 
-      <div className="p-4 border-t border-[#e5e7eb]">
+      <div className="p-4 border-t border-border">
         <Link
           href="/logout"
           method="post"
           as="button"
-          className="w-full bg-white border border-[#e5e7eb] text-[#1F2937] hover:bg-red-50 hover:text-red-600 hover:border-red-200 inline-flex items-center justify-center rounded-md px-4 py-2"
+          className="w-full bg-background border border-border text-foreground hover:bg-red-50 dark:hover:bg-red-950 hover:text-red-600 hover:border-red-200 dark:hover:border-red-800 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm transition-colors"
         >
           <LogOut className="w-4 h-4 mr-2" />
           Logout

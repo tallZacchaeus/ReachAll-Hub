@@ -288,8 +288,8 @@ export default function ReportsPage({
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[#1F2937] mb-2">{mode.title}</h1>
-          <p className="text-[#6b7280]">
+          <h1 className="text-foreground mb-2">{mode.title}</h1>
+          <p className="text-muted-foreground">
             {mode.description}
           </p>
         </div>
@@ -304,7 +304,7 @@ export default function ReportsPage({
           <Button
             onClick={handleExportCSV}
             variant="outline"
-            className="text-[#1F6E4A] border-[#1F6E4A] hover:bg-[#f0fdf4]"
+            className="text-[#1F6E4A] border-[#1F6E4A] hover:bg-muted"
           >
             <FileSpreadsheet className="w-4 h-4 mr-2" />
             Export CSV
@@ -313,7 +313,7 @@ export default function ReportsPage({
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-[1.7fr_1fr] gap-6">
-        <Card className="bg-white shadow-sm">
+        <Card className="bg-card shadow-sm">
           <CardContent className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -322,7 +322,7 @@ export default function ReportsPage({
                   value={reportPeriod}
                   onValueChange={(value) => updateFilters({ period: value })}
                 >
-                  <SelectTrigger className="bg-white">
+                  <SelectTrigger className="bg-card">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -341,7 +341,7 @@ export default function ReportsPage({
                   value={reportType}
                   onValueChange={(value) => updateFilters({ type: value })}
                 >
-                  <SelectTrigger className="bg-white">
+                  <SelectTrigger className="bg-card">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -394,7 +394,7 @@ export default function ReportsPage({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.08 }}
             >
-              <Card className="bg-white shadow-sm">
+              <Card className="bg-card shadow-sm">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-3">
                     <div
@@ -403,13 +403,13 @@ export default function ReportsPage({
                     >
                       <Icon className="w-6 h-6" style={{ color: style.color }} />
                     </div>
-                    <Badge className="bg-[#f8fafc] text-[#475569] border border-[#e2e8f0]">
+                    <Badge className="bg-muted text-muted-foreground border border-border">
                       {summary.meta}
                     </Badge>
                   </div>
-                  <p className="text-sm text-[#6b7280] mb-1">{summary.label}</p>
+                  <p className="text-sm text-muted-foreground mb-1">{summary.label}</p>
                   <p
-                    className="text-[#1F2937]"
+                    className="text-foreground"
                     style={{ fontSize: "1.75rem", fontWeight: "600" }}
                   >
                     {summary.value}
@@ -423,10 +423,10 @@ export default function ReportsPage({
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {hasSection("taskTrend") && (
-          <Card className="bg-white shadow-sm">
+          <Card className="bg-card shadow-sm">
             <CardHeader>
-              <CardTitle className="text-[#1F2937]">Task Trend</CardTitle>
-              <CardDescription className="text-[#6b7280]">
+              <CardTitle className="text-foreground">Task Trend</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 Six-month view of created, completed, and overdue tasks
               </CardDescription>
             </CardHeader>
@@ -475,10 +475,10 @@ export default function ReportsPage({
         )}
 
         {hasSection("departmentDistribution") && (
-          <Card className="bg-white shadow-sm">
+          <Card className="bg-card shadow-sm">
             <CardHeader>
-              <CardTitle className="text-[#1F2937]">Department Distribution</CardTitle>
-              <CardDescription className="text-[#6b7280]">
+              <CardTitle className="text-foreground">Department Distribution</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 Active staff footprint by department
               </CardDescription>
             </CardHeader>
@@ -512,10 +512,10 @@ export default function ReportsPage({
         )}
 
         {hasSection("statusMix") && (
-          <Card className="bg-white shadow-sm">
+          <Card className="bg-card shadow-sm">
             <CardHeader>
-              <CardTitle className="text-[#1F2937]">Task Status Mix</CardTitle>
-              <CardDescription className="text-[#6b7280]">
+              <CardTitle className="text-foreground">Task Status Mix</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 Current task load by workflow state
               </CardDescription>
             </CardHeader>
@@ -540,23 +540,23 @@ export default function ReportsPage({
         )}
 
         {hasSection("topPerformers") && (
-          <Card className="bg-white shadow-sm">
+          <Card className="bg-card shadow-sm">
             <CardHeader>
-              <CardTitle className="text-[#1F2937]">Top Performers</CardTitle>
-              <CardDescription className="text-[#6b7280]">
+              <CardTitle className="text-foreground">Top Performers</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 Ranked by completed-task rate in the selected period
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {reportData.topPerformers.length === 0 && (
-                <div className="rounded-lg border border-dashed border-[#d1d5db] p-4 text-sm text-[#6b7280]">
+                <div className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">
                   No performer data available for this period.
                 </div>
               )}
               {reportData.topPerformers.map((performer) => (
                 <div
                   key={performer.rank}
-                  className="flex items-center justify-between p-3 bg-[#F5F7F8] rounded-lg"
+                  className="flex items-center justify-between p-3 bg-muted rounded-lg"
                 >
                   <div className="flex items-center gap-3">
                     <div
@@ -571,8 +571,8 @@ export default function ReportsPage({
                       <span className="text-sm font-semibold">{performer.rank}</span>
                     </div>
                     <div>
-                      <p className="text-[#1F2937]">{performer.name}</p>
-                      <p className="text-xs text-[#6b7280]">
+                      <p className="text-foreground">{performer.name}</p>
+                      <p className="text-xs text-muted-foreground">
                         {performer.staffId} • {performer.completedTasks}/
                         {performer.assignedTasks} completed
                       </p>
@@ -590,10 +590,10 @@ export default function ReportsPage({
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {hasSection("priorityBreakdown") && (
-          <Card className="bg-white shadow-sm">
+          <Card className="bg-card shadow-sm">
             <CardHeader>
-              <CardTitle className="text-[#1F2937]">Priority Breakdown</CardTitle>
-              <CardDescription className="text-[#6b7280]">
+              <CardTitle className="text-foreground">Priority Breakdown</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 Task volume grouped by priority level
               </CardDescription>
             </CardHeader>
@@ -601,16 +601,16 @@ export default function ReportsPage({
               {reportData.priorityDistribution.map((item) => (
                 <div
                   key={item.label}
-                  className="flex items-center justify-between p-3 bg-[#F5F7F8] rounded-lg"
+                  className="flex items-center justify-between p-3 bg-muted rounded-lg"
                 >
-                  <span className="text-[#1F2937]">{item.label}</span>
+                  <span className="text-foreground">{item.label}</span>
                   <Badge className="bg-[#e2f3ea] text-[#1F6E4A]">
                     {item.count} tasks
                   </Badge>
                 </div>
               ))}
               {reportData.priorityDistribution.length === 0 && (
-                <div className="rounded-lg border border-dashed border-[#d1d5db] p-4 text-sm text-[#6b7280]">
+                <div className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">
                   No priority data available for this period.
                 </div>
               )}
@@ -619,10 +619,10 @@ export default function ReportsPage({
         )}
 
         {hasSection("departmentWorkload") && (
-          <Card className="bg-white shadow-sm">
+          <Card className="bg-card shadow-sm">
             <CardHeader>
-              <CardTitle className="text-[#1F2937]">Department Workload</CardTitle>
-              <CardDescription className="text-[#6b7280]">
+              <CardTitle className="text-foreground">Department Workload</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 Departmental task volume and completion split
               </CardDescription>
             </CardHeader>
@@ -631,11 +631,11 @@ export default function ReportsPage({
                 {reportData.departmentWorkload.map((department) => (
                   <div
                     key={department.department}
-                    className="flex items-center justify-between p-3 bg-[#F5F7F8] rounded-lg"
+                    className="flex items-center justify-between p-3 bg-muted rounded-lg"
                   >
                     <div>
-                      <p className="text-[#1F2937]">{department.department}</p>
-                      <p className="text-xs text-[#6b7280]">
+                      <p className="text-foreground">{department.department}</p>
+                      <p className="text-xs text-muted-foreground">
                         {department.completed} completed • {department.open} open
                       </p>
                     </div>
@@ -645,7 +645,7 @@ export default function ReportsPage({
                   </div>
                 ))}
                 {reportData.departmentWorkload.length === 0 && (
-                  <div className="rounded-lg border border-dashed border-[#d1d5db] p-4 text-sm text-[#6b7280]">
+                  <div className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">
                     No departmental workload data available for this period.
                   </div>
                 )}

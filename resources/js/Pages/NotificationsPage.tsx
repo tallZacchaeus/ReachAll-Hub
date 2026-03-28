@@ -153,8 +153,8 @@ export default function NotificationsPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[#1F2937] mb-2">Notifications</h1>
-          <p className="text-[#6b7280]">Stay updated with all your alerts and announcements</p>
+          <h1 className="text-foreground mb-2">Notifications</h1>
+          <p className="text-muted-foreground">Stay updated with all your alerts and announcements</p>
         </div>
         {unreadCount > 0 && (
           <Button
@@ -169,12 +169,12 @@ export default function NotificationsPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="bg-white shadow-sm">
+        <Card className="bg-card shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#6b7280] mb-1">Total</p>
-                <p className="text-[#1F2937]" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
+                <p className="text-sm text-muted-foreground mb-1">Total</p>
+                <p className="text-foreground" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
                   {notifications.length}
                 </p>
               </div>
@@ -182,12 +182,12 @@ export default function NotificationsPage() {
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-white shadow-sm">
+        <Card className="bg-card shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#6b7280] mb-1">Unread</p>
-                <p className="text-[#1F2937]" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
+                <p className="text-sm text-muted-foreground mb-1">Unread</p>
+                <p className="text-foreground" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
                   {unreadCount}
                 </p>
               </div>
@@ -197,12 +197,12 @@ export default function NotificationsPage() {
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-white shadow-sm">
+        <Card className="bg-card shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#6b7280] mb-1">Badges</p>
-                <p className="text-[#1F2937]" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
+                <p className="text-sm text-muted-foreground mb-1">Badges</p>
+                <p className="text-foreground" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
                   {notifications.filter((n) => n.type === "badge").length}
                 </p>
               </div>
@@ -210,12 +210,12 @@ export default function NotificationsPage() {
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-white shadow-sm">
+        <Card className="bg-card shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#6b7280] mb-1">Today</p>
-                <p className="text-[#1F2937]" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
+                <p className="text-sm text-muted-foreground mb-1">Today</p>
+                <p className="text-foreground" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
                   {notifications.filter((n) => n.date === "Nov 5, 2025").length}
                 </p>
               </div>
@@ -227,7 +227,7 @@ export default function NotificationsPage() {
 
       {/* Filter Tabs */}
       <Tabs defaultValue="all" className="space-y-6">
-        <TabsList className="bg-white border border-[#e5e7eb]">
+        <TabsList className="bg-card border border-border">
           <TabsTrigger
             value="all"
             onClick={() => setFilter("all")}
@@ -271,7 +271,7 @@ export default function NotificationsPage() {
               >
                 <Card
                   className={`shadow-sm cursor-pointer transition-all ${
-                    notification.read ? "bg-white" : "bg-[#f0fdf4] border-l-4"
+                    notification.read ? "bg-card" : "bg-[#f0fdf4] dark:bg-muted border-l-4"
                   }`}
                   style={{ borderLeftColor: notification.read ? "transparent" : color }}
                 >
@@ -285,7 +285,7 @@ export default function NotificationsPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between mb-2">
-                          <h3 className="text-[#1F2937]">{notification.title}</h3>
+                          <h3 className="text-foreground">{notification.title}</h3>
                           <div className="flex items-center gap-2 flex-shrink-0 ml-4">
                             {!notification.read && (
                               <Badge className="bg-[#ef4444] text-white hover:bg-[#ef4444]">
@@ -296,7 +296,7 @@ export default function NotificationsPage() {
                               size="sm"
                               variant="ghost"
                               onClick={() => handleMarkAsRead(notification.id)}
-                              className="hover:bg-[#f0fdf4] p-1 h-auto"
+                              className="hover:bg-muted p-1 h-auto"
                             >
                               <Check className="w-4 h-4 text-[#1F6E4A]" />
                             </Button>
@@ -310,8 +310,8 @@ export default function NotificationsPage() {
                             </Button>
                           </div>
                         </div>
-                        <p className="text-[#6b7280] text-sm mb-2">{notification.message}</p>
-                        <div className="flex items-center gap-4 text-xs text-[#6b7280]">
+                        <p className="text-muted-foreground text-sm mb-2">{notification.message}</p>
+                        <div className="flex items-center gap-4 text-xs text-muted-foreground">
                           <span>{notification.time}</span>
                           <span>•</span>
                           <span>{notification.date}</span>
@@ -331,11 +331,11 @@ export default function NotificationsPage() {
 
         <TabsContent value="unread">
           {filteredNotifications.length === 0 ? (
-            <Card className="bg-white shadow-sm">
+            <Card className="bg-card shadow-sm">
               <CardContent className="p-12 text-center">
                 <Check className="w-16 h-16 text-[#1F6E4A] mx-auto mb-4" />
-                <h3 className="text-[#1F2937] mb-2">All Caught Up!</h3>
-                <p className="text-[#6b7280]">You have no unread notifications.</p>
+                <h3 className="text-foreground mb-2">All Caught Up!</h3>
+                <p className="text-muted-foreground">You have no unread notifications.</p>
               </CardContent>
             </Card>
           ) : (
@@ -347,7 +347,7 @@ export default function NotificationsPage() {
                 return (
                   <Card
                     key={notification.id}
-                    className="bg-[#f0fdf4] border-l-4 shadow-sm"
+                    className="bg-[#f0fdf4] dark:bg-muted border-l-4 shadow-sm"
                     style={{ borderLeftColor: color }}
                   >
                     <CardContent className="p-4">
@@ -359,8 +359,8 @@ export default function NotificationsPage() {
                           <Icon className="w-6 h-6" style={{ color }} />
                         </div>
                         <div className="flex-1">
-                          <h3 className="text-[#1F2937] mb-2">{notification.title}</h3>
-                          <p className="text-[#6b7280] text-sm">{notification.message}</p>
+                          <h3 className="text-foreground mb-2">{notification.title}</h3>
+                          <p className="text-muted-foreground text-sm">{notification.message}</p>
                         </div>
                         <Button
                           size="sm"
@@ -388,7 +388,7 @@ export default function NotificationsPage() {
                 return (
                   <Card
                     key={notification.id}
-                    className={`shadow-sm ${!notification.read ? "bg-[#f0fdf4]" : "bg-white"}`}
+                    className={`shadow-sm ${!notification.read ? "bg-[#f0fdf4] dark:bg-muted" : "bg-card"}`}
                   >
                     <CardContent className="p-4">
                       <div className="flex items-start gap-4">
@@ -399,9 +399,9 @@ export default function NotificationsPage() {
                           <Award className="w-6 h-6" style={{ color }} />
                         </div>
                         <div className="flex-1">
-                          <h3 className="text-[#1F2937] mb-2">{notification.title}</h3>
-                          <p className="text-[#6b7280] text-sm">{notification.message}</p>
-                          <p className="text-xs text-[#6b7280] mt-2">{notification.time}</p>
+                          <h3 className="text-foreground mb-2">{notification.title}</h3>
+                          <p className="text-muted-foreground text-sm">{notification.message}</p>
+                          <p className="text-xs text-muted-foreground mt-2">{notification.time}</p>
                         </div>
                       </div>
                     </CardContent>
@@ -421,7 +421,7 @@ export default function NotificationsPage() {
                 return (
                   <Card
                     key={notification.id}
-                    className={`shadow-sm ${!notification.read ? "bg-[#f0fdf4]" : "bg-white"}`}
+                    className={`shadow-sm ${!notification.read ? "bg-[#f0fdf4] dark:bg-muted" : "bg-card"}`}
                   >
                     <CardContent className="p-4">
                       <div className="flex items-start gap-4">
@@ -432,9 +432,9 @@ export default function NotificationsPage() {
                           <Info className="w-6 h-6" style={{ color }} />
                         </div>
                         <div className="flex-1">
-                          <h3 className="text-[#1F2937] mb-2">{notification.title}</h3>
-                          <p className="text-[#6b7280] text-sm">{notification.message}</p>
-                          <p className="text-xs text-[#6b7280] mt-2">{notification.time}</p>
+                          <h3 className="text-foreground mb-2">{notification.title}</h3>
+                          <p className="text-muted-foreground text-sm">{notification.message}</p>
+                          <p className="text-xs text-muted-foreground mt-2">{notification.time}</p>
                         </div>
                       </div>
                     </CardContent>

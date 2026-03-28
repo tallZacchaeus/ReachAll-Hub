@@ -42,21 +42,21 @@ export default function AttendanceUploadPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-[#1F2937] mb-2">Attendance Upload</h1>
-        <p className="text-[#6b7280]">Upload and manage employee attendance records</p>
+        <h1 className="text-foreground mb-2">Attendance Upload</h1>
+        <p className="text-muted-foreground">Upload and manage employee attendance records</p>
       </div>
 
       {/* Upload Section */}
-      <Card className="bg-white shadow-sm">
+      <Card className="bg-card shadow-sm">
         <CardHeader>
-          <CardTitle className="text-[#1F2937]">Upload Attendance File</CardTitle>
-          <CardDescription className="text-[#6b7280]">
+          <CardTitle className="text-foreground">Upload Attendance File</CardTitle>
+          <CardDescription className="text-muted-foreground">
             Upload CSV or Excel file. System will automatically link attendance to staff IDs.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            <div className="border-2 border-dashed border-[#e5e7eb] rounded-lg p-8 text-center hover:border-[#1F6E4A] transition-colors">
+            <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-[#1F6E4A] transition-colors">
               <input
                 type="file"
                 id="attendance-upload"
@@ -65,11 +65,11 @@ export default function AttendanceUploadPage() {
                 onChange={handleFileUpload}
               />
               <label htmlFor="attendance-upload" className="cursor-pointer">
-                <div className="w-16 h-16 bg-[#f0fdf4] rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-[#f0fdf4] dark:bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
                   <FileSpreadsheet className="w-8 h-8 text-[#1F6E4A]" />
                 </div>
-                <h3 className="text-[#1F2937] mb-2">Choose file to upload</h3>
-                <p className="text-sm text-[#6b7280] mb-4">
+                <h3 className="text-foreground mb-2">Choose file to upload</h3>
+                <p className="text-sm text-muted-foreground mb-4">
                   CSV or Excel format (Max 10MB)
                 </p>
                 <Button className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
@@ -80,11 +80,11 @@ export default function AttendanceUploadPage() {
             </div>
 
             {uploadStatus === "success" && (
-              <div className="flex items-center gap-3 p-4 bg-[#f0fdf4] border border-[#1F6E4A] rounded-lg">
+              <div className="flex items-center gap-3 p-4 bg-[#f0fdf4] dark:bg-muted border border-[#1F6E4A] rounded-lg">
                 <Check className="w-5 h-5 text-[#1F6E4A]" />
                 <div>
-                  <p className="text-[#1F2937]">File uploaded successfully</p>
-                  <p className="text-sm text-[#6b7280]">
+                  <p className="text-foreground">File uploaded successfully</p>
+                  <p className="text-sm text-muted-foreground">
                     {uploadedData.length} records processed and linked to staff IDs
                   </p>
                 </div>
@@ -104,10 +104,10 @@ export default function AttendanceUploadPage() {
             )}
 
             <div className="flex gap-3">
-              <Button className="bg-white border border-[#e5e7eb] text-[#1F2937] hover:bg-[#F5F7F8]">
+              <Button className="bg-card border border-border text-foreground hover:bg-muted">
                 Download Template
               </Button>
-              <Button className="bg-white border border-[#e5e7eb] text-[#1F2937] hover:bg-[#F5F7F8]">
+              <Button className="bg-card border border-border text-foreground hover:bg-muted">
                 View Upload History
               </Button>
             </div>
@@ -117,12 +117,12 @@ export default function AttendanceUploadPage() {
 
       {/* Uploaded Data Table */}
       {uploadedData.length > 0 && (
-        <Card className="bg-white shadow-sm">
+        <Card className="bg-card shadow-sm">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-[#1F2937]">Uploaded Records</CardTitle>
-                <CardDescription className="text-[#6b7280]">
+                <CardTitle className="text-foreground">Uploaded Records</CardTitle>
+                <CardDescription className="text-muted-foreground">
                   Latest attendance data
                 </CardDescription>
               </div>
@@ -135,30 +135,30 @@ export default function AttendanceUploadPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-[#1F2937]">Staff ID</TableHead>
-                  <TableHead className="text-[#1F2937]">Name</TableHead>
-                  <TableHead className="text-[#1F2937]">Days Present</TableHead>
-                  <TableHead className="text-[#1F2937]">Late Count</TableHead>
-                  <TableHead className="text-[#1F2937]">Month</TableHead>
-                  <TableHead className="text-[#1F2937]">Status</TableHead>
+                  <TableHead className="text-foreground">Staff ID</TableHead>
+                  <TableHead className="text-foreground">Name</TableHead>
+                  <TableHead className="text-foreground">Days Present</TableHead>
+                  <TableHead className="text-foreground">Late Count</TableHead>
+                  <TableHead className="text-foreground">Month</TableHead>
+                  <TableHead className="text-foreground">Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {uploadedData.map((record) => (
                   <TableRow key={record.staffId}>
-                    <TableCell className="text-[#6b7280]">{record.staffId}</TableCell>
-                    <TableCell className="text-[#1F2937]">{record.name}</TableCell>
-                    <TableCell className="text-[#1F2937]">{record.daysPresent}</TableCell>
-                    <TableCell className="text-[#1F2937]">{record.lateCount}</TableCell>
-                    <TableCell className="text-[#6b7280]">{record.month}</TableCell>
+                    <TableCell className="text-muted-foreground">{record.staffId}</TableCell>
+                    <TableCell className="text-foreground">{record.name}</TableCell>
+                    <TableCell className="text-foreground">{record.daysPresent}</TableCell>
+                    <TableCell className="text-foreground">{record.lateCount}</TableCell>
+                    <TableCell className="text-muted-foreground">{record.month}</TableCell>
                     <TableCell>
                       <Badge
                         className={
                           record.status === "Excellent"
                             ? "bg-[#1F6E4A] text-white"
                             : record.status === "Good"
-                            ? "bg-[#FFD400] text-[#1F2937]"
-                            : "bg-[#e5e7eb] text-[#6b7280]"
+                            ? "bg-[#FFD400] text-foreground"
+                            : "bg-muted text-muted-foreground"
                         }
                       >
                         {record.status}

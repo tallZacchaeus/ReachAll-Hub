@@ -18,7 +18,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
     return (
         <>
-            <div className="min-h-screen bg-[#F5F7F8]">
+            <div className="min-h-screen bg-background">
                 <Sidebar
                     activePage={activePage}
                     userRole={userRole}

@@ -817,7 +817,7 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
       case "good":
         return "bg-[#dbeafe] text-[#1e40af] border-[#93c5fd]";
       default:
-        return "bg-[#fef9c3] text-[#854d0e] border-[#fde68a]";
+        return "bg-[#fef9c3] dark:bg-yellow-950/30 text-[#854d0e] border-[#fde68a]";
     }
   };
 
@@ -831,14 +831,14 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[#1F2937] mb-2">Staff Overview</h1>
-          <p className="text-sm text-[#6b7280]">
+          <h1 className="text-foreground mb-2">Staff Overview</h1>
+          <p className="text-sm text-muted-foreground">
             Manage and monitor all staff members ({staffData.length} total)
           </p>
         </div>
         <Button
           variant="outline"
-          className="border-[#1F6E4A] text-[#1F6E4A] hover:bg-[#f0fdf4]"
+          className="border-[#1F6E4A] text-[#1F6E4A] hover:bg-muted"
         >
           <Download className="w-4 h-4 mr-2" />
           Export Report
@@ -848,11 +848,11 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
       {/* Department Stats */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {Object.entries(departmentStats).map(([dept, count]) => (
-          <Card key={dept} className="bg-white rounded-xl">
+          <Card key={dept} className="bg-card rounded-xl">
             <CardContent className="p-4">
-              <p className="text-xs text-[#6b7280] mb-1">{dept}</p>
-              <p className="text-2xl text-[#1F2937]">{count}</p>
-              <Badge className="bg-[#f0fdf4] text-[#1F6E4A] hover:bg-[#f0fdf4] mt-2 text-xs">
+              <p className="text-xs text-muted-foreground mb-1">{dept}</p>
+              <p className="text-2xl text-foreground">{count}</p>
+              <Badge className="bg-[#f0fdf4] dark:bg-muted text-[#1F6E4A] hover:bg-muted mt-2 text-xs">
                 staff members
               </Badge>
             </CardContent>
@@ -865,16 +865,16 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
         <CardContent className="p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
             <div className="lg:col-span-2 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6b7280]" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 placeholder="Search staff by name, ID, or email..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-white"
+                className="pl-10 bg-card"
               />
             </div>
             <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
-              <SelectTrigger className="bg-white">
+              <SelectTrigger className="bg-card">
                 <SelectValue placeholder="Department" />
               </SelectTrigger>
               <SelectContent>
@@ -893,7 +893,7 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
               </SelectContent>
             </Select>
             <Select value={performanceFilter} onValueChange={setPerformanceFilter}>
-              <SelectTrigger className="bg-white">
+              <SelectTrigger className="bg-card">
                 <SelectValue placeholder="Performance" />
               </SelectTrigger>
               <SelectContent>
@@ -911,7 +911,7 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
                 setRoleFilter("all");
                 setPerformanceFilter("all");
               }}
-              className="border-[#e5e7eb]"
+              className="border-border"
             >
               <Filter className="w-4 h-4 mr-2" />
               Reset
@@ -923,10 +923,10 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
       {/* Staff Table */}
       <Card className="rounded-2xl">
         <CardHeader>
-          <CardTitle className="text-[#1F2937]">
+          <CardTitle className="text-foreground">
             Staff Directory ({filteredStaff.length})
           </CardTitle>
-          <CardDescription className="text-[#6b7280]">
+          <CardDescription className="text-muted-foreground">
             Complete list of all staff members
           </CardDescription>
         </CardHeader>
@@ -955,16 +955,16 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="text-sm text-[#1F2937]">{staff.name}</p>
-                          <p className="text-xs text-[#6b7280]">{staff.staffId}</p>
+                          <p className="text-sm text-foreground">{staff.name}</p>
+                          <p className="text-xs text-muted-foreground">{staff.staffId}</p>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <p className="text-sm text-[#1F2937]">{staff.department}</p>
+                      <p className="text-sm text-foreground">{staff.department}</p>
                     </TableCell>
                     <TableCell>
-                      <p className="text-sm text-[#6b7280]">{staff.role}</p>
+                      <p className="text-sm text-muted-foreground">{staff.role}</p>
                     </TableCell>
                     <TableCell>
                       <Badge
@@ -984,11 +984,11 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
                             style={{ width: `${staff.attendance}%` }}
                           />
                         </div>
-                        <span className="text-xs text-[#6b7280]">{staff.attendance}%</span>
+                        <span className="text-xs text-muted-foreground">{staff.attendance}%</span>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <p className="text-sm text-[#6b7280]">{staff.joinDate}</p>
+                      <p className="text-sm text-muted-foreground">{staff.joinDate}</p>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
@@ -1033,10 +1033,10 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
         <Dialog open={!!selectedStaff && !viewAttendance} onOpenChange={() => setSelectedStaff(null)}>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle className="text-[#1F2937]">
+              <DialogTitle className="text-foreground">
                 {selectedStaff?.name} - {selectedStaff?.staffId}
               </DialogTitle>
-              <DialogDescription className="text-[#6b7280]">
+              <DialogDescription className="text-muted-foreground">
                 Staff member details and feedback
               </DialogDescription>
             </DialogHeader>
@@ -1046,20 +1046,20 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
                 {/* Staff Info */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-xs text-[#6b7280]">Email</Label>
-                    <p className="text-sm text-[#1F2937]">{selectedStaff.email}</p>
+                    <Label className="text-xs text-muted-foreground">Email</Label>
+                    <p className="text-sm text-foreground">{selectedStaff.email}</p>
                   </div>
                   <div>
-                    <Label className="text-xs text-[#6b7280]">Department</Label>
-                    <p className="text-sm text-[#1F2937]">{selectedStaff.department}</p>
+                    <Label className="text-xs text-muted-foreground">Department</Label>
+                    <p className="text-sm text-foreground">{selectedStaff.department}</p>
                   </div>
                   <div>
-                    <Label className="text-xs text-[#6b7280]">Role</Label>
-                    <p className="text-sm text-[#1F2937]">{selectedStaff.role}</p>
+                    <Label className="text-xs text-muted-foreground">Role</Label>
+                    <p className="text-sm text-foreground">{selectedStaff.role}</p>
                   </div>
                   <div>
-                    <Label className="text-xs text-[#6b7280]">Join Date</Label>
-                    <p className="text-sm text-[#1F2937]">{selectedStaff.joinDate}</p>
+                    <Label className="text-xs text-muted-foreground">Join Date</Label>
+                    <p className="text-sm text-foreground">{selectedStaff.joinDate}</p>
                   </div>
                 </div>
 
@@ -1070,7 +1070,7 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
                     placeholder="Enter feedback for this staff member..."
                     value={feedbackNote}
                     onChange={(e) => setFeedbackNote(e.target.value)}
-                    className="min-h-[120px] bg-white"
+                    className="min-h-[120px] bg-card"
                   />
                   <Button
                     onClick={handleSendFeedback}
@@ -1091,10 +1091,10 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
         <Dialog open={viewAttendance} onOpenChange={() => setViewAttendance(false)}>
           <DialogContent className="max-w-3xl">
             <DialogHeader>
-              <DialogTitle className="text-[#1F2937]">
+              <DialogTitle className="text-foreground">
                 {selectedStaff?.name} - Attendance Records
               </DialogTitle>
-              <DialogDescription className="text-[#6b7280]">
+              <DialogDescription className="text-muted-foreground">
                 Clock-in and clock-out times for November 2025
               </DialogDescription>
             </DialogHeader>
@@ -1116,9 +1116,9 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-4">
-                            <Calendar className="w-5 h-5 text-[#6b7280]" />
+                            <Calendar className="w-5 h-5 text-muted-foreground" />
                             <div>
-                              <p className="text-sm text-[#1F2937]">{record.date}</p>
+                              <p className="text-sm text-foreground">{record.date}</p>
                               <Badge
                                 variant="outline"
                                 className={`text-xs mt-1 ${
@@ -1135,15 +1135,15 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
                           </div>
                           <div className="flex items-center gap-6">
                             <div className="text-right">
-                              <p className="text-xs text-[#6b7280]">Clock In</p>
-                              <p className="text-sm text-[#1F2937] flex items-center gap-1">
+                              <p className="text-xs text-muted-foreground">Clock In</p>
+                              <p className="text-sm text-foreground flex items-center gap-1">
                                 <Clock className="w-3 h-3" />
                                 {record.clockIn}
                               </p>
                             </div>
                             <div className="text-right">
-                              <p className="text-xs text-[#6b7280]">Clock Out</p>
-                              <p className="text-sm text-[#1F2937] flex items-center gap-1">
+                              <p className="text-xs text-muted-foreground">Clock Out</p>
+                              <p className="text-sm text-foreground flex items-center gap-1">
                                 <Clock className="w-3 h-3" />
                                 {record.clockOut}
                               </p>

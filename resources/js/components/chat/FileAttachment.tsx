@@ -42,7 +42,7 @@ export function FileAttachmentButton({ onFileSelect, disabled = false }: FileAtt
                             size="sm"
                             onClick={() => fileInputRef.current?.click()}
                             disabled={disabled}
-                            className="text-[#6b7280] hover:text-[#1F2937] hover:bg-[#F5F7F8]"
+                            className="text-muted-foreground hover:text-foreground hover:bg-muted"
                         >
                             <Paperclip className="w-5 h-5" />
                         </Button>
@@ -80,11 +80,11 @@ export function FilePreview({ file, onRemove }: FilePreviewProps) {
     };
 
     return (
-        <div className="flex items-center gap-2 p-2 bg-[#F5F7F8] rounded-lg border border-[#e5e7eb]">
+        <div className="flex items-center gap-2 p-2 bg-muted rounded-lg border border-border">
             <div className="text-[#1F6E4A]">{getFileIcon()}</div>
             <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-[#1F2937] truncate">{file.name}</p>
-                <p className="text-xs text-[#6b7280]">{formatFileSize(file.size)}</p>
+                <p className="text-sm font-medium text-foreground truncate">{file.name}</p>
+                <p className="text-xs text-muted-foreground">{formatFileSize(file.size)}</p>
             </div>
             <Button
                 variant="ghost"

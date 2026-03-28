@@ -120,20 +120,20 @@ export default function DepartmentAnalyticsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-[#1F2937] mb-2">Department Analytics</h1>
-        <p className="text-[#6b7280]">
+        <h1 className="text-foreground mb-2">Department Analytics</h1>
+        <p className="text-muted-foreground">
           Detailed performance insights by department
         </p>
       </div>
 
       {/* Filters */}
-      <Card className="bg-white shadow-sm">
+      <Card className="bg-card shadow-sm">
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label>Department</Label>
               <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
-                <SelectTrigger className="bg-white">
+                <SelectTrigger className="bg-card">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -148,7 +148,7 @@ export default function DepartmentAnalyticsPage() {
             <div className="space-y-2">
               <Label>Date Range</Label>
               <Select value={dateRange} onValueChange={setDateRange}>
-                <SelectTrigger className="bg-white">
+                <SelectTrigger className="bg-card">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -163,7 +163,7 @@ export default function DepartmentAnalyticsPage() {
             <div className="space-y-2">
               <Label>Metric Type</Label>
               <Select value={metricType} onValueChange={setMetricType}>
-                <SelectTrigger className="bg-white">
+                <SelectTrigger className="bg-card">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -185,7 +185,7 @@ export default function DepartmentAnalyticsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Card className="bg-white shadow-sm">
+          <Card className="bg-card shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-start justify-between mb-3">
                 <div
@@ -194,10 +194,10 @@ export default function DepartmentAnalyticsPage() {
                 >
                   <Users className="w-6 h-6 text-[#1F6E4A]" />
                 </div>
-                <Building2 className="w-5 h-5 text-[#6b7280]" />
+                <Building2 className="w-5 h-5 text-muted-foreground" />
               </div>
-              <p className="text-sm text-[#6b7280] mb-1">Total Staff</p>
-              <p className="text-[#1F2937]" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
+              <p className="text-sm text-muted-foreground mb-1">Total Staff</p>
+              <p className="text-foreground" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
                 {currentDept.staffCount}
               </p>
             </CardContent>
@@ -209,7 +209,7 @@ export default function DepartmentAnalyticsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Card className="bg-white shadow-sm">
+          <Card className="bg-card shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-start justify-between mb-3">
                 <div
@@ -218,10 +218,10 @@ export default function DepartmentAnalyticsPage() {
                 >
                   <Calendar className="w-6 h-6 text-[#1F6E4A]" />
                 </div>
-                <Badge className="bg-[#f0fdf4] text-[#1F6E4A]">+2%</Badge>
+                <Badge className="bg-[#f0fdf4] dark:bg-muted text-[#1F6E4A]">+2%</Badge>
               </div>
-              <p className="text-sm text-[#6b7280] mb-1">Attendance Rate</p>
-              <p className="text-[#1F2937]" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
+              <p className="text-sm text-muted-foreground mb-1">Attendance Rate</p>
+              <p className="text-foreground" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
                 {currentDept.attendance}%
               </p>
             </CardContent>
@@ -233,7 +233,7 @@ export default function DepartmentAnalyticsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="bg-white shadow-sm">
+          <Card className="bg-card shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-start justify-between mb-3">
                 <div
@@ -242,10 +242,10 @@ export default function DepartmentAnalyticsPage() {
                 >
                   <TrendingUp className="w-6 h-6 text-[#FFD400]" />
                 </div>
-                <Badge className="bg-[#fff9e6] text-[#1F2937]">+5%</Badge>
+                <Badge className="bg-[#fff9e6] dark:bg-yellow-900/30 text-foreground">+5%</Badge>
               </div>
-              <p className="text-sm text-[#6b7280] mb-1">Engagement Score</p>
-              <p className="text-[#1F2937]" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
+              <p className="text-sm text-muted-foreground mb-1">Engagement Score</p>
+              <p className="text-foreground" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
                 {currentDept.engagement}%
               </p>
             </CardContent>
@@ -257,7 +257,7 @@ export default function DepartmentAnalyticsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <Card className="bg-white shadow-sm">
+          <Card className="bg-card shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-start justify-between mb-3">
                 <div
@@ -266,10 +266,10 @@ export default function DepartmentAnalyticsPage() {
                 >
                   <Award className="w-6 h-6 text-[#1F6E4A]" />
                 </div>
-                <Badge className="bg-[#f0fdf4] text-[#1F6E4A]">New</Badge>
+                <Badge className="bg-[#f0fdf4] dark:bg-muted text-[#1F6E4A]">New</Badge>
               </div>
-              <p className="text-sm text-[#6b7280] mb-1">Badges Earned</p>
-              <p className="text-[#1F2937]" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
+              <p className="text-sm text-muted-foreground mb-1">Badges Earned</p>
+              <p className="text-foreground" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
                 24
               </p>
             </CardContent>
@@ -280,10 +280,10 @@ export default function DepartmentAnalyticsPage() {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Attendance Trend */}
-        <Card className="bg-white shadow-sm">
+        <Card className="bg-card shadow-sm">
           <CardHeader>
-            <CardTitle className="text-[#1F2937]">Attendance Trend</CardTitle>
-            <CardDescription className="text-[#6b7280]">
+            <CardTitle className="text-foreground">Attendance Trend</CardTitle>
+            <CardDescription className="text-muted-foreground">
               Monthly attendance rate for {currentDept.name}
             </CardDescription>
           </CardHeader>
@@ -313,10 +313,10 @@ export default function DepartmentAnalyticsPage() {
         </Card>
 
         {/* Engagement Trend */}
-        <Card className="bg-white shadow-sm">
+        <Card className="bg-card shadow-sm">
           <CardHeader>
-            <CardTitle className="text-[#1F2937]">Engagement Trend</CardTitle>
-            <CardDescription className="text-[#6b7280]">
+            <CardTitle className="text-foreground">Engagement Trend</CardTitle>
+            <CardDescription className="text-muted-foreground">
               Team engagement score over time
             </CardDescription>
           </CardHeader>
@@ -346,10 +346,10 @@ export default function DepartmentAnalyticsPage() {
         </Card>
 
         {/* Performance Radar */}
-        <Card className="bg-white shadow-sm">
+        <Card className="bg-card shadow-sm">
           <CardHeader>
-            <CardTitle className="text-[#1F2937]">Performance Metrics</CardTitle>
-            <CardDescription className="text-[#6b7280]">
+            <CardTitle className="text-foreground">Performance Metrics</CardTitle>
+            <CardDescription className="text-muted-foreground">
               Multi-dimensional performance view
             </CardDescription>
           </CardHeader>
@@ -373,10 +373,10 @@ export default function DepartmentAnalyticsPage() {
         </Card>
 
         {/* Department Comparison */}
-        <Card className="bg-white shadow-sm">
+        <Card className="bg-card shadow-sm">
           <CardHeader>
-            <CardTitle className="text-[#1F2937]">Department Comparison</CardTitle>
-            <CardDescription className="text-[#6b7280]">
+            <CardTitle className="text-foreground">Department Comparison</CardTitle>
+            <CardDescription className="text-muted-foreground">
               Performance across all departments
             </CardDescription>
           </CardHeader>
@@ -406,19 +406,19 @@ export default function DepartmentAnalyticsPage() {
       </div>
 
       {/* Top Performers */}
-      <Card className="bg-white shadow-sm">
+      <Card className="bg-card shadow-sm">
         <CardHeader>
-          <CardTitle className="text-[#1F2937]">
+          <CardTitle className="text-foreground">
             Top 3 Performers - {currentDept.name}
           </CardTitle>
-          <CardDescription className="text-[#6b7280]">
+          <CardDescription className="text-muted-foreground">
             Highest performing team members this period
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {currentDept.topPerformers.map((performer, index) => (
-              <Card key={performer.id} className="bg-[#F5F7F8] shadow-sm">
+              <Card key={performer.id} className="bg-muted shadow-sm">
                 <CardContent className="p-6 text-center">
                   <div
                     className={`w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center text-white ${
@@ -436,8 +436,8 @@ export default function DepartmentAnalyticsPage() {
                       {performer.avatar}
                     </AvatarFallback>
                   </Avatar>
-                  <p className="text-[#1F2937] mb-1">{performer.name}</p>
-                  <p className="text-xs text-[#6b7280] mb-3">{performer.id}</p>
+                  <p className="text-foreground mb-1">{performer.name}</p>
+                  <p className="text-xs text-muted-foreground mb-3">{performer.id}</p>
                   <Badge className="bg-[#1F6E4A] text-white">
                     {performer.score}% Score
                   </Badge>

@@ -111,15 +111,15 @@ export function TopBar({ onViewAllNotifications, onViewProfile, userRole, isTeam
   };
 
   return (
-    <div className="h-16 bg-white border-b border-[#e5e7eb] flex items-center justify-end px-8 gap-3">
+    <div className="h-16 bg-card border-b border-border flex items-center justify-end px-8 gap-3">
       <Popover>
         <PopoverTrigger asChild>
           <Button
             variant="ghost"
             size="icon"
-            className="relative hover:bg-[#F5F7F8]"
+            className="relative"
           >
-            <Bell className="w-5 h-5 text-[#1F2937]" />
+            <Bell className="w-5 h-5 text-foreground" />
             {unreadCount > 0 && (
               <motion.div
                 initial={{ scale: 0 }}
@@ -132,9 +132,9 @@ export function TopBar({ onViewAllNotifications, onViewProfile, userRole, isTeam
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-96 p-0" align="end">
-          <div className="p-4 border-b border-[#e5e7eb]">
+          <div className="p-4 border-b border-border">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-[#1F2937]">Notifications</h3>
+              <h3 className="text-foreground">Notifications</h3>
               {unreadCount > 0 && (
                 <Badge className="bg-[#ef4444] text-white hover:bg-[#ef4444]">
                   {unreadCount} new
@@ -146,7 +146,7 @@ export function TopBar({ onViewAllNotifications, onViewProfile, userRole, isTeam
                 variant="ghost"
                 size="sm"
                 onClick={handleMarkAllAsRead}
-                className="text-[#1F6E4A] hover:bg-[#f0fdf4] p-0 h-auto"
+                className="text-[#1F6E4A] hover:bg-muted p-0 h-auto"
               >
                 Mark all as read
               </Button>
@@ -164,8 +164,8 @@ export function TopBar({ onViewAllNotifications, onViewProfile, userRole, isTeam
                     exit={{ opacity: 0, x: 20 }}
                     onClick={() => handleMarkAsRead(notification.id)}
                     className={`p-3 mb-2 rounded-lg cursor-pointer transition-colors ${notification.read
-                      ? "bg-white hover:bg-[#F5F7F8]"
-                      : "bg-[#f0fdf4] hover:bg-[#dcfce7] border-l-4"
+                      ? "bg-card hover:bg-muted"
+                      : "bg-[#f0fdf4] dark:bg-muted hover:bg-[#dcfce7] dark:bg-green-950/30 dark:hover:bg-muted/80 border-l-4"
                       }`}
                     style={{
                       borderLeftColor: notification.read ? "transparent" : getNotificationColor(notification.type),
@@ -179,13 +179,13 @@ export function TopBar({ onViewAllNotifications, onViewProfile, userRole, isTeam
                         }}
                       ></div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm text-[#1F2937] mb-1">
+                        <p className="text-sm text-foreground mb-1">
                           {notification.title}
                         </p>
-                        <p className="text-xs text-[#6b7280] mb-1">
+                        <p className="text-xs text-muted-foreground mb-1">
                           {notification.message}
                         </p>
-                        <p className="text-xs text-[#6b7280]">{notification.time}</p>
+                        <p className="text-xs text-muted-foreground">{notification.time}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -194,10 +194,10 @@ export function TopBar({ onViewAllNotifications, onViewProfile, userRole, isTeam
             </div>
           </ScrollArea>
 
-          <div className="p-3 border-t border-[#e5e7eb]">
+          <div className="p-3 border-t border-border">
             <Button
               variant="ghost"
-              className="w-full text-[#1F6E4A] hover:bg-[#f0fdf4]"
+              className="w-full text-[#1F6E4A] hover:bg-muted"
               onClick={() => router.visit('/notifications')}
             >
               View All Notifications
@@ -210,7 +210,7 @@ export function TopBar({ onViewAllNotifications, onViewProfile, userRole, isTeam
       <Button
         onClick={() => router.visit('/profile')}
         variant="ghost"
-        className="flex items-center gap-2 hover:bg-[#F5F7F8] px-3"
+        className="flex items-center gap-2 px-3"
       >
         <Avatar className="w-8 h-8">
           <AvatarFallback className="bg-[#1F6E4A] text-white text-sm">
@@ -219,15 +219,15 @@ export function TopBar({ onViewAllNotifications, onViewProfile, userRole, isTeam
         </Avatar>
         <div className="text-left hidden md:block">
           <div className="flex items-center gap-2">
-            <p className="text-sm text-[#1F2937]">{user.name}</p>
+            <p className="text-sm text-foreground">{user.name}</p>
             {isTeamLead && (
-              <Badge className="bg-[#FFD400] text-[#1F2937] hover:bg-[#FFD400] h-5 px-1.5">
+              <Badge className="bg-[#FFD400] text-foreground hover:bg-[#FFD400] h-5 px-1.5">
                 <Shield className="w-3 h-3 mr-1" />
                 <span className="text-xs">Team Lead</span>
               </Badge>
             )}
           </div>
-          <p className="text-xs text-[#6b7280]">{userRole || "Staff"}</p>
+          <p className="text-xs text-muted-foreground capitalize">{userRole || "Staff"}</p>
         </div>
       </Button>
     </div>

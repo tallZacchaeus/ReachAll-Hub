@@ -215,8 +215,8 @@ export default function ProjectsPage({ userRole }: ProjectsPageProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[#1F2937] mb-2">Projects & Departments</h1>
-          <p className="text-[#6b7280]">
+          <h1 className="text-foreground mb-2">Projects & Departments</h1>
+          <p className="text-muted-foreground">
             Manage projects, assign to departments and track progress
           </p>
         </div>
@@ -356,8 +356,8 @@ export default function ProjectsPage({ userRole }: ProjectsPageProps) {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#6b7280] mb-1">Total Projects</p>
-                <p className="text-2xl text-[#1F2937]">{totalProjects}</p>
+                <p className="text-sm text-muted-foreground mb-1">Total Projects</p>
+                <p className="text-2xl text-foreground">{totalProjects}</p>
               </div>
               <div className="w-12 h-12 bg-[#1F6E4A]/10 rounded-lg flex items-center justify-center">
                 <FolderKanban className="w-6 h-6 text-[#1F6E4A]" />
@@ -369,8 +369,8 @@ export default function ProjectsPage({ userRole }: ProjectsPageProps) {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#6b7280] mb-1">Active Projects</p>
-                <p className="text-2xl text-[#1F2937]">{activeProjects}</p>
+                <p className="text-sm text-muted-foreground mb-1">Active Projects</p>
+                <p className="text-2xl text-foreground">{activeProjects}</p>
               </div>
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                 <Clock className="w-6 h-6 text-blue-600" />
@@ -382,8 +382,8 @@ export default function ProjectsPage({ userRole }: ProjectsPageProps) {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#6b7280] mb-1">Completed</p>
-                <p className="text-2xl text-[#1F2937]">{completedProjects}</p>
+                <p className="text-sm text-muted-foreground mb-1">Completed</p>
+                <p className="text-2xl text-foreground">{completedProjects}</p>
               </div>
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                 <CheckCircle className="w-6 h-6 text-green-600" />
@@ -395,8 +395,8 @@ export default function ProjectsPage({ userRole }: ProjectsPageProps) {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#6b7280] mb-1">Avg Progress</p>
-                <p className="text-2xl text-[#1F2937]">{avgProgress}%</p>
+                <p className="text-sm text-muted-foreground mb-1">Avg Progress</p>
+                <p className="text-2xl text-foreground">{avgProgress}%</p>
               </div>
               <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
                 <TrendingUp className="w-6 h-6 text-yellow-600" />
@@ -410,7 +410,7 @@ export default function ProjectsPage({ userRole }: ProjectsPageProps) {
       <Card>
         <CardHeader>
           <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-            <TabsList className="bg-[#F5F7F8]">
+            <TabsList className="bg-muted">
               <TabsTrigger value="all">All Projects</TabsTrigger>
               <TabsTrigger value="planning">Planning</TabsTrigger>
               <TabsTrigger value="in-progress">In Progress</TabsTrigger>
@@ -435,7 +435,7 @@ export default function ProjectsPage({ userRole }: ProjectsPageProps) {
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
-                            <h3 className="text-[#1F2937]">{project.name}</h3>
+                            <h3 className="text-foreground">{project.name}</h3>
                             <Badge className={getStatusColor(project.status)}>
                               {getStatusIcon(project.status)}
                               <span className="ml-1 capitalize">{project.status.replace('-', ' ')}</span>
@@ -444,7 +444,7 @@ export default function ProjectsPage({ userRole }: ProjectsPageProps) {
                               <span className="capitalize">{project.priority} Priority</span>
                             </Badge>
                           </div>
-                          <p className="text-sm text-[#6b7280] mb-3">
+                          <p className="text-sm text-muted-foreground mb-3">
                             {project.description}
                           </p>
                         </div>
@@ -453,7 +453,7 @@ export default function ProjectsPage({ userRole }: ProjectsPageProps) {
                       {/* Project Details */}
                       <div className="grid grid-cols-4 gap-4 text-sm">
                         <div>
-                          <p className="text-[#6b7280] mb-1 flex items-center gap-1">
+                          <p className="text-muted-foreground mb-1 flex items-center gap-1">
                             <Building2 className="w-3 h-3" />
                             Departments
                           </p>
@@ -470,27 +470,27 @@ export default function ProjectsPage({ userRole }: ProjectsPageProps) {
                           </div>
                         </div>
                         <div>
-                          <p className="text-[#6b7280] mb-1 flex items-center gap-1">
+                          <p className="text-muted-foreground mb-1 flex items-center gap-1">
                             <Users className="w-3 h-3" />
                             Assigned To
                           </p>
-                          <p className="text-[#1F2937]">
+                          <p className="text-foreground">
                             {project.assignedTo.length} member{project.assignedTo.length > 1 ? 's' : ''}
                           </p>
                         </div>
                         <div>
-                          <p className="text-[#6b7280] mb-1 flex items-center gap-1">
+                          <p className="text-muted-foreground mb-1 flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
                             Timeline
                           </p>
-                          <p className="text-[#1F2937]">
+                          <p className="text-foreground">
                             {new Date(project.startDate).toLocaleDateString()} - {new Date(project.endDate).toLocaleDateString()}
                           </p>
                         </div>
                         {project.budget && (
                           <div>
-                            <p className="text-[#6b7280] mb-1">Budget</p>
-                            <p className="text-[#1F2937]">
+                            <p className="text-muted-foreground mb-1">Budget</p>
+                            <p className="text-foreground">
                               ${project.budget.toLocaleString()}
                             </p>
                           </div>
@@ -500,8 +500,8 @@ export default function ProjectsPage({ userRole }: ProjectsPageProps) {
                       {/* Progress Bar */}
                       <div>
                         <div className="flex items-center justify-between mb-2">
-                          <p className="text-sm text-[#6b7280]">Progress</p>
-                          <p className="text-sm text-[#1F2937]">{project.progress}%</p>
+                          <p className="text-sm text-muted-foreground">Progress</p>
+                          <p className="text-sm text-foreground">{project.progress}%</p>
                         </div>
                         <Progress value={project.progress} className="h-2" />
                       </div>
@@ -527,8 +527,8 @@ export default function ProjectsPage({ userRole }: ProjectsPageProps) {
 
             {filteredProjects.length === 0 && (
               <div className="text-center py-12">
-                <FolderKanban className="w-12 h-12 text-[#6b7280] mx-auto mb-3 opacity-50" />
-                <p className="text-[#6b7280]">No projects found in this category</p>
+                <FolderKanban className="w-12 h-12 text-muted-foreground mx-auto mb-3 opacity-50" />
+                <p className="text-muted-foreground">No projects found in this category</p>
               </div>
             )}
           </div>

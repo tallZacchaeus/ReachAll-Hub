@@ -19,7 +19,7 @@ export default function VerifyEmail({ status }: VerifyEmailProps) {
     const verificationLinkSent = status === "verification-link-sent";
 
     return (
-        <div className="min-h-screen bg-[#F5F7F8] flex items-center justify-center p-4">
+        <div className="min-h-screen bg-muted flex items-center justify-center p-4">
             <Head title="Email Verification" />
 
             <motion.div
@@ -31,11 +31,11 @@ export default function VerifyEmail({ status }: VerifyEmailProps) {
                     <div className="w-16 h-16 bg-[#1F6E4A] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                         <Mail className="w-8 h-8 text-white" />
                     </div>
-                    <h2 className="text-[#1F2937] text-2xl font-bold">Verify Your Email</h2>
-                    <p className="text-[#6b7280] mt-2">Just one more step to get started</p>
+                    <h2 className="text-foreground text-2xl font-bold">Verify Your Email</h2>
+                    <p className="text-muted-foreground mt-2">Just one more step to get started</p>
                 </div>
 
-                <Card className="bg-white shadow-xl border-2 border-[#e5e7eb]">
+                <Card className="bg-card shadow-xl border-2 border-border">
                     <CardHeader className="pb-2 text-center">
                         <CardTitle className="text-lg">Check your inbox</CardTitle>
                         <CardDescription>
@@ -79,7 +79,7 @@ export default function VerifyEmail({ status }: VerifyEmailProps) {
                     </CardContent>
                 </Card>
 
-                <p className="text-center text-xs text-[#6b7280] mt-8">
+                <p className="text-center text-xs text-muted-foreground mt-8">
                     If you didn't receive the email, we will gladly send you another.
                 </p>
             </motion.div>
