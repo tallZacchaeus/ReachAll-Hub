@@ -1,0 +1,178 @@
+import MainLayout from "@/layouts/MainLayout";
+import { useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Upload, FileSpreadsheet, Check, AlertCircle } from "lucide-react";
+
+export default function AttendanceUploadPage() {
+  const [uploadStatus, setUploadStatus] = useState<"idle" | "success" | "error">("idle");
+  const [uploadedData, setUploadedData] = useState<any[]>([]);
+
+  const mockUploadedData = [
+    { staffId: "EMP001", name: "Alice Johnson", daysPresent: 22, lateCount: 2, month: "October 2025", status: "Excellent" },
+    { staffId: "EMP002", name: "Bob Williams", daysPresent: 21, lateCount: 3, month: "October 2025", status: "Good" },
+    { staffId: "EMP003", name: "Carol Davis", daysPresent: 20, lateCount: 4, month: "October 2025", status: "Good" },
+    { staffId: "EMP004", name: "David Brown", daysPresent: 19, lateCount: 5, month: "October 2025", status: "Fair" },
+    { staffId: "EMP005", name: "Emma Wilson", daysPresent: 23, lateCount: 1, month: "October 2025", status: "Excellent" },
+    { staffId: "EMP006", name: "Frank Miller", daysPresent: 18, lateCount: 6, month: "October 2025", status: "Fair" },
+    { staffId: "EMP007", name: "Grace Lee", daysPresent: 22, lateCount: 2, month: "October 2025", status: "Excellent" },
+    { staffId: "EMP008", name: "Henry Taylor", daysPresent: 21, lateCount: 3, month: "October 2025", status: "Good" },
+  ];
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Simulate upload and processing
+      setTimeout(() => {
+        setUploadStatus("success");
+        setUploadedData(mockUploadedData);
+      }, 1000);
+    }
+  };
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-[#1F2937] mb-2">Attendance Upload</h1>
+        <p className="text-[#6b7280]">Upload and manage employee attendance records</p>
+      </div>
+
+      {/* Upload Section */}
+      <Card className="bg-white shadow-sm">
+        <CardHeader>
+          <CardTitle className="text-[#1F2937]">Upload Attendance File</CardTitle>
+          <CardDescription className="text-[#6b7280]">
+            Upload CSV or Excel file. System will automatically link attendance to staff IDs.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-6">
+            <div className="border-2 border-dashed border-[#e5e7eb] rounded-lg p-8 text-center hover:border-[#1F6E4A] transition-colors">
+              <input
+                type="file"
+                id="attendance-upload"
+                className="hidden"
+                accept=".csv,.xlsx,.xls"
+                onChange={handleFileUpload}
+              />
+              <label htmlFor="attendance-upload" className="cursor-pointer">
+                <div className="w-16 h-16 bg-[#f0fdf4] rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FileSpreadsheet className="w-8 h-8 text-[#1F6E4A]" />
+                </div>
+                <h3 className="text-[#1F2937] mb-2">Choose file to upload</h3>
+                <p className="text-sm text-[#6b7280] mb-4">
+                  CSV or Excel format (Max 10MB)
+                </p>
+                <Button className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+                  <Upload className="w-4 h-4 mr-2" />
+                  Select File
+                </Button>
+              </label>
+            </div>
+
+            {uploadStatus === "success" && (
+              <div className="flex items-center gap-3 p-4 bg-[#f0fdf4] border border-[#1F6E4A] rounded-lg">
+                <Check className="w-5 h-5 text-[#1F6E4A]" />
+                <div>
+                  <p className="text-[#1F2937]">File uploaded successfully</p>
+                  <p className="text-sm text-[#6b7280]">
+                    {uploadedData.length} records processed and linked to staff IDs
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {uploadStatus === "error" && (
+              <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <AlertCircle className="w-5 h-5 text-red-600" />
+                <div>
+                  <p className="text-red-900">Upload failed</p>
+                  <p className="text-sm text-red-600">
+                    Please check your file format and try again
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-3">
+              <Button className="bg-white border border-[#e5e7eb] text-[#1F2937] hover:bg-[#F5F7F8]">
+                Download Template
+              </Button>
+              <Button className="bg-white border border-[#e5e7eb] text-[#1F2937] hover:bg-[#F5F7F8]">
+                View Upload History
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Uploaded Data Table */}
+      {uploadedData.length > 0 && (
+        <Card className="bg-white shadow-sm">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-[#1F2937]">Uploaded Records</CardTitle>
+                <CardDescription className="text-[#6b7280]">
+                  Latest attendance data
+                </CardDescription>
+              </div>
+              <Button className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+                Save to Database
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-[#1F2937]">Staff ID</TableHead>
+                  <TableHead className="text-[#1F2937]">Name</TableHead>
+                  <TableHead className="text-[#1F2937]">Days Present</TableHead>
+                  <TableHead className="text-[#1F2937]">Late Count</TableHead>
+                  <TableHead className="text-[#1F2937]">Month</TableHead>
+                  <TableHead className="text-[#1F2937]">Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {uploadedData.map((record) => (
+                  <TableRow key={record.staffId}>
+                    <TableCell className="text-[#6b7280]">{record.staffId}</TableCell>
+                    <TableCell className="text-[#1F2937]">{record.name}</TableCell>
+                    <TableCell className="text-[#1F2937]">{record.daysPresent}</TableCell>
+                    <TableCell className="text-[#1F2937]">{record.lateCount}</TableCell>
+                    <TableCell className="text-[#6b7280]">{record.month}</TableCell>
+                    <TableCell>
+                      <Badge
+                        className={
+                          record.status === "Excellent"
+                            ? "bg-[#1F6E4A] text-white"
+                            : record.status === "Good"
+                            ? "bg-[#FFD400] text-[#1F2937]"
+                            : "bg-[#e5e7eb] text-[#6b7280]"
+                        }
+                      >
+                        {record.status}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}
+
+AttendanceUploadPage.layout = (page: React.ReactNode) => <MainLayout children={page} />;

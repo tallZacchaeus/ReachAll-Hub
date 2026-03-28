@@ -1,0 +1,54 @@
+import { useState } from "react";
+import { Smile } from "lucide-react";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+
+interface ReactionPickerProps {
+    onReactionSelect: (emoji: string) => void;
+}
+
+const COMMON_EMOJIS = [
+    "👍", "❤️", "😂", "😮", "😢", "🙏",
+    "🎉", "🔥", "👏", "✅", "💯", "🚀"
+];
+
+export function ReactionPicker({ onReactionSelect }: ReactionPickerProps) {
+    const [open, setOpen] = useState(false);
+
+    const handleSelect = (emoji: string) => {
+        onReactionSelect(emoji);
+        setOpen(false);
+    };
+
+    return (
+        <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 px-2 text-[#6b7280] hover:text-[#1F2937] hover:bg-[#F5F7F8]"
+                >
+                    <Smile className="w-4 h-4" />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-64 p-2" align="start">
+                <div className="grid grid-cols-6 gap-1">
+                    {COMMON_EMOJIS.map((emoji) => (
+                        <button
+                            key={emoji}
+                            onClick={() => handleSelect(emoji)}
+                            className="text-2xl p-2 hover:bg-[#F5F7F8] rounded transition-colors"
+                            title={emoji}
+                        >
+                            {emoji}
+                        </button>
+                    ))}
+                </div>
+            </PopoverContent>
+        </Popover>
+    );
+}
