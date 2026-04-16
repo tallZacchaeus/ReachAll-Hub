@@ -278,6 +278,9 @@ Route::middleware(['auth'])->group(function () {
         Route::put('admin/account-codes/{id}',     [\App\Http\Controllers\Finance\AccountCodeController::class, 'update'])->name('finance.account-codes.update');
         Route::post('admin/vendors',               [\App\Http\Controllers\Finance\VendorController::class, 'store'])->name('finance.vendors.store');
         Route::put('admin/vendors/{id}',           [\App\Http\Controllers\Finance\VendorController::class, 'update'])->name('finance.vendors.update');
+        // Archive (not delete) — financial entities are immutable; status='archived' instead of hard-delete
+        Route::delete('admin/vendors/{id}',        [\App\Http\Controllers\Finance\VendorController::class, 'destroy'])->name('finance.vendors.destroy');
+        Route::delete('admin/cost-centres/{id}',   [\App\Http\Controllers\Finance\CostCentreController::class, 'destroy'])->name('finance.cost-centres.destroy');
     });
 
     // Profile Change Requests
