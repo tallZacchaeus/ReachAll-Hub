@@ -1,4 +1,5 @@
 import { Form } from '@inertiajs/react';
+import { sanitizeHtml } from '@/lib/sanitize';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
 import { Check, Copy, ScanLine } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -80,8 +81,9 @@ function TwoFactorSetupStep({
                                 {qrCodeSvg ? (
                                     <div
                                         className="aspect-square w-full rounded-lg bg-card p-2 [&_svg]:size-full"
+                                        // qrCodeSvg is server-generated; sanitised as defence-in-depth
                                         dangerouslySetInnerHTML={{
-                                            __html: qrCodeSvg,
+                                            __html: sanitizeHtml(qrCodeSvg),
                                         }}
                                         style={{
                                             filter:
