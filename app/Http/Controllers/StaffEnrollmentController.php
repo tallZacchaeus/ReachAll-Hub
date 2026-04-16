@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ChecklistTemplate;
 use App\Models\User;
+use App\Models\UserChecklist;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -78,7 +80,7 @@ class StaffEnrollmentController extends Controller
 
         $validated = $request->validate($this->rules());
 
-        User::create([
+        $newUser = User::create([
             'employee_id' => $validated['employeeId'],
             'name' => trim($validated['firstName'].' '.$validated['lastName']),
             'email' => $validated['email'],
@@ -86,9 +88,23 @@ class StaffEnrollmentController extends Controller
             'position' => $validated['position'],
             'role' => $this->normalizeRole($validated['role']),
             'status' => 'active',
+            'employee_stage' => $validated['employee_stage'] ?? 'performer',
             'password' => Hash::make($validated['password']),
             'email_verified_at' => now(),
         ]);
+
+        // Auto-assign default checklists matching the user's stage
+        if ($newUser->employee_stage) {
+            $defaultTemplates = ChecklistTemplate::where('stage', $newUser->employee_stage)
+                ->where('is_default', true)
+                ->get();
+            foreach ($defaultTemplates as $template) {
+                UserChecklist::firstOrCreate([
+                    'user_id' => $newUser->id,
+                    'checklist_template_id' => $template->id,
+                ]);
+            }
+        }
 
         return back()->with('success', $validated['firstName'].' '.$validated['lastName'].' has been enrolled successfully.');
     }
@@ -106,6 +122,7 @@ class StaffEnrollmentController extends Controller
             'department' => $validated['department'],
             'position' => $validated['position'],
             'role' => $this->normalizeRole($validated['role']),
+            'employee_stage' => $validated['employee_stage'] ?? $user->employee_stage ?? 'performer',
         ]);
 
         return back()->with('success', 'Staff information updated successfully.');
@@ -158,6 +175,7 @@ class StaffEnrollmentController extends Controller
             'department' => ['required', 'string', Rule::in(self::DEPARTMENTS)],
             'position' => ['required', 'string', Rule::in(self::POSITIONS)],
             'role' => ['required', 'string', Rule::in(['Staff', 'Management', 'HR'])],
+            'employee_stage' => ['nullable', 'string', Rule::in(['joiner', 'performer', 'leader'])],
         ];
     }
 
@@ -179,6 +197,7 @@ class StaffEnrollmentController extends Controller
             'position' => $user->position ?? 'Unassigned',
             'enrollmentDate' => $user->created_at?->toDateString() ?? '',
             'status' => self::STATUS_LABELS[$user->status ?? 'active'] ?? 'Active',
+            'employeeStage' => $user->employee_stage ?? 'performer',
         ];
     }
 

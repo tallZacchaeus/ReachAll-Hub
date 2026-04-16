@@ -48,7 +48,7 @@ interface Comment {
 
 interface RequestItem {
   id: string;
-  type: "invoice" | "funds" | "equipment";
+  type: "invoice" | "funds" | "equipment" | "budget_approval" | "procurement";
   title: string;
   description: string;
   amount?: number | null;
@@ -63,6 +63,8 @@ interface RequestItem {
   requesterName?: string;
   requesterEmployeeId?: string;
   reviewerName?: string | null;
+  approvalChain?: string[] | null;
+  approvalLevel?: number;
 }
 
 interface RequestsPageProps {
@@ -75,7 +77,7 @@ interface RequestsPageProps {
 }
 
 type RequestFormData = {
-  type: RequestItem["type"];
+  type: "invoice" | "funds" | "equipment" | "budget_approval" | "procurement";
   title: string;
   description: string;
   amount: string;
@@ -234,12 +236,21 @@ export default function RequestsPage({
 
   const getTypeColor = (type: RequestItem["type"]) => {
     switch (type) {
-      case "funds":
-        return "bg-blue-100 text-blue-800";
-      case "equipment":
-        return "bg-purple-100 text-purple-800";
-      default:
-        return "bg-gray-100 text-gray-800";
+      case "funds":           return "bg-blue-100 text-blue-800";
+      case "equipment":       return "bg-purple-100 text-purple-800";
+      case "budget_approval": return "bg-orange-100 text-orange-800";
+      case "procurement":     return "bg-teal-100 text-teal-800";
+      default:                return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const getTypeLabel = (type: RequestItem["type"]) => {
+    switch (type) {
+      case "budget_approval": return "Budget Approval";
+      case "procurement":     return "Procurement";
+      case "funds":           return "Funds";
+      case "equipment":       return "Equipment";
+      default:                return "Invoice";
     }
   };
 
@@ -281,7 +292,7 @@ export default function RequestsPage({
             <form onSubmit={handleCreateRequest} className="space-y-4">
               <div className="space-y-2">
                 <Label>Request Type</Label>
-                <Select value={data.type} onValueChange={(value: RequestItem["type"]) => setData("type", value)}>
+                <Select value={data.type} onValueChange={(value) => setData("type", value as RequestFormData["type"])}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -289,8 +300,15 @@ export default function RequestsPage({
                     <SelectItem value="invoice">Invoice Payment</SelectItem>
                     <SelectItem value="funds">Funds Request</SelectItem>
                     <SelectItem value="equipment">Equipment Purchase</SelectItem>
+                    <SelectItem value="budget_approval">Budget Approval</SelectItem>
+                    <SelectItem value="procurement">Procurement</SelectItem>
                   </SelectContent>
                 </Select>
+                {(data.type === "budget_approval" || data.type === "procurement") && (
+                  <p className="text-xs text-amber-600">
+                    This request type requires multi-level approval (Management → HR → Superadmin).
+                  </p>
+                )}
                 {errors.type && <p className="text-xs text-red-600">{errors.type}</p>}
               </div>
 
@@ -473,9 +491,31 @@ export default function RequestsPage({
                               <span className="ml-1 capitalize">{request.status}</span>
                             </Badge>
                             <Badge className={getTypeColor(request.type)}>
-                              <span className="capitalize">{request.type}</span>
+                              <span className="capitalize">{getTypeLabel(request.type)}</span>
                             </Badge>
                           </div>
+                          {request.approvalChain && request.approvalChain.length > 0 && (
+                            <div className="flex items-center gap-1 mb-2 flex-wrap">
+                              {request.approvalChain.map((step, i) => (
+                                <span key={step} className="flex items-center gap-1">
+                                  <span
+                                    className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                                      i < (request.approvalLevel ?? 0)
+                                        ? "bg-green-100 text-green-700"
+                                        : i === (request.approvalLevel ?? 0) && request.status === "pending"
+                                        ? "bg-amber-100 text-amber-700 ring-1 ring-amber-400"
+                                        : "bg-muted text-muted-foreground"
+                                    }`}
+                                  >
+                                    {step}
+                                  </span>
+                                  {i < request.approvalChain!.length - 1 && (
+                                    <span className="text-muted-foreground text-xs">→</span>
+                                  )}
+                                </span>
+                              ))}
+                            </div>
+                          )}
                           <p className="text-sm text-muted-foreground mb-3">{request.description}</p>
                           <div className="flex items-center gap-6 text-sm flex-wrap">
                             <div className="flex items-center gap-2">

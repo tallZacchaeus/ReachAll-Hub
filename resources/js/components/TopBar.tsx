@@ -1,15 +1,22 @@
-import { useState } from "react";
-import { Bell, User, Shield } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { Bell, User, Shield, Search } from "lucide-react";
 import { usePage } from "@inertiajs/react";
 import { SharedData } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion, AnimatePresence } from "motion/react";
 import { router } from "@inertiajs/react";
@@ -34,7 +41,9 @@ export function TopBar({ onViewAllNotifications, onViewProfile, userRole, isTeam
   const { auth } = usePage<SharedData>().props;
   const user = auth.user;
 
-  // Generate initials from user name
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const getInitials = (name: string) => {
     return name
       .split(' ')
@@ -43,6 +52,30 @@ export function TopBar({ onViewAllNotifications, onViewProfile, userRole, isTeam
       .toUpperCase()
       .slice(0, 2);
   };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim().length >= 2) {
+      setSearchOpen(false);
+      router.visit("/search", { data: { q: searchQuery.trim() } });
+      setSearchQuery("");
+    }
+  };
+
+  // Cmd+K / Ctrl+K shortcut
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+      if (e.key === "Escape") {
+        setSearchOpen(false);
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, []);
 
   const [notifications, setNotifications] = useState<Notification[]>([
     {
@@ -112,6 +145,50 @@ export function TopBar({ onViewAllNotifications, onViewProfile, userRole, isTeam
 
   return (
     <div className="h-16 bg-card border-b border-border flex items-center justify-end px-8 gap-3">
+      {/* Search */}
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        onClick={() => setSearchOpen(true)}
+        title="Search (⌘K)"
+      >
+        <Search className="w-5 h-5 text-foreground" />
+      </Button>
+
+      <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
+        <DialogContent className="max-w-lg p-0 overflow-hidden">
+          <form onSubmit={handleSearchSubmit}>
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
+              <Search className="w-4 h-4 text-muted-foreground shrink-0" />
+              <input
+                autoFocus
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search people, content, FAQs, courses…"
+                className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
+              />
+              <kbd className="text-xs text-muted-foreground border border-border rounded px-1.5 py-0.5 shrink-0">ESC</kbd>
+            </div>
+            {searchQuery.trim().length >= 2 && (
+              <div className="px-4 py-3">
+                <button
+                  type="submit"
+                  className="w-full text-left text-sm text-[#1F6E4A] hover:underline"
+                >
+                  Search for "{searchQuery.trim()}" →
+                </button>
+              </div>
+            )}
+            {searchQuery.trim().length === 0 && (
+              <div className="px-4 py-6 text-center text-sm text-muted-foreground">
+                Start typing to search across all content
+              </div>
+            )}
+          </form>
+        </DialogContent>
+      </Dialog>
+
       <Popover>
         <PopoverTrigger asChild>
           <Button

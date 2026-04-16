@@ -8,8 +8,17 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Send, Search as SearchIcon, Lock, Users, Bell, MessageCircle } from "lucide-react";
+import { Send, Search as SearchIcon, Lock, Users, Bell, MessageCircle, PlusCircle, Shield } from "lucide-react";
 import axios from "axios";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { ReactionPicker } from "@/components/chat/ReactionPicker";
 import { ReactionDisplay } from "@/components/chat/ReactionDisplay";
 import { MessageActions } from "@/components/chat/MessageActions";
@@ -60,6 +69,7 @@ interface Conversation {
   last_message_time?: string;
   is_read_only?: boolean;
   is_global?: boolean;
+  is_confidential?: boolean;
 }
 
 interface DirectMessage {
@@ -149,6 +159,13 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+
+  // New channel dialog
+  const [newChannelOpen, setNewChannelOpen] = useState(false);
+  const [newChannelName, setNewChannelName] = useState("");
+  const [newChannelDept, setNewChannelDept] = useState("");
+  const [newChannelConfidential, setNewChannelConfidential] = useState(false);
+  const [newChannelCreating, setNewChannelCreating] = useState(false);
 
   const isAdmin = userRole === "superadmin" || userRole === "hr" || userRole === "management";
   const activeConversationId = chatType === "channels" ? selectedConversation : selectedDM;
@@ -523,6 +540,30 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
     }
   };
 
+  const handleCreateChannel = async () => {
+    if (!newChannelName.trim()) return;
+    setNewChannelCreating(true);
+    try {
+      const currentUserId2 = auth.user.id;
+      await axios.post('/api/chat/conversations', {
+        type: 'group',
+        name: newChannelName.trim(),
+        department: newChannelDept.trim() || null,
+        participant_ids: [currentUserId2],
+        is_confidential: newChannelConfidential,
+      });
+      setNewChannelOpen(false);
+      setNewChannelName("");
+      setNewChannelDept("");
+      setNewChannelConfidential(false);
+      fetchConversations();
+    } catch (error) {
+      console.error('Error creating channel:', error);
+    } finally {
+      setNewChannelCreating(false);
+    }
+  };
+
   const departments = ["Tech", "Design", "Marketing", "Sales", "HR", "Finance"];
 
   const filteredConversations = isAdmin && selectedDepartmentFilter !== "all"
@@ -576,7 +617,7 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
               {chatType === "channels" ? (
                 <>
                   {isAdmin && (
-                    <div className="p-3 border-b border-border">
+                    <div className="p-3 border-b border-border space-y-2">
                       <Select value={selectedDepartmentFilter} onValueChange={setSelectedDepartmentFilter}>
                         <SelectTrigger className="bg-card h-9 text-xs">
                           <SelectValue placeholder="Filter by department" />
@@ -588,6 +629,55 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                           ))}
                         </SelectContent>
                       </Select>
+                      <Dialog open={newChannelOpen} onOpenChange={setNewChannelOpen}>
+                        <DialogTrigger asChild>
+                          <Button size="sm" variant="outline" className="w-full h-8 text-xs">
+                            <PlusCircle className="w-3.5 h-3.5 mr-1" /> New Channel
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-sm">
+                          <DialogHeader>
+                            <DialogTitle className="text-sm">Create Channel</DialogTitle>
+                          </DialogHeader>
+                          <div className="space-y-4 pt-2">
+                            <div className="space-y-1.5">
+                              <Label className="text-xs">Channel Name *</Label>
+                              <Input
+                                value={newChannelName}
+                                onChange={(e) => setNewChannelName(e.target.value)}
+                                placeholder="e.g. #leadership-ops"
+                                className="h-8 text-sm"
+                              />
+                            </div>
+                            <div className="space-y-1.5">
+                              <Label className="text-xs">Department (optional)</Label>
+                              <Input
+                                value={newChannelDept}
+                                onChange={(e) => setNewChannelDept(e.target.value)}
+                                placeholder="e.g. Engineering"
+                                className="h-8 text-sm"
+                              />
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Shield className="w-4 h-4 text-amber-500" />
+                                <Label className="text-xs">Confidential (leaders only)</Label>
+                              </div>
+                              <Switch
+                                checked={newChannelConfidential}
+                                onCheckedChange={setNewChannelConfidential}
+                              />
+                            </div>
+                            <Button
+                              onClick={handleCreateChannel}
+                              disabled={newChannelCreating || !newChannelName.trim()}
+                              className="w-full bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white h-8 text-xs"
+                            >
+                              {newChannelCreating ? "Creating…" : "Create Channel"}
+                            </Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   )}
                   <div className="space-y-1 p-2">
@@ -625,6 +715,11 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                             )}
                             {conv.is_global && (
                               <Bell className={`w-3 h-3 ${selectedConversation === conv.id && chatType === "channels" ? "text-white" : "text-muted-foreground"}`} />
+                            )}
+                            {conv.is_confidential && (
+                              <span title="Confidential">
+                                <Shield className={`w-3 h-3 ${selectedConversation === conv.id && chatType === "channels" ? "text-white" : "text-amber-500"}`} />
+                              </span>
                             )}
                           </div>
                           <p className={`text-xs truncate ${selectedConversation === conv.id && chatType === "channels" ? "text-white/80" : "text-muted-foreground"}`}>
@@ -726,6 +821,12 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                       <Badge variant="outline" className="text-xs">
                         <Lock className="w-3 h-3 mr-1" />
                         Read Only
+                      </Badge>
+                    )}
+                    {currentConvData?.is_confidential && chatType === "channels" && (
+                      <Badge variant="outline" className="text-xs border-amber-300 text-amber-600 bg-amber-50 dark:bg-amber-950/30">
+                        <Shield className="w-3 h-3 mr-1" />
+                        Confidential
                       </Badge>
                     )}
                     {chatType === "direct" && currentDMData?.isOnline && (

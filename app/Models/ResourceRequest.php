@@ -24,6 +24,8 @@ class ResourceRequest extends Model
         'attachments',
         'receipts',
         'reviewed_at',
+        'approval_chain',
+        'approval_level',
     ];
 
     protected function casts(): array
@@ -33,6 +35,8 @@ class ResourceRequest extends Model
             'attachments' => 'array',
             'receipts' => 'array',
             'reviewed_at' => 'datetime',
+            'approval_chain' => 'array',
+            'approval_level' => 'integer',
         ];
     }
 

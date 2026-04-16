@@ -44,6 +44,7 @@ interface StaffMember {
   position: string;
   enrollmentDate: string;
   status: "Active" | "Inactive" | "Pending";
+  employeeStage: "joiner" | "performer" | "leader";
 }
 
 interface StaffEnrollmentPageProps {
@@ -62,6 +63,7 @@ type StaffFormData = {
   department: string;
   role: string;
   position: string;
+  employee_stage: string;
 };
 
 const initialFormData: StaffFormData = {
@@ -73,6 +75,7 @@ const initialFormData: StaffFormData = {
   department: "",
   role: "Staff",
   position: "",
+  employee_stage: "performer",
 };
 
 export default function StaffEnrollmentPage({
@@ -136,6 +139,7 @@ export default function StaffEnrollmentPage({
       department: staff.department,
       role: staff.role,
       position: staff.position,
+      employee_stage: staff.employeeStage,
     });
     setIsAddDialogOpen(true);
   };
@@ -422,6 +426,29 @@ export default function StaffEnrollmentPage({
                   </p>
                 </div>
 
+                <div className="space-y-2">
+                  <Label htmlFor="employee_stage" className="text-foreground">
+                    Employee Stage <span className="text-red-500">*</span>
+                  </Label>
+                  <Select
+                    value={formData.employee_stage}
+                    onValueChange={(value) => handleInputChange("employee_stage", value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="joiner">Joiner</SelectItem>
+                      <SelectItem value="performer">Performer</SelectItem>
+                      <SelectItem value="leader">Leader</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {errors.employee_stage && <p className="text-sm text-red-500">{errors.employee_stage}</p>}
+                  <p className="text-xs text-muted-foreground">
+                    The staff member's lifecycle stage in the organisation
+                  </p>
+                </div>
+
                 <div className="flex justify-end gap-3 pt-4 border-t">
                   <Button
                     type="button"
@@ -580,6 +607,7 @@ export default function StaffEnrollmentPage({
                   <TableHead className="text-foreground">Department</TableHead>
                   <TableHead className="text-foreground">Position</TableHead>
                   <TableHead className="text-foreground">Role</TableHead>
+                  <TableHead className="text-foreground">Stage</TableHead>
                   <TableHead className="text-foreground">Enrollment Date</TableHead>
                   <TableHead className="text-foreground">Status</TableHead>
                   <TableHead className="text-foreground text-right">Actions</TableHead>
@@ -588,7 +616,7 @@ export default function StaffEnrollmentPage({
               <TableBody>
                 {filteredStaff.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                       No staff members found
                     </TableCell>
                   </TableRow>
@@ -625,6 +653,20 @@ export default function StaffEnrollmentPage({
                           }
                         >
                           {staff.role}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant="outline"
+                          className={
+                            staff.employeeStage === "leader"
+                              ? "border-purple-500 text-purple-600 bg-purple-50"
+                              : staff.employeeStage === "joiner"
+                              ? "border-orange-400 text-orange-600 bg-orange-50"
+                              : "border-blue-400 text-blue-600 bg-blue-50"
+                          }
+                        >
+                          {staff.employeeStage.charAt(0).toUpperCase() + staff.employeeStage.slice(1)}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-muted-foreground">{staff.enrollmentDate}</TableCell>

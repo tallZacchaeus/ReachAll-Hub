@@ -14,11 +14,13 @@ class Conversation extends Model
         'department',
         'is_read_only',
         'is_global',
+        'is_confidential',
     ];
 
     protected $casts = [
         'is_read_only' => 'boolean',
         'is_global' => 'boolean',
+        'is_confidential' => 'boolean',
     ];
 
     public function messages(): HasMany
