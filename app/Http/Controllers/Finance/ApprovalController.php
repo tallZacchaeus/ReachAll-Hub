@@ -37,23 +37,26 @@ class ApprovalController extends Controller
             ->where('status', 'pending')
             ->orderBy('sla_deadline');
 
-        // Filters
+        // Filters: use join-based filtering to avoid N+1 subqueries
+        $query->join('requisitions', 'approval_steps.requisition_id', '=', 'requisitions.id')
+              ->select('approval_steps.*');
+
         if ($request->filled('urgency')) {
-            $query->whereHas('requisition', fn ($q) => $q->where('urgency', $request->get('urgency')));
+            $query->where('requisitions.urgency', $request->get('urgency'));
         }
 
         if ($request->filled('type')) {
-            $query->whereHas('requisition', fn ($q) => $q->where('type', $request->get('type')));
+            $query->where('requisitions.type', $request->get('type'));
         }
 
         if ($request->filled('min_amount')) {
             $minKobo = MoneyHelper::toKobo((float) $request->get('min_amount'));
-            $query->whereHas('requisition', fn ($q) => $q->where('amount_kobo', '>=', $minKobo));
+            $query->where('requisitions.amount_kobo', '>=', $minKobo);
         }
 
         if ($request->filled('max_amount')) {
             $maxKobo = MoneyHelper::toKobo((float) $request->get('max_amount'));
-            $query->whereHas('requisition', fn ($q) => $q->where('amount_kobo', '<=', $maxKobo));
+            $query->where('requisitions.amount_kobo', '<=', $maxKobo);
         }
 
         $steps = $query->get()->map(fn (ApprovalStep $step) => $this->formatQueueItem($step));

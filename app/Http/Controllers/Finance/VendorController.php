@@ -34,6 +34,7 @@ class VendorController extends Controller
         $vendors = $query->get()->map(fn (Vendor $v) => [
             'id'            => $v->id,
             'name'          => $v->name,
+            'tin'           => $v->tin,
             'tax_id'        => $v->tax_id,
             'bank_name'     => $v->bank_name,
             'bank_account'  => $v->bank_account,
@@ -54,6 +55,7 @@ class VendorController extends Controller
 
         $validated = $request->validate([
             'name'          => ['required', 'string', 'max:200', 'unique:vendors,name'],
+            'tin'           => ['nullable', 'string', 'max:14', 'regex:/^[A-Z0-9]{8,14}$/'],
             'tax_id'        => ['nullable', 'string', 'max:50'],
             'bank_name'     => ['nullable', 'string', 'max:100'],
             'bank_account'  => ['nullable', 'string', 'max:20'],
@@ -75,6 +77,7 @@ class VendorController extends Controller
 
         $validated = $request->validate([
             'name'          => ['required', 'string', 'max:200', "unique:vendors,name,{$id}"],
+            'tin'           => ['nullable', 'string', 'max:14', 'regex:/^[A-Z0-9]{8,14}$/'],
             'tax_id'        => ['nullable', 'string', 'max:50'],
             'bank_name'     => ['nullable', 'string', 'max:100'],
             'bank_account'  => ['nullable', 'string', 'max:20'],

@@ -245,6 +245,67 @@ class ApprovalRouter
     }
 
     /**
+     * Resolve the next approver up the hierarchy for an overdue step.
+     *
+     * Looks at the current step's role_label, finds the next tier in the
+     * standard chain, and returns the first available user for that role
+     * (excluding the current approver and the requisition's requester).
+     *
+     * Returns null when no higher approver can be found (already at CEO level,
+     * or no user exists for the next role).
+     */
+    public function findNextLevelApprover(ApprovalStep $step): ?User
+    {
+        $req = $step->requisition;
+
+        // Full role escalation ladder
+        $ladder = [
+            'management',
+            'dept_head',
+            'finance',
+            'general_management',
+            'ceo',
+            'superadmin',
+        ];
+
+        // Find current approver's role
+        $currentRole = $step->approver?->role ?? 'management';
+        $currentPos  = array_search($currentRole, $ladder, true);
+
+        if ($currentPos === false) {
+            $currentPos = 0;
+        }
+
+        // Walk up the ladder looking for an available approver
+        for ($i = $currentPos + 1; $i < count($ladder); $i++) {
+            $role = $ladder[$i];
+
+            if ($role === 'dept_head') {
+                $head = $req->costCentre?->head;
+                if ($head
+                    && $head->id !== $req->requester_id
+                    && $head->id !== $step->approver_id
+                    && $head->status === 'active'
+                ) {
+                    return $head;
+                }
+            }
+
+            $next = User::where('role', $role)
+                ->where('id', '!=', $req->requester_id)
+                ->where('id', '!=', $step->approver_id)
+                ->where('status', 'active')
+                ->first();
+
+            if ($next) {
+                return $next;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * SLA deadline: 48 hours from now, skipping over weekends.
      * Friday → deadline is Monday + the remaining hours.
      */

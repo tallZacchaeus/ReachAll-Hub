@@ -239,6 +239,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('finance-team',    [\App\Http\Controllers\Finance\HelpController::class, 'financeTeam'])->name('finance.help.finance-team');
         });
         Route::get('go-live', [\App\Http\Controllers\Finance\GoLiveController::class, 'index'])->name('finance.go-live');
+        Route::get('audit-log', [\App\Http\Controllers\Finance\AuditLogController::class, 'index'])->name('finance.audit-log');
         Route::prefix('admin')->group(function () {
             Route::get('cost-centres',   [\App\Http\Controllers\Finance\CostCentreController::class, 'index'])->name('finance.cost-centres.index');
             Route::get('account-codes',  [\App\Http\Controllers\Finance\AccountCodeController::class, 'index'])->name('finance.account-codes.index');

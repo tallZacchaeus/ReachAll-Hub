@@ -105,6 +105,23 @@ class RequisitionController extends Controller
         $accountCode = AccountCode::findOrFail($validated['account_code_id']);
         $taxes       = TaxCalculator::calculate($amountKobo, $accountCode);
 
+        // CAT2-02: CAPEX enforcement — account codes beginning with '95' must use type=CAPEX.
+        // Conversely, CAPEX type must use a '95...' account code.
+        $isCapexCode = str_starts_with((string) $accountCode->code, '95');
+        $isCapexType = strtoupper($validated['type']) === 'CAPEX';
+
+        if ($isCapexCode && ! $isCapexType) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'type' => "Account code {$accountCode->code} is a capital expenditure code. Request type must be CAPEX.",
+            ]);
+        }
+
+        if ($isCapexType && ! $isCapexCode) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'account_code_id' => "CAPEX requests must use a capital expenditure account code (starting with 95).",
+            ]);
+        }
+
         // Total must be ≥ base amount (VAT adds to total; WHT reduces net but total stays ≥ amount)
         abort_if($taxes['total_kobo'] < $amountKobo, 422, 'Total amount cannot be less than base amount.');
 
