@@ -47,6 +47,25 @@ return [
             'report' => false,
         ],
 
+        // D8-01: Private disk for all sensitive finance documents.
+        // Files here are NOT publicly accessible — served only through
+        // the authenticated DocumentDownloadController.
+        // In production, set FINANCE_DISK=s3 and configure AWS credentials
+        // to swap to S3 without changing any upload/download code.
+        'finance' => [
+            'driver'     => env('FINANCE_DISK', 'local'),
+            'root'       => storage_path('app/finance'),
+            'visibility' => 'private',
+            'throw'      => false,
+            'report'     => false,
+            // S3 passthrough keys (ignored when driver=local)
+            'key'        => env('AWS_ACCESS_KEY_ID'),
+            'secret'     => env('AWS_SECRET_ACCESS_KEY'),
+            'region'     => env('AWS_DEFAULT_REGION'),
+            'bucket'     => env('AWS_FINANCE_BUCKET', env('AWS_BUCKET')),
+            'url'        => env('AWS_URL'),
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

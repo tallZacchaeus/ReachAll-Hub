@@ -23,8 +23,16 @@ class SetSecurityHeaders
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 
-        // CSP is only enforced in production — Vite dev server needs 'unsafe-eval' for HMR.
+        // CSP and HSTS are only enforced in production — Vite dev server needs 'unsafe-eval'
+        // for HMR, and HSTS must not be sent over HTTP in dev/staging environments.
         if (app()->isProduction()) {
+            // CAT11-01: Strict-Transport-Security — instructs browsers to only use HTTPS
+            // for the next year. Prevents SSL-stripping on first contact.
+            $response->headers->set(
+                'Strict-Transport-Security',
+                'max-age=31536000; includeSubDomains'
+            );
+
             $response->headers->set(
                 'Content-Security-Policy',
                 "default-src 'self'; " .

@@ -12,7 +12,6 @@ use App\Services\Finance\PettyCashEnforcer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -95,7 +94,15 @@ class PettyCashController extends Controller
         $validated = $request->validate([
             'amount_naira'    => ['required', 'numeric', 'min:1', 'max:99999.99'],
             'description'     => ['required', 'string', 'max:255'],
-            'date'            => ['required', 'date', 'before_or_equal:today'],
+            // Date must be today or yesterday (1 business day back for morning catch-up).
+            // Future dates are rejected entirely. Cap checks use created_at (server time),
+            // not this field, so this validation is purely for record-keeping accuracy.
+            'date'            => [
+                'required',
+                'date',
+                'before_or_equal:today',
+                'after_or_equal:' . now()->subWeekdays(1)->toDateString(),
+            ],
             'account_code_id' => ['nullable', 'exists:account_codes,id'],
             'receipt'         => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
         ]);
@@ -108,7 +115,7 @@ class PettyCashController extends Controller
             return back()->withErrors(['amount_naira' => $check['reason']])->withInput();
         }
 
-        $receiptPath = $request->file('receipt')->store('finance/petty-cash/receipts', 'public');
+        $receiptPath = $request->file('receipt')->store('petty-cash/receipts', 'finance');
 
         DB::transaction(function () use ($float, $amountKobo, $validated, $receiptPath, $request) {
             // CAT2-06: Lock the float row to prevent concurrent double-spend.

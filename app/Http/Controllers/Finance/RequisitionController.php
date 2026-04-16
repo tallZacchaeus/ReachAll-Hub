@@ -97,7 +97,7 @@ class RequisitionController extends Controller
         // Store uploaded files
         $docPaths = [];
         foreach ($request->file('supporting_docs', []) as $file) {
-            $path = $file->store('finance/docs', 'public');
+            $path = $file->store('docs', 'finance');
             $docPaths[] = $path;
         }
 

@@ -201,6 +201,30 @@ Route::middleware(['auth'])->group(function () {
     // Global Search
     Route::get('search', [\App\Http\Controllers\SearchController::class, 'search'])->name('search');
 
+    // ── Finance: Authenticated document downloads (D8-01) ─────────────────
+    // All sensitive finance files live on the private 'finance' disk.
+    // These endpoints enforce policy-level access before streaming the file.
+    Route::prefix('finance/documents')->group(function () {
+        Route::get('invoice/{invoice}',
+            [\App\Http\Controllers\Finance\DocumentDownloadController::class, 'invoice'])
+            ->name('finance.document.invoice');
+        Route::get('goods-receipt/{receipt}',
+            [\App\Http\Controllers\Finance\DocumentDownloadController::class, 'goodsReceipt'])
+            ->name('finance.document.goods-receipt');
+        Route::get('payment-proof/{payment}',
+            [\App\Http\Controllers\Finance\DocumentDownloadController::class, 'paymentProof'])
+            ->name('finance.document.payment-proof');
+        Route::get('close-report/{period}',
+            [\App\Http\Controllers\Finance\DocumentDownloadController::class, 'closeReport'])
+            ->name('finance.document.close-report');
+        Route::get('requisition/{requisition}/doc/{docIndex}',
+            [\App\Http\Controllers\Finance\DocumentDownloadController::class, 'requisitionDoc'])
+            ->name('finance.document.requisition-doc');
+        Route::get('receipt/{transaction}',
+            [\App\Http\Controllers\Finance\DocumentDownloadController::class, 'receipt'])
+            ->name('finance.document.receipt');
+    });
+
     // ── Finance: Read-only routes (no rate limit beyond auth) ───────────────
     Route::prefix('finance')->group(function () {
         // Requisitions — read

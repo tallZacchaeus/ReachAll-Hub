@@ -119,7 +119,7 @@ class PaymentController extends Controller
         ]);
 
         $proofPath = $request->file('proof')
-            ->store("finance/payments/{$req->id}", 'public');
+            ->store("payments/{$req->id}", 'finance');
 
         DB::transaction(function () use ($req, $request, $tax, $proofPath) {
             // Lock the row to prevent concurrent double-payments on the same requisition
