@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Jobs\Finance\PostLedgerEntry;
 use App\Models\Finance\Payment;
 use App\Models\Finance\Requisition;
+use App\Models\Finance\WhtLiability;
 use App\Services\Finance\ClosedPeriodGuard;
+use App\Services\Finance\FinanceRoleHelper;
 use App\Services\Finance\MoneyHelper;
 use App\Services\Finance\TaxCalculator;
 use Illuminate\Http\RedirectResponse;
@@ -118,37 +120,109 @@ class PaymentController extends Controller
             'total_kobo'   => $tax['total_kobo'],
         ]);
 
-        $proofPath = $request->file('proof')
-            ->store("payments/{$req->id}", 'finance');
+        // F2-03: Store the proof file INSIDE the transaction so that if the DB
+        // write fails the uploaded file is cleaned up and no orphaned file remains.
+        // On Throwable: delete the newly uploaded file before re-throwing.
+        $proofFile = $request->file('proof');
 
-        DB::transaction(function () use ($req, $request, $tax, $proofPath) {
+        DB::transaction(function () use ($req, $request, $tax, $proofFile) {
             // Lock the row to prevent concurrent double-payments on the same requisition
             $locked = Requisition::where('id', $req->id)->lockForUpdate()->first();
             if (! $locked || ! in_array($locked->status, ['matched', 'approved'], true)) {
                 throw new \RuntimeException('Requisition is no longer in a payable state.');
             }
 
-            $payment = Payment::create([
-                'requisition_id' => $req->id,
-                'amount_kobo'    => $tax['total_kobo'], // net payable
-                'method'         => $request->input('method'),
-                'reference'      => $request->input('reference'),
-                'paid_at'        => $request->input('paid_at'),
-                'paid_by'        => $request->user()->id,
-                'proof_path'     => $proofPath,
-            ]);
+            // F2-03: Upload inside the transaction — if the DB write below throws,
+            // the catch block cleans up the file before the exception propagates.
+            $proofPath = $proofFile->store("payments/{$req->id}", 'finance');
 
-            $req->update([
-                'status'  => 'paid',
-                'paid_at' => $request->input('paid_at'),
-            ]);
+            try {
+                $payment = Payment::create([
+                    'requisition_id' => $req->id,
+                    'amount_kobo'    => $tax['total_kobo'], // net payable
+                    'method'         => $request->input('method'),
+                    'reference'      => $request->input('reference'),
+                    'paid_at'        => $request->input('paid_at'),
+                    'paid_by'        => $request->user()->id,
+                    'proof_path'     => $proofPath,
+                ]);
 
-            // Dispatch background posting job
-            PostLedgerEntry::dispatch($payment->id);
+                $req->update([
+                    'status'  => 'paid',
+                    'paid_at' => $request->input('paid_at'),
+                ]);
+
+                // Dispatch background posting job
+                PostLedgerEntry::dispatch($payment->id);
+            } catch (\Throwable $e) {
+                // F2-03: Clean up the uploaded file so the finance disk stays consistent.
+                \Illuminate\Support\Facades\Storage::disk('finance')->delete($proofPath);
+                throw $e;
+            }
         });
 
         return redirect('/finance/payments')
             ->with('success', 'Payment recorded. Ledger posting queued.');
+    }
+
+    // ── Void a payment ────────────────────────────────────────────────────────
+
+    /**
+     * T10-01: Void a payment, reverse any WHT liability, and return the
+     * requisition to 'approved' status so it can be re-paid or cancelled.
+     *
+     * Restricted to Finance admins (FinanceRoleHelper::FINANCE_ADMIN_ROLES)
+     * via PaymentPolicy::voidPayment.
+     */
+    public function voidPayment(Request $request, int $paymentId): RedirectResponse
+    {
+        $payment = Payment::with(['requisition', 'whtLiability'])->findOrFail($paymentId);
+        $this->authorize('voidPayment', $payment);
+
+        $request->validate([
+            'void_reason' => ['required', 'string', 'min:20'],
+        ]);
+
+        DB::transaction(function () use ($payment, $request) {
+            $req = $payment->requisition;
+
+            // Record void on the payment
+            $payment->update([
+                'voided_at'   => now(),
+                'voided_by'   => $request->user()->id,
+                'void_reason' => $request->input('void_reason'),
+            ]);
+
+            // T10-01: WHT reversal — create a matching negative entry so the
+            // FIRS WHT-01 export nets to zero for this liability.
+            $wht = $payment->whtLiability;
+            if ($wht && $wht->amount_kobo > 0) {
+                WhtLiability::create([
+                    'requisition_id'      => $wht->requisition_id,
+                    'payment_id'          => $payment->id,
+                    'vendor_id'           => $wht->vendor_id,
+                    'amount_kobo'         => -$wht->amount_kobo,
+                    'rate_percent'        => $wht->rate_percent,
+                    'status'              => 'voided',
+                    'financial_period_id' => $wht->financial_period_id,
+                    'created_by'          => $request->user()->id,
+                ]);
+            }
+
+            // Return requisition to 'approved' so Finance can re-pay or cancel
+            if ($req) {
+                $prevStatus = \in_array($req->status, ['paid', 'posted'], true)
+                    ? 'approved'
+                    : $req->status;
+                $req->update([
+                    'status'  => $prevStatus,
+                    'paid_at' => null,
+                ]);
+            }
+        });
+
+        return redirect('/finance/payments')
+            ->with('success', "Payment #{$payment->id} voided. Requisition returned to approved state.");
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
@@ -186,7 +260,7 @@ class PaymentController extends Controller
     private function authorizeFinance(Request $request): void
     {
         abort_unless(
-            \in_array($request->user()?->role, ['finance', 'ceo', 'superadmin'], true),
+            \in_array($request->user()?->role, FinanceRoleHelper::FINANCE_ADMIN_ROLES, true),
             403
         );
     }

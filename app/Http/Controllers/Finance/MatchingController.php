@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Finance;
 
 use App\Http\Controllers\Controller;
+use App\Models\Finance\FinanceAuditLog;
 use App\Models\Finance\GoodsReceipt;
 use App\Models\Finance\Invoice;
 use App\Models\Finance\Requisition;
 use App\Models\User;
 use App\Notifications\Finance\VarianceFlagged;
+use App\Services\Finance\FinanceRoleHelper;
 use App\Services\Finance\MoneyHelper;
 use App\Services\Finance\ThreeWayMatcher;
 use Illuminate\Http\RedirectResponse;
@@ -156,8 +158,8 @@ class MatchingController extends Controller
     {
         $user = $request->user();
 
-        if (! \in_array($user->role, ['ceo', 'superadmin'], true)) {
-            abort(403, 'Only the CEO may accept a match variance.');
+        if (! \in_array($user->role, FinanceRoleHelper::FINANCE_EXEC_ROLES, true)) {
+            abort(403, 'Only executive roles may accept a match variance.');
         }
 
         $req = Requisition::with(['invoices'])->findOrFail($requisitionId);
@@ -172,9 +174,25 @@ class MatchingController extends Controller
             return back()->withErrors(['match' => 'No variance to accept on this requisition.']);
         }
 
-        DB::transaction(function () use ($req, $invoice, $request) {
+        DB::transaction(function () use ($req, $invoice, $request, $user) {
             $invoice->update(['match_status' => 'matched']);
             $req->update(['status' => 'matched']);
+
+            // F2-04: Explicit audit entry so override reasons are searchable in the
+            // finance audit log independently of the model observer.
+            FinanceAuditLog::insert([
+                'user_id'     => $user->id,
+                'model_type'  => Requisition::class,
+                'model_id'    => $req->id,
+                'action'      => 'variance_accepted',
+                'before_json' => json_encode(['match_status' => 'variance']),
+                'after_json'  => json_encode([
+                    'match_status'    => 'matched',
+                    'override_reason' => $request->input('override_reason'),
+                    'override_by'     => $user->id,
+                ]),
+                'logged_at'   => now()->toDateTimeString(),
+            ]);
         });
 
         return redirect('/finance/matching')->with('success', 'Variance accepted. Requisition cleared for payment.');
@@ -218,7 +236,7 @@ class MatchingController extends Controller
     private function authorizeFinance(Request $request): void
     {
         abort_unless(
-            \in_array($request->user()?->role, ['finance', 'ceo', 'superadmin'], true),
+            \in_array($request->user()?->role, FinanceRoleHelper::FINANCE_ADMIN_ROLES, true),
             403
         );
     }

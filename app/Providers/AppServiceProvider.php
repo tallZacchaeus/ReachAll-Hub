@@ -19,6 +19,7 @@ use App\Models\Finance\PeriodCloseWaiver;
 use App\Models\Finance\WhtLiability;
 use App\Observers\Finance\FinanceModelObserver;
 use App\Policies\Finance\ApprovalPolicy;
+use App\Policies\Finance\PaymentPolicy;
 use App\Policies\Finance\PettyCashPolicy;
 use App\Policies\Finance\RequisitionPolicy;
 use Carbon\CarbonImmutable;
@@ -64,6 +65,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(ApprovalStep::class, ApprovalPolicy::class);
         Gate::policy(PettyCashFloat::class, PettyCashPolicy::class);
         Gate::policy(PettyCashReconciliation::class, PettyCashPolicy::class);
+        Gate::policy(Payment::class, PaymentPolicy::class);
     }
 
     protected function configureDefaults(): void

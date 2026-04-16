@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Finance\FinanceRoleHelper;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -90,24 +91,18 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     // ── Finance role helpers ────────────────────────────────────────────────
-
-    /** All roles with any finance module access */
-    public const FINANCE_ROLES = ['finance', 'general_management', 'ceo', 'superadmin'];
-
-    /** Roles that can access finance admin pages */
-    public const FINANCE_ADMIN_ROLES = ['finance', 'ceo', 'superadmin'];
-
-    /** Roles with executive-level approval authority */
-    public const EXEC_ROLES = ['general_management', 'ceo', 'superadmin'];
+    // A1-02: Delegates to FinanceRoleHelper — single source of truth.
 
     public function isFinance(): bool
     {
-        return in_array($this->role, self::FINANCE_ROLES, true);
+        // A1-02: Maps to FINANCE_ADMIN_ROLES (the authoritative 4-role set).
+        // Previously User::FINANCE_ROLES = ['finance','general_management','ceo','superadmin'].
+        return FinanceRoleHelper::isAdmin($this->role);
     }
 
     public function isFinanceAdmin(): bool
     {
-        return in_array($this->role, self::FINANCE_ADMIN_ROLES, true);
+        return FinanceRoleHelper::isAdmin($this->role);
     }
 
     public function isCeo(): bool

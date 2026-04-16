@@ -42,12 +42,17 @@ a soft warning in a future sprint.
 **Risk:** Low — no deferred logic hidden behind TODO markers.
 
 ### CAT11-04 — File storage on ephemeral disk
-**Status:** Accepted risk for initial launch; S3 migration required before scale  
-Finance receipts and supporting documents are currently stored on the local `public` disk.
+**Status:** Partially resolved in Sprint 5A (D8-01); S3 migration required before scale  
+Finance documents (receipts, supporting docs, period close reports, invoices, goods receipts,
+payment proofs) are now stored on the **private `finance` disk** (`storage/app/finance/`) and
+served exclusively through `DocumentDownloadController` with auth + policy gating. They are
+**no longer on the public disk** and are not directly accessible via URL.
+
 This is acceptable for a single-server deployment but **will result in data loss** if the
 server is replaced or scaled horizontally.  
-**Mitigation:** Set `FILESYSTEM_DISK=s3` and configure AWS credentials before launching on
-cloud infrastructure. See `.env.example` S3 section for all required variables.  
+**Mitigation:** Set `FINANCE_DISK=s3` and configure `AWS_FINANCE_BUCKET` before launching on
+cloud infrastructure. See `.env.example` S3 and finance disk sections for all required variables.
+Run `php artisan finance:migrate-files` to move any pre-Sprint-5A files from the old public path.  
 **Risk:** Medium — data loss possible on server replacement. Must be resolved before
 horizontal scaling or cloud migration.
 

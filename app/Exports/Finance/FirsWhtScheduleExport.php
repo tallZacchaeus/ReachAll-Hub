@@ -39,7 +39,11 @@ class FirsWhtScheduleExport implements FromCollection, WithHeadings, WithMapping
             'requisition:id,request_id,description,amount_kobo,account_code_id',
             'requisition.accountCode:id,code,description',
             'financialPeriod:id,year,month',
-        ])->where('status', 'pending');
+        ])
+        // T10-01: Exclude voided reversal entries (amount_kobo < 0) and
+        // entries explicitly marked 'voided' so they net to zero in the export.
+        ->where('status', 'pending')
+        ->where('amount_kobo', '>', 0);
 
         if (! empty($this->filters['period_id'])) {
             $query->where('financial_period_id', $this->filters['period_id']);

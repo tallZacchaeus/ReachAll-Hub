@@ -290,7 +290,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('matching/{id}/match',           [\App\Http\Controllers\Finance\MatchingController::class, 'match'])->name('finance.matching.match');
         Route::post('matching/{id}/accept-variance', [\App\Http\Controllers\Finance\MatchingController::class, 'acceptVariance'])->name('finance.matching.accept-variance');
         // Payments — write
-        Route::post('payments/{id}/pay', [\App\Http\Controllers\Finance\PaymentController::class, 'pay'])->name('finance.payments.pay');
+        Route::post('payments/{id}/pay',  [\App\Http\Controllers\Finance\PaymentController::class, 'pay'])->name('finance.payments.pay');
+        Route::post('payments/{id}/void', [\App\Http\Controllers\Finance\PaymentController::class, 'voidPayment'])->name('finance.payments.void');
         // Period Close — write
         Route::post('period-close/initiate',    [\App\Http\Controllers\Finance\PeriodCloseController::class, 'initiate'])->name('finance.period-close.initiate');
         Route::post('period-close/waive',       [\App\Http\Controllers\Finance\PeriodCloseController::class, 'waive'])->name('finance.period-close.waive');

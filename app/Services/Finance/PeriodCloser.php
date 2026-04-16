@@ -12,7 +12,9 @@ use App\Models\User;
 use App\Notifications\Finance\PeriodCloseInitiated;
 use App\Notifications\Finance\PeriodClosed;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 /**
@@ -210,19 +212,33 @@ class PeriodCloser
         abort_unless($period->isClosing(), 422, 'Period is not in closing state.');
         abort_unless($period->co_authorized_by, 422, 'Co-authorisation is required before close.');
 
-        $reportPath = DB::transaction(function () use ($period, $closer) {
-            // Generate a close summary PDF via dompdf
-            $path = self::generateCloseReport($period);
+        // P6-01: Pre-flight — validate view exists before acquiring the DB lock.
+        if (! view()->exists('finance.close-report')) {
+            throw new \RuntimeException('Close report view is missing. Contact technical support.');
+        }
 
+        // P6-01: Fast DB transaction — status change only, no slow I/O inside the lock.
+        DB::transaction(function () use ($period, $closer) {
             $period->update([
-                'status'            => 'closed',
-                'closed_at'         => now(),
-                'closed_by'         => $closer->id,
-                'close_report_path' => $path,
+                'status'    => 'closed',
+                'closed_at' => now(),
+                'closed_by' => $closer->id,
             ]);
-
-            return $path;
         });
+
+        // P6-01: PDF generated AFTER the transaction so the DB lock is not held
+        // during slow rendering. PDF failure is non-fatal — the period is already closed.
+        $reportPath = '';
+        try {
+            $reportPath = self::generateCloseReport($period);
+            $period->update(['close_report_path' => $reportPath]);
+        } catch (\Throwable $e) {
+            report($e);
+            Log::error('Period close report PDF generation failed — period closed but no PDF saved.', [
+                'period_id' => $period->id,
+                'error'     => $e->getMessage(),
+            ]);
+        }
 
         // Notify all Finance + Exec users
         $recipients = User::whereIn('role', ['finance', 'ceo', 'superadmin', 'management'])->get();
@@ -239,6 +255,16 @@ class PeriodCloser
      */
     public static function reopen(FinancialPeriod $period, User $user): string
     {
+        // Q12-02: The dual-auth window relies on a persistent cache. The 'array'
+        // driver is in-process only — each request gets a fresh store, so the
+        // second authoriser would never see the first token. Fail loudly in production.
+        if (config('cache.default') === 'array' && app()->isProduction()) {
+            throw new \RuntimeException(
+                'Period reopen requires a persistent cache driver (e.g. database or redis). '
+                . 'Set CACHE_DRIVER=database in your production .env.'
+            );
+        }
+
         abort_unless($period->isClosed(), 422, 'Period is not closed.');
         abort_unless(
             \in_array($user->role, ['ceo', 'superadmin'], true),
@@ -246,11 +272,11 @@ class PeriodCloser
         );
 
         $cacheKey = "period_reopen_{$period->id}";
-        $first    = \Illuminate\Support\Facades\Cache::get($cacheKey);
+        $first    = Cache::get($cacheKey);
 
         if (! $first) {
             // Store first authorization for 30 minutes
-            \Illuminate\Support\Facades\Cache::put($cacheKey, [
+            Cache::put($cacheKey, [
                 'user_id' => $user->id,
                 'role'    => $user->role,
             ], now()->addMinutes(30));
@@ -262,7 +288,7 @@ class PeriodCloser
             'The second authoriser must have a different role (CEO + Superadmin required).'
         );
 
-        \Illuminate\Support\Facades\Cache::forget($cacheKey);
+        Cache::forget($cacheKey);
 
         $period->update([
             'status'             => 'open',

@@ -11,18 +11,20 @@ namespace App\Services\Finance;
 class FinanceRoleHelper
 {
     /**
-     * Roles with full Finance admin access (validate, record payments, run reports).
+     * A1-01: Roles with full Finance admin access (validate, record payments,
+     * run reports, access matching/payment/period-close pages).
+     * Includes general_management — previously missing, causing 403 for GM users.
      */
-    public const FINANCE_ADMIN_ROLES = ['finance', 'superadmin'];
+    public const FINANCE_ADMIN_ROLES = ['finance', 'general_management', 'ceo', 'superadmin'];
 
     /**
      * All roles that may access the Finance module (read-only or above).
      */
     public const FINANCE_ACCESS_ROLES = [
         'finance',
-        'superadmin',
-        'ceo',
         'general_management',
+        'ceo',
+        'superadmin',
         'management',
         'dept_head',
         'staff',
@@ -30,9 +32,14 @@ class FinanceRoleHelper
     ];
 
     /**
-     * Executive roles — can see org-wide dashboards and override budgets.
+     * Executive roles — can co-authorise period close/reopen and accept variances.
      */
-    public const FINANCE_EXEC_ROLES = ['ceo', 'general_management', 'management'];
+    public const FINANCE_EXEC_ROLES = ['general_management', 'ceo', 'superadmin'];
+
+    /**
+     * Roles that participate in approval chains.
+     */
+    public const APPROVAL_ROLES = ['management', 'hr', 'finance', 'general_management', 'ceo', 'superadmin'];
 
     /**
      * Roles allowed to view Finance reports.
