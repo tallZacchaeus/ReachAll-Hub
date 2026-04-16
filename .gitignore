@@ -26,3 +26,32 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# ── AI / Agent tooling ────────────────────────────────────────────────────────
+.agent/
+.claude/
+.cursor/
+.aider*
+.continue/
+.copilot/
+
+# ── AI-generated planning / spec docs (not part of the app) ──────────────────
+FINANCE_CLAUDE.md
+FINANCE_SPEC.md
+HOSTING_ANALYSIS.md
+DEPLOYMENT_GUIDE.md
+QUICK_DEPLOY.md
+PROJECT_GUIDE.md
+docs/
+build.log
+deploy.sh
+
+# ── Duplicate / stale lockfiles ───────────────────────────────────────────────
+"package-lock 2.json"
+package-lock\ 2.json
+
+# ── macOS / editor noise ──────────────────────────────────────────────────────
+*.swp
+*.swo
+*~
+Thumbs.db
