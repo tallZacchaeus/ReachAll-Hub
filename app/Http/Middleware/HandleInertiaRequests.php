@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Finance\PettyCashFloat;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -39,8 +40,17 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
-                'user' => $request->user(),
+                // CAT8-01: Expose only the fields the frontend needs — never leak
+                // hashed passwords, remember_tokens, or internal timestamps.
+                'user' => $request->user()?->only([
+                    'id', 'name', 'email', 'role', 'employee_stage',
+                ]),
             ],
+            'has_petty_cash_float' => $request->user()
+                ? PettyCashFloat::where('custodian_id', $request->user()->id)
+                    ->where('status', 'active')
+                    ->exists()
+                : false,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'flash' => [
                 'success' => $request->session()->get('success'),

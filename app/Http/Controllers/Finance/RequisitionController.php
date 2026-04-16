@@ -242,6 +242,41 @@ class RequisitionController extends Controller
         ]);
     }
 
+    // ── Update draft ──────────────────────────────────────────────────────────
+
+    /**
+     * CAT2-10: Allow editing a draft requisition. Tax is always recalculated
+     * from the current amount and account code so it stays consistent.
+     */
+    public function update(Request $request, int $id): RedirectResponse
+    {
+        $requisition = Requisition::findOrFail($id);
+        $this->authorize('update', $requisition);
+
+        $validated = $request->validate([
+            'amount_naira'    => ['required', 'numeric', 'min:0.01'],
+            'account_code_id' => ['required', 'integer', 'exists:account_codes,id'],
+            'description'     => ['required', 'string', 'min:20'],
+            'urgency'         => ['required', 'in:standard,urgent,emergency'],
+        ]);
+
+        $amountKobo  = MoneyHelper::toKobo((float) $validated['amount_naira']);
+        $accountCode = AccountCode::findOrFail($validated['account_code_id']);
+        $taxes       = TaxCalculator::calculate($amountKobo, $accountCode);
+
+        $requisition->update([
+            'amount_kobo'     => $amountKobo,
+            'account_code_id' => $validated['account_code_id'],
+            'description'     => $validated['description'],
+            'urgency'         => $validated['urgency'],
+            'tax_vat_kobo'    => $taxes['vat_kobo'],
+            'tax_wht_kobo'    => $taxes['wht_kobo'],
+            'total_kobo'      => $taxes['total_kobo'],
+        ]);
+
+        return back()->with('success', "Request {$requisition->request_id} updated.");
+    }
+
     // ── Cancel ────────────────────────────────────────────────────────────────
 
     public function cancel(Request $request, int $id): RedirectResponse

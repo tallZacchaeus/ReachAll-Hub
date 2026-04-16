@@ -31,15 +31,15 @@ class PasswordUpdateTest extends TestCase
             ->from(route('user-password.edit'))
             ->put(route('user-password.update'), [
                 'current_password' => 'password',
-                'password' => 'new-password',
-                'password_confirmation' => 'new-password',
+                'password' => 'NewPass1secure',
+                'password_confirmation' => 'NewPass1secure',
             ]);
 
         $response
             ->assertSessionHasNoErrors()
             ->assertRedirect(route('user-password.edit'));
 
-        $this->assertTrue(Hash::check('new-password', $user->refresh()->password));
+        $this->assertTrue(Hash::check('NewPass1secure', $user->refresh()->password));
     }
 
     public function test_correct_password_must_be_provided_to_update_password()

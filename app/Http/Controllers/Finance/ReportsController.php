@@ -6,6 +6,7 @@ use App\Exports\Finance\FirsWhtScheduleExport;
 use App\Exports\Finance\ReportExport;
 use App\Exports\Finance\TransactionExport;
 use App\Http\Controllers\Controller;
+use App\Jobs\Finance\ExportReportJob;
 use App\Models\Finance\AccountCode;
 use App\Models\Finance\CostCentre;
 use App\Models\Finance\Requisition;
@@ -66,21 +67,37 @@ class ReportsController extends Controller
 
     // ── Excel export ──────────────────────────────────────────────────────────
 
-    public function exportExcel(Request $request): BinaryFileResponse
+    /**
+     * CAT6-04: If the result set exceeds config('finance.report_sync_row_limit')
+     * the export is queued and the user receives an email/notification with the
+     * download link. Smaller reports continue to stream synchronously.
+     */
+    public function exportExcel(Request $request): BinaryFileResponse|\Illuminate\Http\RedirectResponse
     {
         $this->authorizeReports($request);
 
         $type    = $request->input('report_type', 'budget_vs_actual');
         $filters = $request->only(['from', 'to', 'cost_centre_id', 'account_category', 'status']);
 
+        // Row-count pre-check (uses the same export collection).
+        $rowLimit = (int) config('finance.report_sync_row_limit', 5000);
+        $export   = $type === 'transactions'
+            ? new TransactionExport($request->user(), $filters)
+            : ($type === 'wht_schedule' ? new FirsWhtScheduleExport($filters) : new ReportExport($type, $filters));
+
+        $rowCount = $export->collection()->count();
+
+        if ($rowCount > $rowLimit) {
+            ExportReportJob::dispatch($type, $filters, $request->user()->id);
+
+            return back()->with('success', "Your report ({$rowCount} rows) is being generated. You'll receive an email when it's ready.");
+        }
+
         if ($type === 'transactions') {
-            $export   = new TransactionExport($request->user(), $filters);
             $filename = 'transactions-' . now()->format('Ymd') . '.xlsx';
         } elseif ($type === 'wht_schedule') {
-            $export   = new FirsWhtScheduleExport($filters);
             $filename = 'firs-wht-schedule-' . now()->format('Ymd') . '.xlsx';
         } else {
-            $export   = new ReportExport($type, $filters);
             $filename = $type . '-' . now()->format('Ymd') . '.xlsx';
         }
 

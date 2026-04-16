@@ -250,8 +250,9 @@ Route::middleware(['auth'])->group(function () {
     // ── Finance: State-changing routes (throttle: 30 writes/minute/user) ────
     Route::prefix('finance')->middleware('throttle:30,1')->group(function () {
         // Requisitions — write
-        Route::post('requisitions',           [\App\Http\Controllers\Finance\RequisitionController::class, 'store'])->name('finance.requisitions.store');
-        Route::post('requisitions/{id}/cancel', [\App\Http\Controllers\Finance\RequisitionController::class, 'cancel'])->name('finance.requisitions.cancel');
+        Route::post('requisitions',               [\App\Http\Controllers\Finance\RequisitionController::class, 'store'])->name('finance.requisitions.store');
+        Route::put('requisitions/{id}',           [\App\Http\Controllers\Finance\RequisitionController::class, 'update'])->name('finance.requisitions.update');
+        Route::post('requisitions/{id}/cancel',   [\App\Http\Controllers\Finance\RequisitionController::class, 'cancel'])->name('finance.requisitions.cancel');
         // Approvals — write
         Route::post('approvals/steps/{stepId}/decide', [\App\Http\Controllers\Finance\ApprovalController::class, 'decide'])->name('finance.approvals.decide');
         // Petty Cash — write

@@ -59,5 +59,11 @@ export default [
     {
         ignores: ['vendor', 'node_modules', 'public', 'bootstrap/ssr', 'tailwind.config.js'],
     },
+    {
+        // CAT4-04: Disallow console.log/debug/warn/error in production code.
+        rules: {
+            'no-console': 'error',
+        },
+    },
     prettier, // Turn off all rules that might conflict with Prettier
 ];
