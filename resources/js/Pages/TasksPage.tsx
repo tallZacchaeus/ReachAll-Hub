@@ -1150,16 +1150,17 @@ export default function TasksPage({
                         border: "1px solid #e5e7eb",
                         borderRadius: "8px",
                       }}
-                      formatter={(value?: number, name?: string) => {
+                      formatter={(value, name) => {
+                        const n = typeof value === 'number' ? value : 0;
                         if (chartView === "department") {
-                          return [value ?? 0, `${name ?? "Value"} - Departments`];
+                          return [n, `${name ?? "Value"} - Departments`];
                         }
 
                         if (chartView === "staff") {
-                          return [value ?? 0, `${name ?? "Value"} - Staff`];
+                          return [n, `${name ?? "Value"} - Staff`];
                         }
 
-                        return [value ?? 0, name ?? "Value"];
+                        return [n, String(name ?? "Value")];
                       }}
                     />
                     <Legend />
@@ -1200,16 +1201,17 @@ export default function TasksPage({
                         border: "1px solid #e5e7eb",
                         borderRadius: "8px",
                       }}
-                      formatter={(value?: number, name?: string) => {
+                      formatter={(value, name) => {
+                        const n = typeof value === 'number' ? value : 0;
                         if (chartView === "department") {
-                          return [value ?? 0, `${name ?? "Value"} - Departments`];
+                          return [n, `${name ?? "Value"} - Departments`];
                         }
 
                         if (chartView === "staff") {
-                          return [value ?? 0, `${name ?? "Value"} - Staff`];
+                          return [n, `${name ?? "Value"} - Staff`];
                         }
 
-                        return [value ?? 0, name ?? "Value"];
+                        return [n, String(name ?? "Value")];
                       }}
                     />
                     <Legend />

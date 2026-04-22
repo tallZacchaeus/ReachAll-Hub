@@ -6,6 +6,8 @@ import { usePage } from "@inertiajs/react";
 
 interface MainLayoutProps {
     children: ReactNode;
+    activePage?: string;
+    title?: string;
 }
 
 export default function MainLayout({ children }: MainLayoutProps) {
