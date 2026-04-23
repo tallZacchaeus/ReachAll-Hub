@@ -23,6 +23,70 @@ Major feature areas:
 - Content pages, newsletters, bulletins, FAQs
 - Finance workflows, approvals, documents, reports, and scheduled checks
 
+## Serious HR Platform Roadmap
+
+The current product has a strong internal HR/operations foundation, but a serious full-fledged HR platform needs the following NOW-tier capabilities. Treat these as strategic product gaps when planning major feature work.
+
+Build these features as modular, permission-gated modules. Superadmin must be able to control access by role wherever practical. Sensitive changes must be audited, and system-critical roles and permissions must be protected from accidental lockout.
+
+### NOW-Tier Missing Capabilities
+
+- Dynamic roles, permissions, and feature access
+  - Role-based access with superadmin-configurable role creation, feature assignment, edit, and removal
+  - Audit trail for every role and permission change
+  - System-protected roles such as `superadmin` to prevent lockout
+- Payroll
+  - Gross-to-net engine with Nigerian statutory rules such as PAYE, pension, NHF, and NSITF
+  - Payslip generation and delivery
+  - Off-cycle payroll runs
+  - Loans, salary advances, deductions, bank payment file exports, and year-end tax reports
+- Benefits administration
+  - HMO enrollment, pension, life insurance, disability insurance, dependents, and open enrollment workflows
+- Compensation management
+  - Salary bands, pay grades, merit and compensation review cycles, bonus and variable pay, and total rewards statements
+- Full recruitment / ATS
+  - Job requisitions, candidate pipeline, application forms, interview scheduling, scorecards, talent pool, and offer letters
+- Org chart and reporting hierarchy
+  - Proper employee master data
+  - Job positions as separate entities
+  - Cost centers, departments, business units, and locations
+  - Effective-dated lifecycle events such as hire, promotion, transfer, termination, and rehire
+- HR document vault and e-signatures
+  - Central digital personnel file
+  - Document versioning
+  - E-signature workflows for offers, contracts, and policies
+  - Contract management with versioning
+- Employee relations / case management
+  - HR helpdesk and ticketing with knowledge base
+  - Grievance and whistleblower channels
+  - Disciplinary action tracking
+  - Investigation case management
+- Global compliance and localization basics
+  - Visa and work permit tracking with expiry alerts
+  - Right-to-work verification
+  - GDPR / NDPR data subject request workflows
+  - Mandatory compliance training tracking
+  - Policy acknowledgement workflow with versioning
+
+### Supporting NOW-Tier Capabilities
+
+- Performance review cycles beyond OKRs, including quarterly and annual cycles, 360-degree feedback, continuous feedback, 1:1s, and performance improvement plans
+- Deeper leave management, including multiple leave types, accrual policies with carry-over, Nigerian holiday calendar, team leave calendar, and cover assignment
+- Onboarding document collection for ID, tax, bank, NIN, BVN, visa, and related employee records
+- Pre-boarding flows and equipment provisioning requests
+- Expense and travel reporting with receipt capture and multi-currency support
+- Immutable audit logs across all modules
+- Structured offboarding, including exit interview, equipment return, access revocation, final settlement, and clearance
+
+### Roadmap Implementation Rules
+
+- Start with platform foundations before feature breadth: RBAC, module registry, audit logs, employee master data, org structure, document storage, and workflow primitives.
+- Avoid building isolated screens with hard-coded role checks. New HR modules must use shared authorization, shared audit logging, shared notification patterns, and Inertia-first page delivery.
+- Model country-specific rules, especially payroll and compliance rules, as configurable policy data rather than scattered conditionals.
+- Treat payroll, compensation, employee relations, document vault, and compliance data as high-sensitivity data with strict authorization, auditability, and export controls.
+- Preserve finance auditability and private document storage rules when extending expense, travel, payroll, or document workflows.
+- Prefer phased vertical slices that ship a working module foundation plus one complete workflow before expanding to edge cases.
+
 ## Primary References
 
 - `PROJECT_GUIDE.md` is the repo-wide source of truth for product/domain behavior
@@ -141,6 +205,7 @@ Claude Code should explicitly use these installed skills from `~/.claude/skills`
 - UI/UX audit, accessibility review, or polish pass: `ui-ux-pro-max` + `web-design-guidelines` + `contrast-checker` + `link-purpose`
 - Full-stack feature or bug fix: `fullstack-guardian` + `laravel-specialist` + `react-expert` + `typescript-pro` + `test-master`
 - Security-sensitive change: `laravel-specialist` + `security-reviewer` + `secure-code-guardian` + `test-master`
+- Enterprise HR platform expansion: `architecture-designer` + `fullstack-guardian` + `laravel-specialist` + `php-pro` + `react-expert` + `typescript-pro` + `security-reviewer` + `test-master`; add `database-optimizer` for employee master data, payroll, reporting, audit logs, or high-volume tables
 - Production-readiness or Hostinger deployment work: `code-reviewer` + `security-reviewer` + `devops-engineer` + `cloud-architect` + `sre-engineer` + `monitoring-expert`
 - Chat/realtime work: `laravel-specialist` + `react-expert` + `websocket-engineer` + `test-master`
 - Finance module work: `laravel-specialist` + `php-pro` + `security-reviewer` + `test-master`; add `database-optimizer` for reporting or heavy queries

@@ -315,6 +315,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/profile-requests', [\App\Http\Controllers\ProfileController::class, 'adminIndex'])->name('admin.profile-requests');
     Route::post('/admin/profile-requests/{id}/approve', [\App\Http\Controllers\ProfileController::class, 'approveRequest'])->name('admin.profile-requests.approve');
     Route::post('/admin/profile-requests/{id}/reject', [\App\Http\Controllers\ProfileController::class, 'rejectRequest'])->name('admin.profile-requests.reject');
+
+    // Role & Permission Management (superadmin only)
+    Route::get('/admin/roles', [\App\Http\Controllers\Admin\RoleController::class, 'index'])->name('admin.roles.index');
+    Route::post('/admin/roles', [\App\Http\Controllers\Admin\RoleController::class, 'store'])->name('admin.roles.store');
+    Route::put('/admin/roles/{role}', [\App\Http\Controllers\Admin\RoleController::class, 'update'])->name('admin.roles.update');
+    Route::delete('/admin/roles/{role}', [\App\Http\Controllers\Admin\RoleController::class, 'destroy'])->name('admin.roles.destroy');
 });
 
 require __DIR__.'/settings.php';

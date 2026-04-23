@@ -42,9 +42,10 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 // CAT8-01: Expose only the fields the frontend needs — never leak
                 // hashed passwords, remember_tokens, or internal timestamps.
-                'user' => $request->user()?->only([
-                    'id', 'name', 'email', 'role', 'employee_stage',
-                ]),
+                'user' => $request->user() ? [
+                    ...$request->user()->only(['id', 'name', 'email', 'role', 'employee_stage']),
+                    'permissions' => $request->user()->getPermissions(),
+                ] : null,
             ],
             'has_petty_cash_float' => $request->user()
                 ? PettyCashFloat::where('custodian_id', $request->user()->id)

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Services\Finance\FinanceRoleHelper;
+use App\Services\PermissionService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -131,6 +132,47 @@ class User extends Authenticatable implements MustVerifyEmail
             'superadmin'         => 7,
             default              => 1,
         };
+    }
+
+    // ── RBAC helpers ───────────────────────────────────────────────────────
+
+    /**
+     * Return true if this user holds the named permission.
+     * Superadmin bypasses all permission checks.
+     */
+    public function hasPermission(string $permission): bool
+    {
+        if ($this->role === 'superadmin') {
+            return true;
+        }
+
+        if (!$this->role) {
+            return false;
+        }
+
+        return PermissionService::roleHasPermission($this->role, $permission);
+    }
+
+    /**
+     * Return every permission slug this user holds (for Inertia shared props).
+     *
+     * @return list<string>
+     */
+    public function getPermissions(): array
+    {
+        if ($this->role === 'superadmin') {
+            return \Illuminate\Support\Facades\Cache::remember(
+                'rbac:all_permissions',
+                3600,
+                fn () => \App\Models\Permission::pluck('name')->all()
+            );
+        }
+
+        if (!$this->role) {
+            return [];
+        }
+
+        return PermissionService::permissionsForRole($this->role);
     }
 
     public function assignedTasks(): HasMany

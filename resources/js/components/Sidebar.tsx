@@ -44,6 +44,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Link } from "@inertiajs/react";
+import { usePermissions } from "@/hooks/usePermissions";
 
 interface NavItem {
   id: string;
@@ -215,16 +216,19 @@ const FINANCE_HELP_SECTION: NavSection = {
 };
 
 export function Sidebar({ activePage, userRole, employeeStage = "performer", hasPettyCashFloat = false, onNavigate }: SidebarProps) {
-  const isAdmin = ["superadmin", "hr", "management"].includes(userRole);
-  const isFinanceAdmin = ["superadmin", "finance", "ceo"].includes(userRole);
-  const hasFinanceAccess = ["superadmin", "finance", "ceo", "general_management", "management", "hr"].includes(userRole);
+  const { can, canAny } = usePermissions();
+
+  const isAdmin = can('admin.dashboard');
+  const isFinanceAdmin = can('finance.admin');
+  // finance.reports is held by management/hr/finance/ceo/gm; finance.admin by finance/gm/ceo — together
+  // this covers every role with finance access except plain staff (who have only finance.access)
+  const hasFinanceAccess = canAny(['finance.admin', 'finance.reports']);
 
   const sections: NavSection[] = [];
 
   sections.push(CROSS_LIFECYCLE);
 
   if (isAdmin) {
-    // Admins see ALL stage sections + admin-specific sections
     sections.push(
       { ...JOINER_SECTION, label: "Joiner Tools" },
       { ...PERFORMER_SECTION, label: "Performer Tools" },
@@ -232,8 +236,14 @@ export function Sidebar({ activePage, userRole, employeeStage = "performer", has
       ADMIN_SECTION,
     );
 
-    if (userRole === "superadmin" || userRole === "hr") {
-      sections.push(ADMIN_MANAGE_SECTION);
+    const canManageStaff = can('staff.enroll');
+    const canManageRoles = can('roles.manage');
+    if (canManageStaff || canManageRoles) {
+      const manageItems = [...ADMIN_MANAGE_SECTION.items];
+      if (canManageRoles) {
+        manageItems.push({ id: "roles", label: "Roles & Permissions", icon: ShieldCheck, href: "/admin/roles" });
+      }
+      sections.push({ ...ADMIN_MANAGE_SECTION, items: manageItems });
     }
   } else {
     // Staff: show only their lifecycle stage section
