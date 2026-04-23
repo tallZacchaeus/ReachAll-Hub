@@ -159,7 +159,7 @@ export default function NotificationsPage() {
         {unreadCount > 0 && (
           <Button
             onClick={handleMarkAllAsRead}
-            className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+            className="bg-brand hover:bg-brand/90 text-white"
           >
             <Check className="w-4 h-4 mr-2" />
             Mark All as Read
@@ -178,7 +178,7 @@ export default function NotificationsPage() {
                   {notifications.length}
                 </p>
               </div>
-              <Bell className="w-8 h-8 text-[#1F6E4A]" />
+              <Bell className="w-8 h-8 text-brand" />
             </div>
           </CardContent>
         </Card>
@@ -191,7 +191,7 @@ export default function NotificationsPage() {
                   {unreadCount}
                 </p>
               </div>
-              <Badge className="bg-[#ef4444] text-white text-lg p-2 h-auto">
+              <Badge className="bg-destructive text-white text-lg p-2 h-auto">
                 New
               </Badge>
             </div>
@@ -206,7 +206,7 @@ export default function NotificationsPage() {
                   {notifications.filter((n) => n.type === "badge").length}
                 </p>
               </div>
-              <Award className="w-8 h-8 text-[#FFD400]" />
+              <Award className="w-8 h-8 text-brand-yellow" />
             </div>
           </CardContent>
         </Card>
@@ -219,7 +219,7 @@ export default function NotificationsPage() {
                   {notifications.filter((n) => n.date === "Nov 5, 2025").length}
                 </p>
               </div>
-              <Calendar className="w-8 h-8 text-[#1F6E4A]" />
+              <Calendar className="w-8 h-8 text-brand" />
             </div>
           </CardContent>
         </Card>
@@ -231,26 +231,26 @@ export default function NotificationsPage() {
           <TabsTrigger
             value="all"
             onClick={() => setFilter("all")}
-            className="data-[state=active]:bg-[#1F6E4A] data-[state=active]:text-white"
+            className="data-[state=active]:bg-brand data-[state=active]:text-white"
           >
             All Notifications
           </TabsTrigger>
           <TabsTrigger
             value="unread"
             onClick={() => setFilter("unread")}
-            className="data-[state=active]:bg-[#1F6E4A] data-[state=active]:text-white"
+            className="data-[state=active]:bg-brand data-[state=active]:text-white"
           >
             Unread ({unreadCount})
           </TabsTrigger>
           <TabsTrigger
             value="awards"
-            className="data-[state=active]:bg-[#1F6E4A] data-[state=active]:text-white"
+            className="data-[state=active]:bg-brand data-[state=active]:text-white"
           >
             Awards & Badges
           </TabsTrigger>
           <TabsTrigger
             value="system"
-            className="data-[state=active]:bg-[#1F6E4A] data-[state=active]:text-white"
+            className="data-[state=active]:bg-brand data-[state=active]:text-white"
           >
             System Updates
           </TabsTrigger>
@@ -271,7 +271,7 @@ export default function NotificationsPage() {
               >
                 <Card
                   className={`shadow-sm cursor-pointer transition-all ${
-                    notification.read ? "bg-card" : "bg-[#f0fdf4] dark:bg-muted border-l-4"
+                    notification.read ? "bg-card" : "bg-brand-subtle dark:bg-muted border-l-4"
                   }`}
                   style={{ borderLeftColor: notification.read ? "transparent" : color }}
                 >
@@ -288,7 +288,7 @@ export default function NotificationsPage() {
                           <h3 className="text-foreground">{notification.title}</h3>
                           <div className="flex items-center gap-2 flex-shrink-0 ml-4">
                             {!notification.read && (
-                              <Badge className="bg-[#ef4444] text-white hover:bg-[#ef4444]">
+                              <Badge className="bg-destructive text-white hover:bg-destructive">
                                 New
                               </Badge>
                             )}
@@ -298,7 +298,7 @@ export default function NotificationsPage() {
                               onClick={() => handleMarkAsRead(notification.id)}
                               className="hover:bg-muted p-1 h-auto"
                             >
-                              <Check className="w-4 h-4 text-[#1F6E4A]" />
+                              <Check className="w-4 h-4 text-brand" />
                             </Button>
                             <Button
                               size="sm"
@@ -333,7 +333,7 @@ export default function NotificationsPage() {
           {filteredNotifications.length === 0 ? (
             <Card className="bg-card shadow-sm">
               <CardContent className="p-12 text-center">
-                <Check className="w-16 h-16 text-[#1F6E4A] mx-auto mb-4" />
+                <Check className="w-16 h-16 text-brand mx-auto mb-4" />
                 <h3 className="text-foreground mb-2">All Caught Up!</h3>
                 <p className="text-muted-foreground">You have no unread notifications.</p>
               </CardContent>
@@ -347,7 +347,7 @@ export default function NotificationsPage() {
                 return (
                   <Card
                     key={notification.id}
-                    className="bg-[#f0fdf4] dark:bg-muted border-l-4 shadow-sm"
+                    className="bg-brand-subtle dark:bg-muted border-l-4 shadow-sm"
                     style={{ borderLeftColor: color }}
                   >
                     <CardContent className="p-4">
@@ -365,7 +365,7 @@ export default function NotificationsPage() {
                         <Button
                           size="sm"
                           onClick={() => handleMarkAsRead(notification.id)}
-                          className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+                          className="bg-brand hover:bg-brand/90 text-white"
                         >
                           <Check className="w-4 h-4" />
                         </Button>
@@ -388,7 +388,7 @@ export default function NotificationsPage() {
                 return (
                   <Card
                     key={notification.id}
-                    className={`shadow-sm ${!notification.read ? "bg-[#f0fdf4] dark:bg-muted" : "bg-card"}`}
+                    className={`shadow-sm ${!notification.read ? "bg-brand-subtle dark:bg-muted" : "bg-card"}`}
                   >
                     <CardContent className="p-4">
                       <div className="flex items-start gap-4">
@@ -421,7 +421,7 @@ export default function NotificationsPage() {
                 return (
                   <Card
                     key={notification.id}
-                    className={`shadow-sm ${!notification.read ? "bg-[#f0fdf4] dark:bg-muted" : "bg-card"}`}
+                    className={`shadow-sm ${!notification.read ? "bg-brand-subtle dark:bg-muted" : "bg-card"}`}
                   >
                     <CardContent className="p-4">
                       <div className="flex items-start gap-4">

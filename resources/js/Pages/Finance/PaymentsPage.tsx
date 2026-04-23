@@ -139,6 +139,8 @@ export default function PaymentsPage({ ready, recent, flash }: Props) {
                 No requisitions awaiting payment.
               </p>
             ) : (
+              <div className="overflow-x-auto">
+
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -189,6 +191,7 @@ export default function PaymentsPage({ ready, recent, flash }: Props) {
                   ))}
                 </TableBody>
               </Table>
+              </div>
             )}
           </CardContent>
         </Card>
@@ -200,6 +203,8 @@ export default function PaymentsPage({ ready, recent, flash }: Props) {
               <CardTitle className="text-base">Recent Payments</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
+              <div className="overflow-x-auto">
+
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -224,6 +229,7 @@ export default function PaymentsPage({ ready, recent, flash }: Props) {
                   ))}
                 </TableBody>
               </Table>
+              </div>
             </CardContent>
           </Card>
         )}

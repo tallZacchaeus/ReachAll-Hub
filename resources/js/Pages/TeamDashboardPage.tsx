@@ -30,6 +30,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useState } from "react";
+import { useChartColors } from "@/lib/useChartColors";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -97,8 +98,8 @@ function MetricCard({
             <p className={`text-3xl font-bold mt-1 ${accent ?? "text-foreground"}`}>{value}</p>
             {sub && <p className="text-xs text-muted-foreground mt-1">{sub}</p>}
           </div>
-          <div className="w-10 h-10 rounded-lg bg-[#1F6E4A]/10 flex items-center justify-center shrink-0">
-            <Icon className="w-5 h-5 text-[#1F6E4A]" />
+          <div className="w-10 h-10 rounded-lg bg-brand/10 flex items-center justify-center shrink-0">
+            <Icon className="w-5 h-5 text-brand" />
           </div>
         </div>
       </CardContent>
@@ -132,7 +133,7 @@ function MemberSheet({
         <SheetHeader>
           <div className="flex items-center gap-3">
             <Avatar className="w-12 h-12">
-              <AvatarFallback className="bg-[#1F6E4A] text-white text-sm font-semibold">
+              <AvatarFallback className="bg-brand text-white text-sm font-semibold">
                 {member.initials}
               </AvatarFallback>
             </Avatar>
@@ -194,6 +195,7 @@ export default function TeamDashboardPage({
   members,
   chartData,
 }: TeamDashboardPageProps) {
+  const { colors } = useChartColors();
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
 
   return (
@@ -201,7 +203,7 @@ export default function TeamDashboardPage({
       {/* Header */}
       <div>
         <h1 className="text-foreground flex items-center gap-3">
-          <Users className="w-7 h-7 text-[#1F6E4A]" />
+          <Users className="w-7 h-7 text-brand" />
           Team Dashboard
         </h1>
         <p className="text-muted-foreground text-sm mt-1">
@@ -235,7 +237,7 @@ export default function TeamDashboardPage({
           label="Tasks Done"
           value={tasksCompletedThisWeek}
           sub="this week"
-          accent="text-[#1F6E4A]"
+          accent="text-brand"
         />
         <MetricCard
           icon={FileText}
@@ -267,7 +269,7 @@ export default function TeamDashboardPage({
                       className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors text-left"
                     >
                       <Avatar className="w-9 h-9 shrink-0">
-                        <AvatarFallback className="bg-[#1F6E4A]/10 text-[#1F6E4A] text-xs font-semibold">
+                        <AvatarFallback className="bg-brand/10 text-brand text-xs font-semibold">
                           {m.initials}
                         </AvatarFallback>
                       </Avatar>
@@ -302,6 +304,7 @@ export default function TeamDashboardPage({
               {chartData.length === 0 ? (
                 <p className="text-muted-foreground text-sm text-center py-10">No data yet.</p>
               ) : (
+                <div role="img" aria-label="Team performance bar chart showing attendance percentage and completed tasks by member">
                 <ResponsiveContainer width="100%" height={280}>
                   <BarChart data={chartData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
@@ -316,10 +319,11 @@ export default function TeamDashboardPage({
                       }}
                     />
                     <Legend wrapperStyle={{ fontSize: 11 }} />
-                    <Bar dataKey="attendance" name="Attendance %" fill="#1F6E4A" radius={[3, 3, 0, 0]} />
-                    <Bar dataKey="tasks" name="Completed Tasks" fill="#FFD400" radius={[3, 3, 0, 0]} />
+                    <Bar dataKey="attendance" name="Attendance %" fill={colors.primary} radius={[3, 3, 0, 0]} />
+                    <Bar dataKey="tasks" name="Completed Tasks" fill={colors.secondary} radius={[3, 3, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
+                </div>
               )}
             </CardContent>
           </Card>

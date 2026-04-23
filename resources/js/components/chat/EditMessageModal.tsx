@@ -66,7 +66,7 @@ export function EditMessageModal({
                     <Button
                         onClick={handleSave}
                         disabled={!content.trim() || content === currentContent || isSaving}
-                        className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+                        className="bg-brand hover:bg-brand/90 text-white"
                     >
                         {isSaving ? "Saving..." : "Save changes"}
                     </Button>

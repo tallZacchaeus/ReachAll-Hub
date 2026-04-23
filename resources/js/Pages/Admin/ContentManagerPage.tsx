@@ -90,14 +90,14 @@ export default function ContentManagerPage({ pages, categories, filters }: Conte
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-foreground flex items-center gap-3">
-            <FileText className="w-8 h-8 text-[#1F6E4A]" />
+            <FileText className="w-8 h-8 text-brand" />
             Content Manager
           </h1>
           <p className="text-muted-foreground">Create and manage content pages</p>
         </div>
         <Button
           onClick={() => router.visit("/admin/content/create")}
-          className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+          className="bg-brand hover:bg-brand/90 text-white"
         >
           <Plus className="w-4 h-4 mr-2" />
           Create New
@@ -118,7 +118,7 @@ export default function ContentManagerPage({ pages, categories, filters }: Conte
                   className="pl-9"
                 />
               </div>
-              <Button type="submit" size="sm" className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+              <Button type="submit" size="sm" className="bg-brand hover:bg-brand/90 text-white">
                 Go
               </Button>
             </form>
@@ -293,7 +293,7 @@ export default function ContentManagerPage({ pages, categories, filters }: Conte
               size="sm"
               disabled={!link.url}
               onClick={() => link.url && router.visit(link.url, { preserveScroll: true })}
-              className={link.active ? "bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white" : ""}
+              className={link.active ? "bg-brand hover:bg-brand/90 text-white" : ""}
               dangerouslySetInnerHTML={{ __html: sanitizeHtml(link.label) }}
             />
           ))}

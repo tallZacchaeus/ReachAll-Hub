@@ -130,9 +130,9 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
       case "high":
         return { bg: "bg-red-100", text: "text-red-800", border: "border-red-200" };
       case "medium":
-        return { bg: "bg-[#fff9e6]", text: "text-foreground", border: "border-[#FFD400]" };
+        return { bg: "bg-[#fff9e6]", text: "text-foreground", border: "border-brand-yellow" };
       default:
-        return { bg: "bg-[#f0fdf4] dark:bg-muted", text: "text-[#1F6E4A]", border: "border-[#1F6E4A]" };
+        return { bg: "bg-brand-subtle dark:bg-muted", text: "text-brand", border: "border-brand" };
     }
   };
 
@@ -160,7 +160,7 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
                   {announcements.length}
                 </p>
               </div>
-              <Megaphone className="w-8 h-8 text-[#1F6E4A]" />
+              <Megaphone className="w-8 h-8 text-brand" />
             </div>
           </CardContent>
         </Card>
@@ -173,7 +173,7 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
                   3
                 </p>
               </div>
-              <Calendar className="w-8 h-8 text-[#FFD400]" />
+              <Calendar className="w-8 h-8 text-brand-yellow" />
             </div>
           </CardContent>
         </Card>
@@ -186,7 +186,7 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
                   124
                 </p>
               </div>
-              <Users className="w-8 h-8 text-[#1F6E4A]" />
+              <Users className="w-8 h-8 text-brand" />
             </div>
           </CardContent>
         </Card>
@@ -199,7 +199,7 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
                   100%
                 </p>
               </div>
-              <CheckCircle className="w-8 h-8 text-[#1F6E4A]" />
+              <CheckCircle className="w-8 h-8 text-brand" />
             </div>
           </CardContent>
         </Card>
@@ -207,10 +207,10 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
 
       {/* Create Announcement (Admin only) */}
       {isAdmin && (
-        <Card className="bg-card shadow-sm border-2 border-[#1F6E4A]">
+        <Card className="bg-card shadow-sm border-2 border-brand">
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Megaphone className="w-5 h-5 text-[#1F6E4A]" />
+              <Megaphone className="w-5 h-5 text-brand" />
               <CardTitle className="text-foreground">Create New Announcement</CardTitle>
             </div>
             <CardDescription className="text-muted-foreground">
@@ -275,7 +275,7 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
 
               <Button
                 onClick={handleSendAnnouncement}
-                className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+                className="bg-brand hover:bg-brand/90 text-white"
               >
                 <Send className="w-4 h-4 mr-2" />
                 Send Announcement
@@ -315,7 +315,7 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
                             ? "bg-red-100"
                             : announcement.priority === "medium"
                             ? "bg-[#fff9e6]"
-                            : "bg-[#f0fdf4] dark:bg-muted"
+                            : "bg-brand-subtle dark:bg-muted"
                         }`}
                       >
                         <Megaphone
@@ -323,10 +323,10 @@ export default function AnnouncementsPage({ userRole }: { userRole: string }) {
                           style={{
                             color:
                               announcement.priority === "high"
-                                ? "#ef4444"
+                                ? "var(--destructive)"
                                 : announcement.priority === "medium"
-                                ? "#FFD400"
-                                : "#1F6E4A",
+                                ? "var(--brand-yellow)"
+                                : "var(--brand)",
                           }}
                         />
                       </div>

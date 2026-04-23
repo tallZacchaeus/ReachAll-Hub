@@ -260,7 +260,7 @@ export default function PettyCashPage({
           <h1 className="text-2xl font-bold">Petty Cash</h1>
           <p className="text-sm text-muted-foreground">Your float dashboard</p>
         </div>
-        <Button onClick={() => setShowExpense(true)} className="bg-[#1F6E4A] hover:bg-[#1a5c3e] text-white">
+        <Button onClick={() => setShowExpense(true)} className="bg-brand hover:bg-[#1a5c3e] text-white">
           <TrendingDown className="w-4 h-4 mr-2" /> Log Expense
         </Button>
       </div>

@@ -175,7 +175,7 @@ function JobForm({ posting }: { posting: PostingRow | null }) {
           </div>
 
           <div className="flex gap-2 pt-1">
-            <Button type="submit" disabled={processing} className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+            <Button type="submit" disabled={processing} className="bg-brand hover:bg-brand/90 text-white">
               <Save className="w-4 h-4 mr-2" />
               {processing ? "Saving…" : isEdit ? "Update" : "Create"}
             </Button>
@@ -335,7 +335,7 @@ export default function JobPostingsManagePage({ postings, posting }: JobPostings
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-foreground flex items-center gap-3">
-            <Briefcase className="w-7 h-7 text-[#1F6E4A]" />
+            <Briefcase className="w-7 h-7 text-brand" />
             Manage Job Postings
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
@@ -344,7 +344,7 @@ export default function JobPostingsManagePage({ postings, posting }: JobPostings
         </div>
         <Button
           onClick={() => router.visit("/admin/jobs")}
-          className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+          className="bg-brand hover:bg-brand/90 text-white"
         >
           <PlusCircle className="w-4 h-4 mr-2" />
           New Posting
@@ -371,7 +371,7 @@ export default function JobPostingsManagePage({ postings, posting }: JobPostings
                   size="sm"
                   disabled={!link.url}
                   onClick={() => link.url && router.visit(link.url, { preserveState: true })}
-                  className={link.active ? "bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white" : ""}
+                  className={link.active ? "bg-brand hover:bg-brand/90 text-white" : ""}
                   dangerouslySetInnerHTML={{ __html: sanitizeHtml(link.label) }}
                 />
               ))}

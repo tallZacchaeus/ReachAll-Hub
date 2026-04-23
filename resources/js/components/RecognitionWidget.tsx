@@ -27,10 +27,10 @@ interface RecognitionWidgetProps {
 
 const BADGE_ICONS: Record<string, { icon: React.ComponentType<{ className?: string }>; color: string; label: string }> = {
   shoutout:        { icon: Megaphone,  color: "text-blue-500",   label: "Shout-out" },
-  teamwork:        { icon: Users,      color: "text-[#1F6E4A]",  label: "Teamwork" },
+  teamwork:        { icon: Users,      color: "text-brand",  label: "Teamwork" },
   innovation:      { icon: Lightbulb,  color: "text-amber-500",  label: "Innovation" },
   leadership:      { icon: Crown,      color: "text-purple-500", label: "Leadership" },
-  above_and_beyond:{ icon: Star,       color: "text-[#FFD400]",  label: "Above & Beyond" },
+  above_and_beyond:{ icon: Star,       color: "text-brand-yellow",  label: "Above & Beyond" },
 };
 
 export function RecognitionWidget({ recentRecognitions, receivedThisMonth }: RecognitionWidgetProps) {
@@ -39,7 +39,7 @@ export function RecognitionWidget({ recentRecognitions, receivedThisMonth }: Rec
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base text-foreground flex items-center gap-2">
-            <Star className="w-4 h-4 text-[#FFD400]" />
+            <Star className="w-4 h-4 text-brand-yellow" />
             Recognition
           </CardTitle>
           <Button
@@ -55,7 +55,7 @@ export function RecognitionWidget({ recentRecognitions, receivedThisMonth }: Rec
         {receivedThisMonth > 0 && (
           <p className="text-xs text-muted-foreground mt-0.5">
             You've received{" "}
-            <span className="font-semibold text-[#1F6E4A]">{receivedThisMonth}</span>{" "}
+            <span className="font-semibold text-brand">{receivedThisMonth}</span>{" "}
             recognition{receivedThisMonth !== 1 ? "s" : ""} this month
           </p>
         )}
@@ -82,7 +82,7 @@ export function RecognitionWidget({ recentRecognitions, receivedThisMonth }: Rec
             return (
               <div key={r.id} className="flex items-start gap-3">
                 <Avatar className="w-8 h-8 shrink-0">
-                  <AvatarFallback className="bg-[#1F6E4A] text-white text-xs">
+                  <AvatarFallback className="bg-brand text-white text-xs">
                     {r.sender_initials}
                   </AvatarFallback>
                 </Avatar>

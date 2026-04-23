@@ -126,13 +126,13 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
             <CardContent className="p-6">
               <div className="text-center mb-6">
                 <Avatar className="w-24 h-24 mx-auto mb-4">
-                  <AvatarFallback className="bg-[#1F6E4A] text-white text-2xl uppercase">
+                  <AvatarFallback className="bg-brand text-white text-2xl uppercase">
                     {user.name.charAt(0)}{user.name.split(" ")[1]?.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
                 <h2 className="text-foreground mb-1">{user.name}</h2>
                 <p className="text-muted-foreground mb-2">{user.role}</p>
-                <Badge className="bg-[#1F6E4A] text-white uppercase">{user.employee_id}</Badge>
+                <Badge className="bg-brand text-white uppercase">{user.employee_id}</Badge>
               </div>
 
               <div className="space-y-4 border-t border-border pt-6">
@@ -167,7 +167,7 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
               <div className="flex flex-col gap-2 mt-6">
                 <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
                   <DialogTrigger asChild>
-                    <Button className="w-full bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+                    <Button className="w-full bg-brand hover:bg-brand/90 text-white">
                       Edit Profile
                     </Button>
                   </DialogTrigger>
@@ -215,7 +215,7 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
                       </div>
                       <DialogFooter className="mt-6">
                         <Button type="button" variant="outline" onClick={() => setShowEditModal(false)}>Cancel</Button>
-                        <Button type="submit" disabled={processing} className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+                        <Button type="submit" disabled={processing} className="bg-brand hover:bg-brand/90 text-white">
                           {processing ? "Submitting..." : "Submit for Approval"}
                         </Button>
                       </DialogFooter>
@@ -225,7 +225,7 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
 
                 <Dialog open={showBadgesModal} onOpenChange={setShowBadgesModal}>
                   <DialogTrigger asChild>
-                    <Button className="w-full bg-[#FFD400] hover:bg-[#e6c000] text-foreground">
+                    <Button className="w-full bg-brand-yellow hover:bg-[#e6c000] text-foreground">
                       <Sparkles className="w-4 h-4 mr-2" />
                       View Badges
                     </Button>
@@ -233,7 +233,7 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
                   <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
                     <DialogHeader>
                       <DialogTitle className="flex items-center gap-2 text-foreground">
-                        <Trophy className="w-6 h-6 text-[#FFD400]" />
+                        <Trophy className="w-6 h-6 text-brand-yellow" />
                         My Badges & Milestones
                       </DialogTitle>
                       <DialogDescription className="text-muted-foreground">
@@ -251,7 +251,7 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
               <div className="mt-6 pt-6 border-t border-border">
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="text-sm text-foreground">Recent Badges</h4>
-                  <Badge variant="outline" className="border-[#FFD400] text-[#FFD400]">
+                  <Badge variant="outline" className="border-brand-yellow text-brand-yellow">
                     {allBadges.filter(b => b.earned).length}
                   </Badge>
                 </div>
@@ -289,7 +289,7 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
           <Card className="bg-card shadow-sm border-2 border-border">
             <CardHeader>
               <CardTitle className="text-foreground flex items-center gap-2">
-                <Award className="w-5 h-5 text-[#FFD400]" />
+                <Award className="w-5 h-5 text-brand-yellow" />
                 Recent Achievements
               </CardTitle>
               <CardDescription className="text-muted-foreground">
@@ -304,16 +304,16 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="flex items-center gap-4 p-4 border-2 border-border rounded-lg hover:shadow-md hover:border-[#FFD400] transition-all"
+                    className="flex items-center gap-4 p-4 border-2 border-border rounded-lg hover:shadow-md hover:border-brand-yellow transition-all"
                   >
-                    <div className="w-12 h-12 bg-gradient-to-br from-[#FFD400] to-[#f59e0b] rounded-lg flex items-center justify-center text-2xl shadow-md">
+                    <div className="w-12 h-12 bg-gradient-to-br from-brand-yellow to-[#f59e0b] rounded-lg flex items-center justify-center text-2xl shadow-md">
                       {achievement.icon}
                     </div>
                     <div className="flex-1">
                       <h4 className="text-foreground mb-1">{achievement.title}</h4>
                       <p className="text-sm text-muted-foreground">{achievement.month}</p>
                     </div>
-                    <Trophy className="w-5 h-5 text-[#FFD400]" />
+                    <Trophy className="w-5 h-5 text-brand-yellow" />
                   </motion.div>
                 ))}
               </div>
@@ -338,7 +338,7 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
                     transition={{ delay: index * 0.1 }}
                     className="flex items-start gap-3 pb-4 border-b border-border last:border-b-0 last:pb-0"
                   >
-                    <div className="w-2 h-2 rounded-full bg-[#1F6E4A] mt-2"></div>
+                    <div className="w-2 h-2 rounded-full bg-brand mt-2"></div>
                     <div className="flex-1">
                       <p className="text-sm text-foreground mb-1">{activity.action}</p>
                       <p className="text-xs text-muted-foreground">{activity.date}</p>

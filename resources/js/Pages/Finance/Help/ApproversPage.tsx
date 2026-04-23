@@ -166,7 +166,7 @@ export default function ApproversPage() {
         <div className="flex gap-3">
           <Link
             href="/finance/approvals"
-            className="inline-flex items-center gap-2 bg-[#1F6E4A] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#185c3d] transition-colors"
+            className="inline-flex items-center gap-2 bg-brand text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#185c3d] transition-colors"
           >
             <Clock className="w-4 h-4" /> Go to Approval Queue
           </Link>

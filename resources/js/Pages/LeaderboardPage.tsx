@@ -272,7 +272,7 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
       <div className="relative z-10">
         <div className="mb-6">
           <h1 className="text-foreground mb-2 flex items-center gap-3">
-            <Trophy className="w-10 h-10 text-[#FFD400]" />
+            <Trophy className="w-10 h-10 text-brand-yellow" />
             Leaderboard & Recognition Center
           </h1>
           <p className="text-muted-foreground">
@@ -281,7 +281,7 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
         </div>
 
         {/* Filters */}
-        <Card className="rounded-2xl border-2 border-[#1F6E4A]/10">
+        <Card className="rounded-2xl border-2 border-brand/10">
           <CardContent className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
@@ -363,12 +363,12 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
 
           {/* Floating balloons */}
           <motion.div
-            className="absolute left-[10%] top-[10%] w-10 h-14 rounded-full bg-gradient-to-b from-[#FFD43B]/20 to-transparent"
+            className="absolute left-[10%] top-[10%] w-10 h-14 rounded-full bg-gradient-to-b from-brand-yellow/20 to-transparent"
             animate={{ y: [-10, 10, -10], x: [-5, 5, -5] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div
-            className="absolute right-[10%] top-[15%] w-8 h-12 rounded-full bg-gradient-to-b from-[#1F6E4A]/15 to-transparent"
+            className="absolute right-[10%] top-[15%] w-8 h-12 rounded-full bg-gradient-to-b from-brand/15 to-transparent"
             animate={{ y: [10, -10, 10], x: [5, -5, 5] }}
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           />
@@ -384,9 +384,9 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <Sparkles className="w-7 h-7 text-[#FFD43B]" />
+              <Sparkles className="w-7 h-7 text-brand-yellow" />
               Top Performers of the Month 🎉
-              <Sparkles className="w-7 h-7 text-[#FFD43B]" />
+              <Sparkles className="w-7 h-7 text-brand-yellow" />
             </motion.h2>
             <p className="text-muted-foreground">Celebrating excellence across the team</p>
           </div>
@@ -417,7 +417,7 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
 
                     {/* Avatar */}
                     <Avatar className="w-16 h-16 mx-auto mb-3 border-4 border-white shadow-xl">
-                      <AvatarFallback className="bg-[#1F6E4A] text-white text-lg">
+                      <AvatarFallback className="bg-brand text-white text-lg">
                         {top3[1].avatar}
                       </AvatarFallback>
                     </Avatar>
@@ -464,7 +464,7 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
                 transition={{ delay: 0.2, type: "spring" }}
                 className="flex-1 max-w-xs scale-110"
               >
-                <Card className="rounded-3xl border-4 border-white shadow-2xl bg-gradient-to-b from-[#FFF3B0] to-[#FFD43B] relative overflow-hidden group hover:scale-105 transition-transform">
+                <Card className="rounded-3xl border-4 border-white shadow-2xl bg-gradient-to-b from-[#FFF3B0] to-brand-yellow relative overflow-hidden group hover:scale-105 transition-transform">
                   {/* Pulsing glow */}
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-b from-white/50 to-transparent"
@@ -485,15 +485,15 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
                     {/* Medal & Rank */}
                     <div className="text-center mb-3">
                       <div className="text-5xl mb-2">🥇</div>
-                      <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-[#FFD43B] to-[#FFA500] flex items-center justify-center shadow-xl ring-4 ring-white/50 mb-2">
-                        <Crown className="w-8 h-8 text-[#1F6E4A]" />
+                      <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-brand-yellow to-[#FFA500] flex items-center justify-center shadow-xl ring-4 ring-white/50 mb-2">
+                        <Crown className="w-8 h-8 text-brand" />
                       </div>
                       <p className="text-xs text-amber-800">Champion of the Month</p>
                     </div>
 
                     {/* Avatar */}
                     <Avatar className="w-20 h-20 mx-auto mb-3 border-4 border-white shadow-xl ring-4 ring-[#FFD43B]/30">
-                      <AvatarFallback className="bg-[#1F6E4A] text-white text-xl">
+                      <AvatarFallback className="bg-brand text-white text-xl">
                         {top3[0].avatar}
                       </AvatarFallback>
                     </Avatar>
@@ -503,7 +503,7 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
                       <p className="text-xl text-foreground mb-1">{top3[0].staffId}</p>
                       <p className="text-xs text-amber-800">{top3[0].department}</p>
                       {top3[0].previousWins > 0 && (
-                        <Badge className="bg-card text-[#FFD43B] border-0 mt-2">
+                        <Badge className="bg-card text-brand-yellow border-0 mt-2">
                           <Crown className="w-3 h-3 mr-1" />
                           {top3[0].previousWins}x Winner
                         </Badge>
@@ -513,7 +513,7 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
                     {/* Points */}
                     <div className="bg-card backdrop-blur-sm rounded-2xl py-3 px-4 mb-3 shadow-lg">
                       <div className="flex items-center justify-center gap-2">
-                        <Trophy className="w-5 h-5 text-[#FFD43B]" />
+                        <Trophy className="w-5 h-5 text-brand-yellow" />
                         <span className="text-3xl text-foreground">{top3[0].totalPoints}</span>
                         <span className="text-xs text-gray-600">pts</span>
                       </div>
@@ -531,7 +531,7 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
                   </CardContent>
 
                   {/* Podium base */}
-                  <div className="h-28 bg-gradient-to-b from-[#FFD43B] to-[#FFA500] flex items-center justify-center text-white text-2xl shadow-inner">
+                  <div className="h-28 bg-gradient-to-b from-brand-yellow to-[#FFA500] flex items-center justify-center text-white text-2xl shadow-inner">
                     #1
                   </div>
                 </Card>
@@ -562,7 +562,7 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
 
                     {/* Avatar */}
                     <Avatar className="w-16 h-16 mx-auto mb-3 border-4 border-white shadow-xl">
-                      <AvatarFallback className="bg-[#1F6E4A] text-white text-lg">
+                      <AvatarFallback className="bg-brand text-white text-lg">
                         {top3[2].avatar}
                       </AvatarFallback>
                     </Avatar>
@@ -614,7 +614,7 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-foreground flex items-center gap-2">
-                  <BarChart3 className="w-6 h-6 text-[#1F6E4A]" />
+                  <BarChart3 className="w-6 h-6 text-brand" />
                   Ranking Table
                 </CardTitle>
                 <CardDescription className="text-muted-foreground">
@@ -648,8 +648,8 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
                             <div
                               className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg text-2xl ${
                                 entry.rank <= 6
-                                  ? "bg-gradient-to-br from-[#C9A227] to-[#FFD43B] text-white"
-                                  : "bg-gradient-to-br from-[#1F6E4A] to-[#15803d] text-white"
+                                  ? "bg-gradient-to-br from-[#C9A227] to-brand-yellow text-white"
+                                  : "bg-gradient-to-br from-brand to-[#15803d] text-white"
                               }`}
                             >
                               #{entry.rank}
@@ -658,7 +658,7 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
 
                           {/* Avatar */}
                           <Avatar className="w-12 h-12 border-2 border-border shadow-md shrink-0">
-                            <AvatarFallback className="bg-[#1F6E4A] text-white">
+                            <AvatarFallback className="bg-brand text-white">
                               {entry.avatar}
                             </AvatarFallback>
                           </Avatar>
@@ -669,7 +669,7 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
                               <p className="text-lg text-foreground">{entry.staffId}</p>
                               {getRankIcon(entry.rank, entry.previousRank)}
                               {entry.category && (
-                                <Badge variant="outline" className="text-xs border-[#1F6E4A] text-[#1F6E4A]">
+                                <Badge variant="outline" className="text-xs border-brand text-brand">
                                   {entry.category === "Staff of the Month" ? "🏅" : "🌟"}
                                 </Badge>
                               )}
@@ -688,7 +688,7 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
                           <div className="flex items-center gap-6">
                             <div className="text-right">
                               <div className="flex items-center gap-2 justify-end mb-1">
-                                <Trophy className="w-5 h-5 text-[#FFD400]" />
+                                <Trophy className="w-5 h-5 text-brand-yellow" />
                                 <span className="text-2xl text-foreground">{entry.totalPoints}</span>
                               </div>
                               <p className="text-xs text-muted-foreground">points</p>

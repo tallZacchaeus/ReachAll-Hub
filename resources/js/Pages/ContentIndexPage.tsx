@@ -67,7 +67,7 @@ export default function ContentIndexPage({ pages, categories, filters }: Content
       {/* Header */}
       <div>
         <h1 className="text-foreground mb-1 flex items-center gap-3">
-          <FileText className="w-8 h-8 text-[#1F6E4A]" />
+          <FileText className="w-8 h-8 text-brand" />
           Content Library
         </h1>
         <p className="text-muted-foreground">Policies, guides, and resources for your team</p>
@@ -83,7 +83,7 @@ export default function ContentIndexPage({ pages, categories, filters }: Content
             onClick={() => applyFilter({ category: "", search: "" })}
             className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
               !filters.category
-                ? "bg-[#1F6E4A] text-white"
+                ? "bg-brand text-white"
                 : "text-foreground hover:bg-muted"
             }`}
           >
@@ -95,7 +95,7 @@ export default function ContentIndexPage({ pages, categories, filters }: Content
               onClick={() => selectCategory(cat.slug)}
               className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors flex items-center justify-between ${
                 filters.category === cat.slug
-                  ? "bg-[#1F6E4A] text-white"
+                  ? "bg-brand text-white"
                   : "text-foreground hover:bg-muted"
               }`}
             >
@@ -118,7 +118,7 @@ export default function ContentIndexPage({ pages, categories, filters }: Content
                 className="pl-9"
               />
             </div>
-            <Button type="submit" className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+            <Button type="submit" className="bg-brand hover:bg-brand/90 text-white">
               Search
             </Button>
             {(filters.search || filters.category) && (
@@ -150,7 +150,7 @@ export default function ContentIndexPage({ pages, categories, filters }: Content
               {pages.data.map((item) => (
                 <Card
                   key={item.id}
-                  className="border-2 border-border hover:border-[#1F6E4A] transition-all cursor-pointer hover:shadow-md"
+                  className="border-2 border-border hover:border-brand transition-all cursor-pointer hover:shadow-md"
                   onClick={() => router.visit(`/content/${item.slug}`)}
                 >
                   {item.featured_image && (
@@ -209,7 +209,7 @@ export default function ContentIndexPage({ pages, categories, filters }: Content
                   size="sm"
                   disabled={!link.url}
                   onClick={() => link.url && router.visit(link.url, { preserveScroll: true })}
-                  className={link.active ? "bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white" : ""}
+                  className={link.active ? "bg-brand hover:bg-brand/90 text-white" : ""}
                   dangerouslySetInnerHTML={{ __html: sanitizeHtml(link.label) }}
                 />
               ))}

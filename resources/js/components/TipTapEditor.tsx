@@ -71,7 +71,7 @@ export function TipTapEditor({ content, onChange, placeholder = "Start writingâ€
     extensions: [
       StarterKit.configure({ heading: { levels: [1, 2, 3] } }),
       Underline,
-      Link.configure({ openOnClick: false, HTMLAttributes: { class: "text-[#1F6E4A] underline" } }),
+      Link.configure({ openOnClick: false, HTMLAttributes: { class: "text-brand underline" } }),
       Image.configure({ HTMLAttributes: { class: "max-w-full rounded-lg my-4" } }),
       Placeholder.configure({ placeholder }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),

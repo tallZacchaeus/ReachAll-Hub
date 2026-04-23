@@ -81,7 +81,7 @@ export function FilePreview({ file, onRemove }: FilePreviewProps) {
 
     return (
         <div className="flex items-center gap-2 p-2 bg-muted rounded-lg border border-border">
-            <div className="text-[#1F6E4A]">{getFileIcon()}</div>
+            <div className="text-brand">{getFileIcon()}</div>
             <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-foreground truncate">{file.name}</p>
                 <p className="text-xs text-muted-foreground">{formatFileSize(file.size)}</p>

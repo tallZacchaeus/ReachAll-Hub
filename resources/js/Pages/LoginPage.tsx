@@ -32,7 +32,7 @@ export default function LoginPage({
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-2 text-center">
-          <div className="mx-auto w-16 h-16 bg-[#1F6E4A] rounded-full flex items-center justify-center mb-2">
+          <div className="mx-auto w-16 h-16 bg-brand rounded-full flex items-center justify-center mb-2">
             <svg
               className="w-8 h-8 text-white"
               fill="none"
@@ -94,7 +94,7 @@ export default function LoginPage({
             <Button
               type="submit"
               disabled={processing}
-              className="w-full bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+              className="w-full bg-brand hover:bg-brand/90 text-white"
             >
               {processing ? "Signing In..." : "Sign In"}
             </Button>
@@ -102,12 +102,12 @@ export default function LoginPage({
           {(canResetPassword || canRegister) && (
             <div className="mt-6 flex flex-col gap-2 text-center text-sm">
               {canResetPassword && (
-                <Link href="/forgot-password" className="text-[#1F6E4A] hover:underline">
+                <Link href="/forgot-password" className="text-brand hover:underline">
                   Forgot your password?
                 </Link>
               )}
               {canRegister && (
-                <Link href="/register" className="text-[#1F6E4A] hover:underline">
+                <Link href="/register" className="text-brand hover:underline">
                   Create an account
                 </Link>
               )}

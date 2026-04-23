@@ -59,6 +59,12 @@
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
+
+    --color-brand: var(--brand);
+    --color-brand-foreground: var(--brand-foreground);
+    --color-brand-subtle: var(--brand-subtle);
+    --color-brand-yellow: var(--brand-yellow);
+    --color-brand-yellow-foreground: var(--brand-yellow-foreground);
 }
 
 :root {
@@ -87,6 +93,12 @@
     --chart-4: oklch(0.828 0.189 84.429);
     --chart-5: oklch(0.769 0.188 70.08);
     --radius: 0.625rem;
+    --brand: oklch(0.44 0.11 152);
+    --brand-foreground: oklch(0.985 0 0);
+    --brand-subtle: oklch(0.98 0.02 152);
+    --brand-yellow: oklch(0.88 0.18 95);
+    --brand-yellow-foreground: oklch(0.205 0 0);
+    --destructive-foreground: oklch(0.985 0 0);
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
     --sidebar-primary: oklch(0.205 0 0);
@@ -131,6 +143,7 @@
     --sidebar-accent-foreground: oklch(0.96 0 0);
     --sidebar-border: oklch(0.31 0.065 152);
     --sidebar-ring: oklch(0.50 0.12 152);
+    --brand-subtle: oklch(0.22 0.04 152);
 }
 
 @layer base {
@@ -168,57 +181,28 @@
     }
 }
 
-/* Dark mode overrides for pages that use hardcoded light-mode colors */
-.dark .bg-white {
-    background-color: var(--card) !important;
-}
-
-.dark .border-\[\#e5e7eb\] {
-    border-color: var(--border) !important;
-}
-
-.dark .border-\[\#E5E7EB\] {
-    border-color: var(--border) !important;
-}
-
-.dark .bg-\[\#F5F7F8\] {
-    background-color: var(--background) !important;
-}
-
-.dark .bg-\[\#f0fdf4\] {
-    /* Light green tint → deeper green in dark mode */
-    background-color: #1a3527 !important;
-}
-
-.dark .text-\[\#1F2937\] {
-    color: var(--foreground) !important;
-}
-
-.dark .text-\[\#6b7280\] {
-    color: var(--muted-foreground) !important;
-}
-
 /* Global Scrollbar Styles */
 .custom-scrollbar {
     scrollbar-width: thin !important;
-    scrollbar-color: #1F6E4A #f3f4f6 !important;
+    scrollbar-color: var(--brand) var(--muted) !important;
 }
 
 .dark .custom-scrollbar {
-    scrollbar-color: #4ade80 #152b1f !important;
+    scrollbar-color: var(--brand) var(--background) !important;
 }
 
 .dark .custom-scrollbar::-webkit-scrollbar-track {
-    background: #152b1f !important;
+    background: var(--background) !important;
 }
 
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #4ade80 !important;
-    border-color: #152b1f !important;
+    background: var(--brand) !important;
+    border-color: var(--background) !important;
 }
 
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #22c55e !important;
+    background: var(--brand) !important;
+    opacity: 0.8;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -228,18 +212,18 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-    background: #f3f4f6 !important;
+    background: var(--muted) !important;
     border-radius: 10px !important;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #1F6E4A !important;
+    background: var(--brand) !important;
     border-radius: 10px !important;
-    border: 2px solid #f3f4f6 !important;
+    border: 2px solid var(--muted) !important;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #1a5a3d !important;
+    opacity: 0.85;
 }
 
 /* Force showing scrollbars on certain elements */

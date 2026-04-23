@@ -273,7 +273,7 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
         {isAdmin && (
           <Dialog open={showAddCategory} onOpenChange={setShowAddCategory}>
             <DialogTrigger asChild>
-              <Button className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+              <Button className="bg-brand hover:bg-brand/90 text-white">
                 <Plus className="w-4 h-4 mr-2" />
                 Add Award Category
               </Button>
@@ -321,7 +321,7 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
                 </div>
                 <Button
                   onClick={handleAddCategory}
-                  className="w-full bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+                  className="w-full bg-brand hover:bg-brand/90 text-white"
                 >
                   Add Category
                 </Button>
@@ -344,8 +344,8 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
             <Badge
               className={`${
                 votedCount === totalCategories
-                  ? "bg-[#1F6E4A] text-white"
-                  : "bg-[#FFD400] text-gray-900"
+                  ? "bg-brand text-white"
+                  : "bg-brand-yellow text-gray-900"
               }`}
             >
               {votedCount === totalCategories ? "Complete" : "In Progress"}
@@ -394,10 +394,10 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
 
             <CardContent className="p-6 space-y-6">
               {/* Criteria Section */}
-              <Card className="bg-[#f0fdf4] dark:bg-muted border border-[#1F6E4A]">
+              <Card className="bg-brand-subtle dark:bg-muted border border-brand">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2 mb-3">
-                    <Info className="w-5 h-5 text-[#1F6E4A]" />
+                    <Info className="w-5 h-5 text-brand" />
                     <h4 className="text-foreground">Award Criteria</h4>
                   </div>
                   <ul className="space-y-2">
@@ -406,7 +406,7 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
                         key={index}
                         className="flex items-start gap-2 text-sm text-muted-foreground"
                       >
-                        <span className="text-[#1F6E4A] mt-0.5">•</span>
+                        <span className="text-brand mt-0.5">•</span>
                         <span>{criterion}</span>
                       </li>
                     ))}
@@ -431,12 +431,12 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
                 {selectedStaff.length > 0 && (
                   <div className="space-y-2 mb-4">
                     {selectedStaff.map((staff) => (
-                      <Card key={staff.id} className="border-2 border-[#1F6E4A] bg-[#f0fdf4] dark:bg-muted shadow-md">
+                      <Card key={staff.id} className="border-2 border-brand bg-brand-subtle dark:bg-muted shadow-md">
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                               <Avatar className="w-12 h-12">
-                                <AvatarFallback className="bg-[#1F6E4A] text-white">
+                                <AvatarFallback className="bg-brand text-white">
                                   {staff.avatar}
                                 </AvatarFallback>
                               </Avatar>
@@ -505,7 +505,7 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
                   onClick={handlePrevious}
                   disabled={currentIndex === 0}
                   variant="outline"
-                  className="text-[#1F6E4A] border-[#1F6E4A] hover:bg-muted"
+                  className="text-brand border-brand hover:bg-muted"
                 >
                   <ChevronLeft className="w-4 h-4 mr-2" />
                   Previous
@@ -517,9 +517,9 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
                       key={index}
                       className={`w-2 h-2 rounded-full ${
                         index === currentIndex
-                          ? "bg-[#1F6E4A]"
+                          ? "bg-brand"
                           : votes[categories[index].id] && votes[categories[index].id].length > 0
-                          ? "bg-[#FFD400]"
+                          ? "bg-brand-yellow"
                           : "bg-muted-foreground/30"
                       }`}
                     />
@@ -529,7 +529,7 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
                 <Button
                   onClick={handleNext}
                   disabled={currentIndex === categories.length - 1}
-                  className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+                  className="bg-brand hover:bg-brand/90 text-white"
                 >
                   Next
                   <ChevronRight className="w-4 h-4 ml-2" />
@@ -546,16 +546,16 @@ export default function EvaluationPage({ userRole }: { userRole?: string }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <Card className="bg-gradient-to-br from-[#f0fdf4] dark:from-muted to-card border-2 border-[#1F6E4A] shadow-lg">
+          <Card className="bg-gradient-to-br from-[#f0fdf4] dark:from-muted to-card border-2 border-brand shadow-lg">
             <CardContent className="p-6 text-center">
-              <Award className="w-12 h-12 text-[#FFD400] mx-auto mb-3" />
+              <Award className="w-12 h-12 text-brand-yellow mx-auto mb-3" />
               <h3 className="text-foreground mb-2">All Votes Complete!</h3>
               <p className="text-muted-foreground mb-4">
                 You've voted in all {totalCategories} award categories. Your votes have been recorded.
               </p>
               <Button
                 onClick={() => toast.success("All votes submitted successfully!")}
-                className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+                className="bg-brand hover:bg-brand/90 text-white"
               >
                 Submit All Votes
               </Button>

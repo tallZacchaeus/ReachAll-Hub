@@ -34,9 +34,9 @@ export function OtherPages({ page, userRole = "staff" }: OtherPagesProps) {
         </CardHeader>
         <CardContent>
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="w-16 h-16 bg-[#f0fdf4] dark:bg-muted rounded-full flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-brand-subtle dark:bg-muted rounded-full flex items-center justify-center mb-4">
               <svg
-                className="w-8 h-8 text-[#1F6E4A]"
+                className="w-8 h-8 text-brand"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

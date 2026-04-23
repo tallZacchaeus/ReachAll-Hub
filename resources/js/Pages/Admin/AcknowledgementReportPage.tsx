@@ -64,7 +64,7 @@ function PolicySection({ policy }: { policy: PolicyReport }) {
     policy.acknowledgement_deadline < today;
 
   return (
-    <div className="border-2 border-border rounded-xl overflow-hidden">
+    <div className="border-2 border-border rounded-xl overflow-hidden overflow-x-auto">
       {/* Header row — always visible */}
       <div
         role="button"
@@ -196,7 +196,7 @@ export default function AcknowledgementReportPage({
       {/* Header */}
       <div>
         <h1 className="text-foreground mb-1 flex items-center gap-3">
-          <CheckCircle className="w-8 h-8 text-[#1F6E4A]" />
+          <CheckCircle className="w-8 h-8 text-brand" />
           Acknowledgement Report
         </h1>
         <p className="text-muted-foreground">
@@ -217,7 +217,7 @@ export default function AcknowledgementReportPage({
             summary.overall_percentage === 100
               ? "border-green-300"
               : summary.overall_percentage >= 50
-                ? "border-[#1F6E4A]"
+                ? "border-brand"
                 : "border-amber-300"
           }`}
         >

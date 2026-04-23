@@ -183,11 +183,11 @@ export default function LeaveManagementPage({
 
   const getStatusBadge = (status: string) => {
     const styles = {
-      pending: "bg-[#FFD400] text-foreground",
-      approved: "bg-[#1F6E4A] text-white",
-      rejected: "bg-[#ef4444] text-white",
-      Approved: "bg-[#1F6E4A] text-white",
-      Rejected: "bg-[#ef4444] text-white",
+      pending: "bg-brand-yellow text-foreground",
+      approved: "bg-brand text-white",
+      rejected: "bg-destructive text-white",
+      Approved: "bg-brand text-white",
+      Rejected: "bg-destructive text-white",
     };
 
     return styles[status as keyof typeof styles] || "bg-[#6b7280] text-white";
@@ -221,7 +221,7 @@ export default function LeaveManagementPage({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="bg-gradient-to-br from-[#1F6E4A] to-[#1a5a3d] text-white border-0 shadow-lg">
+        <Card className="bg-gradient-to-br from-brand to-[#1a5a3d] text-white border-0 shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-2">
               <p className="text-sm opacity-90">Annual Leave</p>
@@ -239,11 +239,11 @@ export default function LeaveManagementPage({
           </CardContent>
         </Card>
 
-        <Card className="bg-card border-2 border-[#1F6E4A] shadow-lg">
+        <Card className="bg-card border-2 border-brand shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-2">
               <p className="text-sm text-muted-foreground">Sick Leave</p>
-              <CalendarIcon className="w-5 h-5 text-[#1F6E4A]" />
+              <CalendarIcon className="w-5 h-5 text-brand" />
             </div>
             <p className="text-3xl font-bold text-foreground mb-1">{leaveBalance.sick.remaining}</p>
             <p className="text-sm text-muted-foreground">days remaining</p>
@@ -261,7 +261,7 @@ export default function LeaveManagementPage({
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-2">
               <p className="text-sm text-muted-foreground">Personal Leave</p>
-              <CalendarIcon className="w-5 h-5 text-[#FFD400]" />
+              <CalendarIcon className="w-5 h-5 text-brand-yellow" />
             </div>
             <p className="text-3xl font-bold text-foreground mb-1">{leaveBalance.personal.remaining}</p>
             <p className="text-sm text-muted-foreground">days remaining</p>
@@ -366,7 +366,7 @@ export default function LeaveManagementPage({
           <Button
             onClick={handleSubmitRequest}
             disabled={processing}
-            className="w-full bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+            className="w-full bg-brand hover:bg-brand/90 text-white"
           >
             Submit Leave Request
           </Button>
@@ -384,12 +384,14 @@ export default function LeaveManagementPage({
                 {isAdmin ? "Review and approve team leave requests" : "Track your submitted requests"}
               </CardDescription>
             </div>
-            <Badge variant="secondary" className="bg-[#FFD400] text-foreground">
+            <Badge variant="secondary" className="bg-brand-yellow text-foreground">
               {requests.filter((request) => request.status === "pending").length} Pending
             </Badge>
           </div>
         </CardHeader>
         <CardContent>
+          <div className="overflow-x-auto">
+
           <Table>
             <TableHeader>
               <TableRow>
@@ -451,7 +453,7 @@ export default function LeaveManagementPage({
                         <>
                           <Button
                             size="sm"
-                            className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+                            className="bg-brand hover:bg-brand/90 text-white"
                             onClick={() => updateReviewStatus("approved", request.id)}
                           >
                             <Check className="w-4 h-4" />
@@ -471,6 +473,7 @@ export default function LeaveManagementPage({
               ))}
             </TableBody>
           </Table>
+          </div>
         </CardContent>
       </Card>
 
@@ -482,6 +485,8 @@ export default function LeaveManagementPage({
           </CardDescription>
         </CardHeader>
         <CardContent>
+          <div className="overflow-x-auto">
+
           <Table>
             <TableHeader>
               <TableRow>
@@ -532,6 +537,7 @@ export default function LeaveManagementPage({
               ))}
             </TableBody>
           </Table>
+          </div>
         </CardContent>
       </Card>
 
@@ -539,7 +545,7 @@ export default function LeaveManagementPage({
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="text-foreground flex items-center gap-2">
-              <FileText className="w-5 h-5 text-[#1F6E4A]" />
+              <FileText className="w-5 h-5 text-brand" />
               Leave Request Details
             </DialogTitle>
             <DialogDescription className="text-muted-foreground">
@@ -554,9 +560,9 @@ export default function LeaveManagementPage({
               </div>
 
               {isAdmin && "staffName" in selectedRequest && (
-                <div className="p-3 bg-[#f0fdf4] dark:bg-muted rounded-lg border border-[#1F6E4A]">
+                <div className="p-3 bg-brand-subtle dark:bg-muted rounded-lg border border-brand">
                   <div className="flex items-center gap-2 mb-1">
-                    <User className="w-4 h-4 text-[#1F6E4A]" />
+                    <User className="w-4 h-4 text-brand" />
                     <span className="text-sm text-muted-foreground">Staff Member</span>
                   </div>
                   <p className="text-foreground">{selectedRequest.staffName}</p>
@@ -615,7 +621,7 @@ export default function LeaveManagementPage({
               </div>
 
               {selectedRequest.approverName && (
-                <div className="p-3 bg-[#fff9e6] rounded-lg border border-[#FFD400]">
+                <div className="p-3 bg-[#fff9e6] rounded-lg border border-brand-yellow">
                   <Label className="text-xs text-muted-foreground">Approver</Label>
                   <p className="text-sm text-foreground mt-1">{selectedRequest.approverName}</p>
                 </div>
@@ -625,7 +631,7 @@ export default function LeaveManagementPage({
                 <div
                   className={`p-3 rounded-lg border ${
                     selectedRequest.status.toLowerCase() === "approved"
-                      ? "bg-[#f0fdf4] dark:bg-muted border-[#1F6E4A]"
+                      ? "bg-brand-subtle dark:bg-muted border-brand"
                       : "bg-[#fef2f2] dark:bg-red-950/30 border-[#ef4444]"
                   }`}
                 >
@@ -644,7 +650,7 @@ export default function LeaveManagementPage({
                   />
                   <div className="flex gap-2">
                     <Button
-                      className="flex-1 bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+                      className="flex-1 bg-brand hover:bg-brand/90 text-white"
                       onClick={() => {
                         updateReviewStatus("approved");
                         setShowDetailsModal(false);

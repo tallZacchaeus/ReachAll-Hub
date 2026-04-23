@@ -170,7 +170,7 @@ export default function CourseViewPage({ course, enrollment: initialEnrollment }
             <div className="h-2 bg-muted rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all ${
-                  enrollment.status === "completed" ? "bg-green-500" : "bg-[#1F6E4A]"
+                  enrollment.status === "completed" ? "bg-green-500" : "bg-brand"
                 }`}
                 style={{ width: `${enrollment.progress}%` }}
               />
@@ -198,7 +198,7 @@ export default function CourseViewPage({ course, enrollment: initialEnrollment }
           <Button
             onClick={handleEnroll}
             disabled={enrolling}
-            className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+            className="bg-brand hover:bg-brand/90 text-white"
           >
             <PlayCircle className="w-4 h-4 mr-2" />
             {enrolling ? "Starting…" : "Start Course"}
@@ -227,7 +227,7 @@ export default function CourseViewPage({ course, enrollment: initialEnrollment }
             <Button
               onClick={handleComplete}
               disabled={completing}
-              className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+              className="bg-brand hover:bg-brand/90 text-white"
             >
               <CheckCircle className="w-4 h-4 mr-2" />
               {completing ? "Saving…" : "Mark as Complete"}

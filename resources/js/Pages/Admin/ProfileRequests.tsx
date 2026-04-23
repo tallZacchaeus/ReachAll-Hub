@@ -73,7 +73,7 @@ export default function ProfileRequests({ requests: initialRequests }: ProfileRe
                 </div>
 
                 {initialRequests.length > 0 && (
-                    <Badge className="bg-[#1F6E4A] text-white">
+                    <Badge className="bg-brand text-white">
                         {initialRequests.length} Pending
                     </Badge>
                 )}
@@ -113,7 +113,7 @@ export default function ProfileRequests({ requests: initialRequests }: ProfileRe
                                     <CardHeader className="p-6 border-b border-border">
                                         <div className="flex items-center gap-4">
                                             <Avatar className="w-12 h-12">
-                                                <AvatarFallback className="bg-[#1F6E4A] text-white">
+                                                <AvatarFallback className="bg-brand text-white">
                                                     {request.user.name.charAt(0)}{request.user.name.split(" ")[1]?.charAt(0)}
                                                 </AvatarFallback>
                                             </Avatar>
@@ -146,7 +146,7 @@ export default function ProfileRequests({ requests: initialRequests }: ProfileRe
                                                         <span className="text-xs font-medium capitalize text-foreground">{key}</span>
                                                     </div>
                                                     <div className="flex items-center gap-2">
-                                                        <span className="text-xs text-[#1F6E4A] font-medium truncate max-w-[150px]">{String(value)}</span>
+                                                        <span className="text-xs text-brand font-medium truncate max-w-[150px]">{String(value)}</span>
                                                     </div>
                                                 </div>
                                             ))}
@@ -165,7 +165,7 @@ export default function ProfileRequests({ requests: initialRequests }: ProfileRe
                                                 Reject
                                             </Button>
                                             <Button
-                                                className="flex-1 bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+                                                className="flex-1 bg-brand hover:bg-brand/90 text-white"
                                                 onClick={() => {
                                                     setSelectedRequest(request);
                                                     setActionType("approve");
@@ -216,7 +216,7 @@ export default function ProfileRequests({ requests: initialRequests }: ProfileRe
                             <Button
                                 type="submit"
                                 disabled={processing}
-                                className={actionType === "approve" ? "bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white" : "bg-red-600 hover:bg-red-700 text-white"}
+                                className={actionType === "approve" ? "bg-brand hover:bg-brand/90 text-white" : "bg-red-600 hover:bg-red-700 text-white"}
                             >
                                 {processing
                                     ? "Processing..."

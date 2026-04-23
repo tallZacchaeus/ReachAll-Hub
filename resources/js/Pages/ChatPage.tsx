@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Send, Search as SearchIcon, Lock, Users, Bell, MessageCircle, PlusCircle, Shield } from "lucide-react";
+import { Send, Search as SearchIcon, Lock, Users, Bell, MessageCircle, PlusCircle, Shield, MessageSquare, Loader2 } from "lucide-react";
 import axios from "axios";
 import {
   Dialog,
@@ -671,7 +671,7 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                             <Button
                               onClick={handleCreateChannel}
                               disabled={newChannelCreating || !newChannelName.trim()}
-                              className="w-full bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white h-8 text-xs"
+                              className="w-full bg-brand hover:bg-brand/90 text-white h-8 text-xs"
                             >
                               {newChannelCreating ? "Creating…" : "Create Channel"}
                             </Button>
@@ -681,6 +681,12 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                     </div>
                   )}
                   <div className="space-y-1 p-2">
+                    {filteredConversations.filter(conv => conv.type === 'group').length === 0 && (
+                      <div className="flex flex-col items-center py-8 gap-2 text-center px-4">
+                        <Users className="w-8 h-8 text-muted-foreground/40" />
+                        <p className="text-xs text-muted-foreground">No channels available</p>
+                      </div>
+                    )}
                     {filteredConversations.filter(conv => conv.type === 'group').map((conv) => (
                       <button
                         key={conv.id}
@@ -689,18 +695,18 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                           setSelectedDM(null);
                         }}
                         className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors text-left ${selectedConversation === conv.id && chatType === "channels"
-                          ? "bg-[#1F6E4A] text-white"
+                          ? "bg-brand text-white"
                           : "hover:bg-muted text-foreground"
                           }`}
                       >
                         <div className="relative">
                           <Avatar className="w-10 h-10">
-                            <AvatarFallback className={selectedConversation === conv.id && chatType === "channels" ? "bg-white/20 text-white" : "bg-[#1F6E4A] text-white"}>
+                            <AvatarFallback className={selectedConversation === conv.id && chatType === "channels" ? "bg-white/20 text-white" : "bg-brand text-white"}>
                               {(conv.name || 'CH').substring(0, 2).toUpperCase()}
                             </AvatarFallback>
                           </Avatar>
                           {conv.unread > 0 && (
-                            <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-[#ef4444] text-white text-xs">
+                            <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-destructive text-white text-xs">
                               {conv.unread}
                             </Badge>
                           )}
@@ -753,13 +759,13 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                           setChatType("direct");
                         }}
                         className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors text-left ${selectedDM === dm.conversation_id
-                          ? "bg-[#1F6E4A] text-white"
+                          ? "bg-brand text-white"
                           : "hover:bg-muted text-foreground"
                           }`}
                       >
                         <div className="relative">
                           <Avatar className="w-10 h-10">
-                            <AvatarFallback className={selectedDM === dm.conversation_id ? "bg-white/20 text-white" : "bg-[#1F6E4A] text-white"}>
+                            <AvatarFallback className={selectedDM === dm.conversation_id ? "bg-white/20 text-white" : "bg-brand text-white"}>
                               {dm.avatar}
                             </AvatarFallback>
                           </Avatar>
@@ -767,7 +773,7 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                             <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full" />
                           )}
                           {dm.unread > 0 && (
-                            <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-[#ef4444] text-white text-xs">
+                            <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-destructive text-white text-xs">
                               {dm.unread}
                             </Badge>
                           )}
@@ -802,7 +808,7 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <Avatar className="w-10 h-10">
-                    <AvatarFallback className="bg-[#1F6E4A] text-white">
+                    <AvatarFallback className="bg-brand text-white">
                       {chatType === "direct" && currentDMData
                         ? currentDMData.avatar
                         : (currentConvData?.name || 'CH').substring(0, 2).toUpperCase()}
@@ -858,12 +864,17 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
           {/* Messages Area */}
           <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-6 space-y-4">
             {loading ? (
-              <div className="flex items-center justify-center h-full py-20">
-                <p className="text-muted-foreground">Loading messages...</p>
+              <div className="flex flex-col items-center justify-center h-full py-20 gap-3">
+                <Loader2 className="w-8 h-8 text-brand animate-spin" />
+                <p className="text-sm text-muted-foreground">Loading messages…</p>
               </div>
             ) : messages.length === 0 ? (
-              <div className="flex items-center justify-center h-full py-20">
-                <p className="text-muted-foreground">No messages yet. Start the conversation!</p>
+              <div className="flex flex-col items-center justify-center h-full py-20 gap-3">
+                <div className="w-14 h-14 rounded-full bg-brand/10 flex items-center justify-center">
+                  <MessageSquare className="w-7 h-7 text-brand" />
+                </div>
+                <p className="text-sm font-medium text-foreground">No messages yet</p>
+                <p className="text-xs text-muted-foreground">Be the first to say something!</p>
               </div>
             ) : (
               <>
@@ -874,7 +885,7 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                     className={`flex gap-3 group ${message.isOwn ? "flex-row-reverse" : ""}`}
                   >
                     <Avatar className="w-8 h-8 flex-shrink-0">
-                      <AvatarFallback className={message.isOwn ? "bg-[#FFD400] text-foreground" : "bg-[#1F6E4A] text-white"}>
+                      <AvatarFallback className={message.isOwn ? "bg-brand-yellow text-foreground" : "bg-brand text-white"}>
                         {message.avatar}
                       </AvatarFallback>
                     </Avatar>
@@ -894,7 +905,7 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                       </div>
                       <div
                         className={`inline-block p-3 rounded-2xl max-w-lg ${message.isOwn
-                          ? "bg-[#1F6E4A] text-white rounded-tr-none"
+                          ? "bg-brand text-white rounded-tr-none"
                           : "bg-muted text-foreground rounded-tl-none"
                           }`}
                       >
@@ -981,7 +992,7 @@ export default function ChatPage({ userRole = "staff" }: ChatPageProps) {
                       (!selectedFile && !messageText.trim()) ||
                       (!selectedConversation && !selectedDM)
                     }
-                    className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+                    className="bg-brand hover:bg-brand/90 text-white"
                   >
                     {isUploading ? (
                       <span className="text-sm">Uploading...</span>

@@ -59,7 +59,7 @@ export default function NewsletterViewPage({ newsletter }: NewsletterViewPagePro
         <div className="flex items-center gap-4 pb-4 border-b border-border">
           <div className="flex items-center gap-2">
             <Avatar className="w-8 h-8">
-              <AvatarFallback className="bg-[#1F6E4A] text-white text-xs">
+              <AvatarFallback className="bg-brand text-white text-xs">
                 {newsletter.author_initials}
               </AvatarFallback>
             </Avatar>

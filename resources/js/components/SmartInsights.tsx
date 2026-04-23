@@ -8,7 +8,7 @@ export function SmartInsights() {
     {
       id: 1,
       icon: TrendingUp,
-      color: "#1F6E4A",
+      colorVar: "var(--brand)",
       trend: "up",
       title: "Engagement increased by 12%",
       description: "Compared to last month",
@@ -16,7 +16,7 @@ export function SmartInsights() {
     {
       id: 2,
       icon: Calendar,
-      color: "#1F6E4A",
+      colorVar: "var(--brand)",
       trend: "down",
       title: "Average lateness reduced by 9%",
       description: "Great improvement this month",
@@ -24,7 +24,7 @@ export function SmartInsights() {
     {
       id: 3,
       icon: Award,
-      color: "#FFD400",
+      colorVar: "var(--brand-yellow)",
       trend: "neutral",
       title: "Most nominated: Culture Champion",
       description: "234 votes received",
@@ -32,7 +32,7 @@ export function SmartInsights() {
     {
       id: 4,
       icon: Users,
-      color: "#1F6E4A",
+      colorVar: "var(--brand)",
       trend: "up",
       title: "Team participation up 15%",
       description: "More staff engaging in evaluations",
@@ -58,10 +58,9 @@ export function SmartInsights() {
                 <CardContent className="p-4">
                   <div className="flex items-start gap-3">
                     <div
-                      className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
-                      style={{ backgroundColor: `${insight.color}15` }}
+                      className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 bg-brand/10"
                     >
-                      <Icon className="w-6 h-6" style={{ color: insight.color }} />
+                      <Icon className="w-6 h-6" style={{ color: insight.colorVar }} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between mb-1">
@@ -71,7 +70,7 @@ export function SmartInsights() {
                         {insight.trend !== "neutral" && (
                           <TrendIcon
                             className={`w-4 h-4 flex-shrink-0 ml-2 ${
-                              insight.trend === "up" ? "text-[#1F6E4A]" : "text-[#ef4444]"
+                              insight.trend === "up" ? "text-brand" : "text-destructive"
                             }`}
                           />
                         )}

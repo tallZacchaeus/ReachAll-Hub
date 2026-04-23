@@ -1,5 +1,8 @@
 import MainLayout from "@/layouts/MainLayout";
 import { router } from "@inertiajs/react";
+import { useState } from "react";
+import { KpiCardSkeleton, ChartSkeleton } from "@/components/ui/page-skeleton";
+import { useChartColors } from "@/lib/useChartColors";
 import {
   Card,
   CardContent,
@@ -97,13 +100,13 @@ interface ReportsPageProps {
   };
 }
 
-const COLORS = ["#1F6E4A", "#FFD400", "#4ade80", "#f59e0b", "#60a5fa", "#ef4444"];
+const COLORS = ["#1F6E4A", "#d97706", "#4ade80", "#f59e0b", "#60a5fa", "#dc2626"];
 
 const summaryCardStyles = [
-  { icon: Users, color: "#1F6E4A" },
-  { icon: CheckSquare, color: "#2563eb" },
-  { icon: AlertCircle, color: "#d97706" },
-  { icon: MessageSquare, color: "#7c3aed" },
+  { icon: Users, colorClass: "bg-brand/10", iconClass: "text-brand" },
+  { icon: CheckSquare, colorClass: "bg-blue-500/10", iconClass: "text-blue-600 dark:text-blue-400" },
+  { icon: AlertCircle, colorClass: "bg-amber-500/10", iconClass: "text-amber-600 dark:text-amber-400" },
+  { icon: MessageSquare, colorClass: "bg-violet-500/10", iconClass: "text-violet-600 dark:text-violet-400" },
 ];
 
 interface ActiveSummaryCard {
@@ -166,6 +169,8 @@ export default function ReportsPage({
   reportType,
   reportData,
 }: ReportsPageProps) {
+  const [loading, setLoading] = useState(false);
+  const { colors } = useChartColors();
   const mode = reportModeConfig[reportType] ?? reportModeConfig.comprehensive;
   const activeSummaryCards = mode.summaryIndexes
     .map((index) => {
@@ -252,6 +257,7 @@ export default function ReportsPage({
   ) => mode.sections.includes(section);
 
   const updateFilters = (next: Partial<{ period: string; type: string }>) => {
+    setLoading(true);
     router.get(
       "/reports",
       {
@@ -262,6 +268,7 @@ export default function ReportsPage({
         preserveScroll: true,
         preserveState: true,
         replace: true,
+        onFinish: () => setLoading(false),
       }
     );
   };
@@ -296,7 +303,7 @@ export default function ReportsPage({
         <div className="flex gap-2">
           <Button
             onClick={handleExportPDF}
-            className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+            className="bg-brand hover:bg-brand/90 text-white"
           >
             <FileDown className="w-4 h-4 mr-2" />
             Export PDF
@@ -304,7 +311,7 @@ export default function ReportsPage({
           <Button
             onClick={handleExportCSV}
             variant="outline"
-            className="text-[#1F6E4A] border-[#1F6E4A] hover:bg-muted"
+            className="text-brand border-brand hover:bg-muted"
           >
             <FileSpreadsheet className="w-4 h-4 mr-2" />
             Export CSV
@@ -384,7 +391,9 @@ export default function ReportsPage({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {activeSummaryCards.map(({ key, summary, style }, index) => {
+        {loading
+          ? Array.from({ length: 4 }).map((_, i) => <KpiCardSkeleton key={i} />)
+          : activeSummaryCards.map(({ key, summary, style }, index) => {
           const Icon = style.icon;
 
           return (
@@ -398,10 +407,9 @@ export default function ReportsPage({
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-3">
                     <div
-                      className="w-12 h-12 rounded-lg flex items-center justify-center"
-                      style={{ backgroundColor: `${style.color}15` }}
+                      className={`w-12 h-12 rounded-lg flex items-center justify-center ${style.colorClass}`}
                     >
-                      <Icon className="w-6 h-6" style={{ color: style.color }} />
+                      <Icon className={`w-6 h-6 ${style.iconClass}`} />
                     </div>
                     <Badge className="bg-muted text-muted-foreground border border-border">
                       {summary.meta}
@@ -421,7 +429,14 @@ export default function ReportsPage({
         })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {loading ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <ChartSkeleton height={300} />
+          <ChartSkeleton height={300} />
+        </div>
+      ) : null}
+
+      <div className={`grid grid-cols-1 lg:grid-cols-2 gap-6 ${loading ? "hidden" : ""}`}>
         {hasSection("taskTrend") && (
           <Card className="bg-card shadow-sm">
             <CardHeader>
@@ -431,15 +446,16 @@ export default function ReportsPage({
               </CardDescription>
             </CardHeader>
             <CardContent>
+              <div role="img" aria-label="Task trend line chart: created, completed, and overdue tasks over six months">
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={reportData.taskTrend}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="month" stroke="#6b7280" />
-                  <YAxis stroke="#6b7280" />
+                  <CartesianGrid strokeDasharray="3 3" stroke={colors.gridLine} />
+                  <XAxis dataKey="month" stroke={colors.axisText} />
+                  <YAxis stroke={colors.axisText} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "white",
-                      border: "1px solid #e5e7eb",
+                      backgroundColor: colors.tooltipBg,
+                      border: `1px solid ${colors.tooltipBorder}`,
                       borderRadius: "8px",
                     }}
                   />
@@ -447,29 +463,30 @@ export default function ReportsPage({
                   <Line
                     type="monotone"
                     dataKey="created"
-                    stroke="#1F6E4A"
+                    stroke={colors.primary}
                     strokeWidth={3}
-                    dot={{ fill: "#1F6E4A", r: 5 }}
+                    dot={{ fill: colors.primary, r: 5 }}
                     name="Created"
                   />
                   <Line
                     type="monotone"
                     dataKey="completed"
-                    stroke="#2563eb"
+                    stroke={colors.tertiary}
                     strokeWidth={3}
-                    dot={{ fill: "#2563eb", r: 5 }}
+                    dot={{ fill: colors.tertiary, r: 5 }}
                     name="Completed"
                   />
                   <Line
                     type="monotone"
                     dataKey="overdue"
-                    stroke="#ef4444"
+                    stroke={colors.danger}
                     strokeWidth={3}
-                    dot={{ fill: "#ef4444", r: 5 }}
+                    dot={{ fill: colors.danger, r: 5 }}
                     name="Overdue"
                   />
                 </LineChart>
               </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         )}
@@ -483,6 +500,7 @@ export default function ReportsPage({
               </CardDescription>
             </CardHeader>
             <CardContent>
+              <div role="img" aria-label="Department distribution pie chart showing active staff by department">
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
@@ -507,6 +525,7 @@ export default function ReportsPage({
                   <Tooltip />
                 </PieChart>
               </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         )}
@@ -520,21 +539,23 @@ export default function ReportsPage({
               </CardDescription>
             </CardHeader>
             <CardContent>
+              <div role="img" aria-label="Task status mix bar chart showing task count by workflow state">
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={reportData.statusDistribution}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="name" stroke="#6b7280" />
-                  <YAxis stroke="#6b7280" allowDecimals={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={colors.gridLine} />
+                  <XAxis dataKey="name" stroke={colors.axisText} />
+                  <YAxis stroke={colors.axisText} allowDecimals={false} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "white",
-                      border: "1px solid #e5e7eb",
+                      backgroundColor: colors.tooltipBg,
+                      border: `1px solid ${colors.tooltipBorder}`,
                       borderRadius: "8px",
                     }}
                   />
-                  <Bar dataKey="value" fill="#1F6E4A" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="value" fill={colors.primary} radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         )}
@@ -578,7 +599,7 @@ export default function ReportsPage({
                       </p>
                     </div>
                   </div>
-                  <Badge className="bg-[#1F6E4A] text-white">
+                  <Badge className="bg-brand text-white">
                     {performer.score}%
                   </Badge>
                 </div>
@@ -588,7 +609,7 @@ export default function ReportsPage({
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className={`grid grid-cols-1 lg:grid-cols-2 gap-6 ${loading ? "hidden" : ""}`}>
         {hasSection("priorityBreakdown") && (
           <Card className="bg-card shadow-sm">
             <CardHeader>
@@ -604,7 +625,7 @@ export default function ReportsPage({
                   className="flex items-center justify-between p-3 bg-muted rounded-lg"
                 >
                   <span className="text-foreground">{item.label}</span>
-                  <Badge className="bg-[#e2f3ea] text-[#1F6E4A]">
+                  <Badge className="bg-brand-subtle text-brand dark:bg-brand/20">
                     {item.count} tasks
                   </Badge>
                 </div>
@@ -639,7 +660,7 @@ export default function ReportsPage({
                         {department.completed} completed • {department.open} open
                       </p>
                     </div>
-                    <Badge className="bg-[#1F6E4A] text-white">
+                    <Badge className="bg-brand text-white">
                       {department.total} tasks
                     </Badge>
                   </div>

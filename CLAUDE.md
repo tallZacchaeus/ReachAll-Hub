@@ -49,6 +49,52 @@ Major feature areas:
 - Queue workers matter in production for asynchronous work
 - This app is Inertia-first; do not introduce a separate REST API, Livewire, or a new SPA data layer unless the task explicitly requires it
 
+## Frontend UX Governance
+
+Treat frontend work in this repo as a governed UX system, not as isolated page edits.
+
+- Preserve the app's internal-product character, but consolidate inconsistent page-level styling and interaction patterns
+- Prefer the existing shared primitives in `resources/js/components/ui/` and the newer shell/layout foundation over bespoke page-local wrappers
+- Prefer theme tokens and semantic classes from `resources/css/app.css` over hardcoded hex colors or one-off color utilities
+- Reduce duplicate layout patterns and converge toward one shell/navigation approach where the existing structure supports it
+- Treat accessibility, responsiveness, and empty/loading/error/success states as required work, not optional polish
+- When frontend behavior conflicts with backend/product truth, update the UI to reflect the real system behavior instead of preserving misleading copy
+
+### UI Implementation Rules
+
+- Use shared `Card`, `Button`, `Input`, `Textarea`, `Form`, `Table`, `Dialog`, `Drawer`, `Sheet`, `Tabs`, `Pagination`, and `Toaster` primitives before creating custom wrappers
+- Use `react-hook-form` patterns via the existing form helpers in `resources/js/components/ui/form.tsx` for non-trivial forms
+- Reuse the current shell/layout building blocks such as `MainLayout`, `app-shell`, shared sidebar/header components, and existing app layouts before introducing one-off page shells
+- Use tokenized colors and semantic roles from `resources/css/app.css`; avoid new page-local `#1F6E4A`, `#FFD400`, and similar hardcoded values unless the exception is documented in the task
+- Do not rely on dark-mode override hacks as the primary styling strategy; build components to work in both themes directly
+- Prefer shared status, badge, table, and card patterns over page-specific bespoke variants when the semantics are the same
+- Build forms, filters, search bars, and tables to remain usable on mobile and tablet, not just wide desktop layouts
+- Use motion sparingly and purposefully for hierarchy, transitions, and feedback; do not add decorative animation without UX value
+- Prefer clear CTA placement, predictable navigation, and scannable information density over visually dense dashboards
+
+### UX Review Checklist
+
+Before closing any UI-related task, explicitly evaluate:
+
+- Information hierarchy and page scannability
+- Mobile and tablet behavior, including overflow and stacking
+- Keyboard and screen-reader basics for interactive controls
+- Form clarity, validation, helper text, and submit/loading states
+- Table, filter, and search usability, including overflow behavior
+- Empty, loading, success, and error states
+- Consistency with navigation, naming, icon use, and CTA placement
+- Contrast and theme correctness in both light and dark modes
+
+### Known UI Consistency Issues
+
+Keep these in mind during future frontend work:
+
+- Mixed old/new shell and navigation patterns still exist across the app
+- Hardcoded brand colors are widespread in pages and widgets instead of using shared tokens
+- Dark-mode patching in CSS currently compensates for hardcoded light-mode classes
+- Some auth and UX copy does not fully match actual app behavior and backend rules
+- Several dashboards and status presentations use bespoke page-level card and state styling that should converge on shared patterns over time
+
 ## Required Claude Code Skill Routing
 
 Claude Code should explicitly use these installed skills from `~/.claude/skills` whenever the task matches. Use more than one skill when needed.
@@ -57,7 +103,10 @@ Claude Code should explicitly use these installed skills from `~/.claude/skills`
 
 - `laravel-specialist` for controllers, models, policies, Fortify, queues, migrations, Artisan commands, and Laravel-specific testing
 - `php-pro` for strict PHP refactors, services, validation, typed data flow, and maintainability improvements
+- `ui-ux-pro-max` for UI/UX design decisions, interaction patterns, responsive behavior, accessibility, and interface quality control
+- `frontend-design` for production-grade frontend implementation, visual direction, layout refinement, and polished interface work
 - `react-expert` for Inertia pages, React components, hooks, state flow, and UI behavior
+- `react-best-practices` for React-side quality, rendering discipline, and performance-oriented implementation patterns
 - `typescript-pro` for type safety, shared types, route/helper typing, and removal of unsafe casts
 - `fullstack-guardian` for work that spans backend + frontend + security/validation
 
@@ -65,6 +114,9 @@ Claude Code should explicitly use these installed skills from `~/.claude/skills`
 
 - `test-master` for PHPUnit/Laravel feature tests, regression coverage, release-readiness checks, and test gap analysis
 - `code-reviewer` for code audits, pre-deployment reviews, refactor reviews, and quality passes
+- `web-design-guidelines` for UI/UX audits, best-practice checks, and design-review style findings
+- `contrast-checker` for WCAG color-contrast validation and accessible color corrections
+- `link-purpose` for link-text clarity and navigation accessibility review
 - `debugging-wizard` for reproduction-first bug investigation and root-cause analysis
 
 ### Security Skills
@@ -85,6 +137,8 @@ Claude Code should explicitly use these installed skills from `~/.claude/skills`
 
 ### Preferred Skill Combinations
 
+- UI/UX-heavy implementation or redesign: `ui-ux-pro-max` + `frontend-design` + `react-best-practices`; add `typescript-pro` for typed implementation and `fullstack-guardian` when the flow spans backend and UI
+- UI/UX audit, accessibility review, or polish pass: `ui-ux-pro-max` + `web-design-guidelines` + `contrast-checker` + `link-purpose`
 - Full-stack feature or bug fix: `fullstack-guardian` + `laravel-specialist` + `react-expert` + `typescript-pro` + `test-master`
 - Security-sensitive change: `laravel-specialist` + `security-reviewer` + `secure-code-guardian` + `test-master`
 - Production-readiness or Hostinger deployment work: `code-reviewer` + `security-reviewer` + `devops-engineer` + `cloud-architect` + `sre-engineer` + `monitoring-expert`

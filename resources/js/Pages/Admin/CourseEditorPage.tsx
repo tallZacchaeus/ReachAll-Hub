@@ -269,7 +269,7 @@ function CourseForm({ course }: { course: CourseDetail | null }) {
             <Button
               type="submit"
               disabled={processing}
-              className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+              className="bg-brand hover:bg-brand/90 text-white"
             >
               <Save className="w-4 h-4 mr-2" />
               {processing ? "Saving…" : isEdit ? "Update Course" : "Create Course"}
@@ -307,7 +307,7 @@ export default function CourseEditorPage({ courses, course }: CourseEditorPagePr
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-foreground flex items-center gap-3">
-            <GraduationCap className="w-7 h-7 text-[#1F6E4A]" />
+            <GraduationCap className="w-7 h-7 text-brand" />
             Manage Courses
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
@@ -316,7 +316,7 @@ export default function CourseEditorPage({ courses, course }: CourseEditorPagePr
         </div>
         <Button
           onClick={() => router.visit("/admin/courses/create")}
-          className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+          className="bg-brand hover:bg-brand/90 text-white"
         >
           <PlusCircle className="w-4 h-4 mr-2" />
           New Course
@@ -336,7 +336,7 @@ export default function CourseEditorPage({ courses, course }: CourseEditorPagePr
               return (
                 <div
                   key={c.id}
-                  className="bg-card border-2 border-border rounded-xl p-4 flex items-start gap-4 hover:border-[#1F6E4A]/40 transition-colors"
+                  className="bg-card border-2 border-border rounded-xl p-4 flex items-start gap-4 hover:border-brand/40 transition-colors"
                 >
                   <div className="flex-1 min-w-0 space-y-1">
                     <div className="flex flex-wrap items-center gap-2">
@@ -395,7 +395,7 @@ export default function CourseEditorPage({ courses, course }: CourseEditorPagePr
                   size="sm"
                   disabled={!link.url}
                   onClick={() => link.url && router.visit(link.url, { preserveState: true })}
-                  className={link.active ? "bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white" : ""}
+                  className={link.active ? "bg-brand hover:bg-brand/90 text-white" : ""}
                   dangerouslySetInnerHTML={{ __html: sanitizeHtml(link.label) }}
                 />
               ))}

@@ -106,7 +106,7 @@ export default function GettingStartedPage() {
             <Card key={step.number}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-full bg-[#1F6E4A] text-white text-xs flex items-center justify-center font-bold shrink-0">
+                  <span className="w-8 h-8 rounded-full bg-brand text-white text-xs flex items-center justify-center font-bold shrink-0">
                     {step.number}
                   </span>
                   {step.title}
@@ -175,7 +175,7 @@ export default function GettingStartedPage() {
         <div className="flex gap-3">
           <Link
             href="/finance/requisitions/create"
-            className="inline-flex items-center gap-2 bg-[#1F6E4A] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#185c3d] transition-colors"
+            className="inline-flex items-center gap-2 bg-brand text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#185c3d] transition-colors"
           >
             <FileText className="w-4 h-4" /> Submit Your First Request
           </Link>

@@ -62,6 +62,7 @@ interface SidebarProps {
   userRole: string;
   employeeStage?: string;
   hasPettyCashFloat?: boolean;
+  onNavigate?: () => void;
 }
 
 const CROSS_LIFECYCLE: NavSection = {
@@ -213,7 +214,7 @@ const FINANCE_HELP_SECTION: NavSection = {
   ],
 };
 
-export function Sidebar({ activePage, userRole, employeeStage = "performer", hasPettyCashFloat = false }: SidebarProps) {
+export function Sidebar({ activePage, userRole, employeeStage = "performer", hasPettyCashFloat = false, onNavigate }: SidebarProps) {
   const isAdmin = ["superadmin", "hr", "management"].includes(userRole);
   const isFinanceAdmin = ["superadmin", "finance", "ceo"].includes(userRole);
   const hasFinanceAccess = ["superadmin", "finance", "ceo", "general_management", "management", "hr"].includes(userRole);
@@ -286,7 +287,7 @@ export function Sidebar({ activePage, userRole, employeeStage = "performer", has
       {/* Logo */}
       <div className="p-6 border-b border-border shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-[#1F6E4A] rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-brand rounded-lg flex items-center justify-center">
             <span className="text-white font-semibold text-sm">HR</span>
           </div>
           <div>
@@ -313,9 +314,10 @@ export function Sidebar({ activePage, userRole, employeeStage = "performer", has
                   <Link
                     key={`${section.label}-${item.id}`}
                     href={item.href}
+                    onClick={onNavigate}
                     className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm ${
                       isActive
-                        ? "bg-[#1F6E4A] text-white"
+                        ? "bg-brand text-brand-foreground"
                         : "text-foreground hover:bg-muted"
                     }`}
                   >

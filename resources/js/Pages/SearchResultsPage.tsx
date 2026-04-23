@@ -140,7 +140,7 @@ export default function SearchResultsPage({ query = "", results = [], totalCount
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
-                              <p className="text-sm font-medium text-foreground truncate group-hover:text-[#1F6E4A] transition-colors">
+                              <p className="text-sm font-medium text-foreground truncate group-hover:text-brand transition-colors">
                                 {highlightText(item.title, query)}
                               </p>
                               {item.badge && (

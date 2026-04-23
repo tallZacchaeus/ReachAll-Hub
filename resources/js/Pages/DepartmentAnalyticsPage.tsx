@@ -1,5 +1,6 @@
 import MainLayout from "@/layouts/MainLayout";
 import { useState } from "react";
+import { useChartColors } from "@/lib/useChartColors";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -32,6 +33,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { motion } from "motion/react";
 
 export default function DepartmentAnalyticsPage() {
+  const { colors } = useChartColors();
   const [selectedDepartment, setSelectedDepartment] = useState("engineering");
   const [dateRange, setDateRange] = useState("month");
   const [metricType, setMetricType] = useState("all");
@@ -189,10 +191,9 @@ export default function DepartmentAnalyticsPage() {
             <CardContent className="p-6">
               <div className="flex items-start justify-between mb-3">
                 <div
-                  className="w-12 h-12 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: "#1F6E4A15" }}
+                  className="w-12 h-12 rounded-lg flex items-center justify-center bg-brand/10"
                 >
-                  <Users className="w-6 h-6 text-[#1F6E4A]" />
+                  <Users className="w-6 h-6 text-brand" />
                 </div>
                 <Building2 className="w-5 h-5 text-muted-foreground" />
               </div>
@@ -213,12 +214,11 @@ export default function DepartmentAnalyticsPage() {
             <CardContent className="p-6">
               <div className="flex items-start justify-between mb-3">
                 <div
-                  className="w-12 h-12 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: "#1F6E4A15" }}
+                  className="w-12 h-12 rounded-lg flex items-center justify-center bg-brand/10"
                 >
-                  <Calendar className="w-6 h-6 text-[#1F6E4A]" />
+                  <Calendar className="w-6 h-6 text-brand" />
                 </div>
-                <Badge className="bg-[#f0fdf4] dark:bg-muted text-[#1F6E4A]">+2%</Badge>
+                <Badge className="bg-brand-subtle dark:bg-muted text-brand">+2%</Badge>
               </div>
               <p className="text-sm text-muted-foreground mb-1">Attendance Rate</p>
               <p className="text-foreground" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
@@ -237,12 +237,11 @@ export default function DepartmentAnalyticsPage() {
             <CardContent className="p-6">
               <div className="flex items-start justify-between mb-3">
                 <div
-                  className="w-12 h-12 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: "#FFD40015" }}
+                  className="w-12 h-12 rounded-lg flex items-center justify-center bg-brand-yellow/10"
                 >
-                  <TrendingUp className="w-6 h-6 text-[#FFD400]" />
+                  <TrendingUp className="w-6 h-6 text-brand-yellow" />
                 </div>
-                <Badge className="bg-[#fff9e6] dark:bg-yellow-900/30 text-foreground">+5%</Badge>
+                <Badge className="bg-brand-yellow/10 dark:bg-brand-yellow/20 text-foreground">+5%</Badge>
               </div>
               <p className="text-sm text-muted-foreground mb-1">Engagement Score</p>
               <p className="text-foreground" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
@@ -261,12 +260,11 @@ export default function DepartmentAnalyticsPage() {
             <CardContent className="p-6">
               <div className="flex items-start justify-between mb-3">
                 <div
-                  className="w-12 h-12 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: "#1F6E4A15" }}
+                  className="w-12 h-12 rounded-lg flex items-center justify-center bg-brand/10"
                 >
-                  <Award className="w-6 h-6 text-[#1F6E4A]" />
+                  <Award className="w-6 h-6 text-brand" />
                 </div>
-                <Badge className="bg-[#f0fdf4] dark:bg-muted text-[#1F6E4A]">New</Badge>
+                <Badge className="bg-brand-subtle dark:bg-muted text-brand">New</Badge>
               </div>
               <p className="text-sm text-muted-foreground mb-1">Badges Earned</p>
               <p className="text-foreground" style={{ fontSize: "1.75rem", fontWeight: "600" }}>
@@ -288,27 +286,29 @@ export default function DepartmentAnalyticsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            <div role="img" aria-label="Attendance trend line chart showing monthly attendance rate">
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={attendanceTrend}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                <XAxis dataKey="month" stroke="#6b7280" />
-                <YAxis stroke="#6b7280" />
+                <CartesianGrid strokeDasharray="3 3" stroke={colors.gridLine} />
+                <XAxis dataKey="month" stroke={colors.axisText} />
+                <YAxis stroke={colors.axisText} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "white",
-                    border: "1px solid #e5e7eb",
+                    backgroundColor: colors.tooltipBg,
+                    border: `1px solid ${colors.tooltipBorder}`,
                     borderRadius: "8px",
                   }}
                 />
                 <Line
                   type="monotone"
                   dataKey="rate"
-                  stroke="#1F6E4A"
+                  stroke={colors.primary}
                   strokeWidth={3}
-                  dot={{ fill: "#1F6E4A", r: 5 }}
+                  dot={{ fill: colors.primary, r: 5 }}
                 />
               </LineChart>
             </ResponsiveContainer>
+            </div>
           </CardContent>
         </Card>
 
@@ -321,27 +321,29 @@ export default function DepartmentAnalyticsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            <div role="img" aria-label="Engagement trend line chart showing team engagement score over time">
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={engagementTrend}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                <XAxis dataKey="month" stroke="#6b7280" />
-                <YAxis stroke="#6b7280" />
+                <CartesianGrid strokeDasharray="3 3" stroke={colors.gridLine} />
+                <XAxis dataKey="month" stroke={colors.axisText} />
+                <YAxis stroke={colors.axisText} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "white",
-                    border: "1px solid #e5e7eb",
+                    backgroundColor: colors.tooltipBg,
+                    border: `1px solid ${colors.tooltipBorder}`,
                     borderRadius: "8px",
                   }}
                 />
                 <Line
                   type="monotone"
                   dataKey="score"
-                  stroke="#FFD400"
+                  stroke={colors.secondary}
                   strokeWidth={3}
-                  dot={{ fill: "#FFD400", r: 5 }}
+                  dot={{ fill: colors.secondary, r: 5 }}
                 />
               </LineChart>
             </ResponsiveContainer>
+            </div>
           </CardContent>
         </Card>
 
@@ -354,21 +356,23 @@ export default function DepartmentAnalyticsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            <div role="img" aria-label="Performance metrics radar chart showing multi-dimensional scores">
             <ResponsiveContainer width="100%" height={300}>
               <RadarChart data={performanceMetrics}>
-                <PolarGrid stroke="#e5e7eb" />
-                <PolarAngleAxis dataKey="metric" stroke="#6b7280" />
-                <PolarRadiusAxis stroke="#6b7280" />
+                <PolarGrid stroke={colors.gridLine} />
+                <PolarAngleAxis dataKey="metric" stroke={colors.axisText} />
+                <PolarRadiusAxis stroke={colors.axisText} />
                 <Radar
                   name="Score"
                   dataKey="value"
-                  stroke="#1F6E4A"
-                  fill="#1F6E4A"
+                  stroke={colors.primary}
+                  fill={colors.primary}
                   fillOpacity={0.3}
                 />
                 <Tooltip />
               </RadarChart>
             </ResponsiveContainer>
+            </div>
           </CardContent>
         </Card>
 
@@ -381,26 +385,28 @@ export default function DepartmentAnalyticsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            <div role="img" aria-label="Department comparison bar chart showing performance scores across departments">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={comparisonData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                <XAxis dataKey="department" stroke="#6b7280" />
-                <YAxis stroke="#6b7280" />
+                <CartesianGrid strokeDasharray="3 3" stroke={colors.gridLine} />
+                <XAxis dataKey="department" stroke={colors.axisText} />
+                <YAxis stroke={colors.axisText} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "white",
-                    border: "1px solid #e5e7eb",
+                    backgroundColor: colors.tooltipBg,
+                    border: `1px solid ${colors.tooltipBorder}`,
                     borderRadius: "8px",
                   }}
                 />
                 <Bar
                   dataKey="score"
-                  fill="#1F6E4A"
+                  fill={colors.primary}
                   radius={[8, 8, 0, 0]}
-                  activeBar={{ fill: "#FFD400" }}
+                  activeBar={{ fill: colors.secondary }}
                 />
               </BarChart>
             </ResponsiveContainer>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -432,13 +438,13 @@ export default function DepartmentAnalyticsPage() {
                     <span className="text-2xl font-semibold">{index + 1}</span>
                   </div>
                   <Avatar className="w-16 h-16 mx-auto mb-3">
-                    <AvatarFallback className="bg-[#1F6E4A] text-white text-lg">
+                    <AvatarFallback className="bg-brand text-brand-foreground text-lg">
                       {performer.avatar}
                     </AvatarFallback>
                   </Avatar>
                   <p className="text-foreground mb-1">{performer.name}</p>
                   <p className="text-xs text-muted-foreground mb-3">{performer.id}</p>
-                  <Badge className="bg-[#1F6E4A] text-white">
+                  <Badge className="bg-brand text-white">
                     {performer.score}% Score
                   </Badge>
                 </CardContent>

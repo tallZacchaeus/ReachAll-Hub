@@ -93,9 +93,9 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
   };
 
   const getRatingColor = (value: number) => {
-    if (value >= 4) return "#1F6E4A";
-    if (value >= 3) return "#FFD400";
-    return "#ef4444";
+    if (value >= 4) return "var(--brand)";
+    if (value >= 3) return "var(--brand-yellow)";
+    return "var(--destructive)";
   };
 
   // Mock data for viewing submitted reviews (HR/Management only)
@@ -163,10 +163,10 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
 
       {/* Submit New Review - Only for Staff */}
       {!canOnlyViewResults && (
-        <Card className="bg-card shadow-sm border-2 border-[#1F6E4A]">
+        <Card className="bg-card shadow-sm border-2 border-brand">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <UserCheck className="w-5 h-5 text-[#1F6E4A]" />
+            <UserCheck className="w-5 h-5 text-brand" />
             <CardTitle className="text-foreground">Submit Peer Evaluation</CardTitle>
           </div>
           <CardDescription className="text-muted-foreground flex items-center gap-2">
@@ -178,7 +178,7 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
           {/* Team Member Selection */}
           <div className="space-y-2">
             <Label className="flex items-center gap-2">
-              <UsersIcon className="w-4 h-4 text-[#1F6E4A]" />
+              <UsersIcon className="w-4 h-4 text-brand" />
               Select Team Member to Review
             </Label>
             <Select value={selectedTeamMember} onValueChange={setSelectedTeamMember}>
@@ -197,11 +197,11 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
               </SelectContent>
             </Select>
             {selectedMember && (
-              <Card className="mt-2 bg-[#f0fdf4] dark:bg-muted border border-[#1F6E4A]">
+              <Card className="mt-2 bg-brand-subtle dark:bg-muted border border-brand">
                 <CardContent className="p-3">
                   <div className="flex items-center gap-3">
                     <Avatar className="w-10 h-10">
-                      <AvatarFallback className="bg-[#1F6E4A] text-white">
+                      <AvatarFallback className="bg-brand text-white">
                         {selectedMember.avatar}
                       </AvatarFallback>
                     </Avatar>
@@ -269,9 +269,9 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
 
           {/* Manager Private Notes */}
           {isManager && (
-            <div className="space-y-2 p-4 bg-[#fff9e6] rounded-lg border border-[#FFD400]">
+            <div className="space-y-2 p-4 bg-[#fff9e6] rounded-lg border border-brand-yellow">
               <Label htmlFor="manager-notes" className="flex items-center gap-2">
-                <Lock className="w-4 h-4 text-[#FFD400]" />
+                <Lock className="w-4 h-4 text-brand-yellow" />
                 Private Manager Notes (Visible only to Super Admins)
               </Label>
               <Textarea
@@ -286,7 +286,7 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
 
           <Button
             onClick={handleSubmitReview}
-            className="w-full bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+            className="w-full bg-brand hover:bg-brand/90 text-white"
           >
             <Send className="w-4 h-4 mr-2" />
             Submit Anonymous Review
@@ -300,7 +300,7 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
         <Card className="bg-card shadow-sm">
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Eye className="w-5 h-5 text-[#1F6E4A]" />
+              <Eye className="w-5 h-5 text-brand" />
               <CardTitle className="text-foreground">Recent Peer Reviews</CardTitle>
             </div>
             <CardDescription className="text-muted-foreground">
@@ -313,7 +313,7 @@ export default function PeerReviewPage({ userRole }: { userRole: string }) {
                 <CardContent className="p-4">
                   <div className="flex items-start gap-3 mb-4">
                     <Avatar className="w-10 h-10">
-                      <AvatarFallback className="bg-[#1F6E4A] text-white">
+                      <AvatarFallback className="bg-brand text-white">
                         {review.avatar}
                       </AvatarFallback>
                     </Avatar>

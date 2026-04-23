@@ -102,7 +102,7 @@ export function BadgesDisplay({ badges, compact = false }: BadgesDisplayProps) {
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      className="absolute -top-1 -right-1 w-5 h-5 bg-[#1F6E4A] rounded-full flex items-center justify-center"
+                      className="absolute -top-1 -right-1 w-5 h-5 bg-brand rounded-full flex items-center justify-center"
                     >
                       <Sparkles className="w-3 h-3 text-white" />
                     </motion.div>
@@ -140,8 +140,8 @@ export const DEFAULT_BADGES: BadgeData[] = [
     name: "Punctual Pro",
     description: "100% attendance in a month",
     icon: Calendar,
-    color: "#1F6E4A",
-    bgColor: "#f0fdf4",
+    color: "var(--brand)",
+    bgColor: "var(--brand-subtle)",
     earned: false,
   },
   {
@@ -149,7 +149,7 @@ export const DEFAULT_BADGES: BadgeData[] = [
     name: "Active Voice",
     description: "Regular chat participation",
     icon: MessageSquare,
-    color: "#FFD400",
+    color: "var(--brand-yellow)",
     bgColor: "#fffbeb",
     earned: false,
   },
@@ -167,7 +167,7 @@ export const DEFAULT_BADGES: BadgeData[] = [
     name: "Top Performer",
     description: "Top 3 in leaderboard",
     icon: Trophy,
-    color: "#FFD400",
+    color: "var(--brand-yellow)",
     bgColor: "#fffbeb",
     earned: false,
   },

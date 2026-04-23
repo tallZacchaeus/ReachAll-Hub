@@ -1,5 +1,7 @@
 import MainLayout from "@/layouts/MainLayout";
 import { useState } from "react";
+import { useChartColors } from "@/lib/useChartColors";
+import { BRAND_GREEN, BRAND_YELLOW } from "@/lib/constants";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -67,9 +69,10 @@ interface ResultsOverviewPageProps {
   userRole: string;
 }
 
-const COLORS = ["#1F6E4A", "#FFD400", "#4ade80", "#60a5fa", "#f59e0b", "#ec4899"];
+const COLORS = [BRAND_GREEN, BRAND_YELLOW, "#4ade80", "#60a5fa", "#f59e0b", "#ec4899"];
 
 export default function ResultsOverviewPage({ userRole }: ResultsOverviewPageProps) {
+  const { colors } = useChartColors();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedNominee, setSelectedNominee] = useState<{
     name: string;
@@ -124,7 +127,7 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
       id: "staff-of-year",
       title: "Staff of the Year",
       icon: Crown,
-      color: "#1F6E4A",
+      color: BRAND_GREEN,
       totalVotes: 234,
       winner: { name: "Sarah Johnson", avatar: "SJ", staffId: "EMP023", votes: 58 },
       topFive: [
@@ -169,7 +172,7 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
       id: "culture-champion",
       title: "Culture Champion",
       icon: Award,
-      color: "#FFD400",
+      color: BRAND_YELLOW,
       totalVotes: 198,
       winner: { name: "Alex Wong", avatar: "AW", staffId: "EMP005", votes: 51 },
       topFive: [
@@ -214,7 +217,7 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
       id: "innovation-leader",
       title: "Innovation Leader",
       icon: Trophy,
-      color: "#1F6E4A",
+      color: BRAND_GREEN,
       totalVotes: 187,
       winner: { name: "Kevin Zhang", avatar: "KZ", staffId: "EMP020", votes: 49 },
       topFive: [
@@ -259,7 +262,7 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
       id: "team-player",
       title: "Best Team Player",
       icon: Medal,
-      color: "#FFD400",
+      color: BRAND_YELLOW,
       totalVotes: 223,
       winner: { name: "Maria Garcia", avatar: "MG", staffId: "EMP015", votes: 56 },
       topFive: [
@@ -304,7 +307,7 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
       id: "punctuality-award",
       title: "Punctuality Award",
       icon: Trophy,
-      color: "#1F6E4A",
+      color: BRAND_GREEN,
       totalVotes: 210,
       winner: { name: "Mike Chen", avatar: "MC", staffId: "EMP015", votes: 62 },
       topFive: [
@@ -371,7 +374,7 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
       case 2:
         return "from-orange-400 to-orange-600";
       default:
-        return "from-[#1F6E4A] to-[#1a5a3d]";
+        return "from-brand to-[#1a5a3d]";
     }
   };
 
@@ -396,8 +399,8 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
         </div>
         <div className="flex items-center gap-3">
           <Badge variant="outline" className="flex items-center gap-2">
-            <Activity className="w-3 h-3 text-[#1F6E4A]" />
-            <span className="text-[#1F6E4A]">Live</span>
+            <Activity className="w-3 h-3 text-brand" />
+            <span className="text-brand">Live</span>
           </Badge>
           <span className="text-xs text-muted-foreground">Updated: {lastUpdated}</span>
         </div>
@@ -411,7 +414,7 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
             <p className="text-foreground" style={{ fontSize: "2rem", fontWeight: "600" }}>
               {totalVotesAllCategories.toLocaleString()}
             </p>
-            <Badge className="bg-[#f0fdf4] dark:bg-muted text-[#1F6E4A] hover:bg-muted mt-2">
+            <Badge className="bg-brand-subtle dark:bg-muted text-brand hover:bg-muted mt-2">
               <TrendingUp className="w-3 h-3 mr-1" />
               Across {awardResults.length} categories
             </Badge>
@@ -434,7 +437,7 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
             <p className="text-foreground" style={{ fontSize: "1.5rem", fontWeight: "600" }}>
               {currentAward.winner.name}
             </p>
-            <Badge className="bg-[#1F6E4A] text-white hover:bg-[#1F6E4A] mt-2">
+            <Badge className="bg-brand text-white hover:bg-brand mt-2">
               {currentAward.winner.votes} votes
             </Badge>
           </CardContent>
@@ -553,24 +556,25 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
+                    <div role="img" aria-label={`Vote distribution bar chart for ${currentAward.title} showing top nominees by vote count`}>
                     <ResponsiveContainer width="100%" height={350}>
                       <BarChart data={barChartData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                        <CartesianGrid strokeDasharray="3 3" stroke={colors.gridLine} />
                         <XAxis
                           dataKey="name"
-                          tick={{ fill: '#6b7280', fontSize: 12 }}
+                          tick={{ fill: colors.axisText, fontSize: 12 }}
                         />
                         <YAxis
-                          tick={{ fill: '#6b7280', fontSize: 12 }}
-                          label={{ value: 'Votes', angle: -90, position: 'insideLeft', style: { fill: '#6b7280' } }}
+                          tick={{ fill: colors.axisText, fontSize: 12 }}
+                          label={{ value: 'Votes', angle: -90, position: 'insideLeft', style: { fill: colors.axisText } }}
                         />
                         <Tooltip
                           content={({ active, payload }) => {
                             if (active && payload && payload.length) {
                               return (
-                                <div className="bg-card p-3 rounded-lg shadow-lg border-2 border-[#1F6E4A]">
+                                <div className="bg-card p-3 rounded-lg shadow-lg border-2 border-brand">
                                   <p className="text-sm text-foreground">{payload[0].payload.fullName}</p>
-                                  <p className="text-lg text-[#1F6E4A]">{payload[0].value} votes</p>
+                                  <p className="text-lg text-brand">{payload[0].value} votes</p>
                                 </div>
                               );
                             }
@@ -580,6 +584,7 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
                         <Bar dataKey="votes" fill={currentAward.color} radius={[8, 8, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
+                    </div>
                   </CardContent>
                 </Card>
               )}
@@ -606,7 +611,7 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
                               #{index + 1}
                             </div>
                             <Avatar className="w-12 h-12 border-2 border-border">
-                              <AvatarFallback className="bg-[#1F6E4A] text-white">
+                              <AvatarFallback className="bg-brand text-white">
                                 {staff.avatar}
                               </AvatarFallback>
                             </Avatar>
@@ -629,7 +634,7 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
                                       voters: staff.voters || [],
                                     })
                                   }
-                                  className="border-[#1F6E4A] text-[#1F6E4A] hover:bg-muted"
+                                  className="border-brand text-brand hover:bg-muted"
                                 >
                                   <Users className="w-4 h-4 mr-2" />
                                   View Voters
@@ -656,8 +661,8 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
             onClick={() => setCurrentIndex(index)}
             className={`h-2 rounded-full transition-all ${
               index === currentIndex
-                ? "w-8 bg-[#1F6E4A]"
-                : "w-2 bg-[#e5e7eb] hover:bg-[#1F6E4A]/50"
+                ? "w-8 bg-brand"
+                : "w-2 bg-border hover:bg-brand/50"
             }`}
           />
         ))}
@@ -681,7 +686,7 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
                   <CardContent className="p-3">
                     <div className="flex items-center gap-3">
                       <Avatar className="w-10 h-10">
-                        <AvatarFallback className="bg-[#1F6E4A] text-white text-xs">
+                        <AvatarFallback className="bg-brand text-white text-xs">
                           {voter.avatar}
                         </AvatarFallback>
                       </Avatar>
@@ -691,7 +696,7 @@ export default function ResultsOverviewPage({ userRole }: ResultsOverviewPagePro
                       </div>
                       <Badge
                         variant="outline"
-                        className="bg-card text-[#1F6E4A] border-[#1F6E4A]"
+                        className="bg-card text-brand border-brand"
                       >
                         {voter.department}
                       </Badge>

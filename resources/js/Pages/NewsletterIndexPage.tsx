@@ -34,7 +34,7 @@ export default function NewsletterIndexPage({ newsletters }: NewsletterIndexPage
       {/* Header */}
       <div>
         <h1 className="text-foreground mb-1 flex items-center gap-3">
-          <Newspaper className="w-8 h-8 text-[#1F6E4A]" />
+          <Newspaper className="w-8 h-8 text-brand" />
           Newsletters
         </h1>
         <p className="text-muted-foreground">
@@ -53,7 +53,7 @@ export default function NewsletterIndexPage({ newsletters }: NewsletterIndexPage
             <button
               key={item.id}
               onClick={() => router.visit(`/newsletters/${item.id}`)}
-              className="w-full text-left bg-card border-2 border-border rounded-xl overflow-hidden hover:border-[#1F6E4A] hover:shadow-md transition-all"
+              className="w-full text-left bg-card border-2 border-border rounded-xl overflow-hidden hover:border-brand hover:shadow-md transition-all"
             >
               {/* Featured image */}
               {item.featured_image && (
@@ -79,7 +79,7 @@ export default function NewsletterIndexPage({ newsletters }: NewsletterIndexPage
                 <div className="flex items-center gap-4 pt-1">
                   <div className="flex items-center gap-2">
                     <Avatar className="w-7 h-7">
-                      <AvatarFallback className="bg-[#1F6E4A] text-white text-xs">
+                      <AvatarFallback className="bg-brand text-white text-xs">
                         {item.author_initials}
                       </AvatarFallback>
                     </Avatar>
@@ -111,7 +111,7 @@ export default function NewsletterIndexPage({ newsletters }: NewsletterIndexPage
               size="sm"
               disabled={!link.url}
               onClick={() => link.url && router.visit(link.url, { preserveState: true })}
-              className={link.active ? "bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white" : ""}
+              className={link.active ? "bg-brand hover:bg-brand/90 text-white" : ""}
               dangerouslySetInnerHTML={{ __html: sanitizeHtml(link.label) }}
             />
           ))}

@@ -29,6 +29,8 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Search, LayoutGrid, List, Globe, Mail, Briefcase, Building2, Calendar, IdCard } from "lucide-react";
 import { sanitizeHtml } from "@/lib/sanitize";
+import { DEPT_COLORS, STAGE_STYLES } from "@/lib/constants";
+import { DirectoryGridSkeleton, TableRowSkeleton } from "@/components/ui/page-skeleton";
 
 interface DirectoryUser {
   id: number;
@@ -56,26 +58,7 @@ interface DirectoryPageProps {
   filters: { search: string; department: string; stage: string };
 }
 
-// Deterministic colour per department for avatar backgrounds
-const DEPT_COLORS: Record<string, string> = {
-  "Video & Production": "bg-purple-500",
-  "Project Management": "bg-blue-600",
-  "Product Team": "bg-cyan-600",
-  "Content & Brand Comms": "bg-pink-500",
-  Interns: "bg-orange-400",
-  "Incubator Team": "bg-yellow-500",
-  "Skillup Team": "bg-lime-600",
-  "DAF Team": "bg-teal-600",
-  "Graphics Design": "bg-violet-600",
-  Accounting: "bg-red-500",
-  "Business Development": "bg-emerald-600",
-};
-
-const STAGE_STYLES: Record<string, string> = {
-  joiner: "border-orange-300 text-orange-600 bg-orange-50 dark:bg-orange-950/30",
-  performer: "border-blue-300 text-blue-600 bg-blue-50 dark:bg-blue-950/30",
-  leader: "border-purple-300 text-purple-600 bg-purple-50 dark:bg-purple-950/30",
-};
+// DEPT_COLORS and STAGE_STYLES imported from @/lib/constants
 
 function getInitials(name: string) {
   const parts = name.trim().split(/\s+/);
@@ -83,13 +66,14 @@ function getInitials(name: string) {
 }
 
 function avatarColor(department: string) {
-  return DEPT_COLORS[department] ?? "bg-[#1F6E4A]";
+  return DEPT_COLORS[department] ?? "bg-brand";
 }
 
 export default function DirectoryPage({ users, departments, stages, filters }: DirectoryPageProps) {
   const [view, setView] = useState<"grid" | "list">("grid");
   const [search, setSearch] = useState(filters.search);
   const [selected, setSelected] = useState<DirectoryUser | null>(null);
+  const [loading, setLoading] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Debounced search
@@ -97,10 +81,11 @@ export default function DirectoryPage({ users, departments, stages, filters }: D
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       if (search.length === 0 || search.length >= 2) {
+        setLoading(true);
         router.get(
           "/directory",
           { ...filters, search },
-          { preserveState: true, replace: true },
+          { preserveState: true, replace: true, onFinish: () => setLoading(false) },
         );
       }
     }, 300);
@@ -109,10 +94,11 @@ export default function DirectoryPage({ users, departments, stages, filters }: D
   }, [search]);
 
   const applyFilter = (key: string, value: string) => {
+    setLoading(true);
     router.get(
       "/directory",
       { ...filters, search, [key]: value },
-      { preserveState: true, replace: true },
+      { preserveState: true, replace: true, onFinish: () => setLoading(false) },
     );
   };
 
@@ -121,7 +107,7 @@ export default function DirectoryPage({ users, departments, stages, filters }: D
       {/* Header */}
       <div>
         <h1 className="text-foreground mb-1 flex items-center gap-3">
-          <Globe className="w-8 h-8 text-[#1F6E4A]" />
+          <Globe className="w-8 h-8 text-brand" />
           Employee Directory
         </h1>
         <p className="text-muted-foreground">
@@ -185,7 +171,8 @@ export default function DirectoryPage({ users, departments, stages, filters }: D
             variant="ghost"
             className={`h-7 w-7 p-0 ${view === "grid" ? "bg-muted" : ""}`}
             onClick={() => setView("grid")}
-            title="Grid view"
+            aria-label="Grid view"
+            aria-pressed={view === "grid"}
           >
             <LayoutGrid className="w-4 h-4" />
           </Button>
@@ -194,7 +181,8 @@ export default function DirectoryPage({ users, departments, stages, filters }: D
             variant="ghost"
             className={`h-7 w-7 p-0 ${view === "list" ? "bg-muted" : ""}`}
             onClick={() => setView("list")}
-            title="List view"
+            aria-label="List view"
+            aria-pressed={view === "list"}
           >
             <List className="w-4 h-4" />
           </Button>
@@ -203,6 +191,7 @@ export default function DirectoryPage({ users, departments, stages, filters }: D
 
       {/* Grid view */}
       {view === "grid" && (
+        loading ? <DirectoryGridSkeleton count={12} /> :
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
           {users.data.length === 0 && (
             <p className="col-span-full text-center py-16 text-muted-foreground">
@@ -213,7 +202,7 @@ export default function DirectoryPage({ users, departments, stages, filters }: D
             <button
               key={user.id}
               onClick={() => setSelected(user)}
-              className="text-left p-5 bg-card border-2 border-border rounded-xl hover:border-[#1F6E4A] hover:shadow-md transition-all space-y-3"
+              className="text-left p-5 bg-card border-2 border-border rounded-xl hover:border-brand hover:shadow-md transition-all space-y-3"
             >
               <div className="flex items-center gap-3">
                 <Avatar className="w-12 h-12">
@@ -245,8 +234,9 @@ export default function DirectoryPage({ users, departments, stages, filters }: D
       )}
 
       {/* List view */}
-      {view === "list" && (
-        <div className="border-2 border-border rounded-xl overflow-hidden">
+      {view === "list" && !loading && (
+          <div className="overflow-x-auto">
+
           <Table>
             <TableHeader>
               <TableRow className="bg-muted hover:bg-muted">
@@ -304,8 +294,21 @@ export default function DirectoryPage({ users, departments, stages, filters }: D
         </div>
       )}
 
+      {/* List skeleton */}
+      {view === "list" && loading && (
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <tbody>
+              {Array.from({ length: 8 }).map((_, i) => (
+                <TableRowSkeleton key={i} cols={6} />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
       {/* Pagination */}
-      {users.last_page > 1 && (
+      {users.last_page > 1 && !loading && (
         <div className="flex justify-center gap-1">
           {users.links.map((link) => (
             <Button
@@ -314,7 +317,7 @@ export default function DirectoryPage({ users, departments, stages, filters }: D
               size="sm"
               disabled={!link.url}
               onClick={() => link.url && router.visit(link.url, { preserveState: true })}
-              className={link.active ? "bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white" : ""}
+              className={link.active ? "bg-brand hover:bg-brand/90 text-white" : ""}
               dangerouslySetInnerHTML={{ __html: sanitizeHtml(link.label) }}
             />
           ))}

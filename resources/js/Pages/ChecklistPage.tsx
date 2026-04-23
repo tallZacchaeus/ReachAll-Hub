@@ -115,8 +115,8 @@ function ChecklistCard({ checklist }: { checklist: ChecklistData }) {
                   disabled={isTogglingThis}
                   className={`mt-0.5 shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
                     isDone
-                      ? "bg-[#1F6E4A] border-[#1F6E4A]"
-                      : "border-muted-foreground/40 hover:border-[#1F6E4A]"
+                      ? "bg-brand border-brand"
+                      : "border-muted-foreground/40 hover:border-brand"
                   } ${isTogglingThis ? "opacity-50" : ""}`}
                   title={isDone ? "Mark incomplete" : "Mark complete"}
                 >
@@ -170,7 +170,7 @@ export default function ChecklistPage({ checklists }: ChecklistPageProps) {
       {/* Header */}
       <div>
         <h1 className="text-foreground mb-1 flex items-center gap-3">
-          <ListChecks className="w-8 h-8 text-[#1F6E4A]" />
+          <ListChecks className="w-8 h-8 text-brand" />
           My Checklists
         </h1>
         {overallTotal > 0 && (

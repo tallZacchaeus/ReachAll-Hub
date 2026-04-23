@@ -1,4 +1,5 @@
 import MainLayout from "@/layouts/MainLayout";
+import { useChartColors } from "@/lib/useChartColors";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "@inertiajs/react";
@@ -100,6 +101,7 @@ function ProgressBar({ pct }: { pct: number }) {
 }
 
 export default function DashboardPage({ widgets, user_role, period }: Props) {
+  const { colors } = useChartColors();
   const isExec    = ["ceo", "general_management", "management"].includes(user_role);
   const isFinance = ["finance", "superadmin", "hr"].includes(user_role);
   const trendData = widgets.trend ?? [];
@@ -263,6 +265,7 @@ export default function DashboardPage({ widgets, user_role, period }: Props) {
               <CardTitle className="text-base">Spend Trend (6 Months)</CardTitle>
             </CardHeader>
             <CardContent>
+              <div role="img" aria-label="Spend trend bar chart showing monthly expenditure over 6 months">
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={trendData} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
                   <XAxis dataKey="month" tick={{ fontSize: 11 }} />
@@ -270,9 +273,10 @@ export default function DashboardPage({ widgets, user_role, period }: Props) {
                   <Tooltip
                     formatter={(value) => [`₦${((typeof value === 'number' ? value : 0) / 100).toLocaleString("en-NG", { minimumFractionDigits: 0 })}`, "Spend"]}
                   />
-                  <Bar dataKey="kobo" fill="#1F6E4A" radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="kobo" fill={colors.primary} radius={[3, 3, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         )}

@@ -330,7 +330,8 @@ export default function AccountCodeAdminPage({
       </div>
 
       {/* Table */}
-      <div className="border rounded-lg overflow-hidden">
+        <div className="overflow-x-auto">
+
         <Table>
           <TableHeader>
             <TableRow>

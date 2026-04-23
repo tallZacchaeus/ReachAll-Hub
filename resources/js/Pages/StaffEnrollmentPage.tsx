@@ -222,7 +222,7 @@ export default function StaffEnrollmentPage({
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-foreground mb-2 flex items-center gap-3">
-            <UserPlus className="w-10 h-10 text-[#1F6E4A]" />
+            <UserPlus className="w-10 h-10 text-brand" />
             Staff Enrollment
           </h1>
           <p className="text-muted-foreground">
@@ -233,7 +233,7 @@ export default function StaffEnrollmentPage({
           <Button
             variant="outline"
             onClick={handleDownloadTemplate}
-            className="border-[#1F6E4A] text-[#1F6E4A] hover:bg-[#1F6E4A]/5"
+            className="border-brand text-brand hover:bg-brand/5"
           >
             <Download className="w-4 h-4 mr-2" />
             Download CSV Template
@@ -241,7 +241,7 @@ export default function StaffEnrollmentPage({
           <Button
             variant="outline"
             onClick={handleBulkUpload}
-            className="border-[#1F6E4A] text-[#1F6E4A] hover:bg-[#1F6E4A]/5"
+            className="border-brand text-brand hover:bg-brand/5"
           >
             <Upload className="w-4 h-4 mr-2" />
             Bulk Upload
@@ -259,7 +259,7 @@ export default function StaffEnrollmentPage({
             <DialogTrigger asChild>
               <Button
                 onClick={resetForm}
-                className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+                className="bg-brand hover:bg-brand/90 text-white"
               >
                 <UserPlus className="w-4 h-4 mr-2" />
                 Enroll New Staff
@@ -463,7 +463,7 @@ export default function StaffEnrollmentPage({
                   <Button
                     type="submit"
                     disabled={processing}
-                    className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+                    className="bg-brand hover:bg-brand/90 text-white"
                   >
                     {processing ? "Saving..." : editingStaff ? "Update Staff" : "Enroll Staff"}
                   </Button>
@@ -483,8 +483,8 @@ export default function StaffEnrollmentPage({
                 <p className="text-sm text-muted-foreground mb-1">Total Staff</p>
                 <p className="text-3xl text-foreground">{staffMembers.length}</p>
               </div>
-              <div className="w-12 h-12 rounded-xl bg-[#1F6E4A]/10 flex items-center justify-center">
-                <UserPlus className="w-6 h-6 text-[#1F6E4A]" />
+              <div className="w-12 h-12 rounded-xl bg-brand/10 flex items-center justify-center">
+                <UserPlus className="w-6 h-6 text-brand" />
               </div>
             </div>
           </CardContent>
@@ -598,7 +598,8 @@ export default function StaffEnrollmentPage({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="rounded-xl border border-border overflow-hidden">
+            <div className="overflow-x-auto">
+
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted hover:bg-muted">
@@ -626,7 +627,7 @@ export default function StaffEnrollmentPage({
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <Avatar className="w-10 h-10 border-2 border-border">
-                            <AvatarFallback className="bg-[#1F6E4A] text-white text-sm">
+                            <AvatarFallback className="bg-brand text-white text-sm">
                               {getInitials(staff.firstName, staff.lastName)}
                             </AvatarFallback>
                           </Avatar>
@@ -646,7 +647,7 @@ export default function StaffEnrollmentPage({
                           variant="outline"
                           className={
                             staff.role === "Management"
-                              ? "border-[#1F6E4A] text-[#1F6E4A] bg-[#1F6E4A]/5"
+                              ? "border-brand text-brand bg-brand/5"
                               : staff.role === "HR"
                               ? "border-blue-500 text-blue-500 bg-blue-50"
                               : "border-gray-400 text-gray-600 bg-gray-50"

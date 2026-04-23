@@ -139,7 +139,7 @@ export default function GoLiveChecklistPage({ checks, all_passed }: Props) {
         <div className="flex gap-3">
           <Link
             href="/finance/dashboard"
-            className="inline-flex items-center gap-2 bg-[#1F6E4A] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#185c3d] transition-colors"
+            className="inline-flex items-center gap-2 bg-brand text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#185c3d] transition-colors"
           >
             Go to Finance Dashboard
           </Link>

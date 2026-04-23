@@ -61,7 +61,7 @@ export default function BulletinBoardPage({ bulletins }: BulletinBoardPageProps)
       {/* Header */}
       <div>
         <h1 className="text-foreground mb-1 flex items-center gap-3">
-          <Newspaper className="w-8 h-8 text-[#1F6E4A]" />
+          <Newspaper className="w-8 h-8 text-brand" />
           News &amp; Bulletins
         </h1>
         <p className="text-muted-foreground">
@@ -158,7 +158,7 @@ export default function BulletinBoardPage({ bulletins }: BulletinBoardPageProps)
               size="sm"
               disabled={!link.url}
               onClick={() => link.url && router.visit(link.url, { preserveState: true })}
-              className={link.active ? "bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white" : ""}
+              className={link.active ? "bg-brand hover:bg-brand/90 text-white" : ""}
               dangerouslySetInnerHTML={{ __html: sanitizeHtml(link.label) }}
             />
           ))}

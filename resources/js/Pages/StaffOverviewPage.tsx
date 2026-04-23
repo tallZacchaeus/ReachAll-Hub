@@ -838,7 +838,7 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
         </div>
         <Button
           variant="outline"
-          className="border-[#1F6E4A] text-[#1F6E4A] hover:bg-muted"
+          className="border-brand text-brand hover:bg-muted"
         >
           <Download className="w-4 h-4 mr-2" />
           Export Report
@@ -852,7 +852,7 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
             <CardContent className="p-4">
               <p className="text-xs text-muted-foreground mb-1">{dept}</p>
               <p className="text-2xl text-foreground">{count}</p>
-              <Badge className="bg-[#f0fdf4] dark:bg-muted text-[#1F6E4A] hover:bg-muted mt-2 text-xs">
+              <Badge className="bg-brand-subtle dark:bg-muted text-brand hover:bg-muted mt-2 text-xs">
                 staff members
               </Badge>
             </CardContent>
@@ -950,7 +950,7 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <Avatar className="w-10 h-10">
-                          <AvatarFallback className="bg-[#1F6E4A] text-white text-xs">
+                          <AvatarFallback className="bg-brand text-white text-xs">
                             {staff.avatar}
                           </AvatarFallback>
                         </Avatar>
@@ -980,7 +980,7 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
                       <div className="flex items-center gap-2">
                         <div className="flex-1 bg-[#f3f4f6] rounded-full h-2 w-16">
                           <div
-                            className="bg-[#1F6E4A] h-2 rounded-full"
+                            className="bg-brand h-2 rounded-full"
                             style={{ width: `${staff.attendance}%` }}
                           />
                         </div>
@@ -1074,7 +1074,7 @@ export default function StaffOverviewPage({ userRole = "superadmin" }: StaffOver
                   />
                   <Button
                     onClick={handleSendFeedback}
-                    className="w-full bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+                    className="w-full bg-brand hover:bg-brand/90 text-white"
                   >
                     <MessageSquare className="w-4 h-4 mr-2" />
                     Send Feedback

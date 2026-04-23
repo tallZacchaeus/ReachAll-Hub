@@ -190,7 +190,7 @@ export default function AttendancePage({
           </Select>
           <Button
             onClick={handleDownloadReport}
-            className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+            className="bg-brand hover:bg-brand/90 text-white"
           >
             <Download className="w-4 h-4 mr-2" />
             Download Report
@@ -275,7 +275,7 @@ export default function AttendancePage({
       <Card className="rounded-2xl border-2 border-border">
         <CardHeader>
           <CardTitle className="text-foreground flex items-center gap-2">
-            <CalendarDays className="w-6 h-6 text-[#1F6E4A]" />
+            <CalendarDays className="w-6 h-6 text-brand" />
             Attendance Records
           </CardTitle>
           <CardDescription className="text-muted-foreground">
@@ -368,10 +368,10 @@ export default function AttendancePage({
         </CardContent>
       </Card>
 
-      <Card className="rounded-2xl border-2 border-[#1F6E4A]/20 bg-gradient-to-br from-[#f0fdf4] to-white">
+      <Card className="rounded-2xl border-2 border-brand/20 bg-gradient-to-br from-[#f0fdf4] to-white">
         <CardContent className="p-6">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-[#1F6E4A] flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-brand flex items-center justify-center flex-shrink-0">
               <CheckCircle2 className="w-6 h-6 text-white" />
             </div>
             <div className="flex-1">

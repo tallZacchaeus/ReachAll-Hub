@@ -227,7 +227,7 @@ function CreateObjectiveDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+        <Button className="bg-brand hover:bg-brand/90 text-white">
           <PlusCircle className="w-4 h-4 mr-2" />
           New Objective
         </Button>
@@ -235,7 +235,7 @@ function CreateObjectiveDialog() {
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Target className="w-5 h-5 text-[#1F6E4A]" />
+            <Target className="w-5 h-5 text-brand" />
             Create Objective
           </DialogTitle>
         </DialogHeader>
@@ -335,7 +335,7 @@ function CreateObjectiveDialog() {
           </div>
 
           <div className="flex justify-end pt-1">
-            <Button type="submit" disabled={processing} className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+            <Button type="submit" disabled={processing} className="bg-brand hover:bg-brand/90 text-white">
               {processing ? "Creating…" : "Create Objective"}
             </Button>
           </div>
@@ -367,7 +367,7 @@ export default function OKRPage({
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-foreground flex items-center gap-3">
-            <Target className="w-7 h-7 text-[#1F6E4A]" />
+            <Target className="w-7 h-7 text-brand" />
             OKRs
           </h1>
           <p className="text-muted-foreground text-sm mt-1">

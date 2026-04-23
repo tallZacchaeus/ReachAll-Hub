@@ -40,7 +40,7 @@ export function BulletinWidget({ bulletins }: BulletinWidgetProps) {
         <h3 className="text-sm font-semibold text-foreground">News &amp; Bulletins</h3>
         <Link
           href="/bulletins"
-          className="text-xs text-[#1F6E4A] hover:underline font-medium"
+          className="text-xs text-brand hover:underline font-medium"
         >
           View All
         </Link>

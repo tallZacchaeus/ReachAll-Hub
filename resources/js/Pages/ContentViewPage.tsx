@@ -95,7 +95,7 @@ export default function ContentViewPage({ page, hasAcknowledged, acknowledgedAt 
         <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <Avatar className="w-6 h-6">
-              <AvatarFallback className="bg-[#1F6E4A] text-white text-xs">
+              <AvatarFallback className="bg-brand text-white text-xs">
                 {page.author_initials}
               </AvatarFallback>
             </Avatar>
@@ -153,20 +153,20 @@ export default function ContentViewPage({ page, hasAcknowledged, acknowledgedAt 
                     download={attachment.name}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-3 border border-border rounded-lg hover:border-[#1F6E4A] transition-colors group"
+                    className="flex items-center gap-3 p-3 border border-border rounded-lg hover:border-brand transition-colors group"
                   >
-                    <div className="w-9 h-9 rounded bg-[#1F6E4A]/10 flex items-center justify-center shrink-0">
-                      <AttachIcon className="w-4 h-4 text-[#1F6E4A]" />
+                    <div className="w-9 h-9 rounded bg-brand/10 flex items-center justify-center shrink-0">
+                      <AttachIcon className="w-4 h-4 text-brand" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-foreground group-hover:text-[#1F6E4A] transition-colors truncate">
+                      <p className="text-sm text-foreground group-hover:text-brand transition-colors truncate">
                         {attachment.name}
                       </p>
                       {sizeLabel && (
                         <p className="text-xs text-muted-foreground">{sizeLabel}</p>
                       )}
                     </div>
-                    <Download className="w-4 h-4 text-muted-foreground group-hover:text-[#1F6E4A] transition-colors shrink-0" />
+                    <Download className="w-4 h-4 text-muted-foreground group-hover:text-brand transition-colors shrink-0" />
                   </a>
                 );
               })}
@@ -192,7 +192,7 @@ export default function ContentViewPage({ page, hasAcknowledged, acknowledgedAt 
           <Button
             onClick={handleAcknowledge}
             disabled={acknowledging}
-            className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white shrink-0"
+            className="bg-brand hover:bg-brand/90 text-white shrink-0"
           >
             <CheckCircle className="w-4 h-4 mr-2" />
             {acknowledging ? "Confirming…" : "I have read and understood this policy"}

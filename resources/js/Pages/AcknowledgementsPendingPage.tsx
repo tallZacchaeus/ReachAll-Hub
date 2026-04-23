@@ -32,7 +32,7 @@ export default function AcknowledgementsPendingPage({ policies }: Acknowledgemen
       {/* Header */}
       <div>
         <h1 className="text-foreground mb-1 flex items-center gap-3">
-          <CheckCircle className="w-8 h-8 text-[#1F6E4A]" />
+          <CheckCircle className="w-8 h-8 text-brand" />
           Pending Acknowledgements
         </h1>
         <p className="text-muted-foreground">
@@ -80,13 +80,13 @@ export default function AcknowledgementsPendingPage({ policies }: Acknowledgemen
                   className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
                     overdue
                       ? "bg-red-100 dark:bg-red-900/30"
-                      : "bg-[#1F6E4A]/10"
+                      : "bg-brand/10"
                   }`}
                 >
                   {overdue ? (
                     <AlertTriangle className="w-5 h-5 text-red-500" />
                   ) : (
-                    <FileText className="w-5 h-5 text-[#1F6E4A]" />
+                    <FileText className="w-5 h-5 text-brand" />
                   )}
                 </div>
 
@@ -131,7 +131,7 @@ export default function AcknowledgementsPendingPage({ policies }: Acknowledgemen
 
                 <Button
                   size="sm"
-                  className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white shrink-0"
+                  className="bg-brand hover:bg-brand/90 text-white shrink-0"
                   onClick={() => router.visit(`/content/${policy.slug}`)}
                 >
                   Read & Acknowledge

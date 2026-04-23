@@ -149,7 +149,7 @@ export default function ContentEditorPage({ page, categories }: ContentEditorPag
           <Button
             onClick={handleSubmit}
             disabled={processing}
-            className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+            className="bg-brand hover:bg-brand/90 text-white"
           >
             <Save className="w-4 h-4 mr-2" />
             {processing ? "Saving…" : isEdit ? "Update" : "Create"}

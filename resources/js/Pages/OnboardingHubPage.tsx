@@ -30,8 +30,8 @@ const QUICK_LINKS = [
     title: "First-Day Checklist",
     description: "Track your onboarding tasks step by step",
     href: "/checklists",
-    color: "text-[#1F6E4A]",
-    bg: "bg-[#1F6E4A]/10",
+    color: "text-brand",
+    bg: "bg-brand/10",
   },
   {
     icon: ScrollText,
@@ -87,12 +87,12 @@ export default function OnboardingHubPage({
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Hero */}
-      <div className="bg-card border-2 border-[#1F6E4A] rounded-2xl p-8 shadow-sm">
+      <div className="bg-card border-2 border-brand rounded-2xl p-8 shadow-sm">
         <div className="flex items-start gap-4 flex-wrap">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-3">
-              <Sparkles className="w-5 h-5 text-[#FFD400]" />
-              <Badge className="bg-[#FFD400]/20 text-[#1F6E4A] border-0">New Joiner</Badge>
+              <Sparkles className="w-5 h-5 text-brand-yellow" />
+              <Badge className="bg-brand-yellow/20 text-brand border-0">New Joiner</Badge>
             </div>
             <h1 className="text-foreground mb-2 text-2xl sm:text-3xl font-bold">
               Welcome to the team, {firstName}!
@@ -102,8 +102,8 @@ export default function OnboardingHubPage({
               we're thrilled to have you on board.
             </p>
           </div>
-          <div className="w-20 h-20 rounded-2xl bg-[#1F6E4A]/10 flex items-center justify-center shrink-0">
-            <Sparkles className="w-10 h-10 text-[#1F6E4A]" />
+          <div className="w-20 h-20 rounded-2xl bg-brand/10 flex items-center justify-center shrink-0">
+            <Sparkles className="w-10 h-10 text-brand" />
           </div>
         </div>
       </div>
@@ -114,8 +114,8 @@ export default function OnboardingHubPage({
         <Card className="lg:col-span-2 border-2 border-border shadow-sm">
           <CardContent className="p-6 space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[#1F6E4A]/10 flex items-center justify-center">
-                <CheckCircle className="w-4 h-4 text-[#1F6E4A]" />
+              <div className="w-8 h-8 rounded-lg bg-brand/10 flex items-center justify-center">
+                <CheckCircle className="w-4 h-4 text-brand" />
               </div>
               <h2 className="text-base font-semibold text-foreground">Your Onboarding Progress</h2>
             </div>
@@ -144,7 +144,7 @@ export default function OnboardingHubPage({
             ) : (
               <button
                 onClick={() => router.visit("/checklists")}
-                className="w-full text-sm text-[#1F6E4A] hover:underline font-medium text-left"
+                className="w-full text-sm text-brand hover:underline font-medium text-left"
               >
                 Continue onboarding checklist →
               </button>
@@ -156,8 +156,8 @@ export default function OnboardingHubPage({
         <Card className="lg:col-span-3 border-2 border-border shadow-sm">
           <CardContent className="p-6 space-y-3">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[#FFD400]/10 flex items-center justify-center">
-                <MessageSquare className="w-4 h-4 text-[#FFD400]" />
+              <div className="w-8 h-8 rounded-lg bg-brand-yellow/10 flex items-center justify-center">
+                <MessageSquare className="w-4 h-4 text-brand-yellow" />
               </div>
               <h2 className="text-base font-semibold text-foreground">A Message from Leadership</h2>
             </div>
@@ -192,14 +192,14 @@ export default function OnboardingHubPage({
               <button
                 key={link.href}
                 onClick={() => router.visit(link.href)}
-                className="text-left bg-card border-2 border-border rounded-xl p-5 hover:border-[#1F6E4A] hover:shadow-md transition-all group"
+                className="text-left bg-card border-2 border-border rounded-xl p-5 hover:border-brand hover:shadow-md transition-all group"
               >
                 <div
                   className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${link.bg}`}
                 >
                   <Icon className={`w-5 h-5 ${link.color}`} />
                 </div>
-                <p className="text-sm font-semibold text-foreground group-hover:text-[#1F6E4A] transition-colors mb-1">
+                <p className="text-sm font-semibold text-foreground group-hover:text-brand transition-colors mb-1">
                   {link.title}
                 </p>
                 <p className="text-xs text-muted-foreground leading-relaxed">{link.description}</p>

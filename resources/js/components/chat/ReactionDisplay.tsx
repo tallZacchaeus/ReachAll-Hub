@@ -30,7 +30,7 @@ export function ReactionDisplay({ reactions, onReactionClick }: ReactionDisplayP
                             <Badge
                                 variant="secondary"
                                 className={`cursor-pointer transition-all hover:scale-105 ${reaction.hasReacted
-                                        ? "bg-[#1F6E4A] text-white hover:bg-[#1a5a3d]"
+                                        ? "bg-brand text-white hover:bg-brand/90"
                                         : "bg-muted text-foreground hover:bg-[#e5e7eb]"
                                     }`}
                                 onClick={() => onReactionClick(reaction.emoji)}

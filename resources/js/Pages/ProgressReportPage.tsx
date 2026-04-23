@@ -1,5 +1,6 @@
 import MainLayout from "@/layouts/MainLayout";
 import { useState } from "react";
+import { useChartColors } from "@/lib/useChartColors";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,6 +34,7 @@ interface ProgressReportPageProps {
 }
 
 export default function ProgressReportPage({ userRole }: ProgressReportPageProps) {
+  const { colors } = useChartColors();
   const [selectedStaff, setSelectedStaff] = useState("john-smith");
   const [selectedYear, setSelectedYear] = useState("2024");
 
@@ -106,14 +108,14 @@ export default function ProgressReportPage({ userRole }: ProgressReportPageProps
           <Button
             onClick={handleDownloadCSV}
             variant="outline"
-            className="border-[#1F6E4A] text-[#1F6E4A] hover:bg-[#1F6E4A] hover:text-white"
+            className="border-brand text-brand hover:bg-brand hover:text-white"
           >
             <Download className="w-4 h-4 mr-2" />
             Download CSV
           </Button>
           <Button
             onClick={handleDownloadPDF}
-            className="bg-[#1F6E4A] text-white hover:bg-[#1F6E4A]/90"
+            className="bg-brand text-white hover:bg-brand/90"
           >
             <FileText className="w-4 h-4 mr-2" />
             Download PDF
@@ -167,32 +169,32 @@ export default function ProgressReportPage({ userRole }: ProgressReportPageProps
             <CardContent className="pt-6">
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4">
-                  <div className="w-16 h-16 bg-[#1F6E4A] rounded-full flex items-center justify-center text-white text-xl">
+                  <div className="w-16 h-16 bg-brand rounded-full flex items-center justify-center text-white text-xl">
                     {selectedStaffData.name.split(' ').map(n => n[0]).join('')}
                   </div>
                   <div>
                     <h3 className="text-foreground mb-1">{selectedStaffData.name}</h3>
                     <p className="text-sm text-muted-foreground mb-2">{selectedStaffData.position}</p>
-                    <Badge className="bg-[#1F6E4A] text-white">
+                    <Badge className="bg-brand text-white">
                       {selectedStaffData.department}
                     </Badge>
                   </div>
                 </div>
                 <div className="grid grid-cols-4 gap-6">
                   <div className="text-center">
-                    <p className="text-2xl text-[#1F6E4A] mb-1">{avgTasksCompleted}</p>
+                    <p className="text-2xl text-brand mb-1">{avgTasksCompleted}</p>
                     <p className="text-xs text-muted-foreground">Avg Tasks/Month</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-2xl text-[#1F6E4A] mb-1">{avgAttendance}%</p>
+                    <p className="text-2xl text-brand mb-1">{avgAttendance}%</p>
                     <p className="text-xs text-muted-foreground">Avg Attendance</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-2xl text-[#1F6E4A] mb-1">{avgEngagement}%</p>
+                    <p className="text-2xl text-brand mb-1">{avgEngagement}%</p>
                     <p className="text-xs text-muted-foreground">Avg Engagement</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-2xl text-[#1F6E4A] mb-1">{avgScore}%</p>
+                    <p className="text-2xl text-brand mb-1">{avgScore}%</p>
                     <p className="text-xs text-muted-foreground">Overall Score</p>
                   </div>
                 </div>
@@ -222,19 +224,20 @@ export default function ProgressReportPage({ userRole }: ProgressReportPageProps
               </CardDescription>
             </CardHeader>
             <CardContent>
+              <div role="img" aria-label="Annual performance area chart: overall score and attendance percentage over the year">
               <ResponsiveContainer width="100%" height={400}>
                 <AreaChart data={monthlyPerformance}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="month" stroke="#6b7280" />
-                  <YAxis stroke="#6b7280" />
+                  <CartesianGrid strokeDasharray="3 3" stroke={colors.gridLine} />
+                  <XAxis dataKey="month" stroke={colors.axisText} />
+                  <YAxis stroke={colors.axisText} />
                   <Tooltip />
                   <Legend />
                   <Area
                     type="monotone"
                     dataKey="score"
                     stackId="1"
-                    stroke="#1F6E4A"
-                    fill="#1F6E4A"
+                    stroke={colors.primary}
+                    fill={colors.primary}
                     fillOpacity={0.6}
                     name="Overall Score"
                   />
@@ -242,13 +245,14 @@ export default function ProgressReportPage({ userRole }: ProgressReportPageProps
                     type="monotone"
                     dataKey="attendance"
                     stackId="2"
-                    stroke="#FFD400"
-                    fill="#FFD400"
+                    stroke={colors.secondary}
+                    fill={colors.secondary}
                     fillOpacity={0.4}
                     name="Attendance %"
                   />
                 </AreaChart>
               </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -261,16 +265,18 @@ export default function ProgressReportPage({ userRole }: ProgressReportPageProps
               <CardDescription>Monthly task completion trend</CardDescription>
             </CardHeader>
             <CardContent>
+              <div role="img" aria-label="Tasks completed bar chart showing monthly task completion trend">
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={monthlyPerformance}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="month" stroke="#6b7280" />
-                  <YAxis stroke="#6b7280" />
+                  <CartesianGrid strokeDasharray="3 3" stroke={colors.gridLine} />
+                  <XAxis dataKey="month" stroke={colors.axisText} />
+                  <YAxis stroke={colors.axisText} />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="tasksCompleted" fill="#1F6E4A" name="Tasks Completed" />
+                  <Bar dataKey="tasksCompleted" fill={colors.primary} name="Tasks Completed" />
                 </BarChart>
               </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -283,23 +289,25 @@ export default function ProgressReportPage({ userRole }: ProgressReportPageProps
               <CardDescription>Monthly attendance percentage</CardDescription>
             </CardHeader>
             <CardContent>
+              <div role="img" aria-label="Attendance record line chart showing monthly attendance percentage">
               <ResponsiveContainer width="100%" height={400}>
                 <LineChart data={monthlyPerformance}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="month" stroke="#6b7280" />
-                  <YAxis stroke="#6b7280" domain={[80, 100]} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={colors.gridLine} />
+                  <XAxis dataKey="month" stroke={colors.axisText} />
+                  <YAxis stroke={colors.axisText} domain={[80, 100]} />
                   <Tooltip />
                   <Legend />
                   <Line
                     type="monotone"
                     dataKey="attendance"
-                    stroke="#1F6E4A"
+                    stroke={colors.primary}
                     strokeWidth={3}
                     name="Attendance %"
-                    dot={{ fill: "#1F6E4A", r: 5 }}
+                    dot={{ fill: colors.primary, r: 5 }}
                   />
                 </LineChart>
               </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -312,23 +320,25 @@ export default function ProgressReportPage({ userRole }: ProgressReportPageProps
               <CardDescription>Team engagement and participation metrics</CardDescription>
             </CardHeader>
             <CardContent>
+              <div role="img" aria-label="Engagement score line chart showing monthly team engagement and participation">
               <ResponsiveContainer width="100%" height={400}>
                 <LineChart data={monthlyPerformance}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="month" stroke="#6b7280" />
-                  <YAxis stroke="#6b7280" domain={[80, 100]} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={colors.gridLine} />
+                  <XAxis dataKey="month" stroke={colors.axisText} />
+                  <YAxis stroke={colors.axisText} domain={[80, 100]} />
                   <Tooltip />
                   <Legend />
                   <Line
                     type="monotone"
                     dataKey="engagement"
-                    stroke="#FFD400"
+                    stroke={colors.secondary}
                     strokeWidth={3}
                     name="Engagement Score"
-                    dot={{ fill: "#FFD400", r: 5 }}
+                    dot={{ fill: colors.secondary, r: 5 }}
                   />
                 </LineChart>
               </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -341,18 +351,20 @@ export default function ProgressReportPage({ userRole }: ProgressReportPageProps
               <CardDescription>Performance metrics by quarter</CardDescription>
             </CardHeader>
             <CardContent>
+              <div role="img" aria-label="Quarterly performance bar chart: performance score, projects completed, and teamwork score by quarter">
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={quarterlyData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="quarter" stroke="#6b7280" />
-                  <YAxis stroke="#6b7280" />
+                  <CartesianGrid strokeDasharray="3 3" stroke={colors.gridLine} />
+                  <XAxis dataKey="quarter" stroke={colors.axisText} />
+                  <YAxis stroke={colors.axisText} />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="performance" fill="#1F6E4A" name="Performance Score" />
-                  <Bar dataKey="projects" fill="#FFD400" name="Projects Completed" />
-                  <Bar dataKey="teamwork" fill="#6b7280" name="Teamwork Score" />
+                  <Bar dataKey="performance" fill={colors.primary} name="Performance Score" />
+                  <Bar dataKey="projects" fill={colors.secondary} name="Projects Completed" />
+                  <Bar dataKey="teamwork" fill={colors.quaternary} name="Teamwork Score" />
                 </BarChart>
               </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

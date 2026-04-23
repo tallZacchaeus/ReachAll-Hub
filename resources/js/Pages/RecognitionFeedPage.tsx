@@ -75,7 +75,7 @@ const BADGE_CONFIG: Record<
   { label: string; icon: React.ComponentType<{ className?: string }>; color: string; pill: string }
 > = {
   shoutout:         { label: "Shout-out",       icon: Megaphone,  color: "text-blue-500",   pill: "bg-blue-100 text-blue-700 border-blue-200" },
-  teamwork:         { label: "Teamwork",         icon: Users,      color: "text-[#1F6E4A]",  pill: "bg-green-100 text-green-700 border-green-200" },
+  teamwork:         { label: "Teamwork",         icon: Users,      color: "text-brand",  pill: "bg-green-100 text-green-700 border-green-200" },
   innovation:       { label: "Innovation",       icon: Lightbulb,  color: "text-amber-500",  pill: "bg-amber-100 text-amber-700 border-amber-200" },
   leadership:       { label: "Leadership",       icon: Crown,      color: "text-purple-500", pill: "bg-purple-100 text-purple-700 border-purple-200" },
   above_and_beyond: { label: "Above & Beyond",   icon: Star,       color: "text-yellow-500", pill: "bg-yellow-100 text-yellow-700 border-yellow-200" },
@@ -126,7 +126,7 @@ function GiveRecognitionDialog({ users }: { users: UserOption[] }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+        <Button className="bg-brand hover:bg-brand/90 text-white">
           <PlusCircle className="w-4 h-4 mr-2" />
           Give Recognition
         </Button>
@@ -135,7 +135,7 @@ function GiveRecognitionDialog({ users }: { users: UserOption[] }) {
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Star className="w-5 h-5 text-[#FFD400]" />
+            <Star className="w-5 h-5 text-brand-yellow" />
             Give Recognition
           </DialogTitle>
         </DialogHeader>
@@ -166,11 +166,11 @@ function GiveRecognitionDialog({ users }: { users: UserOption[] }) {
                       setUserSearch(u.name);
                     }}
                     className={`w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-muted transition-colors text-sm ${
-                      data.to_user_id === String(u.id) ? "bg-[#1F6E4A]/10" : ""
+                      data.to_user_id === String(u.id) ? "bg-brand/10" : ""
                     }`}
                   >
                     <Avatar className="w-7 h-7 shrink-0">
-                      <AvatarFallback className="bg-[#1F6E4A] text-white text-xs">
+                      <AvatarFallback className="bg-brand text-white text-xs">
                         {u.initials}
                       </AvatarFallback>
                     </Avatar>
@@ -181,7 +181,7 @@ function GiveRecognitionDialog({ users }: { users: UserOption[] }) {
                       )}
                     </div>
                     {data.to_user_id === String(u.id) && (
-                      <div className="ml-auto w-2 h-2 rounded-full bg-[#1F6E4A] shrink-0" />
+                      <div className="ml-auto w-2 h-2 rounded-full bg-brand shrink-0" />
                     )}
                   </button>
                 ))
@@ -206,7 +206,7 @@ function GiveRecognitionDialog({ users }: { users: UserOption[] }) {
                     onClick={() => setData("badge_type", key)}
                     className={`flex items-center gap-2 px-3 py-2 rounded-lg border-2 text-sm transition-all ${
                       selected
-                        ? "border-[#1F6E4A] bg-[#1F6E4A]/10"
+                        ? "border-brand bg-brand/10"
                         : "border-border hover:border-muted-foreground/40"
                     }`}
                   >
@@ -245,7 +245,7 @@ function GiveRecognitionDialog({ users }: { users: UserOption[] }) {
           <Button
             type="submit"
             disabled={processing}
-            className="w-full bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+            className="w-full bg-brand hover:bg-brand/90 text-white"
           >
             {processing ? "Sending…" : "Send Recognition"}
           </Button>
@@ -272,7 +272,7 @@ export default function RecognitionFeedPage({
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-foreground flex items-center gap-3 mb-1">
-            <Star className="w-8 h-8 text-[#FFD400]" />
+            <Star className="w-8 h-8 text-brand-yellow" />
             Recognition Feed
           </h1>
           <p className="text-muted-foreground">
@@ -301,7 +301,7 @@ export default function RecognitionFeedPage({
             onClick={() => applyFilter(tab.value)}
             className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
               filters.badge_type === tab.value
-                ? "bg-[#1F6E4A] text-white border-[#1F6E4A]"
+                ? "bg-brand text-white border-brand"
                 : "bg-background border-border text-muted-foreground hover:text-foreground hover:border-muted-foreground/40"
             }`}
           >
@@ -324,12 +324,12 @@ export default function RecognitionFeedPage({
             return (
               <div
                 key={r.id}
-                className="bg-card border-2 border-border rounded-xl p-5 space-y-3 hover:border-[#1F6E4A]/30 transition-colors"
+                className="bg-card border-2 border-border rounded-xl p-5 space-y-3 hover:border-brand/30 transition-colors"
               >
                 {/* Sender → Receiver */}
                 <div className="flex items-center gap-2 flex-wrap">
                   <Avatar className="w-9 h-9 shrink-0">
-                    <AvatarFallback className="bg-[#1F6E4A] text-white text-xs">
+                    <AvatarFallback className="bg-brand text-white text-xs">
                       {r.sender.initials}
                     </AvatarFallback>
                   </Avatar>
@@ -365,7 +365,7 @@ export default function RecognitionFeedPage({
                 </div>
 
                 {/* Message */}
-                <p className="text-sm text-foreground leading-relaxed border-l-2 border-[#1F6E4A]/30 pl-3 italic">
+                <p className="text-sm text-foreground leading-relaxed border-l-2 border-brand/30 pl-3 italic">
                   "{r.message}"
                 </p>
 
@@ -387,7 +387,7 @@ export default function RecognitionFeedPage({
               size="sm"
               disabled={!link.url}
               onClick={() => link.url && router.visit(link.url, { preserveState: true })}
-              className={link.active ? "bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white" : ""}
+              className={link.active ? "bg-brand hover:bg-brand/90 text-white" : ""}
               dangerouslySetInnerHTML={{ __html: sanitizeHtml(link.label) }}
             />
           ))}

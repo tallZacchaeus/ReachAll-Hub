@@ -114,13 +114,13 @@ export default function BulletinEditorPage({ bulletin, bulletins }: BulletinEdit
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-foreground mb-1 flex items-center gap-3">
-            <Newspaper className="w-8 h-8 text-[#1F6E4A]" />
+            <Newspaper className="w-8 h-8 text-brand" />
             {isEdit ? "Edit Bulletin" : "Manage Bulletins"}
           </h1>
         </div>
         {!isEdit && !showForm && (
           <Button
-            className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+            className="bg-brand hover:bg-brand/90 text-white"
             onClick={() => setShowForm(true)}
           >
             <Plus className="w-4 h-4 mr-2" />
@@ -131,7 +131,7 @@ export default function BulletinEditorPage({ bulletin, bulletins }: BulletinEdit
 
       {/* Form (create / edit) */}
       {(showForm || isEdit) && (
-        <Card className="border-2 border-[#1F6E4A]">
+        <Card className="border-2 border-brand">
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-base">
@@ -260,7 +260,7 @@ export default function BulletinEditorPage({ bulletin, bulletins }: BulletinEdit
                 )}
                 <Button
                   type="submit"
-                  className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+                  className="bg-brand hover:bg-brand/90 text-white"
                   disabled={processing || charCount > charMax}
                 >
                   <Save className="w-4 h-4 mr-2" />
@@ -274,7 +274,7 @@ export default function BulletinEditorPage({ bulletin, bulletins }: BulletinEdit
 
       {/* Bulletin list */}
       {!isEdit && bulletinList.length > 0 && (
-        <div className="border-2 border-border rounded-xl overflow-hidden">
+        <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted hover:bg-muted">
@@ -329,7 +329,7 @@ export default function BulletinEditorPage({ bulletin, bulletins }: BulletinEdit
                       <Button
                         size="sm"
                         variant="ghost"
-                        className={`h-7 w-7 p-0 ${item.is_pinned ? "text-[#1F6E4A]" : "text-muted-foreground hover:text-foreground"}`}
+                        className={`h-7 w-7 p-0 ${item.is_pinned ? "text-brand" : "text-muted-foreground hover:text-foreground"}`}
                         onClick={() => handlePin(item.id)}
                         title={item.is_pinned ? "Unpin" : "Pin"}
                       >
@@ -370,7 +370,7 @@ export default function BulletinEditorPage({ bulletin, bulletins }: BulletinEdit
         <div className="text-center py-16 text-muted-foreground border-2 border-dashed border-border rounded-xl">
           No bulletins yet.{" "}
           <button
-            className="text-[#1F6E4A] hover:underline"
+            className="text-brand hover:underline"
             onClick={() => setShowForm(true)}
           >
             Create the first one.

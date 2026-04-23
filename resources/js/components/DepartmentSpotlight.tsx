@@ -9,22 +9,19 @@ export function DepartmentSpotlight() {
       department: "Marketing Team",
       achievement: "Led the punctuality chart this month!",
       metric: "98% attendance rate",
-      icon: "📈",
-      color: "#1F6E4A",
+      icon: TrendingUp,
     },
     {
       department: "Tech Team",
       achievement: "Most engaged in chat discussions",
       metric: "450+ messages exchanged",
-      icon: "💬",
-      color: "#FFD400",
+      icon: Users,
     },
     {
       department: "Sales Team",
       achievement: "Highest evaluation participation",
       metric: "100% voting completion",
-      icon: "🗳️",
-      color: "#1F6E4A",
+      icon: Trophy,
     },
   ];
 
@@ -32,14 +29,14 @@ export function DepartmentSpotlight() {
   const currentSpotlight = spotlights[Math.floor(Date.now() / 10000) % spotlights.length];
 
   return (
-    <Card className="bg-gradient-to-br from-[#1F6E4A] to-[#165938] text-white shadow-lg overflow-hidden relative">
+    <Card className="bg-gradient-to-br from-brand to-brand/90 text-white shadow-lg overflow-hidden relative">
       <div className="absolute top-0 right-0 w-40 h-40 bg-card opacity-5 rounded-full -mr-20 -mt-20"></div>
       <div className="absolute bottom-0 left-0 w-32 h-32 bg-card opacity-5 rounded-full -ml-16 -mb-16"></div>
       
       <CardContent className="p-6 relative">
         <div className="flex items-center gap-2 mb-3">
-          <Trophy className="w-5 h-5 text-[#FFD400]" />
-          <Badge className="bg-[#FFD400] text-foreground hover:bg-[#FFD400]">
+          <Trophy className="w-5 h-5 text-brand-yellow" />
+          <Badge className="bg-brand-yellow text-foreground hover:bg-brand-yellow">
             Department of the Month
           </Badge>
         </div>
@@ -51,8 +48,8 @@ export function DepartmentSpotlight() {
           transition={{ duration: 0.5 }}
         >
           <div className="flex items-start gap-4">
-            <div className="w-16 h-16 bg-card bg-opacity-20 rounded-lg flex items-center justify-center text-3xl flex-shrink-0">
-              {currentSpotlight.icon}
+            <div className="w-16 h-16 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
+              <currentSpotlight.icon className="w-8 h-8 text-white" />
             </div>
             <div className="flex-1">
               <h3 className="text-white mb-2">{currentSpotlight.department}</h3>
@@ -60,7 +57,7 @@ export function DepartmentSpotlight() {
                 {currentSpotlight.achievement}
               </p>
               <div className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-[#FFD400]" />
+                <TrendingUp className="w-4 h-4 text-brand-yellow" />
                 <span className="text-sm text-white text-opacity-90">
                   {currentSpotlight.metric}
                 </span>
@@ -73,7 +70,7 @@ export function DepartmentSpotlight() {
           <span className="text-white text-opacity-75">
             Great teamwork! Keep it up 🌟
           </span>
-          <Users className="w-4 h-4 text-[#FFD400]" />
+          <Users className="w-4 h-4 text-brand-yellow" />
         </div>
       </CardContent>
     </Card>

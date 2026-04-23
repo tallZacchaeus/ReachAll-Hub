@@ -1,6 +1,7 @@
 import MainLayout from "@/layouts/MainLayout";
 import { router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
+import { useChartColors } from "@/lib/useChartColors";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -186,7 +187,7 @@ const DraggableTaskCard = ({
 
   const isOverdue = new Date(task.dueDate) < new Date();
   const priorityColors = {
-    high: "bg-[#fef2f2] dark:bg-red-950/30 text-[#ef4444] border-[#fecaca]",
+    high: "bg-destructive/10 dark:bg-red-950/30 text-destructive border-destructive/30",
     medium: "bg-[#fef9c3] dark:bg-yellow-950/30 text-[#d97706] border-[#fde68a]",
     low: "bg-[#f0f9ff] dark:bg-blue-950/30 text-[#0284c7] border-[#bae6fd]",
   };
@@ -257,7 +258,7 @@ const DraggableTaskCard = ({
 
           <div className="flex items-center gap-2">
             <Avatar className="w-7 h-7">
-              <AvatarFallback className="bg-[#1E3D34] text-white text-xs">
+              <AvatarFallback className="bg-brand/90 text-white text-xs">
                 {task.assignedToName
                   .split(" ")
                   .map((n) => n[0])
@@ -274,7 +275,7 @@ const DraggableTaskCard = ({
           {task.department && (
             <Badge
               variant="outline"
-              className="bg-[#f0fdf4] dark:bg-muted text-[#15803d] border-[#86efac] text-[10px]"
+              className="bg-brand-subtle dark:bg-muted text-[#15803d] border-[#86efac] text-[10px]"
             >
               {task.department}
             </Badge>
@@ -283,12 +284,12 @@ const DraggableTaskCard = ({
           <div className="flex items-center gap-2">
             <Calendar
               className={`w-3.5 h-3.5 ${
-                isOverdue ? "text-[#ef4444]" : "text-muted-foreground"
+                isOverdue ? "text-destructive" : "text-muted-foreground"
               }`}
             />
             <span
               className={`text-xs ${
-                isOverdue ? "text-[#ef4444]" : "text-muted-foreground"
+                isOverdue ? "text-destructive" : "text-muted-foreground"
               }`}
             >
               {new Date(task.dueDate).toLocaleDateString("en-US", {
@@ -297,7 +298,7 @@ const DraggableTaskCard = ({
               })}
             </span>
             {isOverdue && (
-              <Badge className="bg-[#fef2f2] dark:bg-red-950/30 text-[#ef4444] border-[#fecaca] text-[10px] ml-auto">
+              <Badge className="bg-destructive/10 dark:bg-red-950/30 text-destructive border-destructive/30 text-[10px] ml-auto">
                 Overdue
               </Badge>
             )}
@@ -369,7 +370,7 @@ const DropZone = ({
         drop(node);
       }}
       className={`space-y-4 min-h-[600px] ${
-        isOver ? "bg-[#f0fdf4] dark:bg-muted rounded-2xl p-2 transition-colors" : ""
+        isOver ? "bg-brand-subtle dark:bg-muted rounded-2xl p-2 transition-colors" : ""
       }`}
     >
       <div className="flex items-center justify-between sticky top-0 bg-muted pb-2 z-10">
@@ -413,6 +414,7 @@ export default function TasksPage({
   currentUserEmployeeId,
   currentUserName,
 }: TasksPageProps) {
+  const { colors } = useChartColors();
   const { flash } = usePage<{
     flash?: {
       success?: string;
@@ -751,7 +753,7 @@ export default function TasksPage({
           </div>
           <Dialog open={showCreateDialog} onOpenChange={closeCreateDialog}>
             <DialogTrigger asChild>
-              <Button className="bg-[#1E3D34] hover:bg-[#16302a] text-white">
+              <Button className="bg-brand/90 hover:bg-brand text-white">
                 <Plus className="w-4 h-4 mr-2" />
                 Add Task
               </Button>
@@ -775,7 +777,7 @@ export default function TasksPage({
                     className="bg-card"
                   />
                   {createErrors.title && (
-                    <p className="text-xs text-[#ef4444]">{createErrors.title}</p>
+                    <p className="text-xs text-destructive">{createErrors.title}</p>
                   )}
                 </div>
 
@@ -809,7 +811,7 @@ export default function TasksPage({
                     />
                   )}
                   {createErrors.assignedTo && (
-                    <p className="text-xs text-[#ef4444]">{createErrors.assignedTo}</p>
+                    <p className="text-xs text-destructive">{createErrors.assignedTo}</p>
                   )}
                 </div>
 
@@ -835,7 +837,7 @@ export default function TasksPage({
                       </SelectContent>
                     </Select>
                     {createErrors.department && (
-                      <p className="text-xs text-[#ef4444]">{createErrors.department}</p>
+                      <p className="text-xs text-destructive">{createErrors.department}</p>
                     )}
                   </div>
 
@@ -848,7 +850,7 @@ export default function TasksPage({
                       className="bg-card"
                     />
                     {createErrors.project && (
-                      <p className="text-xs text-[#ef4444]">{createErrors.project}</p>
+                      <p className="text-xs text-destructive">{createErrors.project}</p>
                     )}
                   </div>
                 </div>
@@ -872,7 +874,7 @@ export default function TasksPage({
                       </SelectContent>
                     </Select>
                     {createErrors.priority && (
-                      <p className="text-xs text-[#ef4444]">{createErrors.priority}</p>
+                      <p className="text-xs text-destructive">{createErrors.priority}</p>
                     )}
                   </div>
 
@@ -885,7 +887,7 @@ export default function TasksPage({
                       className="bg-card"
                     />
                     {createErrors.dueDate && (
-                      <p className="text-xs text-[#ef4444]">{createErrors.dueDate}</p>
+                      <p className="text-xs text-destructive">{createErrors.dueDate}</p>
                     )}
                   </div>
                 </div>
@@ -899,14 +901,14 @@ export default function TasksPage({
                     className="bg-card min-h-[80px]"
                   />
                   {createErrors.description && (
-                    <p className="text-xs text-[#ef4444]">{createErrors.description}</p>
+                    <p className="text-xs text-destructive">{createErrors.description}</p>
                   )}
                 </div>
 
                 <Button
                   onClick={handleCreateTask}
                   disabled={creatingTask}
-                  className="w-full bg-[#1E3D34] hover:bg-[#16302a] text-white"
+                  className="w-full bg-brand/90 hover:bg-brand text-white"
                 >
                   Create Task
                 </Button>
@@ -944,7 +946,7 @@ export default function TasksPage({
             title="Overdue Tasks"
             value={overdueTasks}
             icon={AlertCircle}
-            color="text-[#ef4444]"
+            color="text-destructive"
             iconBg="bg-[#fee2e2]"
             percentage={Math.round((overdueTasks / totalTasks) * 100)}
           />
@@ -1060,7 +1062,7 @@ export default function TasksPage({
             status="in-progress"
             tasks={tasksByStatus["in-progress"]}
             title="In Progress"
-            color="bg-[#FFD43B]"
+            color="bg-brand-yellow"
             onDrop={handleDrop}
             onViewDetails={setSelectedTask}
             onEdit={handleEditTask}
@@ -1070,7 +1072,7 @@ export default function TasksPage({
             status="blocked"
             tasks={tasksByStatus.blocked}
             title="Blocked"
-            color="bg-[#ef4444]"
+            color="bg-destructive"
             onDrop={handleDrop}
             onViewDetails={setSelectedTask}
             onEdit={handleEditTask}
@@ -1134,20 +1136,21 @@ export default function TasksPage({
               </div>
             </CardHeader>
             <CardContent>
+              <div role="img" aria-label="Task analytics chart showing completed, in-progress, and total tasks over time">
               <ResponsiveContainer width="100%" height={300}>
                 {chartType === "line" ? (
                   <LineChart data={monthlyData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <CartesianGrid strokeDasharray="3 3" stroke={colors.gridLine} />
                     <XAxis
                       dataKey="month"
-                      stroke="#6b7280"
+                      stroke={colors.axisText}
                       style={{ fontSize: "12px" }}
                     />
-                    <YAxis stroke="#6b7280" style={{ fontSize: "12px" }} />
+                    <YAxis stroke={colors.axisText} style={{ fontSize: "12px" }} />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: "#ffffff",
-                        border: "1px solid #e5e7eb",
+                        backgroundColor: colors.tooltipBg,
+                        border: `1px solid ${colors.tooltipBorder}`,
                         borderRadius: "8px",
                       }}
                       formatter={(value, name) => {
@@ -1167,38 +1170,38 @@ export default function TasksPage({
                     <Line
                       type="monotone"
                       dataKey="completed"
-                      stroke="#15803d"
+                      stroke={colors.primary}
                       strokeWidth={2}
                       name="Completed"
                     />
                     <Line
                       type="monotone"
                       dataKey="inProgress"
-                      stroke="#FFD43B"
+                      stroke={colors.secondary}
                       strokeWidth={2}
                       name="In Progress"
                     />
                     <Line
                       type="monotone"
                       dataKey="total"
-                      stroke="#1E3D34"
+                      stroke={colors.quaternary}
                       strokeWidth={2}
                       name="Total"
                     />
                   </LineChart>
                 ) : (
                   <BarChart data={monthlyData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <CartesianGrid strokeDasharray="3 3" stroke={colors.gridLine} />
                     <XAxis
                       dataKey="month"
-                      stroke="#6b7280"
+                      stroke={colors.axisText}
                       style={{ fontSize: "12px" }}
                     />
-                    <YAxis stroke="#6b7280" style={{ fontSize: "12px" }} />
+                    <YAxis stroke={colors.axisText} style={{ fontSize: "12px" }} />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: "#ffffff",
-                        border: "1px solid #e5e7eb",
+                        backgroundColor: colors.tooltipBg,
+                        border: `1px solid ${colors.tooltipBorder}`,
                         borderRadius: "8px",
                       }}
                       formatter={(value, name) => {
@@ -1215,12 +1218,13 @@ export default function TasksPage({
                       }}
                     />
                     <Legend />
-                    <Bar dataKey="completed" fill="#15803d" name="Completed" />
-                    <Bar dataKey="inProgress" fill="#FFD43B" name="In Progress" />
-                    <Bar dataKey="total" fill="#1E3D34" name="Total" />
+                    <Bar dataKey="completed" fill={colors.primary} name="Completed" />
+                    <Bar dataKey="inProgress" fill={colors.secondary} name="In Progress" />
+                    <Bar dataKey="total" fill={colors.quaternary} name="Total" />
                   </BarChart>
                 )}
               </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         )}
@@ -1309,7 +1313,7 @@ export default function TasksPage({
 
                 <Button
                   onClick={handleUpdateTask}
-                  className="w-full bg-[#1E3D34] hover:bg-[#16302a] text-white"
+                  className="w-full bg-brand/90 hover:bg-brand text-white"
                 >
                   Update Task
                 </Button>
@@ -1344,7 +1348,7 @@ export default function TasksPage({
                     <Label className="text-xs text-muted-foreground">Assigned To</Label>
                     <div className="flex items-center gap-2">
                       <Avatar className="w-7 h-7">
-                        <AvatarFallback className="bg-[#1E3D34] text-white text-xs">
+                        <AvatarFallback className="bg-brand/90 text-white text-xs">
                           {selectedTask.assignedToName
                             .split(" ")
                             .map((name) => name[0])
@@ -1375,7 +1379,7 @@ export default function TasksPage({
                     <Badge
                       className={`text-xs ${
                         selectedTask.priority === "high"
-                          ? "bg-[#fef2f2] dark:bg-red-950/30 text-[#ef4444] border-[#fecaca]"
+                          ? "bg-destructive/10 dark:bg-red-950/30 text-destructive border-destructive/30"
                           : selectedTask.priority === "medium"
                             ? "bg-[#fef9c3] dark:bg-yellow-950/30 text-[#d97706] border-[#fde68a]"
                             : "bg-[#f0f9ff] dark:bg-blue-950/30 text-[#0284c7] border-[#bae6fd]"
@@ -1448,7 +1452,7 @@ export default function TasksPage({
                           <div
                             className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
                               subtask.completed
-                                ? "bg-[#1E3D34] border-[#1E3D34]"
+                                ? "bg-brand/90 border-[#1E3D34]"
                                 : "border-border"
                             }`}
                           >
@@ -1514,7 +1518,7 @@ export default function TasksPage({
                     {selectedTask.comments.map((comment) => (
                       <div key={comment.id} className="flex gap-3">
                         <Avatar className="w-8 h-8 flex-shrink-0">
-                          <AvatarFallback className="bg-[#1E3D34] text-white text-xs">
+                          <AvatarFallback className="bg-brand/90 text-white text-xs">
                             {comment.authorAvatar}
                           </AvatarFallback>
                         </Avatar>
@@ -1551,7 +1555,7 @@ export default function TasksPage({
                   <Button
                     onClick={handleAddComment}
                     disabled={!newComment.trim()}
-                    className="w-full bg-[#1E3D34] hover:bg-[#16302a] text-white"
+                    className="w-full bg-brand/90 hover:bg-brand text-white"
                   >
                     <MessageSquare className="w-4 h-4 mr-2" />
                     Add Comment

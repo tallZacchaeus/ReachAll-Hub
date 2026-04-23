@@ -31,7 +31,7 @@ const BADGE_CONFIG: Record<
   { label: string; icon: React.ComponentType<{ className?: string }>; color: string; pill: string }
 > = {
   shoutout:         { label: "Shout-out",     icon: Megaphone,  color: "text-blue-500",   pill: "bg-blue-100 text-blue-700 border-blue-200" },
-  teamwork:         { label: "Teamwork",       icon: Users,      color: "text-[#1F6E4A]",  pill: "bg-green-100 text-green-700 border-green-200" },
+  teamwork:         { label: "Teamwork",       icon: Users,      color: "text-brand",  pill: "bg-green-100 text-green-700 border-green-200" },
   innovation:       { label: "Innovation",     icon: Lightbulb,  color: "text-amber-500",  pill: "bg-amber-100 text-amber-700 border-amber-200" },
   leadership:       { label: "Leadership",     icon: Crown,      color: "text-purple-500", pill: "bg-purple-100 text-purple-700 border-purple-200" },
   above_and_beyond: { label: "Above & Beyond", icon: Star,       color: "text-yellow-500", pill: "bg-yellow-100 text-yellow-700 border-yellow-200" },
@@ -45,7 +45,7 @@ export default function RecognitionMinePage({ received, sent }: RecognitionMineP
       <div key={r.id} className="bg-card border-2 border-border rounded-xl p-4 space-y-2">
         <div className="flex items-center gap-2 flex-wrap">
           <Avatar className="w-8 h-8 shrink-0">
-            <AvatarFallback className="bg-[#1F6E4A] text-white text-xs">
+            <AvatarFallback className="bg-brand text-white text-xs">
               {person.initials}
             </AvatarFallback>
           </Avatar>
@@ -60,7 +60,7 @@ export default function RecognitionMinePage({ received, sent }: RecognitionMineP
             {badge.label}
           </Badge>
         </div>
-        <p className="text-sm text-foreground leading-relaxed border-l-2 border-[#1F6E4A]/30 pl-3 italic">
+        <p className="text-sm text-foreground leading-relaxed border-l-2 border-brand/30 pl-3 italic">
           "{r.message}"
         </p>
         <p className="text-xs text-muted-foreground">{r.created_at}</p>
@@ -82,7 +82,7 @@ export default function RecognitionMinePage({ received, sent }: RecognitionMineP
           Back to Feed
         </Button>
         <h1 className="text-foreground flex items-center gap-3 mb-1">
-          <Star className="w-8 h-8 text-[#FFD400]" />
+          <Star className="w-8 h-8 text-brand-yellow" />
           My Recognitions
         </h1>
       </div>
@@ -113,7 +113,7 @@ export default function RecognitionMinePage({ received, sent }: RecognitionMineP
           </h2>
           <Button
             size="sm"
-            className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white text-xs"
+            className="bg-brand hover:bg-brand/90 text-white text-xs"
             onClick={() => router.visit("/recognition")}
           >
             Give Recognition

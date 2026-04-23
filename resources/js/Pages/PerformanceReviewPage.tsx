@@ -120,9 +120,9 @@ export default function PerformanceReviewPage() {
   });
 
   const getPerformanceColor = (value: number) => {
-    if (value >= 90) return "#1F6E4A";
-    if (value >= 75) return "#FFD400";
-    return "#ef4444";
+    if (value >= 90) return "var(--brand)";
+    if (value >= 75) return "var(--brand-yellow)";
+    return "var(--destructive)";
   };
 
   const getOverallScore = (staff: StaffPerformance) => {
@@ -217,7 +217,7 @@ export default function PerformanceReviewPage() {
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
                       <Avatar className="w-12 h-12">
-                        <AvatarFallback className="bg-[#1F6E4A] text-white">
+                        <AvatarFallback className="bg-brand text-white">
                           {staff.avatar}
                         </AvatarFallback>
                       </Avatar>
@@ -298,7 +298,7 @@ export default function PerformanceReviewPage() {
                           <Button
                             variant="outline"
                             size="sm"
-                            className="text-[#1F6E4A] border-[#1F6E4A] hover:bg-muted"
+                            className="text-brand border-brand hover:bg-muted"
                           >
                             <FileText className="w-4 h-4 mr-1" />
                             History
@@ -343,7 +343,7 @@ export default function PerformanceReviewPage() {
                                         By {review.reviewer}
                                       </p>
                                     </div>
-                                    <Badge className="bg-[#1F6E4A] text-white">
+                                    <Badge className="bg-brand text-white">
                                       {review.score}%
                                     </Badge>
                                   </div>
@@ -362,7 +362,7 @@ export default function PerformanceReviewPage() {
                         <DialogTrigger asChild>
                           <Button
                             size="sm"
-                            className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+                            className="bg-brand hover:bg-brand/90 text-white"
                           >
                             <Plus className="w-4 h-4 mr-1" />
                             Add Review
@@ -390,7 +390,7 @@ export default function PerformanceReviewPage() {
                             <div className="flex gap-2">
                               <Button
                                 onClick={handleAddReview}
-                                className="flex-1 bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+                                className="flex-1 bg-brand hover:bg-brand/90 text-white"
                               >
                                 Save Review
                               </Button>

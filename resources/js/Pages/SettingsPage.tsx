@@ -98,31 +98,31 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
 
       <Tabs defaultValue="profile" className="space-y-6">
         <TabsList className="bg-card border-2 border-border">
-          <TabsTrigger value="profile" className="data-[state=active]:bg-[#1F6E4A] data-[state=active]:text-white">
+          <TabsTrigger value="profile" className="data-[state=active]:bg-brand data-[state=active]:text-white">
             <User className="w-4 h-4 mr-2" />
             Profile
           </TabsTrigger>
-          <TabsTrigger value="notifications" className="data-[state=active]:bg-[#1F6E4A] data-[state=active]:text-white">
+          <TabsTrigger value="notifications" className="data-[state=active]:bg-brand data-[state=active]:text-white">
             <Bell className="w-4 h-4 mr-2" />
             Notifications
           </TabsTrigger>
-          <TabsTrigger value="preferences" className="data-[state=active]:bg-[#1F6E4A] data-[state=active]:text-white">
+          <TabsTrigger value="preferences" className="data-[state=active]:bg-brand data-[state=active]:text-white">
             <Palette className="w-4 h-4 mr-2" />
             Preferences
           </TabsTrigger>
           {!isAdmin && (
-            <TabsTrigger value="privacy" className="data-[state=active]:bg-[#1F6E4A] data-[state=active]:text-white">
+            <TabsTrigger value="privacy" className="data-[state=active]:bg-brand data-[state=active]:text-white">
               <Shield className="w-4 h-4 mr-2" />
               Privacy
             </TabsTrigger>
           )}
           {isAdmin && (
-            <TabsTrigger value="system" className="data-[state=active]:bg-[#1F6E4A] data-[state=active]:text-white">
+            <TabsTrigger value="system" className="data-[state=active]:bg-brand data-[state=active]:text-white">
               <Database className="w-4 h-4 mr-2" />
               System
             </TabsTrigger>
           )}
-          <TabsTrigger value="security" className="data-[state=active]:bg-[#1F6E4A] data-[state=active]:text-white">
+          <TabsTrigger value="security" className="data-[state=active]:bg-brand data-[state=active]:text-white">
             <Lock className="w-4 h-4 mr-2" />
             Security
           </TabsTrigger>
@@ -140,7 +140,7 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
             <CardContent className="space-y-6">
               <div className="flex items-center gap-4">
                 <Avatar className="w-20 h-20">
-                  <AvatarFallback className="bg-[#1F6E4A] text-white text-2xl">
+                  <AvatarFallback className="bg-brand text-white text-2xl">
                     {profileData.fullName.split(' ').map(n => n[0]).join('')}
                   </AvatarFallback>
                 </Avatar>
@@ -216,7 +216,7 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                 </div>
               </div>
 
-              <Button onClick={handleSaveProfile} className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+              <Button onClick={handleSaveProfile} className="bg-brand hover:bg-brand/90 text-white">
                 <Save className="w-4 h-4 mr-2" />
                 Save Changes
               </Button>
@@ -332,7 +332,7 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                 )}
               </div>
 
-              <Button onClick={handleSaveNotifications} className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+              <Button onClick={handleSaveNotifications} className="bg-brand hover:bg-brand/90 text-white">
                 <Save className="w-4 h-4 mr-2" />
                 Save Preferences
               </Button>
@@ -409,7 +409,7 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                 </div>
               </div>
 
-              <Button onClick={handleSavePreferences} className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+              <Button onClick={handleSavePreferences} className="bg-brand hover:bg-brand/90 text-white">
                 <Save className="w-4 h-4 mr-2" />
                 Save Preferences
               </Button>
@@ -479,7 +479,7 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                   </div>
                 </div>
 
-                <Button onClick={handleSavePrivacy} className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+                <Button onClick={handleSavePrivacy} className="bg-brand hover:bg-brand/90 text-white">
                   <Save className="w-4 h-4 mr-2" />
                   Save Privacy Settings
                 </Button>
@@ -552,7 +552,7 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
                   </div>
                 </div>
 
-                <Button onClick={handleSaveSystemSettings} className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+                <Button onClick={handleSaveSystemSettings} className="bg-brand hover:bg-brand/90 text-white">
                   <Save className="w-4 h-4 mr-2" />
                   Save System Settings
                 </Button>
@@ -590,20 +590,20 @@ export default function SettingsPage({ userRole = "staff" }: SettingsPageProps) 
 
               <Separator />
 
-              <div className="p-4 bg-[#f0fdf4] dark:bg-muted border-2 border-[#1F6E4A] rounded-lg">
+              <div className="p-4 bg-brand-subtle dark:bg-muted border-2 border-brand rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
-                  <Shield className="w-5 h-5 text-[#1F6E4A]" />
+                  <Shield className="w-5 h-5 text-brand" />
                   <p className="text-sm text-foreground">Two-Factor Authentication</p>
                 </div>
                 <p className="text-xs text-muted-foreground mb-3">
                   Add an extra layer of security to your account
                 </p>
-                <Button variant="outline" className="border-2 border-[#1F6E4A] text-[#1F6E4A]">
+                <Button variant="outline" className="border-2 border-brand text-brand">
                   Enable 2FA
                 </Button>
               </div>
 
-              <Button className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+              <Button className="bg-brand hover:bg-brand/90 text-white">
                 <Save className="w-4 h-4 mr-2" />
                 Update Password
               </Button>

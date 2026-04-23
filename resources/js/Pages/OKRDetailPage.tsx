@@ -161,7 +161,7 @@ function KRRow({ kr }: { kr: KeyResult }) {
           size="sm"
           disabled={saving}
           onClick={handleSave}
-          className="h-7 text-xs bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+          className="h-7 text-xs bg-brand hover:bg-brand/90 text-white"
         >
           <Save className="w-3 h-3 mr-1" />
           {saving ? "Saving…" : "Save"}
@@ -221,7 +221,7 @@ export default function OKRDetailPage({ objective, isAdmin }: OKRDetailPageProps
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
-              <Target className="w-5 h-5 text-[#1F6E4A]" />
+              <Target className="w-5 h-5 text-brand" />
               <Badge className={`text-xs border-0 ${STATUS_COLORS[objective.status]}`}>
                 {objective.status}
               </Badge>

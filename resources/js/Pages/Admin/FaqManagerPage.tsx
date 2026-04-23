@@ -180,7 +180,7 @@ function FaqDialog({
             <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={processing} className="bg-[#1F6E4A] hover:bg-[#185a3c] text-white">
+            <Button type="submit" disabled={processing} className="bg-brand hover:bg-[#185a3c] text-white">
               <Save className="w-4 h-4 mr-2" />
               {isEdit ? "Save Changes" : "Add FAQ"}
             </Button>
@@ -207,7 +207,7 @@ export default function FaqManagerPage({ faqs = [] }: FaqManagerPageProps) {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#1F6E4A] rounded-lg flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 bg-brand rounded-lg flex items-center justify-center shrink-0">
               <HelpCircle className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -217,7 +217,7 @@ export default function FaqManagerPage({ faqs = [] }: FaqManagerPageProps) {
           </div>
           <FaqDialog
             trigger={
-              <Button className="bg-[#1F6E4A] hover:bg-[#185a3c] text-white">
+              <Button className="bg-brand hover:bg-[#185a3c] text-white">
                 <Plus className="w-4 h-4 mr-2" />
                 Add FAQ
               </Button>

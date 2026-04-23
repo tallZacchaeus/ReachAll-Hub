@@ -77,7 +77,7 @@ export default function NewsletterManagerPage({
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-foreground mb-1 flex items-center gap-3">
-            <Newspaper className="w-8 h-8 text-[#1F6E4A]" />
+            <Newspaper className="w-8 h-8 text-brand" />
             Manage Newsletters
           </h1>
           <p className="text-muted-foreground">
@@ -85,7 +85,7 @@ export default function NewsletterManagerPage({
           </p>
         </div>
         <Button
-          className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+          className="bg-brand hover:bg-brand/90 text-white"
           onClick={() => router.visit('/admin/newsletters/create')}
         >
           <Plus className="w-4 h-4 mr-2" />
@@ -94,7 +94,8 @@ export default function NewsletterManagerPage({
       </div>
 
       {/* Table */}
-      <div className="border-2 border-border rounded-xl overflow-hidden">
+        <div className="overflow-x-auto">
+
         <Table>
           <TableHeader>
             <TableRow className="bg-muted hover:bg-muted">
@@ -202,7 +203,7 @@ export default function NewsletterManagerPage({
               size="sm"
               disabled={!link.url}
               onClick={() => link.url && router.visit(link.url, { preserveState: true })}
-              className={link.active ? "bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white" : ""}
+              className={link.active ? "bg-brand hover:bg-brand/90 text-white" : ""}
               dangerouslySetInnerHTML={{ __html: sanitizeHtml(link.label) }}
             />
           ))}

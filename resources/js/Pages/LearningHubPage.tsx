@@ -80,7 +80,7 @@ export default function LearningHubPage({ courses, filters }: LearningHubPagePro
       {/* Header */}
       <div>
         <h1 className="text-foreground mb-1 flex items-center gap-3">
-          <GraduationCap className="w-8 h-8 text-[#1F6E4A]" />
+          <GraduationCap className="w-8 h-8 text-brand" />
           Learning Hub
         </h1>
         <p className="text-muted-foreground">
@@ -138,7 +138,7 @@ export default function LearningHubPage({ courses, filters }: LearningHubPagePro
               <button
                 key={course.id}
                 onClick={() => router.visit(`/learning/${course.id}`)}
-                className="text-left bg-card border-2 border-border rounded-xl p-5 hover:border-[#1F6E4A] hover:shadow-md transition-all space-y-3 flex flex-col"
+                className="text-left bg-card border-2 border-border rounded-xl p-5 hover:border-brand hover:shadow-md transition-all space-y-3 flex flex-col"
               >
                 {/* Type badge + status */}
                 <div className="flex items-center justify-between gap-2">
@@ -180,7 +180,7 @@ export default function LearningHubPage({ courses, filters }: LearningHubPagePro
                         className={`h-full rounded-full transition-all ${
                           enrollment.status === "completed"
                             ? "bg-green-500"
-                            : "bg-[#1F6E4A]"
+                            : "bg-brand"
                         }`}
                         style={{ width: `${enrollment.progress}%` }}
                       />
@@ -212,7 +212,7 @@ export default function LearningHubPage({ courses, filters }: LearningHubPagePro
               size="sm"
               disabled={!link.url}
               onClick={() => link.url && router.visit(link.url, { preserveState: true })}
-              className={link.active ? "bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white" : ""}
+              className={link.active ? "bg-brand hover:bg-brand/90 text-white" : ""}
               dangerouslySetInnerHTML={{ __html: sanitizeHtml(link.label) }}
             />
           ))}

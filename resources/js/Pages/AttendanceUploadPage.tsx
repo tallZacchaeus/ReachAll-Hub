@@ -56,7 +56,7 @@ export default function AttendanceUploadPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-[#1F6E4A] transition-colors">
+            <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-brand transition-colors">
               <input
                 type="file"
                 id="attendance-upload"
@@ -65,14 +65,14 @@ export default function AttendanceUploadPage() {
                 onChange={handleFileUpload}
               />
               <label htmlFor="attendance-upload" className="cursor-pointer">
-                <div className="w-16 h-16 bg-[#f0fdf4] dark:bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FileSpreadsheet className="w-8 h-8 text-[#1F6E4A]" />
+                <div className="w-16 h-16 bg-brand-subtle dark:bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FileSpreadsheet className="w-8 h-8 text-brand" />
                 </div>
                 <h3 className="text-foreground mb-2">Choose file to upload</h3>
                 <p className="text-sm text-muted-foreground mb-4">
                   CSV or Excel format (Max 10MB)
                 </p>
-                <Button className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+                <Button className="bg-brand hover:bg-brand/90 text-white">
                   <Upload className="w-4 h-4 mr-2" />
                   Select File
                 </Button>
@@ -80,8 +80,8 @@ export default function AttendanceUploadPage() {
             </div>
 
             {uploadStatus === "success" && (
-              <div className="flex items-center gap-3 p-4 bg-[#f0fdf4] dark:bg-muted border border-[#1F6E4A] rounded-lg">
-                <Check className="w-5 h-5 text-[#1F6E4A]" />
+              <div className="flex items-center gap-3 p-4 bg-brand-subtle dark:bg-muted border border-brand rounded-lg">
+                <Check className="w-5 h-5 text-brand" />
                 <div>
                   <p className="text-foreground">File uploaded successfully</p>
                   <p className="text-sm text-muted-foreground">
@@ -126,12 +126,14 @@ export default function AttendanceUploadPage() {
                   Latest attendance data
                 </CardDescription>
               </div>
-              <Button className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+              <Button className="bg-brand hover:bg-brand/90 text-white">
                 Save to Database
               </Button>
             </div>
           </CardHeader>
           <CardContent>
+            <div className="overflow-x-auto">
+
             <Table>
               <TableHeader>
                 <TableRow>
@@ -155,9 +157,9 @@ export default function AttendanceUploadPage() {
                       <Badge
                         className={
                           record.status === "Excellent"
-                            ? "bg-[#1F6E4A] text-white"
+                            ? "bg-brand text-white"
                             : record.status === "Good"
-                            ? "bg-[#FFD400] text-foreground"
+                            ? "bg-brand-yellow text-foreground"
                             : "bg-muted text-muted-foreground"
                         }
                       >
@@ -168,6 +170,7 @@ export default function AttendanceUploadPage() {
                 ))}
               </TableBody>
             </Table>
+            </div>
           </CardContent>
         </Card>
       )}

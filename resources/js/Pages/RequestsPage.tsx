@@ -277,7 +277,7 @@ export default function RequestsPage({
           }}
         >
           <DialogTrigger asChild>
-            <Button className="bg-[#1F6E4A] text-white hover:bg-[#1F6E4A]/90">
+            <Button className="bg-brand text-white hover:bg-brand/90">
               <Plus className="w-4 h-4 mr-2" />
               New Request
             </Button>
@@ -395,7 +395,7 @@ export default function RequestsPage({
                 <Button
                   type="submit"
                   disabled={processing}
-                  className="bg-[#1F6E4A] text-white hover:bg-[#1F6E4A]/90"
+                  className="bg-brand text-white hover:bg-brand/90"
                 >
                   Submit Request
                 </Button>
@@ -561,7 +561,7 @@ export default function RequestsPage({
                         >
                           <Button
                             size="sm"
-                            className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+                            className="bg-brand hover:bg-brand/90 text-white"
                             onClick={() => {
                               handleStatusUpdate("approved", request.id);
                             }}
@@ -642,8 +642,8 @@ export default function RequestsPage({
                 {selectedRequest.taggedPerson && (
                   <div>
                     <h4 className="text-sm mb-2 text-foreground">Person Involved</h4>
-                    <div className="flex items-center gap-2 p-3 bg-[#1F6E4A]/5 border border-[#1F6E4A]/20 rounded-lg">
-                      <User className="w-4 h-4 text-[#1F6E4A]" />
+                    <div className="flex items-center gap-2 p-3 bg-brand/5 border border-brand/20 rounded-lg">
+                      <User className="w-4 h-4 text-brand" />
                       <span className="text-sm text-foreground">{selectedRequest.taggedPerson}</span>
                     </div>
                   </div>
@@ -742,7 +742,7 @@ export default function RequestsPage({
                     <Button
                       onClick={handleAddComment}
                       disabled={!newComment.trim()}
-                      className="bg-[#1F6E4A] text-white hover:bg-[#1F6E4A]/90"
+                      className="bg-brand text-white hover:bg-brand/90"
                     >
                       <MessageSquare className="w-4 h-4" />
                     </Button>
@@ -760,7 +760,7 @@ export default function RequestsPage({
                     />
                     <div className="flex gap-2">
                       <Button
-                        className="flex-1 bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+                        className="flex-1 bg-brand hover:bg-brand/90 text-white"
                         onClick={() => handleStatusUpdate("approved")}
                       >
                         <CheckCircle className="w-4 h-4 mr-2" />

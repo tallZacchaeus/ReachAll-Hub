@@ -215,7 +215,7 @@ function TemplateForm({
   };
 
   return (
-    <Card className="border-2 border-[#1F6E4A]">
+    <Card className="border-2 border-brand">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base">
@@ -320,7 +320,7 @@ function TemplateForm({
             </Button>
             <Button
               type="submit"
-              className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+              className="bg-brand hover:bg-brand/90 text-white"
               disabled={processing}
             >
               <Save className="w-4 h-4 mr-2" />
@@ -348,7 +348,7 @@ export default function ChecklistTemplatePage({ templates }: ChecklistTemplatePa
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-foreground mb-1 flex items-center gap-3">
-            <ListChecks className="w-8 h-8 text-[#1F6E4A]" />
+            <ListChecks className="w-8 h-8 text-brand" />
             Checklist Templates
           </h1>
           <p className="text-muted-foreground">
@@ -357,7 +357,7 @@ export default function ChecklistTemplatePage({ templates }: ChecklistTemplatePa
         </div>
         {!showCreate && (
           <Button
-            className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+            className="bg-brand hover:bg-brand/90 text-white"
             onClick={() => { setShowCreate(true); setEditingId(null); }}
           >
             <Plus className="w-4 h-4 mr-2" />
@@ -384,12 +384,13 @@ export default function ChecklistTemplatePage({ templates }: ChecklistTemplatePa
       {templates.length === 0 && !showCreate ? (
         <div className="text-center py-16 border-2 border-dashed border-border rounded-xl text-muted-foreground">
           No templates yet.{" "}
-          <button className="text-[#1F6E4A] hover:underline" onClick={() => setShowCreate(true)}>
+          <button className="text-brand hover:underline" onClick={() => setShowCreate(true)}>
             Create the first one.
           </button>
         </div>
       ) : (
-        <div className="border-2 border-border rounded-xl overflow-hidden">
+          <div className="overflow-x-auto">
+
           <Table>
             <TableHeader>
               <TableRow className="bg-muted hover:bg-muted">

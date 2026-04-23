@@ -32,7 +32,7 @@ export default function JobPostingsPage({ postings }: JobPostingsPageProps) {
       {/* Header */}
       <div>
         <h1 className="text-foreground mb-1 flex items-center gap-3">
-          <Briefcase className="w-8 h-8 text-[#1F6E4A]" />
+          <Briefcase className="w-8 h-8 text-brand" />
           Internal Job Openings
         </h1>
         <p className="text-muted-foreground">
@@ -52,7 +52,7 @@ export default function JobPostingsPage({ postings }: JobPostingsPageProps) {
             <button
               key={job.id}
               onClick={() => router.visit(`/jobs/${job.id}`)}
-              className="text-left bg-card border-2 border-border rounded-xl p-5 hover:border-[#1F6E4A] hover:shadow-md transition-all space-y-3 flex flex-col"
+              className="text-left bg-card border-2 border-border rounded-xl p-5 hover:border-brand hover:shadow-md transition-all space-y-3 flex flex-col"
             >
               {/* Department badge */}
               <Badge variant="secondary" className="text-xs self-start">
@@ -77,7 +77,7 @@ export default function JobPostingsPage({ postings }: JobPostingsPageProps) {
                 ) : (
                   <span className="text-xs text-muted-foreground">Open until filled</span>
                 )}
-                <span className="text-xs text-[#1F6E4A] font-medium flex items-center gap-1">
+                <span className="text-xs text-brand font-medium flex items-center gap-1">
                   View & Apply
                   <ArrowRight className="w-3.5 h-3.5" />
                 </span>
@@ -97,7 +97,7 @@ export default function JobPostingsPage({ postings }: JobPostingsPageProps) {
               size="sm"
               disabled={!link.url}
               onClick={() => link.url && router.visit(link.url, { preserveState: true })}
-              className={link.active ? "bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white" : ""}
+              className={link.active ? "bg-brand hover:bg-brand/90 text-white" : ""}
               dangerouslySetInnerHTML={{ __html: sanitizeHtml(link.label) }}
             />
           ))}

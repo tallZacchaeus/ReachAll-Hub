@@ -75,7 +75,7 @@ function ApplyDialog({ postingId, onSuccess }: { postingId: number; onSuccess: (
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white">
+        <Button className="bg-brand hover:bg-brand/90 text-white">
           <Send className="w-4 h-4 mr-2" />
           Apply Now
         </Button>
@@ -83,7 +83,7 @@ function ApplyDialog({ postingId, onSuccess }: { postingId: number; onSuccess: (
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Briefcase className="w-5 h-5 text-[#1F6E4A]" />
+            <Briefcase className="w-5 h-5 text-brand" />
             Submit Application
           </DialogTitle>
         </DialogHeader>
@@ -108,7 +108,7 @@ function ApplyDialog({ postingId, onSuccess }: { postingId: number; onSuccess: (
           <Button
             type="submit"
             disabled={processing}
-            className="w-full bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+            className="w-full bg-brand hover:bg-brand/90 text-white"
           >
             {processing ? "Submitting…" : "Submit Application"}
           </Button>

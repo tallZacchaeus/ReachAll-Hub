@@ -222,7 +222,7 @@ export default function ProjectsPage({ userRole }: ProjectsPageProps) {
         </div>
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-[#1F6E4A] text-white hover:bg-[#1F6E4A]/90">
+            <Button className="bg-brand text-white hover:bg-brand/90">
               <Plus className="w-4 h-4 mr-2" />
               Create Project
             </Button>
@@ -340,7 +340,7 @@ export default function ProjectsPage({ userRole }: ProjectsPageProps) {
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-[#1F6E4A] text-white hover:bg-[#1F6E4A]/90"
+                  className="bg-brand text-white hover:bg-brand/90"
                 >
                   Create Project
                 </Button>
@@ -359,8 +359,8 @@ export default function ProjectsPage({ userRole }: ProjectsPageProps) {
                 <p className="text-sm text-muted-foreground mb-1">Total Projects</p>
                 <p className="text-2xl text-foreground">{totalProjects}</p>
               </div>
-              <div className="w-12 h-12 bg-[#1F6E4A]/10 rounded-lg flex items-center justify-center">
-                <FolderKanban className="w-6 h-6 text-[#1F6E4A]" />
+              <div className="w-12 h-12 bg-brand/10 rounded-lg flex items-center justify-center">
+                <FolderKanban className="w-6 h-6 text-brand" />
               </div>
             </div>
           </CardContent>
@@ -511,7 +511,7 @@ export default function ProjectsPage({ userRole }: ProjectsPageProps) {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="text-[#1F6E4A] border-[#1F6E4A] hover:bg-[#1F6E4A] hover:text-white"
+                          className="text-brand border-brand hover:bg-brand hover:text-white"
                         >
                           View Details
                         </Button>

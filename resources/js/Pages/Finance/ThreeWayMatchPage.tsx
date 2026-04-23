@@ -171,6 +171,8 @@ export default function ThreeWayMatchPage({ pending, matched, flash, userRole }:
                 No approved requisitions awaiting three-way match.
               </p>
             ) : (
+              <div className="overflow-x-auto">
+
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -270,6 +272,7 @@ export default function ThreeWayMatchPage({ pending, matched, flash, userRole }:
                   ))}
                 </TableBody>
               </Table>
+              </div>
             )}
           </CardContent>
         </Card>
@@ -281,6 +284,8 @@ export default function ThreeWayMatchPage({ pending, matched, flash, userRole }:
               <CardTitle className="text-base">Recently Matched</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
+              <div className="overflow-x-auto">
+
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -307,6 +312,7 @@ export default function ThreeWayMatchPage({ pending, matched, flash, userRole }:
                   ))}
                 </TableBody>
               </Table>
+              </div>
             </CardContent>
           </Card>
         )}

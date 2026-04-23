@@ -118,7 +118,7 @@ export default function FinanceTeamPage() {
               <Card key={step.title}>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm flex items-center gap-2">
-                    <Icon className="w-4 h-4 text-[#1F6E4A]" />
+                    <Icon className="w-4 h-4 text-brand" />
                     {step.title}
                   </CardTitle>
                 </CardHeader>

@@ -77,7 +77,7 @@ export function AttachmentDisplay({ attachment }: AttachmentDisplayProps) {
         // File download card
         return (
             <div className="mt-2 flex items-center gap-3 p-3 bg-white/50 rounded-lg border border-white/20 max-w-xs">
-                <div className="text-[#1F6E4A]">{getFileIcon()}</div>
+                <div className="text-brand">{getFileIcon()}</div>
                 <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">{attachment.name}</p>
                     <p className="text-xs opacity-75">{formatFileSize(attachment.size)}</p>

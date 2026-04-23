@@ -224,7 +224,7 @@ export default function NewsletterEditorPage({
                 ) : (
                   <div
                     onClick={() => fileInputRef.current?.click()}
-                    className="border-2 border-dashed border-border rounded-lg h-36 flex flex-col items-center justify-center cursor-pointer hover:border-[#1F6E4A] transition-colors text-muted-foreground"
+                    className="border-2 border-dashed border-border rounded-lg h-36 flex flex-col items-center justify-center cursor-pointer hover:border-brand transition-colors text-muted-foreground"
                   >
                     <ImageIcon className="w-8 h-8 mb-2 opacity-40" />
                     <p className="text-xs">Click to upload image</p>
@@ -267,8 +267,8 @@ export default function NewsletterEditorPage({
                     <div
                       className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
                         audienceType === type
-                          ? "border-[#1F6E4A] bg-[#1F6E4A]"
-                          : "border-border group-hover:border-[#1F6E4A]"
+                          ? "border-brand bg-brand"
+                          : "border-border group-hover:border-brand"
                       }`}
                       onClick={() => handleAudienceTypeChange(type)}
                     >
@@ -343,7 +343,7 @@ export default function NewsletterEditorPage({
                   className={`w-full ${
                     isPublished
                       ? "bg-amber-600 hover:bg-amber-700 text-white"
-                      : "bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white"
+                      : "bg-brand hover:bg-brand/90 text-white"
                   }`}
                   onClick={handlePublish}
                   disabled={processing}

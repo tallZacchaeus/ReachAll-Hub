@@ -99,13 +99,13 @@ export default function DashboardPage({
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-card rounded-xl p-8 border-2 border-[#1F6E4A] shadow-sm"
+          className="bg-card rounded-xl p-8 border-2 border-brand shadow-sm"
         >
           <div className="flex items-start justify-between flex-wrap gap-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <Sparkles className="w-5 h-5 text-[#FFD400]" />
-                <Badge className="bg-[#FFD400]/20 text-[#1F6E4A] border-0 text-xs">New Joiner</Badge>
+                <Sparkles className="w-5 h-5 text-brand-yellow" />
+                <Badge className="bg-brand-yellow/20 text-brand border-0 text-xs">New Joiner</Badge>
               </div>
               <h1 className="text-foreground mb-2">Welcome, {firstName}! 👋</h1>
               <p className="text-muted-foreground max-w-lg">
@@ -113,8 +113,8 @@ export default function DashboardPage({
                 you need for your first days is right here.
               </p>
             </div>
-            <div className="bg-[#1F6E4A]/10 rounded-xl px-6 py-4 text-center">
-              <p className="text-3xl font-bold text-[#1F6E4A]">{daysHere}</p>
+            <div className="bg-brand/10 rounded-xl px-6 py-4 text-center">
+              <p className="text-3xl font-bold text-brand">{daysHere}</p>
               <p className="text-xs text-muted-foreground mt-1">
                 {daysHere === 1 ? "day" : "days"} with us
               </p>
@@ -132,7 +132,7 @@ export default function DashboardPage({
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="text-foreground flex items-center gap-2">
-                      <ListChecks className="w-5 h-5 text-[#1F6E4A]" />
+                      <ListChecks className="w-5 h-5 text-brand" />
                       Onboarding Checklist
                     </CardTitle>
                     <CardDescription className="text-muted-foreground">
@@ -193,7 +193,7 @@ export default function DashboardPage({
                 <div className="grid grid-cols-2 gap-3">
                   <Button
                     onClick={() => onNavigate("/onboarding")}
-                    className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white justify-start h-auto py-4"
+                    className="bg-brand hover:bg-brand/90 text-white justify-start h-auto py-4"
                   >
                     <Sparkles className="w-5 h-5 mr-3" />
                     <div className="text-left">
@@ -206,7 +206,7 @@ export default function DashboardPage({
                     variant="outline"
                     className="justify-start h-auto py-4 border-2"
                   >
-                    <ScrollText className="w-5 h-5 mr-3 text-[#1F6E4A]" />
+                    <ScrollText className="w-5 h-5 mr-3 text-brand" />
                     <div className="text-left">
                       <p className="text-sm text-foreground">Policies</p>
                       <p className="text-xs text-muted-foreground">Read & acknowledge</p>
@@ -217,7 +217,7 @@ export default function DashboardPage({
                     variant="outline"
                     className="justify-start h-auto py-4 border-2"
                   >
-                    <MessageSquare className="w-5 h-5 mr-3 text-[#1F6E4A]" />
+                    <MessageSquare className="w-5 h-5 mr-3 text-brand" />
                     <div className="text-left">
                       <p className="text-sm text-foreground">Team Chat</p>
                       <p className="text-xs text-muted-foreground">Say hi to the team</p>
@@ -228,7 +228,7 @@ export default function DashboardPage({
                     variant="outline"
                     className="justify-start h-auto py-4 border-2"
                   >
-                    <BookOpen className="w-5 h-5 mr-3 text-[#FFD400]" />
+                    <BookOpen className="w-5 h-5 mr-3 text-brand-yellow" />
                     <div className="text-left">
                       <p className="text-sm text-foreground">Learning</p>
                       <p className="text-xs text-muted-foreground">Mandatory courses</p>
@@ -286,9 +286,9 @@ export default function DashboardPage({
         value: "4/5",
         subtitle: "1 vote remaining",
         icon: Award,
-        borderClass: "border-[#1F6E4A]",
-        iconBgClass: "bg-[#1F6E4A]/10",
-        iconColorClass: "text-[#1F6E4A]",
+        borderClass: "border-brand",
+        iconBgClass: "bg-brand/10",
+        iconColorClass: "text-brand",
         progress: 80,
         action: "/evaluation",
       },
@@ -297,9 +297,9 @@ export default function DashboardPage({
         value: "3/6",
         subtitle: "3 tasks pending",
         icon: CheckSquare,
-        borderClass: "border-[#FFD400]",
-        iconBgClass: "bg-[#FFD400]/10",
-        iconColorClass: "text-[#FFD400]",
+        borderClass: "border-brand-yellow",
+        iconBgClass: "bg-brand-yellow/10",
+        iconColorClass: "text-brand-yellow",
         progress: 50,
         action: "/tasks",
       },
@@ -308,9 +308,9 @@ export default function DashboardPage({
         value: "85%",
         subtitle: "+5% from last month",
         icon: TrendingUp,
-        borderClass: "border-[#1F6E4A]",
-        iconBgClass: "bg-[#1F6E4A]/10",
-        iconColorClass: "text-[#1F6E4A]",
+        borderClass: "border-brand",
+        iconBgClass: "bg-brand/10",
+        iconColorClass: "text-brand",
         progress: 85,
         action: null,
       },
@@ -322,7 +322,7 @@ export default function DashboardPage({
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-card rounded-xl p-8 border-2 border-[#1F6E4A] shadow-sm"
+          className="bg-card rounded-xl p-8 border-2 border-brand shadow-sm"
         >
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
@@ -419,7 +419,7 @@ export default function DashboardPage({
                     onClick={() => onNavigate("/okrs")}
                     className="text-center p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors"
                   >
-                    <p className="text-2xl font-bold text-[#1F6E4A]">{activeOKRsCount}</p>
+                    <p className="text-2xl font-bold text-brand">{activeOKRsCount}</p>
                     <p className="text-xs text-muted-foreground mt-1">Active OKRs</p>
                   </button>
                   <button
@@ -440,7 +440,7 @@ export default function DashboardPage({
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="text-foreground flex items-center gap-2">
-                      <Target className="w-5 h-5 text-[#1F6E4A]" />
+                      <Target className="w-5 h-5 text-brand" />
                       OKR Summary
                     </CardTitle>
                     <CardDescription className="text-muted-foreground">
@@ -454,7 +454,16 @@ export default function DashboardPage({
               </CardHeader>
               <CardContent>
                 {activeOKRList.length === 0 ? (
-                  <p className="text-sm text-muted-foreground text-center py-4">No active OKRs this period.</p>
+                  <div className="flex flex-col items-center py-6 gap-2 text-center">
+                    <div className="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center">
+                      <Target className="w-5 h-5 text-brand" />
+                    </div>
+                    <p className="text-sm font-medium text-foreground">No active OKRs</p>
+                    <p className="text-xs text-muted-foreground">Set objectives for this period to track your progress.</p>
+                    <Button size="sm" variant="outline" className="mt-1" onClick={() => onNavigate("/okrs")}>
+                      Create OKR
+                    </Button>
+                  </div>
                 ) : (
                   <div className="space-y-3">
                     {activeOKRList.map((okr) => (
@@ -479,13 +488,13 @@ export default function DashboardPage({
           <div className="space-y-6">
             <DepartmentSpotlight />
 
-            <Card className="bg-card border-2 border-[#FFD400] shadow-sm">
+            <Card className="bg-card border-2 border-brand-yellow shadow-sm">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 rounded-lg bg-[#FFD400]/10 flex items-center justify-center">
-                    <Trophy className="w-6 h-6 text-[#FFD400]" />
+                  <div className="w-12 h-12 rounded-lg bg-brand-yellow/10 flex items-center justify-center">
+                    <Trophy className="w-6 h-6 text-brand-yellow" />
                   </div>
-                  <Badge variant="outline" className="border-[#FFD400] text-[#FFD400]">#5</Badge>
+                  <Badge variant="outline" className="border-brand-yellow text-brand-yellow">#5</Badge>
                 </div>
                 <h3 className="text-foreground mb-1">Your Ranking</h3>
                 <p className="text-sm text-muted-foreground mb-4">Team engagement leaderboard</p>
@@ -514,9 +523,9 @@ export default function DashboardPage({
       value: "4/5",
       subtitle: "1 vote remaining",
       icon: Award,
-      borderClass: "border-[#1F6E4A]",
-      iconBgClass: "bg-[#1F6E4A]/10",
-      iconColorClass: "text-[#1F6E4A]",
+      borderClass: "border-brand",
+      iconBgClass: "bg-brand/10",
+      iconColorClass: "text-brand",
       progress: 80,
       action: "/evaluation",
     },
@@ -525,9 +534,9 @@ export default function DashboardPage({
       value: "3/6",
       subtitle: "3 tasks pending",
       icon: CheckSquare,
-      borderClass: "border-[#FFD400]",
-      iconBgClass: "bg-[#FFD400]/10",
-      iconColorClass: "text-[#FFD400]",
+      borderClass: "border-brand-yellow",
+      iconBgClass: "bg-brand-yellow/10",
+      iconColorClass: "text-brand-yellow",
       progress: 50,
       action: "/tasks",
     },
@@ -536,9 +545,9 @@ export default function DashboardPage({
       value: "85%",
       subtitle: "+5% from last month",
       icon: TrendingUp,
-      borderClass: "border-[#1F6E4A]",
-      iconBgClass: "bg-[#1F6E4A]/10",
-      iconColorClass: "text-[#1F6E4A]",
+      borderClass: "border-brand",
+      iconBgClass: "bg-brand/10",
+      iconColorClass: "text-brand",
       progress: 85,
       action: null,
     },
@@ -555,8 +564,8 @@ export default function DashboardPage({
   const getPriorityClass = (priority: string) => {
     switch (priority) {
       case "high": return "border-red-500 text-red-500";
-      case "medium": return "border-[#FFD400] text-[#FFD400]";
-      case "low": return "border-[#1F6E4A] text-[#1F6E4A]";
+      case "medium": return "border-brand-yellow text-brand-yellow";
+      case "low": return "border-brand text-brand";
       default: return "border-gray-500 text-gray-500";
     }
   };
@@ -567,7 +576,7 @@ export default function DashboardPage({
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-card rounded-xl p-8 border-2 border-[#1F6E4A] shadow-sm"
+        className="bg-card rounded-xl p-8 border-2 border-brand shadow-sm"
       >
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
@@ -642,7 +651,7 @@ export default function DashboardPage({
               <div className="grid grid-cols-2 gap-3">
                 <Button
                   onClick={() => onNavigate("/evaluation")}
-                  className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white justify-start h-auto py-4"
+                  className="bg-brand hover:bg-brand/90 text-white justify-start h-auto py-4"
                 >
                   <Award className="w-5 h-5 mr-3" />
                   <div className="text-left">
@@ -655,7 +664,7 @@ export default function DashboardPage({
                   variant="outline"
                   className="justify-start h-auto py-4 border-2"
                 >
-                  <CheckSquare className="w-5 h-5 mr-3 text-[#1F6E4A]" />
+                  <CheckSquare className="w-5 h-5 mr-3 text-brand" />
                   <div className="text-left">
                     <p className="text-sm text-foreground">View Tasks</p>
                     <p className="text-xs text-muted-foreground">3 pending</p>
@@ -666,7 +675,7 @@ export default function DashboardPage({
                   variant="outline"
                   className="justify-start h-auto py-4 border-2"
                 >
-                  <Calendar className="w-5 h-5 mr-3 text-[#FFD400]" />
+                  <Calendar className="w-5 h-5 mr-3 text-brand-yellow" />
                   <div className="text-left">
                     <p className="text-sm text-foreground">Request Leave</p>
                     <p className="text-xs text-muted-foreground">
@@ -679,7 +688,7 @@ export default function DashboardPage({
                   variant="outline"
                   className="justify-start h-auto py-4 border-2"
                 >
-                  <MessageSquare className="w-5 h-5 mr-3 text-[#1F6E4A]" />
+                  <MessageSquare className="w-5 h-5 mr-3 text-brand" />
                   <div className="text-left">
                     <p className="text-sm text-foreground">Team Chat</p>
                     <p className="text-xs text-muted-foreground">3 unread</p>
@@ -695,7 +704,7 @@ export default function DashboardPage({
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-foreground flex items-center gap-2">
-                    <CheckSquare className="w-5 h-5 text-[#1F6E4A]" />
+                    <CheckSquare className="w-5 h-5 text-brand" />
                     My Tasks
                   </CardTitle>
                   <CardDescription className="text-muted-foreground">Tasks assigned to you</CardDescription>
@@ -713,7 +722,7 @@ export default function DashboardPage({
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="p-4 border-2 border-border rounded-lg hover:shadow-md hover:border-[#1F6E4A] transition-all cursor-pointer"
+                    className="p-4 border-2 border-border rounded-lg hover:shadow-md hover:border-brand transition-all cursor-pointer"
                     onClick={() => onNavigate("/tasks")}
                   >
                     <div className="flex items-start justify-between mb-2">
@@ -742,11 +751,11 @@ export default function DashboardPage({
           </Card>
 
           {/* Peer Review CTA */}
-          <Card className="bg-card border-2 border-[#1F6E4A] shadow-sm">
+          <Card className="bg-card border-2 border-brand shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-lg bg-[#1F6E4A]/10 flex items-center justify-center">
-                  <Users className="w-6 h-6 text-[#1F6E4A]" />
+                <div className="w-12 h-12 rounded-lg bg-brand/10 flex items-center justify-center">
+                  <Users className="w-6 h-6 text-brand" />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-foreground mb-1">Peer Review</h3>
@@ -754,7 +763,7 @@ export default function DashboardPage({
                 </div>
                 <Button
                   onClick={() => onNavigate("/peer-review")}
-                  className="bg-[#1F6E4A] hover:bg-[#1a5a3d] text-white shrink-0"
+                  className="bg-brand hover:bg-brand/90 text-white shrink-0"
                 >
                   Submit Review
                 </Button>
@@ -773,7 +782,7 @@ export default function DashboardPage({
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-foreground flex items-center gap-2">
-                    <BookOpen className="w-5 h-5 text-[#1F6E4A]" />
+                    <BookOpen className="w-5 h-5 text-brand" />
                     Learning Progress
                   </CardTitle>
                   <CardDescription className="text-muted-foreground">
@@ -787,7 +796,16 @@ export default function DashboardPage({
             </CardHeader>
             <CardContent>
               {enrolledCourses.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-4">No courses enrolled yet.</p>
+                <div className="flex flex-col items-center py-6 gap-2 text-center">
+                  <div className="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center">
+                    <BookOpen className="w-5 h-5 text-brand" />
+                  </div>
+                  <p className="text-sm font-medium text-foreground">No courses enrolled</p>
+                  <p className="text-xs text-muted-foreground">Browse the learning hub to find courses relevant to you.</p>
+                  <Button size="sm" variant="outline" className="mt-1" onClick={() => onNavigate("/learning")}>
+                    Explore Courses
+                  </Button>
+                </div>
               ) : (
                 <div className="space-y-3">
                   {enrolledCourses.map((course) => (
@@ -818,13 +836,13 @@ export default function DashboardPage({
         <div className="space-y-6">
           <DepartmentSpotlight />
 
-          <Card className="bg-card border-2 border-[#FFD400] shadow-sm">
+          <Card className="bg-card border-2 border-brand-yellow shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 rounded-lg bg-[#FFD400]/10 flex items-center justify-center">
-                  <Trophy className="w-6 h-6 text-[#FFD400]" />
+                <div className="w-12 h-12 rounded-lg bg-brand-yellow/10 flex items-center justify-center">
+                  <Trophy className="w-6 h-6 text-brand-yellow" />
                 </div>
-                <Badge variant="outline" className="border-[#FFD400] text-[#FFD400]">#5</Badge>
+                <Badge variant="outline" className="border-brand-yellow text-brand-yellow">#5</Badge>
               </div>
               <h3 className="text-foreground mb-1">Your Ranking</h3>
               <p className="text-sm text-muted-foreground mb-4">Team engagement leaderboard</p>
