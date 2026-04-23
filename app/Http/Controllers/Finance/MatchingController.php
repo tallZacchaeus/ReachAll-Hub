@@ -9,7 +9,6 @@ use App\Models\Finance\Invoice;
 use App\Models\Finance\Requisition;
 use App\Models\User;
 use App\Notifications\Finance\VarianceFlagged;
-use App\Services\Finance\FinanceRoleHelper;
 use App\Services\Finance\MoneyHelper;
 use App\Services\Finance\ThreeWayMatcher;
 use Illuminate\Http\RedirectResponse;
@@ -158,7 +157,7 @@ class MatchingController extends Controller
     {
         $user = $request->user();
 
-        if (! \in_array($user->role, FinanceRoleHelper::FINANCE_EXEC_ROLES, true)) {
+        if (! $user->hasPermission('finance.exec')) {
             abort(403, 'Only executive roles may accept a match variance.');
         }
 
@@ -236,7 +235,7 @@ class MatchingController extends Controller
     private function authorizeFinance(Request $request): void
     {
         abort_unless(
-            \in_array($request->user()?->role, FinanceRoleHelper::FINANCE_ADMIN_ROLES, true),
+            $request->user()?->hasPermission('finance.admin'),
             403
         );
     }

@@ -25,6 +25,31 @@ export type Permission =
     | 'team.dashboard'
     | 'roles.manage'
     | 'org.manage'
+    // HR Document Vault
+    | 'documents.manage'
+    | 'documents.sign'
+    // Payroll
+    | 'payroll.manage'
+    | 'payroll.view'
+    | 'payroll.my-payslips'
+    // Benefits
+    | 'benefits.manage'
+    | 'benefits.self-enroll'
+    // Compensation
+    | 'compensation.manage'
+    | 'compensation.view'
+    | 'compensation.self'
+    // Recruitment / ATS
+    | 'recruitment.manage'
+    | 'recruitment.view'
+    | 'recruitment.interview'
+    // Employee Relations
+    | 'er.manage'
+    | 'er.investigate'
+    | 'er.self'
+    // Compliance
+    | 'compliance.manage'
+    | 'compliance.self'
     // Finance
     | 'finance.access'
     | 'finance.admin'

@@ -132,7 +132,7 @@ class RoleController extends Controller
     {
         $this->authorise($request);
 
-        abort_if($role->is_system, 403, "System role \"{$role->label}\" cannot be deleted.");
+        abort_if($role->is_system || $role->name === 'superadmin', 403, "System role \"{$role->label}\" cannot be deleted.");
 
         $old = ['label' => $role->label, 'permissions' => $this->currentPermissions($role->name)];
 

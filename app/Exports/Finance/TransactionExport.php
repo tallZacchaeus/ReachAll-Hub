@@ -34,8 +34,9 @@ class TransactionExport implements FromCollection, WithHeadings, WithMapping, Wi
             'payment:id,requisition_id,method,reference,paid_at',
         ]);
 
-        // Data-visibility gate: non-finance roles only see their own cost centre
-        if (! \in_array($this->user->role, ['finance', 'superadmin', 'ceo'], true)) {
+        // Data-visibility gate: users without finance admin permission only see
+        // their own cost centre or their own requisitions.
+        if (! $this->user->hasPermission('finance.admin')) {
             $cc = \App\Models\Finance\CostCentre::where('head_user_id', $this->user->id)
                 ->pluck('id');
             if ($cc->isEmpty()) {

@@ -4,7 +4,6 @@ namespace App\Policies\Finance;
 
 use App\Models\Finance\Payment;
 use App\Models\User;
-use App\Services\Finance\FinanceRoleHelper;
 
 /**
  * T10-01: Policy for Payment model actions.
@@ -12,12 +11,11 @@ use App\Services\Finance\FinanceRoleHelper;
 class PaymentPolicy
 {
     /**
-     * Only Finance admins (finance, general_management, ceo, superadmin)
-     * may void a payment that has not already been voided.
+     * Only Finance admins may void a payment that has not already been voided.
      */
     public function voidPayment(User $user, Payment $payment): bool
     {
-        return \in_array($user->role, FinanceRoleHelper::FINANCE_ADMIN_ROLES, true)
+        return $user->hasPermission('finance.admin')
             && $payment->voided_at === null;
     }
 }

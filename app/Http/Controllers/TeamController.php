@@ -16,7 +16,7 @@ class TeamController extends Controller
     {
         $user = $request->user();
 
-        if (! in_array($user->role, ['superadmin', 'hr', 'management'], true)) {
+        if (! $user->hasPermission('team.dashboard')) {
             abort(403);
         }
 

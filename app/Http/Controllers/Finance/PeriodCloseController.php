@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Finance;
 
 use App\Http\Controllers\Controller;
 use App\Models\Finance\FinancialPeriod;
-use App\Services\Finance\FinanceRoleHelper;
 use App\Services\Finance\PeriodCloser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -195,7 +194,7 @@ class PeriodCloseController extends Controller
     private function authorizeAccess(Request $request): void
     {
         abort_unless(
-            \in_array($request->user()?->role, FinanceRoleHelper::FINANCE_ADMIN_ROLES, true),
+            $request->user()?->hasPermission('finance.period-close'),
             403
         );
     }
@@ -203,7 +202,7 @@ class PeriodCloseController extends Controller
     private function authorizeCeo(Request $request): void
     {
         abort_unless(
-            \in_array($request->user()?->role, FinanceRoleHelper::FINANCE_EXEC_ROLES, true),
+            $request->user()?->hasPermission('finance.exec'),
             403
         );
     }

@@ -66,6 +66,24 @@ return [
             'url'        => env('AWS_URL'),
         ],
 
+        // HR document vault — private disk mirroring the finance disk pattern.
+        // Files are never publicly accessible; served only through authenticated
+        // HrDocumentDownloadController. Set HR_DISK=s3 in production to swap
+        // to S3 without touching upload/download logic.
+        'hr' => [
+            'driver'     => env('HR_DISK', 'local'),
+            'root'       => storage_path('app/hr'),
+            'visibility' => 'private',
+            'throw'      => false,
+            'report'     => false,
+            // S3 passthrough keys (ignored when driver=local)
+            'key'        => env('AWS_ACCESS_KEY_ID'),
+            'secret'     => env('AWS_SECRET_ACCESS_KEY'),
+            'region'     => env('AWS_DEFAULT_REGION'),
+            'bucket'     => env('AWS_HR_BUCKET', env('AWS_BUCKET')),
+            'url'        => env('AWS_URL'),
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

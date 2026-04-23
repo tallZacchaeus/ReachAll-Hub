@@ -15,7 +15,7 @@ class OKRController extends Controller
     public function index(Request $request): Response
     {
         $user    = $request->user();
-        $isAdmin = in_array($user->role, ['superadmin', 'hr', 'management'], true);
+        $isAdmin = $user->hasPermission('okr.manage');
 
         $query = Objective::with(['keyResults', 'owner:id,name'])
             ->whereNull('parent_id');
@@ -48,7 +48,7 @@ class OKRController extends Controller
 
         return Inertia::render('OKRDetailPage', [
             'objective' => $this->transformObjectiveFull($objective),
-            'isAdmin'   => in_array($request->user()->role, ['superadmin', 'hr', 'management'], true),
+            'isAdmin'   => $request->user()->hasPermission('okr.manage'),
         ]);
     }
 
@@ -56,7 +56,7 @@ class OKRController extends Controller
     {
         $user = $request->user();
 
-        if (! in_array($user->role, ['superadmin', 'hr', 'management'], true)) {
+        if (! $user->hasPermission('okr.manage')) {
             abort(403);
         }
 
@@ -100,7 +100,7 @@ class OKRController extends Controller
     {
         $user = $request->user();
 
-        if (! in_array($user->role, ['superadmin', 'hr', 'management'], true)) {
+        if (! $user->hasPermission('okr.manage')) {
             abort(403);
         }
 

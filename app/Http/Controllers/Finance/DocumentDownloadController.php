@@ -9,8 +9,6 @@ use App\Models\Finance\Invoice;
 use App\Models\Finance\Payment;
 use App\Models\Finance\PettyCashTransaction;
 use App\Models\Finance\Requisition;
-use App\Services\Finance\FinanceRoleHelper;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
@@ -63,12 +61,12 @@ class DocumentDownloadController extends Controller
 
     /**
      * GET /finance/documents/close-report/{period}
-     * Finance admin only (finance, ceo, superadmin).
+     * Finance admin only.
      */
     public function closeReport(Request $request, FinancialPeriod $period): StreamedResponse
     {
         abort_unless(
-            \in_array($request->user()->role, FinanceRoleHelper::FINANCE_ADMIN_ROLES, true),
+            $request->user()->hasPermission('finance.admin'),
             403,
             'Only Finance admins may download period close reports.'
         );
@@ -105,7 +103,7 @@ class DocumentDownloadController extends Controller
         abort_unless($float, 404, 'Float not found.');
         abort_unless(
             $request->user()->id === $float->custodian_id
-                || \in_array($request->user()->role, FinanceRoleHelper::FINANCE_ADMIN_ROLES, true),
+                || $request->user()->hasPermission('finance.admin'),
             403,
             'Only the float custodian or Finance admins may access receipts.'
         );

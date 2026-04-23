@@ -93,7 +93,7 @@ class ReconciliationController extends Controller
                 'replenishment_req_id' => $recon->replenishment_requisition_id,
             ],
             'transactions' => $transactions,
-            'canReview'    => in_array(request()->user()?->role, ['finance', 'ceo', 'superadmin'], true)
+            'canReview'    => request()->user()?->hasPermission('finance.admin')
                 && $recon->status === 'submitted',
         ]);
     }

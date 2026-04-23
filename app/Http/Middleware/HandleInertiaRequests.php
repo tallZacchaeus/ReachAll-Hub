@@ -43,14 +43,18 @@ class HandleInertiaRequests extends Middleware
                 // CAT8-01: Expose only the fields the frontend needs — never leak
                 // hashed passwords, remember_tokens, or internal timestamps.
                 'user' => $request->user() ? [
-                    ...$request->user()->only(['id', 'name', 'email', 'role', 'employee_stage']),
+                    ...$request->user()->only(['id', 'employee_id', 'name', 'email', 'role', 'employee_stage']),
                     'permissions' => $request->user()->getPermissions(),
                 ] : null,
             ],
-            'has_petty_cash_float' => $request->user()
-                ? PettyCashFloat::where('custodian_id', $request->user()->id)
-                    ->where('status', 'active')
-                    ->exists()
+            'has_petty_cash_float' => $request->user()?->hasPermission('finance.access')
+                ? \Illuminate\Support\Facades\Cache::remember(
+                    "pcf_exists_{$request->user()->id}",
+                    60,
+                    fn () => PettyCashFloat::where('custodian_id', $request->user()->id)
+                        ->where('status', 'active')
+                        ->exists()
+                )
                 : false,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'flash' => [

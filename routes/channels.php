@@ -12,7 +12,7 @@ Broadcast::channel('chat.conversation.{conversationId}', function (User $user, i
         return false;
     }
 
-    if (in_array($user->role, ['superadmin', 'hr', 'management'], true) || $conversation->is_global) {
+    if ($user->hasPermission('chat.admin') || $conversation->is_global) {
         return true;
     }
 
@@ -29,8 +29,8 @@ Broadcast::channel('requisition.{id}', function (User $user, int $id): bool {
         return false;
     }
 
-    // Finance admins can see all requisitions
-    if (\in_array($user->role, ['finance', 'ceo', 'superadmin'], true)) {
+    // Finance admins can see all requisitions.
+    if ($user->hasPermission('finance.admin')) {
         return true;
     }
 

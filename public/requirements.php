@@ -80,7 +80,7 @@
     <div class="container">
         <div class="header">
             <h1>🚀 Server Requirements Check</h1>
-            <p>Tech Staff Evaluation Platform</p>
+            <p>ReachAll Hub</p>
         </div>
         
         <div class="content">
@@ -125,7 +125,7 @@
                 <p>
                     <?php echo $passed; ?> of <?php echo $total; ?> requirements passed.
                     <?php if ($allPassed): ?>
-                        Your server is ready to host the Tech Staff Evaluation Platform!
+                        Your server is ready to host the ReachAll Hub!
                     <?php else: ?>
                         Please fix the failed requirements before deploying.
                     <?php endif; ?>
@@ -207,7 +207,7 @@
         </div>
 
         <div class="footer">
-            <p>Tech Staff Evaluation Platform © <?php echo date('Y'); ?></p>
+            <p>ReachAll Hub © <?php echo date('Y'); ?></p>
             <p style="margin-top: 5px; font-size: 12px;">
                 Delete this file (requirements.php) after deployment for security
             </p>

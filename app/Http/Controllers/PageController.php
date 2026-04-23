@@ -147,7 +147,7 @@ class PageController extends Controller
             ];
         }
 
-        if ($user && ($employeeStage === 'leader' || in_array($role, ['superadmin', 'hr', 'management'], true))) {
+        if ($user && ($employeeStage === 'leader' || $user->hasPermission('team.dashboard'))) {
             // Team size (same department, excluding self)
             $teamSize = $user->department
                 ? User::where('department', $user->department)
@@ -178,7 +178,7 @@ class PageController extends Controller
             ];
         }
 
-        if (in_array($role, ['superadmin', 'hr', 'management'])) {
+        if ($user?->hasPermission('admin.dashboard')) {
             return Inertia::render('AdminDashboardPage', $sharedData);
         }
 
@@ -188,7 +188,7 @@ class PageController extends Controller
     public function onboarding(Request $request)
     {
         $user = $request->user();
-        $isAdmin = in_array($user->role, ['superadmin', 'hr', 'management']);
+        $isAdmin = $user->hasPermission('admin.dashboard');
 
         if (! $isAdmin && $user->employee_stage !== 'joiner') {
             abort(403, 'This page is for joiners only.');
@@ -272,7 +272,7 @@ class PageController extends Controller
     public function profileRequests()
     {
         $user = auth()->user();
-        if (!in_array($user->role, ['superadmin', 'hr'])) {
+        if (! $user->hasPermission('profile.review')) {
             abort(403);
         }
 

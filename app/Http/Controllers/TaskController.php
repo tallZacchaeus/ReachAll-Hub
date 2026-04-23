@@ -250,7 +250,7 @@ class TaskController extends Controller
 
     private function isManager(User $user): bool
     {
-        return in_array($user->role, ['management', 'superadmin', 'hr'], true);
+        return $user->hasPermission('tasks.manage');
     }
 
     private function initials(string $name): string

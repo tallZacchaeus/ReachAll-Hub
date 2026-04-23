@@ -30,15 +30,16 @@ class DashboardController extends Controller
             ->where('month', now()->month)
             ->first();
 
+        // Note: these in_array checks are display-personalization, not auth gates.
+        // The route is already guarded by finance.access. Widget selection
+        // reflects role "persona", not permission enforcement.
         $widgets = match (true) {
             \in_array($role, ['ceo', 'general_management', 'management'], true)
                 => $this->execWidgets($user, $period),
-            \in_array($role, ['finance', 'superadmin'], true)
+            \in_array($role, ['finance', 'superadmin', 'hr'], true)
                 => $this->financeWidgets($user, $period),
-            $role === 'hr'
-                => $this->financeWidgets($user, $period),    // HR same as Finance
             default
-                => $this->staffWidgets($user, $period),      // staff / dept_head treated here
+                => $this->staffWidgets($user, $period),
         };
 
         // Dept heads also get a budget meter

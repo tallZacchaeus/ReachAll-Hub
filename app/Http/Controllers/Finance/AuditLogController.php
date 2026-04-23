@@ -17,12 +17,10 @@ use Inertia\Response;
  */
 class AuditLogController extends Controller
 {
-    private const ALLOWED_ROLES = ['finance', 'ceo', 'superadmin'];
-
     public function index(Request $request): Response
     {
         abort_unless(
-            \in_array($request->user()?->role, self::ALLOWED_ROLES, true),
+            $request->user()?->hasPermission('finance.admin'),
             403
         );
 

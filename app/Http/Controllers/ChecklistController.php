@@ -215,7 +215,7 @@ class ChecklistController extends Controller
 
     private function requireAdmin(Request $request): void
     {
-        if (! in_array($request->user()->role, ['superadmin', 'hr', 'management'], true)) {
+        if (! $request->user()->hasPermission('checklist.manage')) {
             abort(403, 'Unauthorized.');
         }
     }

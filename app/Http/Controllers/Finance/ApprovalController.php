@@ -28,18 +28,18 @@ class ApprovalController extends Controller
     {
         $user = $request->user();
 
+        // Join first so all subsequent where() calls can qualify columns unambiguously.
+        // Both approval_steps and requisitions have a status column.
         $query = ApprovalStep::with([
                 'requisition.requester:id,name,department',
                 'requisition.costCentre:id,code,name',
                 'requisition.vendor:id,name',
             ])
-            ->where('approver_id', $user->id)
-            ->where('status', 'pending')
-            ->orderBy('sla_deadline');
-
-        // Filters: use join-based filtering to avoid N+1 subqueries
-        $query->join('requisitions', 'approval_steps.requisition_id', '=', 'requisitions.id')
-              ->select('approval_steps.*');
+            ->join('requisitions', 'approval_steps.requisition_id', '=', 'requisitions.id')
+            ->select('approval_steps.*')
+            ->where('approval_steps.approver_id', $user->id)
+            ->where('approval_steps.status', 'pending')
+            ->orderBy('approval_steps.sla_deadline');
 
         if ($request->filled('urgency')) {
             $query->where('requisitions.urgency', $request->get('urgency'));

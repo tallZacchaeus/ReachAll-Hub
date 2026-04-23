@@ -4,9 +4,9 @@ This file provides repo-specific guidance to Claude Code when working in this re
 
 ## Project Identity
 
-- Canonical app/repo name: `Tech Staff Evaluation Platform`
-- Legacy name appears in some files: `ReachAll Hub`
-- Treat `ReachAll Hub` as stale naming unless the task is an intentional rename/branding cleanup
+- Canonical app/repo name: `ReachAll Hub`
+- Prior name used in some older files: `Tech Staff Evaluation Platform`
+- Treat `Tech Staff Evaluation Platform` as stale naming that should be updated on sight
 - This is an internal HR and operations platform built with Laravel + Inertia + React/TypeScript
 
 Major feature areas:

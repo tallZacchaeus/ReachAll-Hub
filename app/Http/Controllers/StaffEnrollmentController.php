@@ -224,7 +224,7 @@ class StaffEnrollmentController extends Controller
 
     private function authorizeAdmin(Request $request): void
     {
-        if (! in_array($request->user()?->role, ['superadmin', 'hr'], true)) {
+        if (! $request->user()?->hasPermission('staff.enroll')) {
             abort(403, 'Unauthorized action.');
         }
     }

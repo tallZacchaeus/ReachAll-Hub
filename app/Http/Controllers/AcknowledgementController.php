@@ -134,7 +134,7 @@ class AcknowledgementController extends Controller
     private function requireAdmin(Request $request): void
     {
         $user = $request->user();
-        if (! in_array($user->role, ['superadmin', 'hr', 'management'], true)) {
+        if (! $user->hasPermission('content.manage')) {
             abort(403, 'Unauthorized.');
         }
     }

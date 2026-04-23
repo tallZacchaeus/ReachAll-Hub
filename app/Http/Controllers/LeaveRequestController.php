@@ -184,6 +184,6 @@ class LeaveRequestController extends Controller
 
     private function isAdmin(User $user): bool
     {
-        return in_array($user->role, ['superadmin', 'hr', 'management'], true);
+        return $user->hasPermission('leave.review');
     }
 }

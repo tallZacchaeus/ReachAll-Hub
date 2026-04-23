@@ -461,7 +461,7 @@ class ChatController extends Controller
 
     private function isAdmin(User $user): bool
     {
-        return in_array($user->role, ['superadmin', 'hr', 'management'], true);
+        return $user->hasPermission('chat.admin');
     }
 
     private function userHasAccessToConversation(Conversation $conversation, User $user): bool

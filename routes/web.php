@@ -340,6 +340,195 @@ Route::middleware(['auth'])->group(function () {
 
     // Org Chart (anyone with admin.dashboard)
     Route::get('/admin/org/chart', [\App\Http\Controllers\Admin\OrgChartController::class, 'index'])->name('admin.org.chart');
+
+    // ── HR Document Vault (documents.manage = hr/superadmin) ──────────────
+    Route::get('/admin/hr/documents', [\App\Http\Controllers\Admin\HrDocumentController::class, 'index'])->name('admin.hr.documents');
+    Route::post('/admin/hr/documents', [\App\Http\Controllers\Admin\HrDocumentController::class, 'store'])->name('admin.hr.documents.store');
+    Route::put('/admin/hr/documents/{hrDocument}', [\App\Http\Controllers\Admin\HrDocumentController::class, 'update'])->name('admin.hr.documents.update');
+    Route::delete('/admin/hr/documents/{hrDocument}', [\App\Http\Controllers\Admin\HrDocumentController::class, 'destroy'])->name('admin.hr.documents.destroy');
+
+    // Authenticated private download (replaces any public URL)
+    Route::get('/admin/hr/documents/{hrDocument}/download', [\App\Http\Controllers\Admin\HrDocumentDownloadController::class, 'show'])->name('admin.hr.documents.download');
+
+    // ── Employee: My Documents + E-Sign ───────────────────────────────────
+    Route::get('/my-documents', [\App\Http\Controllers\HrDocumentSelfController::class, 'index'])->name('my.documents');
+    Route::post('/my-documents/{hrDocument}/sign', [\App\Http\Controllers\DocumentSignatureController::class, 'sign'])->name('my.documents.sign');
+    Route::post('/my-documents/{hrDocument}/decline', [\App\Http\Controllers\DocumentSignatureController::class, 'decline'])->name('my.documents.decline');
+    Route::get('/my-documents/{hrDocument}/download', [\App\Http\Controllers\HrDocumentSelfController::class, 'download'])->name('my.documents.download');
+
+    // ── Benefits Administration ───────────────────────────────────────────
+    Route::prefix('benefits')->name('benefits.')->group(function () {
+        // Plan catalog (benefits.manage)
+        Route::get('/plans', [\App\Http\Controllers\Benefits\BenefitPlanController::class, 'index'])->name('plans.index');
+        Route::post('/plans', [\App\Http\Controllers\Benefits\BenefitPlanController::class, 'store'])->name('plans.store');
+        Route::put('/plans/{benefitPlan}', [\App\Http\Controllers\Benefits\BenefitPlanController::class, 'update'])->name('plans.update');
+        Route::delete('/plans/{benefitPlan}', [\App\Http\Controllers\Benefits\BenefitPlanController::class, 'destroy'])->name('plans.destroy');
+
+        // Enrollment management (benefits.manage)
+        Route::get('/enrollments', [\App\Http\Controllers\Benefits\BenefitEnrollmentController::class, 'index'])->name('enrollments.index');
+        Route::post('/enrollments', [\App\Http\Controllers\Benefits\BenefitEnrollmentController::class, 'store'])->name('enrollments.store');
+        Route::post('/enrollments/{employeeBenefitEnrollment}/terminate', [\App\Http\Controllers\Benefits\BenefitEnrollmentController::class, 'terminate'])->name('enrollments.terminate');
+
+        // Enrollment windows (benefits.manage)
+        Route::post('/windows', [\App\Http\Controllers\Benefits\EnrollmentWindowController::class, 'store'])->name('windows.store');
+        Route::post('/windows/{benefitEnrollmentWindow}/open', [\App\Http\Controllers\Benefits\EnrollmentWindowController::class, 'open'])->name('windows.open');
+        Route::post('/windows/{benefitEnrollmentWindow}/process', [\App\Http\Controllers\Benefits\EnrollmentWindowController::class, 'process'])->name('windows.process');
+        Route::delete('/windows/{benefitEnrollmentWindow}', [\App\Http\Controllers\Benefits\EnrollmentWindowController::class, 'destroy'])->name('windows.destroy');
+
+        // Employee self-service (benefits.self-enroll)
+        Route::get('/my-benefits', [\App\Http\Controllers\Benefits\BenefitSelfController::class, 'index'])->name('my');
+        Route::post('/my-benefits/election', [\App\Http\Controllers\Benefits\BenefitSelfController::class, 'saveElection'])->name('my.election');
+        Route::post('/my-benefits/submit', [\App\Http\Controllers\Benefits\BenefitSelfController::class, 'submitElections'])->name('my.submit');
+        Route::post('/my-benefits/dependents', [\App\Http\Controllers\Benefits\BenefitSelfController::class, 'storeDependent'])->name('my.dependents.store');
+        Route::put('/my-benefits/dependents/{employeeDependent}', [\App\Http\Controllers\Benefits\BenefitSelfController::class, 'updateDependent'])->name('my.dependents.update');
+        Route::delete('/my-benefits/dependents/{employeeDependent}', [\App\Http\Controllers\Benefits\BenefitSelfController::class, 'removeDependent'])->name('my.dependents.remove');
+    });
+
+    // ── Payroll: Runs + Salaries (payroll.manage / payroll.view) ─────────
+    Route::prefix('payroll')->name('payroll.')->group(function () {
+        // Payroll runs
+        Route::get('/runs', [\App\Http\Controllers\Payroll\PayrollRunController::class, 'index'])->name('runs.index');
+        Route::post('/runs', [\App\Http\Controllers\Payroll\PayrollRunController::class, 'store'])->name('runs.store');
+        Route::get('/runs/{payrollRun}', [\App\Http\Controllers\Payroll\PayrollRunController::class, 'show'])->name('runs.show');
+        Route::post('/runs/{payrollRun}/approve', [\App\Http\Controllers\Payroll\PayrollRunController::class, 'approve'])->name('runs.approve');
+        Route::post('/runs/{payrollRun}/mark-paid', [\App\Http\Controllers\Payroll\PayrollRunController::class, 'markPaid'])->name('runs.mark-paid');
+        Route::post('/runs/{payrollRun}/generate-payslips', [\App\Http\Controllers\Payroll\PayrollRunController::class, 'generatePayslips'])->name('runs.generate-payslips');
+        Route::get('/runs/{payrollRun}/export-bank', [\App\Http\Controllers\Payroll\PayrollRunController::class, 'exportBankFile'])->name('runs.export-bank');
+
+        // Salary management
+        Route::get('/salaries', [\App\Http\Controllers\Payroll\SalaryController::class, 'index'])->name('salaries.index');
+        Route::post('/salaries', [\App\Http\Controllers\Payroll\SalaryController::class, 'store'])->name('salaries.store');
+        Route::delete('/salaries/{employeeSalary}', [\App\Http\Controllers\Payroll\SalaryController::class, 'destroy'])->name('salaries.destroy');
+
+        // Employee self-service payslips
+        Route::get('/my-payslips', [\App\Http\Controllers\Payroll\PayslipController::class, 'index'])->name('my-payslips');
+        Route::get('/payslip/{payrollEntry}/download', [\App\Http\Controllers\Payroll\PayslipController::class, 'download'])->name('payslip.download');
+    });
+
+    // ── Compensation Management ───────────────────────────────────────────
+    Route::prefix('compensation')->name('compensation.')->group(function () {
+        // Salary bands (compensation.manage)
+        Route::get('/bands', [\App\Http\Controllers\Compensation\CompensationBandController::class, 'index'])->name('bands.index');
+        Route::post('/bands', [\App\Http\Controllers\Compensation\CompensationBandController::class, 'store'])->name('bands.store');
+        Route::put('/bands/{compensationBand}', [\App\Http\Controllers\Compensation\CompensationBandController::class, 'update'])->name('bands.update');
+        Route::delete('/bands/{compensationBand}', [\App\Http\Controllers\Compensation\CompensationBandController::class, 'destroy'])->name('bands.destroy');
+
+        // Review cycles (compensation.manage)
+        Route::get('/reviews', [\App\Http\Controllers\Compensation\CompensationReviewController::class, 'index'])->name('reviews.index');
+        Route::post('/reviews', [\App\Http\Controllers\Compensation\CompensationReviewController::class, 'store'])->name('reviews.store');
+        Route::get('/reviews/{compensationReviewCycle}', [\App\Http\Controllers\Compensation\CompensationReviewController::class, 'show'])->name('reviews.show');
+        Route::post('/reviews/{compensationReviewCycle}/activate', [\App\Http\Controllers\Compensation\CompensationReviewController::class, 'activate'])->name('reviews.activate');
+        Route::post('/reviews/{compensationReviewCycle}/close', [\App\Http\Controllers\Compensation\CompensationReviewController::class, 'close'])->name('reviews.close');
+        Route::put('/review-entries/{compensationReviewEntry}', [\App\Http\Controllers\Compensation\CompensationReviewController::class, 'updateEntry'])->name('review-entries.update');
+        Route::post('/review-entries/{compensationReviewEntry}/approve', [\App\Http\Controllers\Compensation\CompensationReviewController::class, 'approveEntry'])->name('review-entries.approve');
+        Route::post('/review-entries/{compensationReviewEntry}/reject', [\App\Http\Controllers\Compensation\CompensationReviewController::class, 'rejectEntry'])->name('review-entries.reject');
+
+        // Bonus plans (compensation.manage)
+        Route::get('/bonus', [\App\Http\Controllers\Compensation\BonusPlanController::class, 'index'])->name('bonus.index');
+        Route::post('/bonus', [\App\Http\Controllers\Compensation\BonusPlanController::class, 'store'])->name('bonus.store');
+        Route::post('/bonus/{bonusPlan}/activate', [\App\Http\Controllers\Compensation\BonusPlanController::class, 'activate'])->name('bonus.activate');
+        Route::post('/bonus/{bonusPlan}/close', [\App\Http\Controllers\Compensation\BonusPlanController::class, 'close'])->name('bonus.close');
+        Route::post('/bonus/{bonusPlan}/awards', [\App\Http\Controllers\Compensation\BonusPlanController::class, 'addAward'])->name('bonus.awards.add');
+        Route::post('/bonus-awards/{bonusAward}/approve', [\App\Http\Controllers\Compensation\BonusPlanController::class, 'approveAward'])->name('bonus.awards.approve');
+        Route::post('/bonus-awards/{bonusAward}/mark-paid', [\App\Http\Controllers\Compensation\BonusPlanController::class, 'markPaid'])->name('bonus.awards.mark-paid');
+        Route::delete('/bonus-awards/{bonusAward}', [\App\Http\Controllers\Compensation\BonusPlanController::class, 'removeAward'])->name('bonus.awards.remove');
+
+        // Employee self-service total rewards (compensation.self)
+        Route::get('/my-rewards', [\App\Http\Controllers\Compensation\TotalRewardsController::class, 'index'])->name('my-rewards');
+    });
+
+    // ── Recruitment / ATS ─────────────────────────────────────────────────
+    Route::prefix('recruitment')->name('recruitment.')->group(function () {
+        // Job requisitions (recruitment.manage | recruitment.view)
+        Route::get('/requisitions', [\App\Http\Controllers\Recruitment\JobRequisitionController::class, 'index'])->name('requisitions.index');
+        Route::post('/requisitions', [\App\Http\Controllers\Recruitment\JobRequisitionController::class, 'store'])->name('requisitions.store');
+        Route::post('/requisitions/{jobRequisition}/approve', [\App\Http\Controllers\Recruitment\JobRequisitionController::class, 'approve'])->name('requisitions.approve');
+        Route::post('/requisitions/{jobRequisition}/reject', [\App\Http\Controllers\Recruitment\JobRequisitionController::class, 'reject'])->name('requisitions.reject');
+        Route::post('/requisitions/{jobRequisition}/link-posting', [\App\Http\Controllers\Recruitment\JobRequisitionController::class, 'linkPosting'])->name('requisitions.link-posting');
+
+        // Candidate pool (recruitment.manage | recruitment.view)
+        Route::get('/candidates', [\App\Http\Controllers\Recruitment\CandidateController::class, 'index'])->name('candidates.index');
+        Route::post('/candidates', [\App\Http\Controllers\Recruitment\CandidateController::class, 'store'])->name('candidates.store');
+        Route::put('/candidates/{candidate}', [\App\Http\Controllers\Recruitment\CandidateController::class, 'update'])->name('candidates.update');
+        Route::get('/candidates/{candidate}/resume', [\App\Http\Controllers\Recruitment\CandidateController::class, 'downloadResume'])->name('candidates.resume');
+
+        // Application pipeline (recruitment.manage | recruitment.view | recruitment.interview)
+        Route::get('/pipeline', [\App\Http\Controllers\Recruitment\ApplicationPipelineController::class, 'index'])->name('pipeline.index');
+        Route::get('/pipeline/{jobApplication}', [\App\Http\Controllers\Recruitment\ApplicationPipelineController::class, 'show'])->name('pipeline.show');
+        Route::post('/pipeline/{jobApplication}/stage', [\App\Http\Controllers\Recruitment\ApplicationPipelineController::class, 'advanceStage'])->name('pipeline.stage');
+        Route::post('/pipeline/add-external', [\App\Http\Controllers\Recruitment\ApplicationPipelineController::class, 'addExternalApplication'])->name('pipeline.add-external');
+
+        // Interview scheduling (recruitment.manage | recruitment.interview)
+        Route::post('/pipeline/{jobApplication}/interviews', [\App\Http\Controllers\Recruitment\InterviewController::class, 'schedule'])->name('interviews.schedule');
+        Route::put('/interviews/{interviewSchedule}/status', [\App\Http\Controllers\Recruitment\InterviewController::class, 'updateStatus'])->name('interviews.status');
+        Route::post('/interviews/{interviewSchedule}/scorecards', [\App\Http\Controllers\Recruitment\InterviewController::class, 'submitScorecard'])->name('interviews.scorecards.submit');
+        Route::delete('/scorecards/{interviewScorecard}', [\App\Http\Controllers\Recruitment\InterviewController::class, 'destroyScorecard'])->name('scorecards.destroy');
+
+        // Offer letters (recruitment.manage)
+        Route::post('/pipeline/{jobApplication}/offer', [\App\Http\Controllers\Recruitment\OfferLetterController::class, 'store'])->name('offers.store');
+        Route::post('/offers/{offerLetter}/send', [\App\Http\Controllers\Recruitment\OfferLetterController::class, 'send'])->name('offers.send');
+        Route::post('/offers/{offerLetter}/respond', [\App\Http\Controllers\Recruitment\OfferLetterController::class, 'respond'])->name('offers.respond');
+        Route::post('/offers/{offerLetter}/withdraw', [\App\Http\Controllers\Recruitment\OfferLetterController::class, 'withdraw'])->name('offers.withdraw');
+        Route::get('/offers/{offerLetter}/download', [\App\Http\Controllers\Recruitment\OfferLetterController::class, 'download'])->name('offers.download');
+    });
+
+    // ── Employee Relations / Case Management ──────────────────────────────
+    Route::prefix('employee-relations')->name('er.')->group(function () {
+        // HR admin + investigator: case list and detail
+        Route::get('/cases', [\App\Http\Controllers\EmployeeRelations\HrCaseController::class, 'index'])->name('cases.index');
+        Route::get('/cases/{hrCase}', [\App\Http\Controllers\EmployeeRelations\HrCaseController::class, 'show'])->name('cases.show');
+        Route::post('/cases', [\App\Http\Controllers\EmployeeRelations\HrCaseController::class, 'store'])->name('cases.store');
+        Route::put('/cases/{hrCase}', [\App\Http\Controllers\EmployeeRelations\HrCaseController::class, 'update'])->name('cases.update');
+        Route::post('/cases/{hrCase}/parties', [\App\Http\Controllers\EmployeeRelations\HrCaseController::class, 'addParty'])->name('cases.parties.add');
+        Route::delete('/cases/{hrCase}/parties/{party}', [\App\Http\Controllers\EmployeeRelations\HrCaseController::class, 'removeParty'])->name('cases.parties.remove');
+
+        // Notes (HR + investigator + reporter)
+        Route::post('/cases/{hrCase}/notes', [\App\Http\Controllers\EmployeeRelations\HrCaseNoteController::class, 'store'])->name('cases.notes.store');
+        Route::delete('/cases/{hrCase}/notes/{note}', [\App\Http\Controllers\EmployeeRelations\HrCaseNoteController::class, 'destroy'])->name('cases.notes.destroy');
+
+        // Employee self-service: submit and track own cases
+        Route::get('/my-cases', [\App\Http\Controllers\EmployeeRelations\HrCaseSelfController::class, 'index'])->name('my-cases.index');
+        Route::post('/my-cases', [\App\Http\Controllers\EmployeeRelations\HrCaseSelfController::class, 'store'])->name('my-cases.store');
+        Route::get('/my-cases/{hrCase}', [\App\Http\Controllers\EmployeeRelations\HrCaseSelfController::class, 'show'])->name('my-cases.show');
+        Route::post('/my-cases/{hrCase}/notes', [\App\Http\Controllers\EmployeeRelations\HrCaseSelfController::class, 'addNote'])->name('my-cases.notes.store');
+    });
+});
+
+// ── Compliance ────────────────────────────────────────────────────────────────
+Route::middleware('auth')->prefix('compliance')->name('compliance.')->group(function () {
+    // Compliance documents (HR manage)
+    Route::get('/documents', [\App\Http\Controllers\Compliance\ComplianceDocumentController::class, 'index'])->name('documents.index');
+    Route::post('/documents', [\App\Http\Controllers\Compliance\ComplianceDocumentController::class, 'store'])->name('documents.store');
+    Route::post('/documents/{doc}/verify', [\App\Http\Controllers\Compliance\ComplianceDocumentController::class, 'verify'])->name('documents.verify');
+    Route::post('/documents/{doc}/reject', [\App\Http\Controllers\Compliance\ComplianceDocumentController::class, 'reject'])->name('documents.reject');
+    Route::get('/documents/{doc}/download', [\App\Http\Controllers\Compliance\ComplianceDocumentController::class, 'download'])->name('documents.download');
+
+    // Data subject requests
+    Route::get('/dsr', [\App\Http\Controllers\Compliance\DataSubjectRequestController::class, 'index'])->name('dsr.index');
+    Route::post('/dsr', [\App\Http\Controllers\Compliance\DataSubjectRequestController::class, 'store'])->name('dsr.store');
+    Route::post('/dsr/{dsr}/acknowledge', [\App\Http\Controllers\Compliance\DataSubjectRequestController::class, 'acknowledge'])->name('dsr.acknowledge');
+    Route::put('/dsr/{dsr}', [\App\Http\Controllers\Compliance\DataSubjectRequestController::class, 'update'])->name('dsr.update');
+    Route::post('/dsr/{dsr}/withdraw', [\App\Http\Controllers\Compliance\DataSubjectRequestController::class, 'withdraw'])->name('dsr.withdraw');
+
+    // Compliance trainings
+    Route::get('/trainings', [\App\Http\Controllers\Compliance\ComplianceTrainingController::class, 'index'])->name('trainings.index');
+    Route::post('/trainings', [\App\Http\Controllers\Compliance\ComplianceTrainingController::class, 'store'])->name('trainings.store');
+    Route::put('/trainings/{training}', [\App\Http\Controllers\Compliance\ComplianceTrainingController::class, 'update'])->name('trainings.update');
+    Route::post('/trainings/{training}/assign', [\App\Http\Controllers\Compliance\ComplianceTrainingController::class, 'assign'])->name('trainings.assign');
+    Route::post('/trainings/{training}/complete', [\App\Http\Controllers\Compliance\ComplianceTrainingController::class, 'complete'])->name('trainings.complete');
+
+    // Compliance policies
+    Route::get('/policies', [\App\Http\Controllers\Compliance\CompliancePolicyController::class, 'index'])->name('policies.index');
+    Route::post('/policies', [\App\Http\Controllers\Compliance\CompliancePolicyController::class, 'store'])->name('policies.store');
+    Route::put('/policies/{policy}', [\App\Http\Controllers\Compliance\CompliancePolicyController::class, 'update'])->name('policies.update');
+    Route::post('/policies/{policy}/versions', [\App\Http\Controllers\Compliance\CompliancePolicyController::class, 'publishVersion'])->name('policies.versions.store');
+    Route::post('/policies/{policy}/acknowledge', [\App\Http\Controllers\Compliance\CompliancePolicyController::class, 'acknowledge'])->name('policies.acknowledge');
+
+    // Employee self-service
+    Route::get('/my', [\App\Http\Controllers\Compliance\MyComplianceController::class, 'index'])->name('my');
+    Route::post('/my/documents', [\App\Http\Controllers\Compliance\MyComplianceController::class, 'storeDocument'])->name('my.documents.store');
+    Route::post('/my/dsr', [\App\Http\Controllers\Compliance\MyComplianceController::class, 'storeDsr'])->name('my.dsr.store');
+    Route::post('/my/dsr/{dsr}/withdraw', [\App\Http\Controllers\Compliance\MyComplianceController::class, 'withdrawDsr'])->name('my.dsr.withdraw');
 });
 
 require __DIR__.'/settings.php';

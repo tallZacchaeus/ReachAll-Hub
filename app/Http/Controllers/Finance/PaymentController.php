@@ -8,7 +8,6 @@ use App\Models\Finance\Payment;
 use App\Models\Finance\Requisition;
 use App\Models\Finance\WhtLiability;
 use App\Services\Finance\ClosedPeriodGuard;
-use App\Services\Finance\FinanceRoleHelper;
 use App\Services\Finance\MoneyHelper;
 use App\Services\Finance\TaxCalculator;
 use Illuminate\Http\RedirectResponse;
@@ -171,7 +170,7 @@ class PaymentController extends Controller
      * T10-01: Void a payment, reverse any WHT liability, and return the
      * requisition to 'approved' status so it can be re-paid or cancelled.
      *
-     * Restricted to Finance admins (FinanceRoleHelper::FINANCE_ADMIN_ROLES)
+     * Restricted to Finance admins.
      * via PaymentPolicy::voidPayment.
      */
     public function voidPayment(Request $request, int $paymentId): RedirectResponse
@@ -260,7 +259,7 @@ class PaymentController extends Controller
     private function authorizeFinance(Request $request): void
     {
         abort_unless(
-            \in_array($request->user()?->role, FinanceRoleHelper::FINANCE_ADMIN_ROLES, true),
+            $request->user()?->hasPermission('finance.admin'),
             403
         );
     }

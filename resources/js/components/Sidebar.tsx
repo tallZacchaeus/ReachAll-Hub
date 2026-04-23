@@ -42,6 +42,11 @@ import {
   PieChart,
   Lock,
   ShieldCheck,
+  FolderOpen,
+  Banknote,
+  Calculator,
+  Heart,
+  Award,
 } from "lucide-react";
 import { Link } from "@inertiajs/react";
 import { usePermissions } from "@/hooks/usePermissions";
@@ -117,6 +122,12 @@ const PERSONAL_SECTION: NavSection = {
   items: [
     { id: "leave", label: "Leave Requests", icon: FileText, href: "/leave" },
     { id: "attendance", label: "My Attendance", icon: CalendarCheck, href: "/attendance" },
+    { id: "my-documents", label: "My Documents", icon: FolderOpen, href: "/my-documents" },
+    { id: "my-payslips", label: "My Payslips", icon: Banknote, href: "/payroll/my-payslips" },
+    { id: "my-benefits", label: "My Benefits", icon: Heart, href: "/benefits/my-benefits" },
+    { id: "my-rewards", label: "My Rewards", icon: Award, href: "/compensation/my-rewards" },
+    { id: "my-cases", label: "Support & Grievances", icon: Shield, href: "/employee-relations/my-cases" },
+    { id: "my-compliance", label: "My Compliance", icon: ShieldCheck, href: "/compliance/my" },
     { id: "settings", label: "Settings", icon: Settings, href: "/settings/profile" },
   ],
 };
@@ -221,9 +232,17 @@ export function Sidebar({ activePage, userRole, employeeStage = "performer", has
 
   const isAdmin = can('admin.dashboard');
   const isFinanceAdmin = can('finance.admin');
-  // finance.reports is held by management/hr/finance/ceo/gm; finance.admin by finance/gm/ceo — together
-  // this covers every role with finance access except plain staff (who have only finance.access)
   const hasFinanceAccess = canAny(['finance.admin', 'finance.reports']);
+  const canManagePayroll  = can('payroll.manage');
+  const canViewPayroll    = canAny(['payroll.manage', 'payroll.view']);
+  const canManageBenefits      = can('benefits.manage');
+  const canManageCompensation  = can('compensation.manage');
+  const canViewCompensation    = canAny(['compensation.manage', 'compensation.view']);
+  const canManageRecruitment   = can('recruitment.manage');
+  const canViewRecruitment     = canAny(['recruitment.manage', 'recruitment.view', 'recruitment.interview']);
+  const canManageER            = can('er.manage');
+  const canViewER              = canAny(['er.manage', 'er.investigate']);
+  const canManageCompliance    = can('compliance.manage');
 
   const sections: NavSection[] = [];
 
@@ -240,8 +259,15 @@ export function Sidebar({ activePage, userRole, employeeStage = "performer", has
     const canManageStaff = can('staff.enroll');
     const canManageRoles = can('roles.manage');
     const canManageOrg = can('org.manage');
-    if (canManageStaff || canManageRoles || canManageOrg) {
+    const canManageDocs = can('documents.manage');
+    if (canManageStaff || canManageRoles || canManageOrg || canManageDocs || canManageBenefits) {
       const manageItems = [...ADMIN_MANAGE_SECTION.items];
+      if (canManageDocs) {
+        manageItems.push({ id: "document-vault", label: "Document Vault", icon: FolderOpen, href: "/admin/hr/documents" });
+      }
+      if (canManageBenefits) {
+        manageItems.push({ id: "benefits-plans", label: "Benefit Plans", icon: Heart, href: "/benefits/plans" });
+      }
       if (canManageOrg) {
         manageItems.push({ id: "org-structure", label: "Org Structure", icon: Building2, href: "/admin/org/departments" });
       }
@@ -260,6 +286,63 @@ export function Sidebar({ activePage, userRole, employeeStage = "performer", has
       // Default to performer
       sections.push(PERFORMER_SECTION);
     }
+  }
+
+  // Payroll section — visible to those who can view or manage payroll
+  if (canViewPayroll) {
+    const payrollItems: NavItem[] = [
+      { id: "payroll-runs",     label: "Payroll Runs",      icon: Banknote,    href: "/payroll/runs" },
+    ];
+    if (canManagePayroll) {
+      payrollItems.push({ id: "payroll-salaries", label: "Salary Setup", icon: Calculator, href: "/payroll/salaries" });
+    }
+    sections.push({ label: "Payroll", items: payrollItems });
+  }
+
+  // Compensation — visible to managers and HR who can view or manage
+  if (canViewCompensation) {
+    const compItems: NavItem[] = [];
+    if (canManageCompensation) {
+      compItems.push({ id: "compensation-bands",   label: "Salary Bands",    icon: TrendingUp, href: "/compensation/bands" });
+      compItems.push({ id: "compensation-reviews", label: "Review Cycles",   icon: TrendingUp, href: "/compensation/reviews" });
+      compItems.push({ id: "compensation-bonus",   label: "Bonus Plans",     icon: Award,      href: "/compensation/bonus" });
+    }
+    if (compItems.length > 0) {
+      sections.push({ label: "Compensation", items: compItems });
+    }
+  }
+
+  // Recruitment / ATS — HR and managers who can view or manage recruitment
+  if (canViewRecruitment) {
+    const recItems: NavItem[] = [
+      { id: "recruitment-pipeline", label: "Pipeline", icon: GitBranch, href: "/recruitment/pipeline" },
+    ];
+    if (canManageRecruitment) {
+      recItems.unshift({ id: "recruitment-requisitions", label: "Requisitions",     icon: Briefcase,    href: "/recruitment/requisitions" });
+      recItems.push(   { id: "recruitment-candidates",   label: "Talent Pool",      icon: UserSearch,   href: "/recruitment/candidates" });
+    }
+    sections.push({ label: "Recruitment", items: recItems });
+  }
+
+  // Employee Relations — HR managers and assigned investigators
+  if (canViewER) {
+    const erItems: NavItem[] = [
+      { id: "er-cases", label: "Case Management", icon: Shield, href: "/employee-relations/cases" },
+    ];
+    sections.push({ label: "Employee Relations", items: erItems });
+  }
+
+  // Compliance — HR managers see full admin views
+  if (canManageCompliance) {
+    sections.push({
+      label: "Compliance",
+      items: [
+        { id: "compliance-docs", label: "Compliance Documents", icon: ShieldCheck, href: "/compliance/documents" },
+        { id: "compliance-dsr", label: "Data Subject Requests", icon: Lock, href: "/compliance/dsr" },
+        { id: "compliance-trainings", label: "Compliance Trainings", icon: GraduationCap, href: "/compliance/trainings" },
+        { id: "compliance-policies", label: "Compliance Policies", icon: ScrollText, href: "/compliance/policies" },
+      ],
+    });
   }
 
   // Finance module sections — all roles with finance access see My Requests + Approvals

@@ -42,8 +42,8 @@ class ClosedPeriodGuard
             return; // period open or doesn't exist → allow
         }
 
-        // CEO/Superadmin with explicit override flag → allow
-        if ($ceoOverride && \in_array($user->role, ['ceo', 'superadmin'], true)) {
+        // Finance executives with explicit override flag may proceed.
+        if ($ceoOverride && $user->hasPermission('finance.exec')) {
             return;
         }
 

@@ -119,6 +119,6 @@ class FaqController extends Controller
 
     private function isAdmin($user): bool
     {
-        return in_array($user->role, ['superadmin', 'hr', 'management'], true);
+        return $user->hasPermission('content.manage');
     }
 }

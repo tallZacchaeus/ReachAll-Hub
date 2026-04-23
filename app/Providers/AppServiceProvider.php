@@ -50,6 +50,8 @@ class AppServiceProvider extends ServiceProvider
         PettyCashTransaction::observe(FinanceModelObserver::class);
         PettyCashReconciliation::observe(FinanceModelObserver::class);
         // Phase 4
+        Requisition::observe(FinanceModelObserver::class);
+        ApprovalStep::observe(FinanceModelObserver::class);
         Invoice::observe(FinanceModelObserver::class);
         GoodsReceipt::observe(FinanceModelObserver::class);
         Payment::observe(FinanceModelObserver::class);

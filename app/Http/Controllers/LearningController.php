@@ -252,7 +252,7 @@ class LearningController extends Controller
 
     private function isAdmin(User $user): bool
     {
-        return in_array($user->role, ['superadmin', 'hr', 'management'], true);
+        return $user->hasPermission('learning.manage');
     }
 
     private function requireAdmin(Request $request): void

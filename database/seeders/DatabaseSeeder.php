@@ -130,6 +130,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call(RolesAndPermissionsSeeder::class);
         $this->call(OrgStructureSeeder::class);
+        $this->call(DocumentCategorySeeder::class);
+        $this->call(BenefitPlanSeeder::class);
         $this->call(ContentSeeder::class);
         $this->call(FaqSeeder::class);
         $this->call(MasterSeeder::class);

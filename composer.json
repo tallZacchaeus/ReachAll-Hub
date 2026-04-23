@@ -1,8 +1,8 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "tech-staff-evaluation-platform/app",
+    "name": "reachall/hub",
     "type": "project",
-    "description": "Tech Staff Evaluation Platform",
+    "description": "ReachAll Hub",
     "keywords": [
         "laravel",
         "framework",

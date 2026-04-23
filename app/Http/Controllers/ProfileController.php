@@ -121,7 +121,7 @@ class ProfileController extends Controller
     private function authorizeAdmin()
     {
         $user = Auth::user();
-        if (!in_array($user->role, ['superadmin', 'hr'])) {
+        if (! $user->hasPermission('profile.review')) {
             abort(403, 'Unauthorized action.');
         }
     }

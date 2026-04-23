@@ -1,6 +1,6 @@
-# Tech Staff Evaluation Platform
+# ReachAll Hub
 
-Tech Staff Evaluation Platform is a Laravel-based platform for managing technology staff, featuring performance evaluations, team communication, and administrative workflows.
+ReachAll Hub is a Laravel-based platform for managing technology staff, featuring performance evaluations, team communication, and administrative workflows.
 
 ## 📖 Project Documentation
 For a deep-dive into how this project works, including educational explanations of every feature and installation guides, please see our master guide:

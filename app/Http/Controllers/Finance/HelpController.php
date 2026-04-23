@@ -19,8 +19,10 @@ class HelpController extends Controller
     /** Available to approvers and above. */
     public function approvers(Request $request): Response
     {
+        $user = $request->user();
+
         abort_unless(
-            \in_array($request->user()?->role, ['management', 'dept_head', 'finance', 'general_management', 'ceo', 'superadmin'], true),
+            $user?->hasPermission('requests.review') || $user?->hasPermission('finance.admin'),
             403
         );
         return Inertia::render('Finance/Help/ApproversPage');
@@ -33,7 +35,7 @@ class HelpController extends Controller
     public function financeTeam(Request $request): Response
     {
         abort_unless(
-            \in_array($request->user()?->role, ['finance', 'ceo', 'general_management', 'superadmin'], true),
+            $request->user()?->hasPermission('finance.admin'),
             403
         );
         return Inertia::render('Finance/Help/FinanceTeamPage');

@@ -140,7 +140,7 @@ class ReportsController extends Controller
     private function authorizeReports(Request $request): void
     {
         abort_unless(
-            \in_array($request->user()?->role, ['finance', 'ceo', 'superadmin', 'management', 'general_management', 'hr'], true),
+            $request->user()?->hasPermission('finance.reports'),
             403
         );
     }

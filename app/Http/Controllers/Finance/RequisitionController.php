@@ -122,8 +122,8 @@ class RequisitionController extends Controller
             ]);
         }
 
-        // Total must be ≥ base amount (VAT adds to total; WHT reduces net but total stays ≥ amount)
-        abort_if($taxes['total_kobo'] < $amountKobo, 422, 'Total amount cannot be less than base amount.');
+        // WHT is withheld from vendor payment, so net payable can legitimately
+        // be lower than the base amount when WHT exceeds VAT.
 
         // Determine current financial period
         $period = FinancialPeriod::where('year', now()->year)

@@ -226,7 +226,7 @@ export default function StaffEnrollmentPage({
             Staff Enrollment
           </h1>
           <p className="text-muted-foreground">
-            Manage and enroll staff members in the Tech Staff Evaluation Platform
+            Manage and enroll staff members in ReachAll Hub
           </p>
         </div>
         <div className="flex gap-3">

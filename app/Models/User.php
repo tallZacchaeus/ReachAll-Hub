@@ -222,6 +222,77 @@ class User extends Authenticatable implements MustVerifyEmail
         return PermissionService::permissionsForRole($this->role);
     }
 
+    // ── HR Document vault relationships ────────────────────────────────────
+
+    public function hrDocuments(): HasMany
+    {
+        return $this->hasMany(HrDocument::class, 'user_id');
+    }
+
+    public function documentSignatures(): HasMany
+    {
+        return $this->hasMany(DocumentSignature::class, 'signee_id');
+    }
+
+    // ── Payroll relationships ───────────────────────────────────────────────
+
+    public function salaries(): HasMany
+    {
+        return $this->hasMany(EmployeeSalary::class, 'user_id')->orderByDesc('effective_date');
+    }
+
+    /** Current active salary record. */
+    public function currentSalary(): ?EmployeeSalary
+    {
+        return $this->salaries()
+            ->where('effective_date', '<=', now()->toDateString())
+            ->where(fn ($q) => $q->whereNull('end_date')->orWhere('end_date', '>=', now()->toDateString()))
+            ->first();
+    }
+
+    public function payrollEntries(): HasMany
+    {
+        return $this->hasMany(PayrollEntry::class, 'user_id');
+    }
+
+    public function payrollDeductions(): HasMany
+    {
+        return $this->hasMany(PayrollDeduction::class, 'user_id');
+    }
+
+    // ── Benefits relationships ──────────────────────────────────────────────
+
+    public function benefitEnrollments(): HasMany
+    {
+        return $this->hasMany(EmployeeBenefitEnrollment::class, 'user_id');
+    }
+
+    public function activeBenefits(): HasMany
+    {
+        return $this->hasMany(EmployeeBenefitEnrollment::class, 'user_id')
+            ->where('status', 'active');
+    }
+
+    public function dependents(): HasMany
+    {
+        return $this->hasMany(EmployeeDependent::class, 'user_id');
+    }
+
+    public function benefitElections(): HasMany
+    {
+        return $this->hasMany(BenefitEnrollmentElection::class, 'user_id');
+    }
+
+    public function compensationReviewEntries(): HasMany
+    {
+        return $this->hasMany(CompensationReviewEntry::class, 'user_id');
+    }
+
+    public function bonusAwards(): HasMany
+    {
+        return $this->hasMany(BonusAward::class, 'user_id');
+    }
+
     public function assignedTasks(): HasMany
     {
         return $this->hasMany(Task::class, 'assigned_to_user_id');
@@ -290,5 +361,55 @@ class User extends Authenticatable implements MustVerifyEmail
     public function receivedRecognitions(): HasMany
     {
         return $this->hasMany(Recognition::class, 'to_user_id');
+    }
+
+    public function jobApplications(): HasMany
+    {
+        return $this->hasMany(JobApplication::class);
+    }
+
+    public function interviews(): HasMany
+    {
+        return $this->hasMany(InterviewSchedule::class, 'interviewer_id');
+    }
+
+    public function interviewScorecards(): HasMany
+    {
+        return $this->hasMany(InterviewScorecard::class, 'evaluator_id');
+    }
+
+    public function reportedCases(): HasMany
+    {
+        return $this->hasMany(HrCase::class, 'reported_by_id');
+    }
+
+    public function assignedCases(): HasMany
+    {
+        return $this->hasMany(HrCase::class, 'assigned_to_id');
+    }
+
+    public function caseParticipations(): HasMany
+    {
+        return $this->hasMany(HrCaseParty::class);
+    }
+
+    public function complianceDocuments(): HasMany
+    {
+        return $this->hasMany(ComplianceDocument::class);
+    }
+
+    public function dataSubjectRequests(): HasMany
+    {
+        return $this->hasMany(DataSubjectRequest::class);
+    }
+
+    public function trainingAssignments(): HasMany
+    {
+        return $this->hasMany(ComplianceTrainingAssignment::class);
+    }
+
+    public function policyAcknowledgements2(): HasMany
+    {
+        return $this->hasMany(CompliancePolicyAcknowledgement::class);
     }
 }

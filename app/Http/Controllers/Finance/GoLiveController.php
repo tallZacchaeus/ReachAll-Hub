@@ -20,7 +20,7 @@ class GoLiveController extends Controller
 {
     public function index(Request $request): Response
     {
-        abort_unless($request->user()?->role === 'superadmin', 403);
+        abort_unless($request->user()?->hasPermission('finance.go-live'), 403);
 
         $checks = $this->runChecks();
 
