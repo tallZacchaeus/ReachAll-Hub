@@ -321,6 +321,25 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/roles', [\App\Http\Controllers\Admin\RoleController::class, 'store'])->name('admin.roles.store');
     Route::put('/admin/roles/{role}', [\App\Http\Controllers\Admin\RoleController::class, 'update'])->name('admin.roles.update');
     Route::delete('/admin/roles/{role}', [\App\Http\Controllers\Admin\RoleController::class, 'destroy'])->name('admin.roles.destroy');
+
+    // Org Structure Management (hr + superadmin)
+    Route::get('/admin/org/departments', [\App\Http\Controllers\Admin\DepartmentController::class, 'index'])->name('admin.org.departments');
+    Route::post('/admin/org/departments', [\App\Http\Controllers\Admin\DepartmentController::class, 'store'])->name('admin.org.departments.store');
+    Route::put('/admin/org/departments/{department}', [\App\Http\Controllers\Admin\DepartmentController::class, 'update'])->name('admin.org.departments.update');
+    Route::delete('/admin/org/departments/{department}', [\App\Http\Controllers\Admin\DepartmentController::class, 'destroy'])->name('admin.org.departments.destroy');
+
+    Route::get('/admin/org/positions', [\App\Http\Controllers\Admin\JobPositionController::class, 'index'])->name('admin.org.positions');
+    Route::post('/admin/org/positions', [\App\Http\Controllers\Admin\JobPositionController::class, 'store'])->name('admin.org.positions.store');
+    Route::put('/admin/org/positions/{jobPosition}', [\App\Http\Controllers\Admin\JobPositionController::class, 'update'])->name('admin.org.positions.update');
+    Route::delete('/admin/org/positions/{jobPosition}', [\App\Http\Controllers\Admin\JobPositionController::class, 'destroy'])->name('admin.org.positions.destroy');
+
+    Route::get('/admin/org/locations', [\App\Http\Controllers\Admin\OfficeLocationController::class, 'index'])->name('admin.org.locations');
+    Route::post('/admin/org/locations', [\App\Http\Controllers\Admin\OfficeLocationController::class, 'store'])->name('admin.org.locations.store');
+    Route::put('/admin/org/locations/{officeLocation}', [\App\Http\Controllers\Admin\OfficeLocationController::class, 'update'])->name('admin.org.locations.update');
+    Route::delete('/admin/org/locations/{officeLocation}', [\App\Http\Controllers\Admin\OfficeLocationController::class, 'destroy'])->name('admin.org.locations.destroy');
+
+    // Org Chart (anyone with admin.dashboard)
+    Route::get('/admin/org/chart', [\App\Http\Controllers\Admin\OrgChartController::class, 'index'])->name('admin.org.chart');
 });
 
 require __DIR__.'/settings.php';

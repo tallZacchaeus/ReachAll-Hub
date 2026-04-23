@@ -6,6 +6,7 @@ use App\Services\Finance\FinanceRoleHelper;
 use App\Services\PermissionService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -33,6 +34,17 @@ class User extends Authenticatable implements MustVerifyEmail
         'status',
         'employee_stage',
         'password',
+        // Structured org fields
+        'department_id',
+        'job_position_id',
+        'office_location_id',
+        'reports_to_id',
+        'hire_date',
+        'date_of_birth',
+        'gender',
+        'employment_type',
+        'probation_end_date',
+        'nin',
     ];
 
     /**
@@ -55,10 +67,45 @@ class User extends Authenticatable implements MustVerifyEmail
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'email_verified_at'    => 'datetime',
+            'password'             => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
+            'hire_date'            => 'date',
+            'date_of_birth'        => 'date',
+            'probation_end_date'   => 'date',
         ];
+    }
+
+    // ── Org structure relationships ─────────────────────────────────────────
+
+    public function departmentEntity(): BelongsTo
+    {
+        return $this->belongsTo(Department::class, 'department_id');
+    }
+
+    public function jobPosition(): BelongsTo
+    {
+        return $this->belongsTo(JobPosition::class, 'job_position_id');
+    }
+
+    public function officeLocation(): BelongsTo
+    {
+        return $this->belongsTo(OfficeLocation::class, 'office_location_id');
+    }
+
+    public function manager(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'reports_to_id');
+    }
+
+    public function directReports(): HasMany
+    {
+        return $this->hasMany(User::class, 'reports_to_id');
+    }
+
+    public function lifecycleEvents(): HasMany
+    {
+        return $this->hasMany(EmployeeLifecycleEvent::class, 'user_id')->orderByDesc('effective_date');
     }
 
     public function scopeJoiners($query)

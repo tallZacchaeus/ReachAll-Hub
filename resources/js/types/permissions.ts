@@ -24,6 +24,7 @@ export type Permission =
     | 'announcements.manage'
     | 'team.dashboard'
     | 'roles.manage'
+    | 'org.manage'
     // Finance
     | 'finance.access'
     | 'finance.admin'

@@ -125,6 +125,7 @@ const ADMIN_SECTION: NavSection = {
   label: "Admin",
   items: [
     { id: "staff-overview", label: "Staff Overview", icon: Users, href: "/staff-overview" },
+    { id: "org-chart", label: "Org Chart", icon: GitBranch, href: "/admin/org/chart" },
     { id: "progress-report", label: "Progress Report", icon: TrendingUp, href: "/progress-report" },
     { id: "reports", label: "Reports", icon: BarChart3, href: "/reports" },
     { id: "department-analytics", label: "Dept. Analytics", icon: Building2, href: "/department-analytics" },
@@ -238,8 +239,12 @@ export function Sidebar({ activePage, userRole, employeeStage = "performer", has
 
     const canManageStaff = can('staff.enroll');
     const canManageRoles = can('roles.manage');
-    if (canManageStaff || canManageRoles) {
+    const canManageOrg = can('org.manage');
+    if (canManageStaff || canManageRoles || canManageOrg) {
       const manageItems = [...ADMIN_MANAGE_SECTION.items];
+      if (canManageOrg) {
+        manageItems.push({ id: "org-structure", label: "Org Structure", icon: Building2, href: "/admin/org/departments" });
+      }
       if (canManageRoles) {
         manageItems.push({ id: "roles", label: "Roles & Permissions", icon: ShieldCheck, href: "/admin/roles" });
       }
