@@ -55,3 +55,10 @@ package-lock\ 2.json
 *.swo
 *~
 Thumbs.db
+
+# ── Python cache artifacts ────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+
+# ── AI agent tooling (local dev only) ────────────────────────────────────────
+.agents/

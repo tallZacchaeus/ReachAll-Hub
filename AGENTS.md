@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides repo-specific guidance to Claude Code when working in this repository.
+This file provides repo-specific guidance to Codex when working in this repository.
 
 ## Project Identity
 
@@ -159,9 +159,9 @@ Keep these in mind during future frontend work:
 - Some auth and UX copy does not fully match actual app behavior and backend rules
 - Several dashboards and status presentations use bespoke page-level card and state styling that should converge on shared patterns over time
 
-## Required Claude Code Skill Routing
+## Required Codex Skill Routing
 
-Claude Code should explicitly use these installed skills from `~/.claude/skills` whenever the task matches. Use more than one skill when needed.
+Codex should explicitly use these installed skills from `~/.Codex/skills` whenever the task matches. Use more than one skill when needed.
 
 ### Core Implementation Skills
 

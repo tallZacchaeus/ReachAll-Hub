@@ -7,10 +7,9 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-// Finance SLA: check every hour for overdue approval steps
-\Illuminate\Support\Facades\Schedule::command('finance:process-sla')
-    ->hourly()
-    ->withoutOverlapping();
+// The legacy combined `finance:process-sla` command is intentionally not scheduled
+// in production. Dedicated reminder + escalation commands run below and scheduling
+// both paths together would duplicate notifications and escalation work.
 
 // Finance SLA Escalation: escalate overdue approval steps every 30 minutes
 \Illuminate\Support\Facades\Schedule::command('finance:escalate-approvals')

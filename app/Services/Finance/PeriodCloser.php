@@ -261,7 +261,7 @@ class PeriodCloser
         if (config('cache.default') === 'array' && app()->isProduction()) {
             throw new \RuntimeException(
                 'Period reopen requires a persistent cache driver (e.g. database or redis). '
-                . 'Set CACHE_DRIVER=database in your production .env.'
+                . 'Set CACHE_STORE=database in your production .env.'
             );
         }
 

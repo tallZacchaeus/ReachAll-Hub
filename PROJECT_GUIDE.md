@@ -1,6 +1,6 @@
-# Tech Staff Evaluation Platform — Full Project Guide
+# ReachAll Hub — Full Project Guide
 
-> This is the single source of truth for understanding, developing, and deploying the Tech Staff Evaluation Platform. It covers every feature, every model, every route, and every architectural decision in the codebase.
+> This is the single source of truth for understanding, developing, and deploying ReachAll Hub. It covers every feature, every model, every route, and every architectural decision in the codebase.
 
 ---
 
@@ -40,7 +40,7 @@
 
 ## 1. What is This Platform?
 
-The **Tech Staff Evaluation Platform** is a full-stack internal web application built for technology companies to manage their workforce. It replaces scattered spreadsheets, email threads, and disconnected tools with a single unified interface that serves both staff and management.
+**ReachAll Hub** is a full-stack internal web application built for technology companies to manage their workforce. It replaces scattered spreadsheets, email threads, and disconnected tools with a single unified interface that serves both staff and management.
 
 ### For Staff Members
 - View and update their personal profile (via an approval workflow)
