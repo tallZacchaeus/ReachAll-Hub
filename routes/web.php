@@ -539,5 +539,8 @@ Route::post('/logout', function (Request $request) {
     $request->session()->invalidate();
     $request->session()->regenerateToken();
 
-    return redirect('/');
+    // Force a full browser navigation so the Inertia SPA is torn down completely.
+    // A plain redirect() is followed by Inertia as an XHR visit, which leaves the
+    // authenticated shell (sidebar/topbar) mounted while LoginPage renders inside it.
+    return \Inertia\Inertia::location(route('login'));
 })->name('logout');
