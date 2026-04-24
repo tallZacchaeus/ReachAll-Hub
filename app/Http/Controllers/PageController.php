@@ -152,7 +152,7 @@ class PageController extends Controller
             $teamSize = $user->department
                 ? User::where('department', $user->department)
                     ->where('id', '!=', $user->id)
-                    ->where('is_active', true)
+                    ->where('status', 'active')
                     ->count()
                 : 0;
 

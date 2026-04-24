@@ -21,4 +21,34 @@ class DashboardTest extends TestCase
 
         $this->get(route('dashboard'))->assertOk();
     }
+
+    public function test_leader_dashboard_team_size_counts_only_active_users()
+    {
+        $leader = User::factory()->create([
+            'role'           => 'superadmin',
+            'employee_stage' => 'leader',
+            'department'     => 'Engineering',
+            'status'         => 'active',
+        ]);
+
+        // Active teammate — should be counted
+        User::factory()->create([
+            'department' => 'Engineering',
+            'status'     => 'active',
+        ]);
+
+        // Inactive teammate — must NOT be counted
+        User::factory()->create([
+            'department' => 'Engineering',
+            'status'     => 'inactive',
+        ]);
+
+        $this->actingAs($leader);
+
+        $response = $this->get(route('dashboard'));
+        $response->assertOk();
+
+        $props = $response->original->getData()['page']['props'];
+        $this->assertSame(1, $props['teamSize']);
+    }
 }

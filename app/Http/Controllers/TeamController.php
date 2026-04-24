@@ -24,7 +24,7 @@ class TeamController extends Controller
 
         $teamMembers = User::where('department', $department)
             ->where('id', '!=', $user->id)
-            ->where('is_active', true)
+            ->where('status', 'active')
             ->get();
 
         $now = now();

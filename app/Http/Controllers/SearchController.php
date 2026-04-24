@@ -27,7 +27,7 @@ class SearchController extends Controller
             $like = "%{$q}%";
 
             // ── People ──────────────────────────────────────────────────────────
-            $people = User::where('is_active', true)
+            $people = User::where('status', 'active')
                 ->where(fn ($query) => $query
                     ->where('name', 'like', $like)
                     ->orWhere('email', 'like', $like)
