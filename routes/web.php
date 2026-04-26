@@ -56,7 +56,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('notifications', [PageController::class, 'notifications'])->name('notifications');
     Route::get('announcements', [PageController::class, 'announcements'])->name('announcements');
     Route::get('performance-review', fn () => redirect()->route('performance.cycles.index'))->name('performance-review');
-    Route::get('peer-review', fn () => redirect()->route('performance.cycles.index'))->name('peer-review');
+    Route::get('peer-review', fn () => redirect()->route('feedback.requests.index'))->name('peer-review');
 
     // Performance Review Cycles, Reviews, and PIPs (Phase 6)
     Route::prefix('performance')->name('performance.')->group(function () {
@@ -530,6 +530,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/preboarding/{offerLetter}/tasks', [\App\Http\Controllers\Recruitment\PreboardingController::class, 'addTask'])->name('preboarding.tasks.store');
         Route::post('/preboarding/tasks/{preboardingTask}/complete', [\App\Http\Controllers\Recruitment\PreboardingController::class, 'complete'])->name('preboarding.tasks.complete');
         Route::post('/preboarding/tasks/{preboardingTask}/waive', [\App\Http\Controllers\Recruitment\PreboardingController::class, 'waive'])->name('preboarding.tasks.waive');
+    });
+
+    // ── Feedback & 1:1s (Phase 8) ────────────────────────────────────────
+    Route::prefix('feedback')->name('feedback.')->group(function () {
+        Route::get('/requests', [\App\Http\Controllers\Feedback\FeedbackRequestController::class, 'index'])->name('requests.index');
+        Route::post('/requests', [\App\Http\Controllers\Feedback\FeedbackRequestController::class, 'store'])->name('requests.store');
+        Route::get('/requests/{feedbackRequest}', [\App\Http\Controllers\Feedback\FeedbackRequestController::class, 'show'])->name('requests.show');
+        Route::post('/requests/{feedbackRequest}/respond', [\App\Http\Controllers\Feedback\FeedbackRequestController::class, 'respond'])->name('requests.respond');
+        Route::post('/requests/{feedbackRequest}/cancel', [\App\Http\Controllers\Feedback\FeedbackRequestController::class, 'cancel'])->name('requests.cancel');
+        Route::get('/my', [\App\Http\Controllers\Feedback\FeedbackRequestController::class, 'myFeedback'])->name('my');
+
+        Route::get('/1on1s', [\App\Http\Controllers\Feedback\OneOnOneController::class, 'index'])->name('1on1s.index');
+        Route::post('/1on1s', [\App\Http\Controllers\Feedback\OneOnOneController::class, 'store'])->name('1on1s.store');
+        Route::get('/1on1s/{oneOnOne}', [\App\Http\Controllers\Feedback\OneOnOneController::class, 'show'])->name('1on1s.show');
+        Route::put('/1on1s/{oneOnOne}', [\App\Http\Controllers\Feedback\OneOnOneController::class, 'update'])->name('1on1s.update');
     });
 
     // ── Offboarding (Phase 7) ────────────────────────────────────────────

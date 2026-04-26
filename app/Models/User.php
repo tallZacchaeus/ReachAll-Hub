@@ -477,6 +477,28 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(PipPlan::class, 'initiated_by_id');
     }
 
+    // ── Feedback & 1:1 relationships ────────────────────────────────────────
+
+    public function feedbackRequestsAboutMe(): HasMany
+    {
+        return $this->hasMany(FeedbackRequest::class, 'subject_id');
+    }
+
+    public function feedbackRequestsByMe(): HasMany
+    {
+        return $this->hasMany(FeedbackRequest::class, 'requester_id');
+    }
+
+    public function oneOnOnesAsManager(): HasMany
+    {
+        return $this->hasMany(OneOnOne::class, 'manager_id');
+    }
+
+    public function oneOnOnesAsEmployee(): HasMany
+    {
+        return $this->hasMany(OneOnOne::class, 'employee_id');
+    }
+
     // ── Pre-boarding relationships ──────────────────────────────────────────
 
     public function preboarding_tasks(): HasMany
