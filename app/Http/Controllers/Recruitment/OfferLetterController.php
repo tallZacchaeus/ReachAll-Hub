@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Recruitment;
 use App\Http\Controllers\Controller;
 use App\Models\JobApplication;
 use App\Models\OfferLetter;
+use App\Services\AuditLogger;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -97,9 +99,23 @@ class OfferLetterController extends Controller
         }
         $offerLetter->application->update($updates);
 
-        // If accepted, update candidate status
-        if ($data['response'] === 'accepted' && $offerLetter->application->candidate) {
-            $offerLetter->application->candidate->update(['status' => 'hired']);
+        // If accepted, update candidate status and create preboarding tasks
+        if ($data['response'] === 'accepted') {
+            if ($offerLetter->application->candidate) {
+                $offerLetter->application->candidate->update(['status' => 'hired']);
+            }
+
+            $this->createDefaultPreboardingTasks($offerLetter);
+
+            AuditLogger::record(
+                'onboarding',
+                'preboarding_initiated',
+                OfferLetter::class,
+                $offerLetter->id,
+                null,
+                ['offer_letter_id' => $offerLetter->id],
+                $request,
+            );
         }
 
         return back()->with('success', 'Offer response recorded.');
@@ -128,5 +144,36 @@ class OfferLetterController extends Controller
             $offerLetter->document_path,
             'offer_letter_' . $offerLetter->id . '.pdf'
         );
+    }
+
+    /**
+     * Create the standard pre-boarding checklist tasks for a newly accepted offer.
+     *
+     * Due dates are calculated relative to the offer's start date. If no start
+     * date is set, due_date is left null and HR should update it manually.
+     */
+    private function createDefaultPreboardingTasks(OfferLetter $offer): void
+    {
+        // [task_type, title, days_before_start]
+        $defaults = [
+            ['document_upload',  'Upload Valid Government ID (NIN/Passport/Drivers License)', 7],
+            ['compliance_doc',   'Submit Signed Employment Contract',                          3],
+            ['bank_details',     'Provide Bank Account Details for Payroll',                   7],
+            ['document_upload',  'Provide Recent Passport Photograph',                         5],
+            ['policy_ack',       'Acknowledge Employee Handbook',                              5],
+            ['it_access',        'IT Workstation & Access Setup',                              3],
+            ['equipment_request','Confirm Equipment Requirements',                             7],
+        ];
+
+        foreach ($defaults as [$type, $title, $daysToComplete]) {
+            $offer->preboarding_tasks()->create([
+                'task_type' => $type,
+                'title'     => $title,
+                'due_date'  => $offer->start_date
+                    ? Carbon::parse($offer->start_date)->subDays($daysToComplete)->toDateString()
+                    : null,
+                'status'    => 'pending',
+            ]);
+        }
     }
 }

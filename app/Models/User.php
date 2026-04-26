@@ -49,6 +49,15 @@ class User extends Authenticatable implements MustVerifyEmail
         'employment_type',
         'probation_end_date',
         'nin',
+        // Payroll / statutory identification — Phase 5
+        'tin',
+        'bank_name',
+        'bank_account_number',
+        'bank_sort_code',
+        'bvn',
+        'pension_fund_admin',
+        'pension_account_number',
+        'nhf_number',
     ];
 
     /**
@@ -61,6 +70,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'two_factor_secret',
         'two_factor_recovery_codes',
         'remember_token',
+        // High-sensitivity payroll fields — MUST NOT be included in Inertia
+        // props or API responses. These are encrypted at rest via the
+        // 'encrypted' cast and must only be accessed through Eloquent.
+        'bank_account_number',
+        'bvn',
     ];
 
     /**
@@ -78,6 +92,10 @@ class User extends Authenticatable implements MustVerifyEmail
             'date_of_birth'        => 'date',
             'probation_end_date'   => 'date',
             'role_id'              => 'integer',
+            // Encrypted at rest — requires APP_KEY to decrypt.
+            // Never rotate APP_KEY without first decrypting and re-encrypting.
+            'bank_account_number'  => 'encrypted',
+            'bvn'                  => 'encrypted',
         ];
     }
 
@@ -457,5 +475,12 @@ class User extends Authenticatable implements MustVerifyEmail
     public function initiatedPipPlans(): HasMany
     {
         return $this->hasMany(PipPlan::class, 'initiated_by_id');
+    }
+
+    // ── Pre-boarding relationships ──────────────────────────────────────────
+
+    public function preboarding_tasks(): HasMany
+    {
+        return $this->hasMany(PreboardingTask::class, 'user_id');
     }
 }

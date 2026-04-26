@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class OfferLetter extends Model
 {
@@ -39,6 +40,11 @@ class OfferLetter extends Model
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by_id');
+    }
+
+    public function preboarding_tasks(): HasMany
+    {
+        return $this->hasMany(PreboardingTask::class, 'offer_letter_id')->orderBy('due_date');
     }
 
     public function offeredSalaryNaira(): float

@@ -523,6 +523,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/offers/{offerLetter}/respond', [\App\Http\Controllers\Recruitment\OfferLetterController::class, 'respond'])->name('offers.respond');
         Route::post('/offers/{offerLetter}/withdraw', [\App\Http\Controllers\Recruitment\OfferLetterController::class, 'withdraw'])->name('offers.withdraw');
         Route::get('/offers/{offerLetter}/download', [\App\Http\Controllers\Recruitment\OfferLetterController::class, 'download'])->name('offers.download');
+
+        // Pre-boarding / onboarding task management (onboarding.manage)
+        Route::get('/preboarding', [\App\Http\Controllers\Recruitment\PreboardingController::class, 'index'])->name('preboarding.index');
+        Route::get('/preboarding/{offerLetter}', [\App\Http\Controllers\Recruitment\PreboardingController::class, 'showOffer'])->name('preboarding.show');
+        Route::post('/preboarding/{offerLetter}/tasks', [\App\Http\Controllers\Recruitment\PreboardingController::class, 'addTask'])->name('preboarding.tasks.store');
+        Route::post('/preboarding/tasks/{preboardingTask}/complete', [\App\Http\Controllers\Recruitment\PreboardingController::class, 'complete'])->name('preboarding.tasks.complete');
+        Route::post('/preboarding/tasks/{preboardingTask}/waive', [\App\Http\Controllers\Recruitment\PreboardingController::class, 'waive'])->name('preboarding.tasks.waive');
     });
 
     // ── Employee Relations / Case Management ──────────────────────────────
