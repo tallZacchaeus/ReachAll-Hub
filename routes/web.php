@@ -623,6 +623,10 @@ Route::middleware('auth')->prefix('compliance')->name('compliance.')->group(func
     Route::post('/policies/{policy}/versions', [\App\Http\Controllers\Compliance\CompliancePolicyController::class, 'publishVersion'])->name('policies.versions.store');
     Route::post('/policies/{policy}/acknowledge', [\App\Http\Controllers\Compliance\CompliancePolicyController::class, 'acknowledge'])->name('policies.acknowledge');
 
+    // Compliance reports (compliance.report permission)
+    Route::get('/training-report', [\App\Http\Controllers\Compliance\ComplianceTrainingController::class, 'report'])->name('training-report');
+    Route::get('/policy-report', [\App\Http\Controllers\Compliance\CompliancePolicyController::class, 'policyReport'])->name('policy-report');
+
     // Employee self-service
     Route::get('/my', [\App\Http\Controllers\Compliance\MyComplianceController::class, 'index'])->name('my');
     Route::post('/my/documents', [\App\Http\Controllers\Compliance\MyComplianceController::class, 'storeDocument'])->name('my.documents.store');

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { router } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import MainLayout from '@/layouts/MainLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -28,6 +29,7 @@ interface Props {
         links: { url: string | null; label: string; active: boolean }[];
     };
     can_manage: boolean;
+    can_report?: boolean;
     filters: { category?: string };
 }
 
@@ -40,7 +42,7 @@ const CATEGORIES = [
     { value: 'general', label: 'General' },
 ];
 
-export default function CompliancePoliciesPage({ policies, can_manage, filters }: Props) {
+export default function CompliancePoliciesPage({ policies, can_manage, can_report, filters }: Props) {
     const [createOpen, setCreateOpen] = useState(false);
     const [publishOpen, setPublishOpen] = useState<number | null>(null);
     const [publishVersion, setPublishVersion] = useState('');
@@ -78,6 +80,12 @@ export default function CompliancePoliciesPage({ policies, can_manage, filters }
                         <h1 className="text-2xl font-semibold">Compliance Policies</h1>
                         <p className="text-sm text-muted-foreground mt-1">Versioned company policies requiring employee acknowledgement</p>
                     </div>
+                    <div className="flex items-center gap-2">
+                        {can_report && (
+                            <Button variant="outline" asChild>
+                                <Link href={route('compliance.policy-report')}>View Policy Report</Link>
+                            </Button>
+                        )}
                     {can_manage && (
                         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                             <DialogTrigger asChild><Button>Create Policy</Button></DialogTrigger>
@@ -116,6 +124,7 @@ export default function CompliancePoliciesPage({ policies, can_manage, filters }
                             </DialogContent>
                         </Dialog>
                     )}
+                    </div>
                 </div>
 
                 <Card>

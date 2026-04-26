@@ -10,11 +10,14 @@ class ComplianceTrainingAssignment extends Model
     protected $fillable = [
         'training_id', 'user_id', 'assigned_by_id',
         'due_at', 'completed_at', 'status', 'completion_notes',
+        'last_reminded_at', 'reminder_count',
     ];
 
     protected $casts = [
-        'due_at'       => 'date',
-        'completed_at' => 'datetime',
+        'due_at'           => 'date',
+        'completed_at'     => 'datetime',
+        'last_reminded_at' => 'datetime',
+        'reminder_count'   => 'integer',
     ];
 
     public function training(): BelongsTo

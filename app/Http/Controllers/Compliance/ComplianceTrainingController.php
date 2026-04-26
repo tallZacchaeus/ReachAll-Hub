@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\DB;
 
 class ComplianceTrainingController extends Controller
 {
@@ -37,6 +38,7 @@ class ComplianceTrainingController extends Controller
             'assignments' => $assignments,
             'staff_list'  => $staff,
             'filters'     => $request->only('category', 'active_only', 'status'),
+            'can_report'  => $request->user()->hasPermission('compliance.report'),
         ]);
     }
 
@@ -108,6 +110,56 @@ class ComplianceTrainingController extends Controller
         }
 
         return back()->with('success', "{$assigned} assignment(s) created.");
+    }
+
+    public function report(Request $request): Response
+    {
+        abort_unless($request->user()->hasPermission('compliance.report'), 403);
+
+        $statusFilter   = $request->get('status');
+        $trainingFilter = $request->get('training_id');
+
+        $assignments = ComplianceTrainingAssignment::with(['training:id,title,category', 'user:id,name,employee_id'])
+            ->when($trainingFilter, fn ($q) => $q->where('training_id', $trainingFilter))
+            ->when($statusFilter && $statusFilter !== 'all', function ($q) use ($statusFilter) {
+                if ($statusFilter === 'overdue') {
+                    $q->where('status', 'pending')->whereDate('due_at', '<', now());
+                } else {
+                    $q->where('status', $statusFilter);
+                }
+            })
+            ->orderBy('due_at')
+            ->paginate(50)
+            ->withQueryString();
+
+        // Summary stats across ALL assignments (unfiltered).
+        $allStats = ComplianceTrainingAssignment::select('status', DB::raw('count(*) as count'))
+            ->groupBy('status')
+            ->pluck('count', 'status');
+
+        $totalAssigned  = (int) ComplianceTrainingAssignment::count();
+        $completed      = (int) ($allStats['completed'] ?? 0);
+        $overdue        = (int) ComplianceTrainingAssignment::where('status', 'pending')
+            ->whereDate('due_at', '<', now())->count();
+
+        $stats = [
+            'total_employees' => (int) User::where('status', 'active')->count(),
+            'total_assigned'  => $totalAssigned,
+            'completed'       => $completed,
+            'overdue'         => $overdue,
+            'pending'         => (int) ($allStats['pending'] ?? 0),
+        ];
+
+        $trainings = ComplianceTraining::where('is_active', true)
+            ->orderBy('title')
+            ->get(['id', 'title']);
+
+        return Inertia::render('Compliance/ComplianceReportPage', [
+            'assignments' => $assignments,
+            'stats'       => $stats,
+            'trainings'   => $trainings,
+            'filters'     => $request->only('status', 'training_id'),
+        ]);
     }
 
     public function complete(Request $request, ComplianceTraining $training): RedirectResponse

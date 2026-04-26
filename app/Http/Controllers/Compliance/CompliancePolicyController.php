@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CompliancePolicy;
 use App\Models\CompliancePolicyAcknowledgement;
 use App\Models\CompliancePolicyVersion;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -37,7 +38,64 @@ class CompliancePolicyController extends Controller
         return Inertia::render('Compliance/CompliancePoliciesPage', [
             'policies'   => $policies,
             'can_manage' => $canManage,
+            'can_report' => $request->user()->hasPermission('compliance.report'),
             'filters'    => $request->only('category'),
+        ]);
+    }
+
+    public function policyReport(Request $request): Response
+    {
+        abort_unless($request->user()->hasPermission('compliance.report'), 403);
+
+        $activeUsers  = User::where('status', 'active')->get(['id', 'name', 'employee_id']);
+        $totalActive  = $activeUsers->count();
+        $activeIds    = $activeUsers->pluck('id')->all();
+
+        $activePolicies = CompliancePolicy::where('is_active', true)
+            ->whereNotNull('current_version')
+            ->with(['versions' => function ($q) {
+                $q->orderBy('published_at', 'desc');
+            }])
+            ->orderBy('title')
+            ->get();
+
+        $report = $activePolicies->map(function (CompliancePolicy $policy) use ($activeUsers, $activeIds, $totalActive) {
+            $currentVersionRecord = $policy->versions->firstWhere('version', $policy->current_version);
+
+            if (! $currentVersionRecord) {
+                return null;
+            }
+
+            // Users who have acknowledged the current version (real acknowledgements only).
+            $acknowledgedIds = CompliancePolicyAcknowledgement::where('policy_version_id', $currentVersionRecord->id)
+                ->whereIn('user_id', $activeIds)
+                ->whereNotNull('acknowledged_at')
+                ->pluck('user_id')
+                ->toArray();
+
+            $outstandingUsers = $activeUsers
+                ->filter(fn ($u) => ! in_array($u->id, $acknowledgedIds))
+                ->values()
+                ->map(fn ($u) => ['id' => $u->id, 'name' => $u->name, 'employee_id' => $u->employee_id]);
+
+            return [
+                'id'                  => $policy->id,
+                'title'               => $policy->title,
+                'category'            => $policy->category,
+                'current_version'     => $policy->current_version,
+                'published_at'        => $currentVersionRecord->published_at?->toISOString(),
+                'total_employees'     => $totalActive,
+                'acknowledged_count'  => count($acknowledgedIds),
+                'outstanding_count'   => $totalActive - count($acknowledgedIds),
+                'acknowledgement_pct' => $totalActive > 0
+                    ? round((count($acknowledgedIds) / $totalActive) * 100, 1)
+                    : 0,
+                'outstanding_users'   => $outstandingUsers,
+            ];
+        })->filter()->values();
+
+        return Inertia::render('Compliance/PolicyComplianceReportPage', [
+            'report' => $report,
         ]);
     }
 

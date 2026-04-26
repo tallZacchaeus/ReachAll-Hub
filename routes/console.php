@@ -30,3 +30,13 @@ Artisan::command('inspire', function () {
 \Illuminate\Support\Facades\Schedule::command('compliance:check-expiring-documents')
     ->dailyAt('09:00')
     ->withoutOverlapping();
+
+// Compliance: reassign recurring mandatory trainings on the 1st of each month at 2am.
+\Illuminate\Support\Facades\Schedule::command('compliance:reassign-recurring-trainings')
+    ->monthlyOn(1, '02:00')
+    ->withoutOverlapping();
+
+// Compliance: remind employees to acknowledge outstanding policy versions daily at 8am.
+\Illuminate\Support\Facades\Schedule::command('compliance:send-policy-reminders')
+    ->dailyAt('08:00')
+    ->withoutOverlapping();

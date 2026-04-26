@@ -20,6 +20,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Link } from '@inertiajs/react';
 import type { ComplianceTrainingRow, TrainingAssignmentRow, AssignmentStatus } from '@/types/compliance';
 
 interface StaffUser {
@@ -39,6 +40,7 @@ interface Props {
     };
     staff_list: StaffUser[];
     filters: { category?: string; status?: string };
+    can_report?: boolean;
 }
 
 const STATUS_COLORS: Record<AssignmentStatus, string> = {
@@ -57,7 +59,7 @@ const CATEGORIES = [
     { value: 'general', label: 'General' },
 ];
 
-export default function ComplianceTrainingsPage({ trainings, assignments, staff_list, filters }: Props) {
+export default function ComplianceTrainingsPage({ trainings, assignments, staff_list, filters, can_report }: Props) {
     const [createOpen, setCreateOpen] = useState(false);
     const [assignOpen, setAssignOpen] = useState<number | null>(null);
     const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
@@ -103,6 +105,12 @@ export default function ComplianceTrainingsPage({ trainings, assignments, staff_
                         <h1 className="text-2xl font-semibold">Compliance Trainings</h1>
                         <p className="text-sm text-muted-foreground mt-1">Mandatory and optional compliance training catalog</p>
                     </div>
+                    <div className="flex items-center gap-2">
+                        {can_report && (
+                            <Button variant="outline" asChild>
+                                <Link href={route('compliance.training-report')}>View Report</Link>
+                            </Button>
+                        )}
                     <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                         <DialogTrigger asChild><Button>Create Training</Button></DialogTrigger>
                         <DialogContent className="max-w-lg">
@@ -153,6 +161,7 @@ export default function ComplianceTrainingsPage({ trainings, assignments, staff_
                             </div>
                         </DialogContent>
                     </Dialog>
+                    </div>
                 </div>
 
                 <Card>
