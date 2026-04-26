@@ -123,14 +123,6 @@
                 padding-left: 18px;
             }
 
-            .hint {
-                margin-top: 18px;
-                font-size: 13px;
-                color: #6b7280;
-                text-align: center;
-                line-height: 1.5;
-            }
-
             .links {
                 margin-top: 18px;
                 display: flex;

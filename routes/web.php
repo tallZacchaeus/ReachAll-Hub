@@ -57,7 +57,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('staff-enrollment', [StaffEnrollmentController::class, 'index'])->name('staff-enrollment');
     Route::post('staff-enrollment', [StaffEnrollmentController::class, 'store'])->name('staff-enrollment.store');
     Route::put('staff-enrollment/{user}', [StaffEnrollmentController::class, 'update'])->name('staff-enrollment.update');
-    Route::post('staff-enrollment/{user}/resend-verification', [StaffEnrollmentController::class, 'resendVerification'])->name('staff-enrollment.resend-verification');
+    Route::post('staff-enrollment/{user}/resend-verification', [StaffEnrollmentController::class, 'resendVerification'])->middleware('throttle:5,1')->name('staff-enrollment.resend-verification');
     Route::patch('staff-enrollment/{user}/status', [StaffEnrollmentController::class, 'toggleStatus'])->name('staff-enrollment.toggle-status');
     Route::delete('staff-enrollment/{user}', [StaffEnrollmentController::class, 'destroy'])->name('staff-enrollment.destroy');
     Route::get('settings-overview', [PageController::class, 'settings'])->name('settings-overview');

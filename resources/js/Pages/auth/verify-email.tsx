@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Head, useForm, usePage } from "@inertiajs/react";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import { ArrowRight, CheckCircle2, KeyRound, Mail } from "lucide-react";
 import { motion } from "motion/react";
 import { SharedData } from "@/types";
@@ -126,7 +126,7 @@ export default function VerifyEmail({ status }: VerifyEmailProps) {
                                         type="button"
                                         variant="link"
                                         className="text-brand"
-                                        onClick={() => resendForm.post("/logout")}
+                                        onClick={() => router.post("/logout")}
                                     >
                                         Log Out
                                     </Button>

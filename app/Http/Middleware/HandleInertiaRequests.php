@@ -43,7 +43,7 @@ class HandleInertiaRequests extends Middleware
                 // CAT8-01: Expose only the fields the frontend needs — never leak
                 // hashed passwords, remember_tokens, or internal timestamps.
                 'user' => $request->user() ? [
-                    ...$request->user()->only(['id', 'employee_id', 'name', 'email', 'role', 'employee_stage', 'email_verified_at']),
+                    ...$request->user()->only(['id', 'employee_id', 'name', 'email', 'role', 'employee_stage']),
                     'permissions' => $request->user()->getPermissions(),
                 ] : null,
             ],
