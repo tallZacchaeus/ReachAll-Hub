@@ -2,8 +2,10 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Notifications\Auth\VerifyEmailWithCode;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
@@ -19,6 +21,8 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register()
     {
+        Notification::fake();
+
         $response = $this->post(route('register.store'), [
             'name' => 'Test User',
             'email' => 'test@example.com',
@@ -32,5 +36,7 @@ class RegistrationTest extends TestCase
         $user = User::query()->where('email', 'test@example.com')->firstOrFail();
 
         $this->assertMatchesRegularExpression('/^EMP\d{4}$/', (string) $user->employee_id);
+        $this->assertNull($user->email_verified_at);
+        Notification::assertSentTo($user, VerifyEmailWithCode::class);
     }
 }

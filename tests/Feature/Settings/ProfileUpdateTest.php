@@ -2,8 +2,10 @@
 
 namespace Tests\Feature\Settings;
 
+use App\Notifications\Auth\VerifyEmailWithCode;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class ProfileUpdateTest extends TestCase
@@ -23,6 +25,8 @@ class ProfileUpdateTest extends TestCase
 
     public function test_profile_information_can_be_updated()
     {
+        Notification::fake();
+
         $user = User::factory()->create();
 
         $response = $this
@@ -41,6 +45,7 @@ class ProfileUpdateTest extends TestCase
         $this->assertSame('Test User', $user->name);
         $this->assertSame('test@example.com', $user->email);
         $this->assertNull($user->email_verified_at);
+        Notification::assertSentTo($user, VerifyEmailWithCode::class);
     }
 
     public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged()

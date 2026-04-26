@@ -22,6 +22,14 @@ class DashboardTest extends TestCase
         $this->get(route('dashboard'))->assertOk();
     }
 
+    public function test_unverified_users_are_redirected_to_the_verification_notice()
+    {
+        $this->actingAs(User::factory()->unverified()->create());
+
+        $this->get(route('dashboard'))
+            ->assertRedirect(route('verification.notice'));
+    }
+
     public function test_leader_dashboard_team_size_counts_only_active_users()
     {
         $leader = User::factory()->create([

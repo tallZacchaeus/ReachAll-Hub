@@ -2,9 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Notifications\Auth\VerifyEmailWithCode;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -48,6 +50,7 @@ class StaffEnrollmentTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page
                 ->component('StaffEnrollmentPage')
                 ->has('staffMembers', 2)
+                ->where('staffMembers.0.emailVerified', true)
                 ->has('departments')
                 ->has('positions')
                 ->has('roles')
@@ -56,6 +59,8 @@ class StaffEnrollmentTest extends TestCase
 
     public function test_hr_users_can_enroll_staff_members(): void
     {
+        Notification::fake();
+
         $admin = User::factory()->create([
             'role' => 'hr',
         ]);
@@ -81,11 +86,15 @@ class StaffEnrollmentTest extends TestCase
         $this->assertSame('John Smith', $user->name);
         $this->assertSame('management', $user->role);
         $this->assertSame('active', $user->status);
+        $this->assertNull($user->email_verified_at);
         $this->assertTrue(Hash::check('password123', $user->password));
+        Notification::assertSentTo($user, VerifyEmailWithCode::class);
     }
 
     public function test_hr_users_can_update_and_toggle_staff_status(): void
     {
+        Notification::fake();
+
         $admin = User::factory()->create([
             'role' => 'hr',
         ]);
@@ -119,6 +128,8 @@ class StaffEnrollmentTest extends TestCase
         $this->assertSame('Graphics Design', $staff->department);
         $this->assertSame('Graphic Designer', $staff->position);
         $this->assertSame('hr', $staff->role);
+        $this->assertNull($staff->email_verified_at);
+        Notification::assertSentTo($staff, VerifyEmailWithCode::class);
 
         $this->actingAs($admin)
             ->from(route('staff-enrollment'))
@@ -143,5 +154,48 @@ class StaffEnrollmentTest extends TestCase
             ->assertSessionHas('error', 'You cannot remove your own account.');
 
         $this->assertNotNull($admin->fresh());
+    }
+
+    public function test_hr_users_can_resend_verification_to_unverified_staff(): void
+    {
+        Notification::fake();
+
+        $admin = User::factory()->create([
+            'role' => 'hr',
+        ]);
+
+        $staff = User::factory()->unverified()->create([
+            'role' => 'staff',
+            'email' => 'pending.staff@example.com',
+        ]);
+
+        $this->actingAs($admin)
+            ->from(route('staff-enrollment'))
+            ->post(route('staff-enrollment.resend-verification', $staff))
+            ->assertRedirect(route('staff-enrollment'))
+            ->assertSessionHas('success', 'Verification email resent successfully.');
+
+        Notification::assertSentTo($staff, VerifyEmailWithCode::class);
+    }
+
+    public function test_hr_users_cannot_resend_verification_to_verified_staff(): void
+    {
+        Notification::fake();
+
+        $admin = User::factory()->create([
+            'role' => 'hr',
+        ]);
+
+        $staff = User::factory()->create([
+            'role' => 'staff',
+        ]);
+
+        $this->actingAs($admin)
+            ->from(route('staff-enrollment'))
+            ->post(route('staff-enrollment.resend-verification', $staff))
+            ->assertRedirect(route('staff-enrollment'))
+            ->assertSessionHas('error', 'This user has already verified their email address.');
+
+        Notification::assertNothingSent();
     }
 }

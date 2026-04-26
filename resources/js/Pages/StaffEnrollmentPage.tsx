@@ -29,7 +29,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { UserPlus, Search, Edit, Trash2, CheckCircle, XCircle, Download, Upload } from "lucide-react";
+import { UserPlus, Search, Edit, Trash2, CheckCircle, XCircle, Download, Upload, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
@@ -39,6 +39,7 @@ interface StaffMember {
   firstName: string;
   lastName: string;
   email: string;
+  emailVerified: boolean;
   department: string;
   role: string;
   position: string;
@@ -169,6 +170,12 @@ export default function StaffEnrollmentPage({
 
   const handleToggleStatus = (id: string) => {
     router.patch(`/staff-enrollment/${id}/status`, {}, {
+      preserveScroll: true,
+    });
+  };
+
+  const handleResendVerification = (staff: StaffMember) => {
+    router.post(`/staff-enrollment/${staff.id}/resend-verification`, {}, {
       preserveScroll: true,
     });
   };
@@ -636,6 +643,11 @@ export default function StaffEnrollmentPage({
                               {staff.firstName} {staff.lastName}
                             </p>
                             <p className="text-sm text-muted-foreground">{staff.email}</p>
+                            <p
+                              className={`text-xs ${staff.emailVerified ? "text-green-600" : "text-amber-600"}`}
+                            >
+                              {staff.emailVerified ? "Email verified" : "Verification pending"}
+                            </p>
                           </div>
                         </div>
                       </TableCell>
@@ -686,11 +698,25 @@ export default function StaffEnrollmentPage({
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-2">
+                          {!staff.emailVerified && (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleResendVerification(staff)}
+                              className="h-8 w-8 p-0 text-amber-600 hover:text-amber-700"
+                              aria-label={`Resend verification email to ${staff.firstName} ${staff.lastName}`}
+                              title="Resend verification email"
+                            >
+                              <Mail className="w-4 h-4" />
+                            </Button>
+                          )}
                           <Button
                             size="sm"
                             variant="ghost"
                             onClick={() => handleEditStaff(staff)}
                             className="h-8 w-8 p-0"
+                            aria-label={`Edit ${staff.firstName} ${staff.lastName}`}
+                            title="Edit staff member"
                           >
                             <Edit className="w-4 h-4" />
                           </Button>
@@ -699,6 +725,12 @@ export default function StaffEnrollmentPage({
                             variant="ghost"
                             onClick={() => handleToggleStatus(staff.id)}
                             className="h-8 w-8 p-0"
+                            aria-label={
+                              staff.status === "Active"
+                                ? `Deactivate ${staff.firstName} ${staff.lastName}`
+                                : `Activate ${staff.firstName} ${staff.lastName}`
+                            }
+                            title={staff.status === "Active" ? "Deactivate staff member" : "Activate staff member"}
                           >
                             {staff.status === "Active" ? (
                               <XCircle className="w-4 h-4 text-orange-600" />
@@ -711,6 +743,8 @@ export default function StaffEnrollmentPage({
                             variant="ghost"
                             onClick={() => handleDeleteStaff(staff.id)}
                             className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+                            aria-label={`Delete ${staff.firstName} ${staff.lastName}`}
+                            title="Delete staff member"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>

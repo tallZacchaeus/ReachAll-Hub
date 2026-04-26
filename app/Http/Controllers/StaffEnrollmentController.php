@@ -90,7 +90,7 @@ class StaffEnrollmentController extends Controller
             'status' => 'active',
             'employee_stage' => $validated['employee_stage'] ?? 'performer',
             'password' => Hash::make($validated['password']),
-            'email_verified_at' => now(),
+            'email_verified_at' => null,
         ]);
 
         // Auto-assign default checklists matching the user's stage
@@ -106,7 +106,18 @@ class StaffEnrollmentController extends Controller
             }
         }
 
-        return back()->with('success', $validated['firstName'].' '.$validated['lastName'].' has been enrolled successfully.');
+        $verificationWarning = $this->sendVerificationEmail($newUser);
+
+        $response = back()->with(
+            'success',
+            $validated['firstName'].' '.$validated['lastName'].' has been enrolled successfully.'
+        );
+
+        if ($verificationWarning) {
+            $response->with('error', $verificationWarning);
+        }
+
+        return $response;
     }
 
     public function update(Request $request, User $user): RedirectResponse
@@ -115,7 +126,9 @@ class StaffEnrollmentController extends Controller
 
         $validated = $request->validate($this->rules($user, false));
 
-        $user->update([
+        $emailChanged = $user->email !== $validated['email'];
+
+        $user->forceFill([
             'employee_id' => $validated['employeeId'],
             'name' => trim($validated['firstName'].' '.$validated['lastName']),
             'email' => $validated['email'],
@@ -123,9 +136,23 @@ class StaffEnrollmentController extends Controller
             'position' => $validated['position'],
             'role' => $this->normalizeRole($validated['role']),
             'employee_stage' => $validated['employee_stage'] ?? $user->employee_stage ?? 'performer',
-        ]);
+            'email_verified_at' => $emailChanged ? null : $user->email_verified_at,
+        ])->save();
 
-        return back()->with('success', 'Staff information updated successfully.');
+        $verificationWarning = $emailChanged ? $this->sendVerificationEmail($user) : null;
+
+        $response = back()->with(
+            'success',
+            $emailChanged
+                ? 'Staff information updated. The user must verify the new email address before accessing the platform.'
+                : 'Staff information updated successfully.'
+        );
+
+        if ($verificationWarning) {
+            $response->with('error', $verificationWarning);
+        }
+
+        return $response;
     }
 
     public function destroy(Request $request, User $user): RedirectResponse
@@ -149,6 +176,23 @@ class StaffEnrollmentController extends Controller
         $user->update(['status' => $nextStatus]);
 
         return back()->with('success', 'Status updated successfully.');
+    }
+
+    public function resendVerification(Request $request, User $user): RedirectResponse
+    {
+        $this->authorizeAdmin($request);
+
+        if ($user->hasVerifiedEmail()) {
+            return back()->with('error', 'This user has already verified their email address.');
+        }
+
+        $verificationWarning = $this->sendVerificationEmail($user);
+
+        if ($verificationWarning) {
+            return back()->with('error', $verificationWarning);
+        }
+
+        return back()->with('success', 'Verification email resent successfully.');
     }
 
     /**
@@ -192,6 +236,7 @@ class StaffEnrollmentController extends Controller
             'firstName' => $firstName,
             'lastName' => $lastName,
             'email' => $user->email,
+            'emailVerified' => $user->hasVerifiedEmail(),
             'department' => $user->department ?? 'Unassigned',
             'role' => self::ROLE_LABELS[$user->role] ?? ucfirst((string) $user->role),
             'position' => $user->position ?? 'Unassigned',
@@ -226,6 +271,19 @@ class StaffEnrollmentController extends Controller
     {
         if (! $request->user()?->hasPermission('staff.enroll')) {
             abort(403, 'Unauthorized action.');
+        }
+    }
+
+    private function sendVerificationEmail(User $user): ?string
+    {
+        try {
+            $user->sendEmailVerificationNotification();
+
+            return null;
+        } catch (\Throwable $e) {
+            report($e);
+
+            return 'The account was saved, but the verification email could not be sent. Check your mail configuration and resend verification.';
         }
     }
 }

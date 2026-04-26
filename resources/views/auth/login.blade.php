@@ -152,7 +152,7 @@
     </head>
     <body>
         <div class="card">
-            <div class="logo">TS</div>
+            <div class="logo">RH</div>
             <h1>Welcome Back</h1>
             <p class="subtitle">Sign in with your employee ID or email address.</p>
 
@@ -179,7 +179,7 @@
                     name="employee_id"
                     type="text"
                     value="{{ old('employee_id') }}"
-                    placeholder="EMP1000 or test@example.com"
+                    placeholder="EMP1000 or name@yourcompany.com"
                     autocomplete="username"
                     required
                 >
@@ -206,8 +206,6 @@
                     <a href="{{ route('register') }}">Create an account</a>
                 @endif
             </div>
-
-            <p class="hint">Local demo account: <strong>test@example.com</strong> / <strong>password</strong></p>
         </div>
     </body>
 </html>

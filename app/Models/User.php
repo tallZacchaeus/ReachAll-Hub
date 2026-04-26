@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Notifications\Auth\VerifyEmailWithCode;
 use App\Services\Finance\FinanceRoleHelper;
+use App\Services\Auth\EmailVerificationCodeService;
 use App\Services\PermissionService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -101,6 +104,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function directReports(): HasMany
     {
         return $this->hasMany(User::class, 'reports_to_id');
+    }
+
+    public function emailVerificationCode(): HasOne
+    {
+        return $this->hasOne(EmailVerificationCode::class);
     }
 
     public function lifecycleEvents(): HasMany
@@ -220,6 +228,13 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return PermissionService::permissionsForRole($this->role);
+    }
+
+    public function sendEmailVerificationNotification(): void
+    {
+        $code = app(EmailVerificationCodeService::class)->issue($this);
+
+        $this->notify(new VerifyEmailWithCode($code));
     }
 
     // ── HR Document vault relationships ────────────────────────────────────

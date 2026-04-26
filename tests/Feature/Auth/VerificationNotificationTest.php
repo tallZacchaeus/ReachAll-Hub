@@ -3,7 +3,7 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
-use Illuminate\Auth\Notifications\VerifyEmail;
+use App\Notifications\Auth\VerifyEmailWithCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
@@ -24,7 +24,11 @@ class VerificationNotificationTest extends TestCase
             ->post(route('verification.send'))
             ->assertRedirect();
 
-        Notification::assertSentTo($user, VerifyEmail::class);
+        Notification::assertSentTo($user, VerifyEmailWithCode::class);
+        $this->assertDatabaseHas('email_verification_codes', [
+            'user_id' => $user->id,
+            'attempts' => 0,
+        ]);
     }
 
     public function test_does_not_send_verification_notification_if_email_is_verified(): void
