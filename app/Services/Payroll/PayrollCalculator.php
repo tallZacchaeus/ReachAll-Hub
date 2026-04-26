@@ -42,17 +42,21 @@ class PayrollCalculator
     ];
 
     private const PENSION_EMPLOYEE_RATE = 0.08;
+
     private const PENSION_EMPLOYER_RATE = 0.10;
-    private const NHF_RATE              = 0.025;
-    private const NSITF_RATE            = 0.01;
+
+    private const NHF_RATE = 0.025;
+
+    private const NSITF_RATE = 0.01;
+
     // Consolidated Relief Allowance flat component (kobo/year)
-    private const CRA_FLAT_KOBO         = 20_000_000; // ₦200,000
+    private const CRA_FLAT_KOBO = 20_000_000; // ₦200,000
 
     /**
      * Compute a single employee's monthly payslip figures.
      *
-     * @param  EmployeeSalary  $salary         Current salary record
-     * @param  int             $otherDeductionsKobo  Loan/advance instalments for this cycle
+     * @param  EmployeeSalary  $salary  Current salary record
+     * @param  int  $otherDeductionsKobo  Loan/advance instalments for this cycle
      * @return array{
      *   basic_kobo: int,
      *   housing_kobo: int,
@@ -70,11 +74,11 @@ class PayrollCalculator
      */
     public static function compute(EmployeeSalary $salary, int $otherDeductionsKobo = 0): array
     {
-        $basic     = $salary->basic_kobo;
-        $housing   = $salary->housing_kobo;
+        $basic = $salary->basic_kobo;
+        $housing = $salary->housing_kobo;
         $transport = $salary->transport_kobo;
-        $other     = $salary->other_allowances_kobo;
-        $gross     = $basic + $housing + $transport + $other;
+        $other = $salary->other_allowances_kobo;
+        $gross = $basic + $housing + $transport + $other;
 
         // Pensionable pay (monthly)
         $pensionable = $basic + $housing + $transport;
@@ -91,16 +95,16 @@ class PayrollCalculator
         $nsitf = (int) round($gross * self::NSITF_RATE);
 
         // PAYE: annual basis
-        $annualGross    = $gross * 12;
-        $annualPension  = $pensionEmployee * 12;
-        $annualNhf      = $nhf * 12;
+        $annualGross = $gross * 12;
+        $annualPension = $pensionEmployee * 12;
+        $annualNhf = $nhf * 12;
 
-        $annualTaxable  = $annualGross - $annualPension - $annualNhf;
+        $annualTaxable = $annualGross - $annualPension - $annualNhf;
 
         // CRA = max(₦200,000, 200,000 + 20% of gross)
         $cra20pct = (int) round($annualGross * 0.20);
-        $cra      = self::CRA_FLAT_KOBO + max(0, $cra20pct);
-        $cra      = max(self::CRA_FLAT_KOBO, $cra);
+        $cra = self::CRA_FLAT_KOBO + max(0, $cra20pct);
+        $cra = max(self::CRA_FLAT_KOBO, $cra);
 
         $netTaxable = max(0, $annualTaxable - $cra);
 
@@ -112,18 +116,18 @@ class PayrollCalculator
         $net = max(0, $net);
 
         return [
-            'basic_kobo'            => $basic,
-            'housing_kobo'          => $housing,
-            'transport_kobo'        => $transport,
+            'basic_kobo' => $basic,
+            'housing_kobo' => $housing,
+            'transport_kobo' => $transport,
             'other_allowances_kobo' => $other,
-            'gross_kobo'            => $gross,
+            'gross_kobo' => $gross,
             'pension_employee_kobo' => $pensionEmployee,
             'pension_employer_kobo' => $pensionEmployer,
-            'nhf_kobo'              => $nhf,
-            'nsitf_kobo'            => $nsitf,
-            'paye_kobo'             => $monthlyPaye,
+            'nhf_kobo' => $nhf,
+            'nsitf_kobo' => $nsitf,
+            'paye_kobo' => $monthlyPaye,
             'other_deductions_kobo' => $otherDeductionsKobo,
-            'net_kobo'              => $net,
+            'net_kobo' => $net,
         ];
     }
 
@@ -136,7 +140,7 @@ class PayrollCalculator
         // Convert to naira for band comparisons
         $netTaxableNaira = $netTaxableKobo / 100;
 
-        $tax  = 0.0;
+        $tax = 0.0;
         $prev = 0.0;
 
         foreach (self::PAYE_BANDS as [$upper, $rate]) {

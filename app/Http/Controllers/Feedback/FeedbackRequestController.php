@@ -10,7 +10,6 @@ use App\Models\User;
 use App\Services\AuditLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -30,28 +29,28 @@ class FeedbackRequestController extends Controller
             'requester:id,name',
         ])->withCount('responses');
 
-        if (!$isHr) {
+        if (! $isHr) {
             $query->where(function ($q) use ($user) {
                 $q->where('subject_id', $user->id)
-                  ->orWhere('requester_id', $user->id);
+                    ->orWhere('requester_id', $user->id);
             });
         }
 
         $requests = $query->latest()->get()->map(fn ($r) => [
-            'id'              => $r->id,
-            'subject'         => $r->subject ? [
-                'id'          => $r->subject->id,
-                'name'        => $r->subject->name,
+            'id' => $r->id,
+            'subject' => $r->subject ? [
+                'id' => $r->subject->id,
+                'name' => $r->subject->name,
                 'employee_id' => $r->subject->employee_id,
             ] : null,
-            'requester'       => $r->requester ? [
-                'id'   => $r->requester->id,
+            'requester' => $r->requester ? [
+                'id' => $r->requester->id,
                 'name' => $r->requester->name,
             ] : null,
-            'type'            => $r->type,
-            'message'         => $r->message,
-            'due_date'        => $r->due_date?->toDateString(),
-            'status'          => $r->status,
+            'type' => $r->type,
+            'message' => $r->message,
+            'due_date' => $r->due_date?->toDateString(),
+            'status' => $r->status,
             'responses_count' => $r->responses_count,
         ]);
 
@@ -61,7 +60,7 @@ class FeedbackRequestController extends Controller
             ->get();
 
         return Inertia::render('Feedback/FeedbackRequestsPage', [
-            'requests'  => $requests,
+            'requests' => $requests,
             'employees' => $employees,
             'canManage' => $isHr,
         ]);
@@ -77,26 +76,26 @@ class FeedbackRequestController extends Controller
         $canManage = $user->hasPermission('feedback.manage');
 
         $validated = $request->validate([
-            'subject_id'      => ['required', 'integer', 'exists:users,id'],
-            'type'            => ['required', 'in:360,peer,upward,downward'],
-            'due_date'        => ['nullable', 'date', 'after:today'],
-            'message'         => ['nullable', 'string', 'max:1000'],
+            'subject_id' => ['required', 'integer', 'exists:users,id'],
+            'type' => ['required', 'in:360,peer,upward,downward'],
+            'due_date' => ['nullable', 'date', 'after:today'],
+            'message' => ['nullable', 'string', 'max:1000'],
             'review_cycle_id' => ['nullable', 'integer', 'exists:review_cycles,id'],
         ]);
 
         // Non-HR users can only request feedback about themselves
-        if (!$canManage && (int) $validated['subject_id'] !== $user->id) {
+        if (! $canManage && (int) $validated['subject_id'] !== $user->id) {
             abort(403, 'You may only request feedback about yourself.');
         }
 
         $feedbackRequest = FeedbackRequest::create([
-            'requester_id'    => $user->id,
-            'subject_id'      => $validated['subject_id'],
+            'requester_id' => $user->id,
+            'subject_id' => $validated['subject_id'],
             'review_cycle_id' => $validated['review_cycle_id'] ?? null,
-            'type'            => $validated['type'],
-            'message'         => $validated['message'] ?? null,
-            'due_date'        => $validated['due_date'] ?? null,
-            'status'          => 'pending',
+            'type' => $validated['type'],
+            'message' => $validated['message'] ?? null,
+            'due_date' => $validated['due_date'] ?? null,
+            'status' => 'pending',
         ]);
 
         AuditLogger::record(
@@ -126,7 +125,7 @@ class FeedbackRequestController extends Controller
             || $feedbackRequest->requester_id === $user->id
             || $feedbackRequest->subject_id === $user->id;
 
-        if (!$canView) {
+        if (! $canView) {
             abort(403);
         }
 
@@ -137,15 +136,15 @@ class FeedbackRequestController extends Controller
             ->get()
             ->map(function (FeedbackResponse $resp) use ($isHr) {
                 $data = [
-                    'id'             => $resp->id,
-                    'is_anonymous'   => $resp->is_anonymous,
-                    'ratings'        => $resp->ratings,
+                    'id' => $resp->id,
+                    'is_anonymous' => $resp->is_anonymous,
+                    'ratings' => $resp->ratings,
                     'overall_rating' => $resp->overall_rating,
-                    'strengths'      => $resp->strengths,
-                    'improvements'   => $resp->improvements,
-                    'submitted_at'   => $resp->submitted_at?->toIso8601String(),
+                    'strengths' => $resp->strengths,
+                    'improvements' => $resp->improvements,
+                    'submitted_at' => $resp->submitted_at?->toIso8601String(),
                     // respondent exposed only to HR and only when NOT anonymous
-                    'respondent'     => ($isHr && !$resp->is_anonymous && $resp->respondent_id)
+                    'respondent' => ($isHr && ! $resp->is_anonymous && $resp->respondent_id)
                         ? ['id' => $resp->respondent_id, 'name' => $resp->respondent?->name]
                         : null,
                 ];
@@ -155,35 +154,35 @@ class FeedbackRequestController extends Controller
 
         $aggregated = [
             'competency_averages' => $feedbackRequest->aggregatedRatings(),
-            'overall_average'     => $feedbackRequest->overallAverage(),
-            'response_count'      => $responses->count(),
+            'overall_average' => $feedbackRequest->overallAverage(),
+            'response_count' => $responses->count(),
         ];
 
         return Inertia::render('Feedback/FeedbackRequestPage', [
             'feedbackRequest' => [
-                'id'          => $feedbackRequest->id,
-                'subject'     => $feedbackRequest->subject ? [
-                    'id'          => $feedbackRequest->subject->id,
-                    'name'        => $feedbackRequest->subject->name,
+                'id' => $feedbackRequest->id,
+                'subject' => $feedbackRequest->subject ? [
+                    'id' => $feedbackRequest->subject->id,
+                    'name' => $feedbackRequest->subject->name,
                     'employee_id' => $feedbackRequest->subject->employee_id,
                 ] : null,
-                'requester'   => $feedbackRequest->requester ? [
-                    'id'   => $feedbackRequest->requester->id,
+                'requester' => $feedbackRequest->requester ? [
+                    'id' => $feedbackRequest->requester->id,
                     'name' => $feedbackRequest->requester->name,
                 ] : null,
                 'review_cycle' => $feedbackRequest->reviewCycle ? [
-                    'id'   => $feedbackRequest->reviewCycle->id,
+                    'id' => $feedbackRequest->reviewCycle->id,
                     'name' => $feedbackRequest->reviewCycle->name,
                 ] : null,
-                'type'        => $feedbackRequest->type,
-                'message'     => $feedbackRequest->message,
-                'due_date'    => $feedbackRequest->due_date?->toDateString(),
-                'status'      => $feedbackRequest->status,
+                'type' => $feedbackRequest->type,
+                'message' => $feedbackRequest->message,
+                'due_date' => $feedbackRequest->due_date?->toDateString(),
+                'status' => $feedbackRequest->status,
             ],
-            'responses'   => $responses,
-            'aggregated'  => $aggregated,
-            'canManage'   => $isHr,
-            'isSubject'   => $feedbackRequest->subject_id === $user->id,
+            'responses' => $responses,
+            'aggregated' => $aggregated,
+            'canManage' => $isHr,
+            'isSubject' => $feedbackRequest->subject_id === $user->id,
         ]);
     }
 
@@ -195,7 +194,7 @@ class FeedbackRequestController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->hasPermission('feedback.submit')) {
+        if (! $user->hasPermission('feedback.submit')) {
             abort(403, 'You do not have permission to submit feedback.');
         }
 
@@ -209,12 +208,12 @@ class FeedbackRequestController extends Controller
         }
 
         $validated = $request->validate([
-            'ratings'        => ['nullable', 'array'],
-            'ratings.*'      => ['integer', 'min:1', 'max:5'],
+            'ratings' => ['nullable', 'array'],
+            'ratings.*' => ['integer', 'min:1', 'max:5'],
             'overall_rating' => ['nullable', 'integer', 'min:1', 'max:5'],
-            'strengths'      => ['nullable', 'string', 'max:2000'],
-            'improvements'   => ['nullable', 'string', 'max:2000'],
-            'is_anonymous'   => ['boolean'],
+            'strengths' => ['nullable', 'string', 'max:2000'],
+            'improvements' => ['nullable', 'string', 'max:2000'],
+            'is_anonymous' => ['boolean'],
         ]);
 
         $existingResponse = FeedbackResponse::where('feedback_request_id', $feedbackRequest->id)
@@ -223,13 +222,13 @@ class FeedbackRequestController extends Controller
 
         $responseData = [
             'feedback_request_id' => $feedbackRequest->id,
-            'respondent_id'       => $user->id,
-            'is_anonymous'        => $validated['is_anonymous'] ?? false,
-            'ratings'             => $validated['ratings'] ?? null,
-            'overall_rating'      => $validated['overall_rating'] ?? null,
-            'strengths'           => $validated['strengths'] ?? null,
-            'improvements'        => $validated['improvements'] ?? null,
-            'submitted_at'        => now(),
+            'respondent_id' => $user->id,
+            'is_anonymous' => $validated['is_anonymous'] ?? false,
+            'ratings' => $validated['ratings'] ?? null,
+            'overall_rating' => $validated['overall_rating'] ?? null,
+            'strengths' => $validated['strengths'] ?? null,
+            'improvements' => $validated['improvements'] ?? null,
+            'submitted_at' => now(),
         ];
 
         if ($existingResponse) {
@@ -251,7 +250,7 @@ class FeedbackRequestController extends Controller
             null,
             [
                 'feedback_request_id' => $feedbackRequest->id,
-                'is_anonymous'        => $response->is_anonymous,
+                'is_anonymous' => $response->is_anonymous,
             ],
             $request,
         );
@@ -269,7 +268,7 @@ class FeedbackRequestController extends Controller
         $canCancel = $user->hasPermission('feedback.manage')
             || $feedbackRequest->requester_id === $user->id;
 
-        if (!$canCancel) {
+        if (! $canCancel) {
             abort(403);
         }
 
@@ -302,18 +301,18 @@ class FeedbackRequestController extends Controller
             ->latest()
             ->get()
             ->map(fn ($r) => [
-                'id'              => $r->id,
-                'requester'       => $r->requester ? ['id' => $r->requester->id, 'name' => $r->requester->name] : null,
-                'review_cycle'    => $r->reviewCycle ? ['id' => $r->reviewCycle->id, 'name' => $r->reviewCycle->name] : null,
-                'type'            => $r->type,
-                'status'          => $r->status,
-                'due_date'        => $r->due_date?->toDateString(),
+                'id' => $r->id,
+                'requester' => $r->requester ? ['id' => $r->requester->id, 'name' => $r->requester->name] : null,
+                'review_cycle' => $r->reviewCycle ? ['id' => $r->reviewCycle->id, 'name' => $r->reviewCycle->name] : null,
+                'type' => $r->type,
+                'status' => $r->status,
+                'due_date' => $r->due_date?->toDateString(),
                 'responses_count' => $r->responses_count,
                 // Include aggregated data for completed requests
                 'aggregated' => $r->status === 'completed' ? [
                     'competency_averages' => $r->aggregatedRatings(),
-                    'overall_average'     => $r->overallAverage(),
-                    'response_count'      => $r->responses_count,
+                    'overall_average' => $r->overallAverage(),
+                    'response_count' => $r->responses_count,
                 ] : null,
             ]);
 
@@ -327,23 +326,23 @@ class FeedbackRequestController extends Controller
             ->latest()
             ->get()
             ->map(fn ($r) => [
-                'id'       => $r->id,
-                'subject'  => $r->subject ? [
-                    'id'          => $r->subject->id,
-                    'name'        => $r->subject->name,
+                'id' => $r->id,
+                'subject' => $r->subject ? [
+                    'id' => $r->subject->id,
+                    'name' => $r->subject->name,
                     'employee_id' => $r->subject->employee_id,
                 ] : null,
-                'type'     => $r->type,
+                'type' => $r->type,
                 'due_date' => $r->due_date?->toDateString(),
-                'message'  => $r->message,
+                'message' => $r->message,
             ]);
 
         $competencies = ReviewCompetency::orderBy('sort_order')->get(['id', 'name', 'slug']);
 
         return Inertia::render('Feedback/MyFeedbackPage', [
-            'myRequests'    => $myRequests,
+            'myRequests' => $myRequests,
             'pendingRespond' => $pendingRespond,
-            'competencies'  => $competencies,
+            'competencies' => $competencies,
         ]);
     }
 

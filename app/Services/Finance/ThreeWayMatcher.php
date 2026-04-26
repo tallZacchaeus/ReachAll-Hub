@@ -46,7 +46,7 @@ class ThreeWayMatcher
         // ── 1. Vendor consistency ────────────────────────────────────────────
         if ($req->vendor_id && $invoice->vendor_id && $req->vendor_id !== $invoice->vendor_id) {
             $flags[] = [
-                'code'        => 'VENDOR_MISMATCH',
+                'code' => 'VENDOR_MISMATCH',
                 'description' => 'Invoice vendor does not match the requisition vendor.',
             ];
         }
@@ -55,7 +55,7 @@ class ThreeWayMatcher
         $varianceKobo = $invoice->amount_kobo - $req->amount_kobo;
         if (\abs($varianceKobo) > self::TOLERANCE_KOBO) {
             $flags[] = [
-                'code'        => 'INVOICE_AMOUNT_VARIANCE',
+                'code' => 'INVOICE_AMOUNT_VARIANCE',
                 'description' => sprintf(
                     'Invoice amount %s differs from requisition amount %s (variance: %s).',
                     MoneyHelper::format($invoice->amount_kobo),
@@ -69,9 +69,9 @@ class ThreeWayMatcher
         $hasVendorMismatch = collect($flags)->contains('code', 'VENDOR_MISMATCH');
 
         $matchStatus = match (true) {
-            empty($flags)      => 'matched',
+            empty($flags) => 'matched',
             $hasVendorMismatch => 'blocked',  // vendor mismatch = hard block
-            default            => 'variance', // amount variance = CEO review
+            default => 'variance', // amount variance = CEO review
         };
 
         // If within tolerance, clear the variance for display purposes
@@ -80,9 +80,9 @@ class ThreeWayMatcher
         }
 
         return [
-            'match_status'  => $matchStatus,
+            'match_status' => $matchStatus,
             'variance_kobo' => $varianceKobo,
-            'flags'         => $flags,
+            'flags' => $flags,
             'requires_match' => self::isMatchRequired($req),
         ];
     }

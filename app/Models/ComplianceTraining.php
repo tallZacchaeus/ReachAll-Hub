@@ -13,10 +13,10 @@ class ComplianceTraining extends Model
     ];
 
     protected $casts = [
-        'is_mandatory'       => 'boolean',
-        'is_active'          => 'boolean',
-        'duration_minutes'   => 'integer',
-        'recurrence_months'  => 'integer',
+        'is_mandatory' => 'boolean',
+        'is_active' => 'boolean',
+        'duration_minutes' => 'integer',
+        'recurrence_months' => 'integer',
     ];
 
     public function assignments(): HasMany

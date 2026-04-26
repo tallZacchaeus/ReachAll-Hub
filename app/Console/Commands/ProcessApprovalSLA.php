@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\Finance\ApprovalStep;
-use App\Models\Finance\Requisition;
 use App\Models\User;
 use App\Notifications\Finance\ApprovalEscalated;
 use App\Notifications\Finance\ApprovalReminder;
@@ -19,7 +18,8 @@ use Illuminate\Console\Command;
  */
 class ProcessApprovalSLA extends Command
 {
-    protected $signature   = 'finance:process-sla';
+    protected $signature = 'finance:process-sla';
+
     protected $description = 'Send SLA reminders and escalate overdue approval steps';
 
     public function handle(ApprovalRouter $router): int
@@ -31,14 +31,15 @@ class ProcessApprovalSLA extends Command
             ->whereNotNull('sla_deadline')
             ->get();
 
-        $reminded   = 0;
-        $escalated  = 0;
+        $reminded = 0;
+        $escalated = 0;
 
         foreach ($pendingSteps as $step) {
             // SLA passed → escalate
             if ($step->sla_deadline->isPast()) {
                 $this->escalate($step, $router);
                 $escalated++;
+
                 continue;
             }
 
@@ -62,9 +63,9 @@ class ProcessApprovalSLA extends Command
 
         // Mark current step as escalated
         $step->update([
-            'status'   => 'escalated',
+            'status' => 'escalated',
             'acted_at' => now(),
-            'comment'  => 'Auto-escalated: 48-hour SLA exceeded.',
+            'comment' => 'Auto-escalated: 48-hour SLA exceeded.',
         ]);
 
         // Find a higher-level user to escalate to (next role in hierarchy above current approver)
@@ -72,6 +73,7 @@ class ProcessApprovalSLA extends Command
 
         if ($escalationUser === null) {
             $this->warn("No escalation target found for step #{$step->id} on {$req->request_id}.");
+
             return;
         }
 
@@ -79,12 +81,12 @@ class ProcessApprovalSLA extends Command
         $newLevel = $step->level; // keep same level slot (replaces the overdue step)
 
         $newStep = ApprovalStep::create([
-            'requisition_id'   => $req->id,
-            'approver_id'      => $escalationUser->id,
-            'level'            => $newLevel,
-            'role_label'       => $step->role_label . ' (Escalated)',
-            'status'           => 'pending',
-            'sla_deadline'     => now()->addHours(ApprovalRouter::SLA_HOURS),
+            'requisition_id' => $req->id,
+            'approver_id' => $escalationUser->id,
+            'level' => $newLevel,
+            'role_label' => $step->role_label.' (Escalated)',
+            'status' => 'pending',
+            'sla_deadline' => now()->addHours(ApprovalRouter::SLA_HOURS),
             'escalated_from_id' => $step->id,
         ]);
 
@@ -100,11 +102,11 @@ class ProcessApprovalSLA extends Command
     private function findEscalationUser(User $currentApprover, int $requesterId): ?User
     {
         $higherRoles = match ($currentApprover->role) {
-            'management'         => ['finance', 'general_management', 'ceo', 'superadmin'],
-            'finance'            => ['general_management', 'ceo', 'superadmin'],
+            'management' => ['finance', 'general_management', 'ceo', 'superadmin'],
+            'finance' => ['general_management', 'ceo', 'superadmin'],
             'general_management' => ['ceo', 'superadmin'],
-            'ceo'                => ['superadmin'],
-            default              => ['management', 'finance', 'general_management', 'ceo'],
+            'ceo' => ['superadmin'],
+            default => ['management', 'finance', 'general_management', 'ceo'],
         };
 
         foreach ($higherRoles as $role) {

@@ -9,7 +9,6 @@ use App\Models\Role;
 use App\Services\PermissionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -29,11 +28,11 @@ class RoleController extends Controller
         $this->authorise($request);
 
         $roles = Role::orderBy('name')->get()->map(fn (Role $r) => [
-            'id'          => $r->id,
-            'name'        => $r->name,
-            'label'       => $r->label,
+            'id' => $r->id,
+            'name' => $r->name,
+            'label' => $r->label,
             'description' => $r->description,
-            'is_system'   => $r->is_system,
+            'is_system' => $r->is_system,
             'permissions' => DB::table('role_permissions as rp')
                 ->join('permissions as p', 'p.id', '=', 'rp.permission_id')
                 ->where('rp.role', $r->name)
@@ -43,15 +42,15 @@ class RoleController extends Controller
 
         $permissions = Permission::orderBy('module')->orderBy('name')->get()
             ->map(fn (Permission $p) => [
-                'id'          => $p->id,
-                'name'        => $p->name,
-                'label'       => $p->label,
-                'module'      => $p->module,
+                'id' => $p->id,
+                'name' => $p->name,
+                'label' => $p->label,
+                'module' => $p->module,
                 'description' => $p->description,
             ]);
 
         return Inertia::render('Admin/RoleManagementPage', [
-            'roles'       => $roles,
+            'roles' => $roles,
             'permissions' => $permissions,
         ]);
     }
@@ -61,18 +60,18 @@ class RoleController extends Controller
         $this->authorise($request);
 
         $data = $request->validate([
-            'name'           => ['required', 'string', 'max:100', 'alpha_dash', 'unique:roles,name'],
-            'label'          => ['required', 'string', 'max:200'],
-            'description'    => ['nullable', 'string', 'max:1000'],
-            'permissions'    => ['array'],
-            'permissions.*'  => ['string', 'exists:permissions,name'],
+            'name' => ['required', 'string', 'max:100', 'alpha_dash', 'unique:roles,name'],
+            'label' => ['required', 'string', 'max:200'],
+            'description' => ['nullable', 'string', 'max:1000'],
+            'permissions' => ['array'],
+            'permissions.*' => ['string', 'exists:permissions,name'],
         ]);
 
         $role = Role::create([
-            'name'        => $data['name'],
-            'label'       => $data['label'],
+            'name' => $data['name'],
+            'label' => $data['label'],
             'description' => $data['description'] ?? null,
-            'is_system'   => false,
+            'is_system' => false,
         ]);
 
         $this->syncPermissions($role->name, $data['permissions'] ?? []);
@@ -97,16 +96,16 @@ class RoleController extends Controller
         $this->authorise($request);
 
         $data = $request->validate([
-            'label'          => ['required', 'string', 'max:200'],
-            'description'    => ['nullable', 'string', 'max:1000'],
-            'permissions'    => ['array'],
-            'permissions.*'  => ['string', 'exists:permissions,name'],
+            'label' => ['required', 'string', 'max:200'],
+            'description' => ['nullable', 'string', 'max:1000'],
+            'permissions' => ['array'],
+            'permissions.*' => ['string', 'exists:permissions,name'],
         ]);
 
         $old = ['label' => $role->label, 'permissions' => $this->currentPermissions($role->name)];
 
         $role->update([
-            'label'       => $data['label'],
+            'label' => $data['label'],
             'description' => $data['description'] ?? null,
         ]);
 
@@ -166,10 +165,10 @@ class RoleController extends Controller
         DB::table('role_permissions')->where('role', $roleName)->delete();
 
         $inserts = array_map(fn (int $id) => [
-            'role'          => $roleName,
+            'role' => $roleName,
             'permission_id' => $id,
-            'created_at'    => now(),
-            'updated_at'    => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
         ], $ids);
 
         if ($inserts) {

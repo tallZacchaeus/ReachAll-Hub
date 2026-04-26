@@ -32,25 +32,25 @@ class JobPositionController extends Controller
             ->orderBy('title')
             ->get()
             ->map(fn (JobPosition $p) => [
-                'id'              => $p->id,
-                'code'            => $p->code,
-                'title'           => $p->title,
-                'department_id'   => $p->department_id,
+                'id' => $p->id,
+                'code' => $p->code,
+                'title' => $p->title,
+                'department_id' => $p->department_id,
                 'department_name' => $p->department?->name,
-                'job_level_id'    => $p->job_level_id,
-                'level_name'      => $p->level?->name,
-                'level_code'      => $p->level?->code,
-                'description'     => $p->description,
-                'is_active'       => $p->is_active,
-                'employee_count'  => $p->employees()->count(),
+                'job_level_id' => $p->job_level_id,
+                'level_name' => $p->level?->name,
+                'level_code' => $p->level?->code,
+                'description' => $p->description,
+                'is_active' => $p->is_active,
+                'employee_count' => $p->employees()->count(),
             ]);
 
         $departments = Department::active()->orderBy('name')->get(['id', 'name']);
 
         return Inertia::render('Admin/OrgStructurePage', [
-            'tab'         => 'positions',
-            'levels'      => $levels,
-            'positions'   => $positions,
+            'tab' => 'positions',
+            'levels' => $levels,
+            'positions' => $positions,
             'departments' => $departments,
         ]);
     }
@@ -60,12 +60,12 @@ class JobPositionController extends Controller
         $this->authorise($request);
 
         $data = $request->validate([
-            'code'          => ['required', 'string', 'max:30', 'alpha_dash', 'unique:job_positions,code'],
-            'title'         => ['required', 'string', 'max:200'],
+            'code' => ['required', 'string', 'max:30', 'alpha_dash', 'unique:job_positions,code'],
+            'title' => ['required', 'string', 'max:200'],
             'department_id' => ['nullable', 'exists:departments,id'],
-            'job_level_id'  => ['nullable', 'exists:job_levels,id'],
-            'description'   => ['nullable', 'string', 'max:1000'],
-            'is_active'     => ['boolean'],
+            'job_level_id' => ['nullable', 'exists:job_levels,id'],
+            'description' => ['nullable', 'string', 'max:1000'],
+            'is_active' => ['boolean'],
         ]);
 
         $pos = JobPosition::create([
@@ -81,12 +81,12 @@ class JobPositionController extends Controller
         $this->authorise($request);
 
         $data = $request->validate([
-            'code'          => ['required', 'string', 'max:30', 'alpha_dash', Rule::unique('job_positions', 'code')->ignore($jobPosition->id)],
-            'title'         => ['required', 'string', 'max:200'],
+            'code' => ['required', 'string', 'max:30', 'alpha_dash', Rule::unique('job_positions', 'code')->ignore($jobPosition->id)],
+            'title' => ['required', 'string', 'max:200'],
             'department_id' => ['nullable', 'exists:departments,id'],
-            'job_level_id'  => ['nullable', 'exists:job_levels,id'],
-            'description'   => ['nullable', 'string', 'max:1000'],
-            'is_active'     => ['boolean'],
+            'job_level_id' => ['nullable', 'exists:job_levels,id'],
+            'description' => ['nullable', 'string', 'max:1000'],
+            'is_active' => ['boolean'],
         ]);
 
         $jobPosition->update($data);

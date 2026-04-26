@@ -32,11 +32,11 @@ class PerformanceReviewController extends Controller
         $competencies = ReviewCompetency::active()->get();
 
         return Inertia::render('Performance/PerformanceReviewFormPage', [
-            'review'       => $performanceReview,
+            'review' => $performanceReview,
             'competencies' => $competencies,
-            'canEdit'      => $performanceReview->canBeEditedBy($user),
-            'canManage'    => $canManage,
-            'authId'       => $user->id,
+            'canEdit' => $performanceReview->canBeEditedBy($user),
+            'canManage' => $canManage,
+            'authId' => $user->id,
         ]);
     }
 
@@ -56,10 +56,10 @@ class PerformanceReviewController extends Controller
 
         $validated = $request->validate(array_merge([
             'overall_rating' => ['nullable', 'integer', 'min:1', 'max:5'],
-            'strengths'      => ['nullable', 'string', 'max:3000'],
-            'improvements'   => ['nullable', 'string', 'max:3000'],
-            'comments'       => ['nullable', 'string', 'max:3000'],
-            'ratings'        => ['nullable', 'array'],
+            'strengths' => ['nullable', 'string', 'max:3000'],
+            'improvements' => ['nullable', 'string', 'max:3000'],
+            'comments' => ['nullable', 'string', 'max:3000'],
+            'ratings' => ['nullable', 'array'],
         ], $ratingsRules));
 
         $old = $performanceReview->toArray();
@@ -104,7 +104,7 @@ class PerformanceReviewController extends Controller
         $old = $performanceReview->toArray();
 
         $performanceReview->update([
-            'status'       => 'submitted',
+            'status' => 'submitted',
             'submitted_at' => now(),
         ]);
 
@@ -133,7 +133,7 @@ class PerformanceReviewController extends Controller
         $old = $performanceReview->toArray();
 
         $performanceReview->update([
-            'status'          => 'acknowledged',
+            'status' => 'acknowledged',
             'acknowledged_at' => now(),
         ]);
 

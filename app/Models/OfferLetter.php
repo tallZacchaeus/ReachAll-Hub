@@ -25,11 +25,11 @@ class OfferLetter extends Model
 
     protected $casts = [
         'offered_salary_kobo' => 'integer',
-        'start_date'          => 'date',
-        'offer_date'          => 'date',
-        'expiry_date'         => 'date',
-        'sent_at'             => 'datetime',
-        'responded_at'        => 'datetime',
+        'start_date' => 'date',
+        'offer_date' => 'date',
+        'expiry_date' => 'date',
+        'sent_at' => 'datetime',
+        'responded_at' => 'datetime',
     ];
 
     public function application(): BelongsTo

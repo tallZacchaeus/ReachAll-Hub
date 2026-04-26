@@ -15,7 +15,7 @@ return new class extends Migration
             $table->unsignedBigInteger('amount_kobo');
             $table->text('rationale')->nullable();
             $table->string('status', 30)->default('draft')
-                  ->comment('draft|approved|rejected|paid');
+                ->comment('draft|approved|rejected|paid');
             $table->foreignId('approved_by_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('approved_at')->nullable();
             $table->timestamp('paid_at')->nullable();

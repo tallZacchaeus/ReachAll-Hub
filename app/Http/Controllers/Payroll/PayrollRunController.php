@@ -3,11 +3,8 @@
 namespace App\Http\Controllers\Payroll;
 
 use App\Http\Controllers\Controller;
-use App\Models\EmployeeSalary;
-use App\Models\PayrollDeduction;
 use App\Models\PayrollEntry;
 use App\Models\PayrollRun;
-use App\Models\User;
 use App\Services\AuditLogger;
 use App\Services\Finance\MoneyHelper;
 use App\Services\Payroll\PayrollRunService;
@@ -47,7 +44,7 @@ class PayrollRunController extends Controller
             ->paginate(20);
 
         return Inertia::render('Payroll/PayrollRunsPage', [
-            'runs'       => $runs,
+            'runs' => $runs,
             'can_manage' => Auth::user()?->hasPermission('payroll.manage'),
         ]);
     }
@@ -58,9 +55,9 @@ class PayrollRunController extends Controller
 
         $validated = $request->validate([
             'period_start' => ['required', 'date'],
-            'period_end'   => ['required', 'date', 'after:period_start'],
+            'period_end' => ['required', 'date', 'after:period_start'],
             'is_off_cycle' => ['boolean'],
-            'notes'        => ['nullable', 'string', 'max:1000'],
+            'notes' => ['nullable', 'string', 'max:1000'],
         ]);
 
         try {
@@ -88,30 +85,30 @@ class PayrollRunController extends Controller
             ->orderBy('id')
             ->get()
             ->map(fn (PayrollEntry $e) => [
-                'id'                     => $e->id,
-                'employee_id'            => $e->employee?->employee_id,
-                'employee_name'          => $e->employee?->name,
-                'department'             => $e->employee?->department,
-                'gross'                  => MoneyHelper::format($e->gross_kobo),
-                'paye'                   => MoneyHelper::format($e->paye_kobo),
-                'pension_employee'       => MoneyHelper::format($e->pension_employee_kobo),
-                'nhf'                    => MoneyHelper::format($e->nhf_kobo),
-                'other_deductions'       => MoneyHelper::format($e->other_deductions_kobo),
-                'net'                    => MoneyHelper::format($e->net_kobo),
-                'gross_kobo'             => $e->gross_kobo,
-                'net_kobo'               => $e->net_kobo,
-                'payslip_generated'      => $e->payslip_generated,
+                'id' => $e->id,
+                'employee_id' => $e->employee?->employee_id,
+                'employee_name' => $e->employee?->name,
+                'department' => $e->employee?->department,
+                'gross' => MoneyHelper::format($e->gross_kobo),
+                'paye' => MoneyHelper::format($e->paye_kobo),
+                'pension_employee' => MoneyHelper::format($e->pension_employee_kobo),
+                'nhf' => MoneyHelper::format($e->nhf_kobo),
+                'other_deductions' => MoneyHelper::format($e->other_deductions_kobo),
+                'net' => MoneyHelper::format($e->net_kobo),
+                'gross_kobo' => $e->gross_kobo,
+                'net_kobo' => $e->net_kobo,
+                'payslip_generated' => $e->payslip_generated,
             ]);
 
         return Inertia::render('Payroll/PayrollRunDetailPage', [
-            'run'     => array_merge($payrollRun->toArray(), [
+            'run' => array_merge($payrollRun->toArray(), [
                 'total_gross' => MoneyHelper::format($payrollRun->total_gross_kobo),
-                'total_paye'  => MoneyHelper::format($payrollRun->total_paye_kobo),
+                'total_paye' => MoneyHelper::format($payrollRun->total_paye_kobo),
                 'total_pension_employee' => MoneyHelper::format($payrollRun->total_pension_employee_kobo),
                 'total_pension_employer' => MoneyHelper::format($payrollRun->total_pension_employer_kobo),
-                'total_nhf'   => MoneyHelper::format($payrollRun->total_nhf_kobo),
+                'total_nhf' => MoneyHelper::format($payrollRun->total_nhf_kobo),
                 'total_nsitf' => MoneyHelper::format($payrollRun->total_nsitf_kobo),
-                'total_net'   => MoneyHelper::format($payrollRun->total_net_kobo),
+                'total_net' => MoneyHelper::format($payrollRun->total_net_kobo),
             ]),
             'entries' => $entries,
             'can_manage' => Auth::user()?->hasPermission('payroll.manage'),
@@ -215,7 +212,7 @@ class PayrollRunController extends Controller
         $filename = "year-end-paye-{$year}.csv";
 
         $headers = [
-            'Content-Type'        => 'text/csv; charset=UTF-8',
+            'Content-Type' => 'text/csv; charset=UTF-8',
             'Content-Disposition' => "attachment; filename=\"{$filename}\"",
         ];
 
@@ -266,7 +263,7 @@ class PayrollRunController extends Controller
             ->get();
 
         $headers = [
-            'Content-Type'        => 'text/csv',
+            'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=\"payroll-{$payrollRun->period_label}.csv\"",
         ];
 

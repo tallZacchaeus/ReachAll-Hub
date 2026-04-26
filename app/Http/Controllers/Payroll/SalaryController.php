@@ -28,9 +28,8 @@ class SalaryController extends Controller
             ->orderBy('name');
 
         if ($search = $request->input('search')) {
-            $query->where(fn ($q) =>
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('employee_id', 'like', "%{$search}%")
+            $query->where(fn ($q) => $q->where('name', 'like', "%{$search}%")
+                ->orWhere('employee_id', 'like', "%{$search}%")
             );
         }
 
@@ -48,23 +47,24 @@ class SalaryController extends Controller
 
         $result = $employees->map(function (User $u) use ($salaryMap) {
             $s = $salaryMap->get($u->id);
+
             return [
-                'id'          => $u->id,
-                'name'        => $u->name,
+                'id' => $u->id,
+                'name' => $u->name,
                 'employee_id' => $u->employee_id,
-                'department'  => $u->department,
-                'role'        => $u->role,
-                'salary_id'   => $s?->id,
-                'gross'       => $s ? MoneyHelper::format($s->grossKobo()) : null,
-                'basic'       => $s ? MoneyHelper::format($s->basic_kobo) : null,
+                'department' => $u->department,
+                'role' => $u->role,
+                'salary_id' => $s?->id,
+                'gross' => $s ? MoneyHelper::format($s->grossKobo()) : null,
+                'basic' => $s ? MoneyHelper::format($s->basic_kobo) : null,
                 'effective_date' => $s?->effective_date?->toDateString(),
             ];
         });
 
         return Inertia::render('Payroll/SalaryManagementPage', [
-            'employees'  => $result,
-            'payGrades'  => PayGrade::active()->orderBy('code')->get(),
-            'filters'    => $request->only(['search']),
+            'employees' => $result,
+            'payGrades' => PayGrade::active()->orderBy('code')->get(),
+            'filters' => $request->only(['search']),
         ]);
     }
 
@@ -73,15 +73,15 @@ class SalaryController extends Controller
         $this->authorise();
 
         $validated = $request->validate([
-            'user_id'              => ['required', 'exists:users,id'],
-            'pay_grade_id'         => ['nullable', 'exists:pay_grades,id'],
-            'basic_naira'          => ['required', 'numeric', 'min:0'],
-            'housing_naira'        => ['required', 'numeric', 'min:0'],
-            'transport_naira'      => ['required', 'numeric', 'min:0'],
+            'user_id' => ['required', 'exists:users,id'],
+            'pay_grade_id' => ['nullable', 'exists:pay_grades,id'],
+            'basic_naira' => ['required', 'numeric', 'min:0'],
+            'housing_naira' => ['required', 'numeric', 'min:0'],
+            'transport_naira' => ['required', 'numeric', 'min:0'],
             'other_allowances_naira' => ['required', 'numeric', 'min:0'],
-            'nhf_enrolled'         => ['boolean'],
-            'effective_date'       => ['required', 'date'],
-            'notes'                => ['nullable', 'string', 'max:1000'],
+            'nhf_enrolled' => ['boolean'],
+            'effective_date' => ['required', 'date'],
+            'notes' => ['nullable', 'string', 'max:1000'],
         ]);
 
         // End any current active salary for this employee
@@ -91,15 +91,15 @@ class SalaryController extends Controller
             ->update(['end_date' => now()->toDateString()]);
 
         EmployeeSalary::create([
-            'user_id'               => $validated['user_id'],
-            'pay_grade_id'          => $validated['pay_grade_id'] ?? null,
-            'basic_kobo'            => MoneyHelper::toKobo($validated['basic_naira']),
-            'housing_kobo'          => MoneyHelper::toKobo($validated['housing_naira']),
-            'transport_kobo'        => MoneyHelper::toKobo($validated['transport_naira']),
+            'user_id' => $validated['user_id'],
+            'pay_grade_id' => $validated['pay_grade_id'] ?? null,
+            'basic_kobo' => MoneyHelper::toKobo($validated['basic_naira']),
+            'housing_kobo' => MoneyHelper::toKobo($validated['housing_naira']),
+            'transport_kobo' => MoneyHelper::toKobo($validated['transport_naira']),
             'other_allowances_kobo' => MoneyHelper::toKobo($validated['other_allowances_naira']),
-            'nhf_enrolled'          => $validated['nhf_enrolled'] ?? false,
-            'effective_date'        => $validated['effective_date'],
-            'notes'                 => $validated['notes'] ?? null,
+            'nhf_enrolled' => $validated['nhf_enrolled'] ?? false,
+            'effective_date' => $validated['effective_date'],
+            'notes' => $validated['notes'] ?? null,
         ]);
 
         return back()->with('success', 'Salary record saved.');

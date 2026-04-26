@@ -161,12 +161,12 @@ class JobPostingController extends Controller
     private function validatePosting(Request $request): array
     {
         return $request->validate([
-            'title'        => ['required', 'string', 'max:255'],
-            'department'   => ['required', 'string', 'max:100'],
-            'description'  => ['required', 'string'],
+            'title' => ['required', 'string', 'max:255'],
+            'department' => ['required', 'string', 'max:100'],
+            'description' => ['required', 'string'],
             'requirements' => ['required', 'string'],
-            'status'       => ['required', 'in:open,closed'],
-            'closes_at'    => ['nullable', 'date'],
+            'status' => ['required', 'in:open,closed'],
+            'closes_at' => ['nullable', 'date'],
         ]);
     }
 
@@ -180,6 +180,7 @@ class JobPostingController extends Controller
     private function excerpt(string $text, int $length = 160): string
     {
         $text = strip_tags($text);
+
         return mb_strlen($text) > $length ? mb_substr($text, 0, $length).'…' : $text;
     }
 
@@ -197,12 +198,12 @@ class JobPostingController extends Controller
     private function transformCard(JobPosting $p): array
     {
         return [
-            'id'          => $p->id,
-            'title'       => $p->title,
-            'department'  => $p->department,
-            'excerpt'     => $this->excerpt($p->description),
-            'closes_at'   => $p->closes_at?->toDateString(),
-            'status'      => $p->status,
+            'id' => $p->id,
+            'title' => $p->title,
+            'department' => $p->department,
+            'excerpt' => $this->excerpt($p->description),
+            'closes_at' => $p->closes_at?->toDateString(),
+            'status' => $p->status,
         ];
     }
 
@@ -210,15 +211,15 @@ class JobPostingController extends Controller
     private function transformFull(JobPosting $p): array
     {
         return [
-            'id'           => $p->id,
-            'title'        => $p->title,
-            'department'   => $p->department,
-            'description'  => $p->description,
+            'id' => $p->id,
+            'title' => $p->title,
+            'department' => $p->department,
+            'description' => $p->description,
             'requirements' => $p->requirements,
-            'closes_at'    => $p->closes_at?->toDateString(),
-            'status'       => $p->status,
-            'posted_by'    => $p->poster?->name ?? 'HR',
-            'created_at'   => $p->created_at?->toDateString(),
+            'closes_at' => $p->closes_at?->toDateString(),
+            'status' => $p->status,
+            'posted_by' => $p->poster?->name ?? 'HR',
+            'created_at' => $p->created_at?->toDateString(),
         ];
     }
 
@@ -226,24 +227,24 @@ class JobPostingController extends Controller
     private function transformAdmin(JobPosting $p): array
     {
         return [
-            'id'                => $p->id,
-            'title'             => $p->title,
-            'department'        => $p->department,
-            'status'            => $p->status,
-            'closes_at'         => $p->closes_at?->toDateString(),
+            'id' => $p->id,
+            'title' => $p->title,
+            'department' => $p->department,
+            'status' => $p->status,
+            'closes_at' => $p->closes_at?->toDateString(),
             'application_count' => $p->applications_count ?? 0,
-            'description'       => $p->description,
-            'requirements'      => $p->requirements,
-            'applications'      => $p->applications
+            'description' => $p->description,
+            'requirements' => $p->requirements,
+            'applications' => $p->applications
                 ? $p->applications->map(fn ($a) => [
-                    'id'         => $a->id,
-                    'status'     => $a->status,
+                    'id' => $a->id,
+                    'status' => $a->status,
                     'applied_at' => $a->applied_at?->toDateString(),
-                    'applicant'  => [
-                        'name'       => $a->applicant?->name ?? 'Unknown',
+                    'applicant' => [
+                        'name' => $a->applicant?->name ?? 'Unknown',
                         'department' => $a->applicant?->department,
-                        'position'   => $a->applicant?->position,
-                        'initials'   => $this->initials($a->applicant?->name ?? '?'),
+                        'position' => $a->applicant?->position,
+                        'initials' => $this->initials($a->applicant?->name ?? '?'),
                     ],
                 ])->values()->all()
                 : [],

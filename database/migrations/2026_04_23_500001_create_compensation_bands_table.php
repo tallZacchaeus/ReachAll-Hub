@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('grade', 50)->comment('E.g. L1, L2, IC3, M1');
             $table->string('title', 150)->comment('Human-readable label');
             $table->string('category', 50)->default('individual_contributor')
-                  ->comment('individual_contributor|manager|executive');
+                ->comment('individual_contributor|manager|executive');
             $table->unsignedBigInteger('min_kobo');
             $table->unsignedBigInteger('midpoint_kobo');
             $table->unsignedBigInteger('max_kobo');

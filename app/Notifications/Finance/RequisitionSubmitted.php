@@ -5,7 +5,6 @@ namespace App\Notifications\Finance;
 use App\Models\Finance\Requisition;
 use App\Services\Finance\MoneyHelper;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class RequisitionSubmitted extends Notification
@@ -22,12 +21,12 @@ class RequisitionSubmitted extends Notification
     public function toDatabase(object $notifiable): array
     {
         return [
-            'type'          => 'requisition_submitted',
-            'title'         => 'New Approval Request',
-            'body'          => "{$this->requisition->requester->name} submitted {$this->requisition->request_id} for {$this->amount()} — awaiting your approval.",
-            'request_id'    => $this->requisition->request_id,
+            'type' => 'requisition_submitted',
+            'title' => 'New Approval Request',
+            'body' => "{$this->requisition->requester->name} submitted {$this->requisition->request_id} for {$this->amount()} — awaiting your approval.",
+            'request_id' => $this->requisition->request_id,
             'requisition_id' => $this->requisition->id,
-            'url'           => "/finance/approvals/{$this->requisition->id}",
+            'url' => "/finance/approvals/{$this->requisition->id}",
         ];
     }
 

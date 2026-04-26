@@ -22,9 +22,9 @@ class DocumentSignature extends Model
     ];
 
     protected $casts = [
-        'signed_at'   => 'datetime',
+        'signed_at' => 'datetime',
         'declined_at' => 'datetime',
-        'created_at'  => 'datetime',
+        'created_at' => 'datetime',
     ];
 
     public function document(): BelongsTo

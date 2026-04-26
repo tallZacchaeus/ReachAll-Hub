@@ -23,8 +23,8 @@ class FinanceAuditLog extends Model
 
     protected $casts = [
         'before_json' => 'array',
-        'after_json'  => 'array',
-        'logged_at'   => 'datetime',
+        'after_json' => 'array',
+        'logged_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

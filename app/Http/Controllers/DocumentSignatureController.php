@@ -25,8 +25,8 @@ class DocumentSignatureController extends Controller
         abort_unless($signature !== null, 403, 'No pending signature request found.');
 
         $signature->update([
-            'status'     => 'signed',
-            'signed_at'  => now(),
+            'status' => 'signed',
+            'signed_at' => now(),
             'ip_address' => $request->ip(),
             'user_agent' => substr($request->userAgent() ?? '', 0, 500),
         ]);
@@ -53,11 +53,11 @@ class DocumentSignatureController extends Controller
         abort_unless($signature !== null, 403, 'No pending signature request found.');
 
         $signature->update([
-            'status'         => 'declined',
-            'declined_at'    => now(),
+            'status' => 'declined',
+            'declined_at' => now(),
             'decline_reason' => $validated['reason'] ?? null,
-            'ip_address'     => $request->ip(),
-            'user_agent'     => substr($request->userAgent() ?? '', 0, 500),
+            'ip_address' => $request->ip(),
+            'user_agent' => substr($request->userAgent() ?? '', 0, 500),
         ]);
 
         return back()->with('success', 'Signature declined.');

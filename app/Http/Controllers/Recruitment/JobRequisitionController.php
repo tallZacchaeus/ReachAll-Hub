@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Recruitment;
 
 use App\Http\Controllers\Controller;
-use App\Models\JobPosting;
 use App\Models\JobRequisition;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,7 +25,7 @@ class JobRequisitionController extends Controller
 
         return Inertia::render('Recruitment/JobRequisitionsPage', [
             'requisitions' => $query->paginate(25)->withQueryString(),
-            'filters'      => $request->only('status'),
+            'filters' => $request->only('status'),
         ]);
     }
 
@@ -35,18 +34,18 @@ class JobRequisitionController extends Controller
         abort_unless($request->user()->hasPermission('recruitment.manage'), 403);
 
         $data = $request->validate([
-            'title'           => 'required|string|max:200',
-            'department'      => 'required|string|max:100',
-            'headcount'       => 'required|integer|min:1|max:100',
+            'title' => 'required|string|max:200',
+            'department' => 'required|string|max:100',
+            'headcount' => 'required|integer|min:1|max:100',
             'employment_type' => 'required|string|in:full_time,part_time,contract,intern',
-            'justification'   => 'required|string|max:2000',
-            'priority'        => 'required|string|in:low,normal,high,urgent',
+            'justification' => 'required|string|max:2000',
+            'priority' => 'required|string|in:low,normal,high,urgent',
         ]);
 
         JobRequisition::create([
             ...$data,
-            'status'           => 'pending',
-            'requested_by_id'  => $request->user()->id,
+            'status' => 'pending',
+            'requested_by_id' => $request->user()->id,
         ]);
 
         return back()->with('success', 'Job requisition submitted for approval.');
@@ -58,9 +57,9 @@ class JobRequisitionController extends Controller
         abort_unless($jobRequisition->status === 'pending', 422);
 
         $jobRequisition->update([
-            'status'       => 'approved',
+            'status' => 'approved',
             'approved_by_id' => $request->user()->id,
-            'approved_at'  => now(),
+            'approved_at' => now(),
         ]);
 
         return back()->with('success', 'Requisition approved.');
@@ -76,10 +75,10 @@ class JobRequisitionController extends Controller
         ]);
 
         $jobRequisition->update([
-            'status'           => 'rejected',
+            'status' => 'rejected',
             'rejection_reason' => $data['rejection_reason'],
-            'approved_by_id'   => $request->user()->id,
-            'approved_at'      => now(),
+            'approved_by_id' => $request->user()->id,
+            'approved_at' => now(),
         ]);
 
         return back()->with('success', 'Requisition rejected.');

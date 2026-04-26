@@ -11,11 +11,11 @@ return new class extends Migration
         Schema::table('job_applications', function (Blueprint $table) {
             // External candidate (nullable — internal apps use user_id)
             $table->foreignId('candidate_id')->nullable()->after('user_id')
-                  ->constrained('candidates')->nullOnDelete();
+                ->constrained('candidates')->nullOnDelete();
 
             // ATS pipeline stage
             $table->string('stage', 30)->default('new')->after('status')
-                  ->comment('new|screening|interview|offer|hired|rejected|withdrawn');
+                ->comment('new|screening|interview|offer|hired|rejected|withdrawn');
 
             // HR notes on this application
             $table->text('ats_notes')->nullable()->after('stage');

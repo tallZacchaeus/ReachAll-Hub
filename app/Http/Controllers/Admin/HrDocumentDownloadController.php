@@ -21,7 +21,7 @@ class HrDocumentDownloadController extends Controller
         $user = Auth::user();
 
         $canManage = $user?->hasPermission('documents.manage');
-        $isOwner   = $hrDocument->user_id === $user?->id;
+        $isOwner = $hrDocument->user_id === $user?->id;
 
         abort_unless($canManage || $isOwner, 403);
 
@@ -32,7 +32,7 @@ class HrDocumentDownloadController extends Controller
         );
 
         $filename = basename($hrDocument->file_path);
-        $mime     = $hrDocument->mime_type ?? 'application/octet-stream';
+        $mime = $hrDocument->mime_type ?? 'application/octet-stream';
 
         return Storage::disk($hrDocument->disk)->download(
             $hrDocument->file_path,

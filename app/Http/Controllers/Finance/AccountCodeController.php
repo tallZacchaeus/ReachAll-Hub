@@ -28,7 +28,7 @@ class AccountCodeController extends Controller
             $q = $request->get('q');
             $query->where(function ($qb) use ($q) {
                 $qb->where('code', 'like', "%{$q}%")
-                   ->orWhere('description', 'like', "%{$q}%");
+                    ->orWhere('description', 'like', "%{$q}%");
             });
         }
 
@@ -37,21 +37,21 @@ class AccountCodeController extends Controller
         }
 
         $codes = $query->get()->map(fn (AccountCode $ac) => [
-            'id'                 => $ac->id,
-            'code'               => $ac->code,
-            'category'           => $ac->category,
-            'category_label'     => $ac->category_label,
-            'description'        => $ac->description,
+            'id' => $ac->id,
+            'code' => $ac->code,
+            'category' => $ac->category,
+            'category_label' => $ac->category_label,
+            'description' => $ac->description,
             'tax_vat_applicable' => $ac->tax_vat_applicable,
             'tax_wht_applicable' => $ac->tax_wht_applicable,
-            'wht_rate'           => $ac->wht_rate,
-            'status'             => $ac->status,
+            'wht_rate' => $ac->wht_rate,
+            'status' => $ac->status,
         ]);
 
         return Inertia::render('Finance/AccountCodeAdminPage', [
-            'codes'      => $codes,
+            'codes' => $codes,
             'categories' => self::CATEGORIES,
-            'filters'    => $request->only(['q', 'category', 'status']),
+            'filters' => $request->only(['q', 'category', 'status']),
         ]);
     }
 
@@ -60,13 +60,13 @@ class AccountCodeController extends Controller
         $this->authorise($request->user());
 
         $validated = $request->validate([
-            'code'               => ['required', 'string', 'size:4', 'unique:account_codes,code'],
-            'category'           => ['required', 'in:' . implode(',', self::CATEGORIES)],
-            'description'        => ['required', 'string', 'max:200'],
+            'code' => ['required', 'string', 'size:4', 'unique:account_codes,code'],
+            'category' => ['required', 'in:'.implode(',', self::CATEGORIES)],
+            'description' => ['required', 'string', 'max:200'],
             'tax_vat_applicable' => ['boolean'],
             'tax_wht_applicable' => ['boolean'],
-            'wht_rate'           => ['nullable', 'integer', 'min:0', 'max:100'],
-            'status'             => ['required', 'in:active,inactive'],
+            'wht_rate' => ['nullable', 'integer', 'min:0', 'max:100'],
+            'status' => ['required', 'in:active,inactive'],
         ]);
 
         AccountCode::create(array_merge($validated, ['created_by' => $request->user()->id]));
@@ -81,12 +81,12 @@ class AccountCodeController extends Controller
         $ac = AccountCode::findOrFail($id);
 
         $validated = $request->validate([
-            'category'           => ['required', 'in:' . implode(',', self::CATEGORIES)],
-            'description'        => ['required', 'string', 'max:200'],
+            'category' => ['required', 'in:'.implode(',', self::CATEGORIES)],
+            'description' => ['required', 'string', 'max:200'],
             'tax_vat_applicable' => ['boolean'],
             'tax_wht_applicable' => ['boolean'],
-            'wht_rate'           => ['nullable', 'integer', 'min:0', 'max:100'],
-            'status'             => ['required', 'in:active,inactive'],
+            'wht_rate' => ['nullable', 'integer', 'min:0', 'max:100'],
+            'status' => ['required', 'in:active,inactive'],
         ]);
 
         $ac->update($validated);

@@ -49,16 +49,17 @@ class HrDocumentVaultTest extends TestCase
     private function makeDocument(User $employee, array $overrides = []): HrDocument
     {
         $category = $this->category();
+
         return HrDocument::create(array_merge([
-            'user_id'            => $employee->id,
-            'category_id'        => $category->id,
-            'title'              => 'Test Document',
-            'file_path'          => 'employee/' . $employee->id . '/test.pdf',
-            'disk'               => 'hr',
-            'file_size'          => 1024,
-            'mime_type'          => 'application/pdf',
-            'version'            => 1,
-            'status'             => 'active',
+            'user_id' => $employee->id,
+            'category_id' => $category->id,
+            'title' => 'Test Document',
+            'file_path' => 'employee/'.$employee->id.'/test.pdf',
+            'disk' => 'hr',
+            'file_size' => 1024,
+            'mime_type' => 'application/pdf',
+            'version' => 1,
+            'status' => 'active',
             'requires_signature' => false,
         ], $overrides));
     }
@@ -112,25 +113,25 @@ class HrDocumentVaultTest extends TestCase
 
     public function test_hr_can_upload_a_document(): void
     {
-        $hr       = $this->hrUser();
+        $hr = $this->hrUser();
         $employee = $this->staffUser();
         $category = $this->category();
 
         $this->actingAs($hr)
             ->post('/admin/hr/documents', [
-                'user_id'     => $employee->id,
+                'user_id' => $employee->id,
                 'category_id' => $category->id,
-                'title'       => 'Employment Contract 2026',
-                'file'        => $this->fakeFile(),
+                'title' => 'Employment Contract 2026',
+                'file' => $this->fakeFile(),
             ])
             ->assertRedirect();
 
         $this->assertDatabaseHas('hr_documents', [
-            'user_id'     => $employee->id,
+            'user_id' => $employee->id,
             'category_id' => $category->id,
-            'title'       => 'Employment Contract 2026',
-            'status'      => 'active',
-            'disk'        => 'hr',
+            'title' => 'Employment Contract 2026',
+            'status' => 'active',
+            'disk' => 'hr',
         ]);
     }
 
@@ -141,10 +142,10 @@ class HrDocumentVaultTest extends TestCase
 
         $this->actingAs($this->staffUser())
             ->post('/admin/hr/documents', [
-                'user_id'     => $employee->id,
+                'user_id' => $employee->id,
                 'category_id' => $category->id,
-                'title'       => 'Sneaky Upload',
-                'file'        => $this->fakeFile(),
+                'title' => 'Sneaky Upload',
+                'file' => $this->fakeFile(),
             ])
             ->assertForbidden();
     }
@@ -158,18 +159,18 @@ class HrDocumentVaultTest extends TestCase
 
     public function test_upload_with_signature_creates_pending_records(): void
     {
-        $hr       = $this->hrUser();
+        $hr = $this->hrUser();
         $employee = $this->staffUser();
         $category = $this->category();
 
         $this->actingAs($hr)
             ->post('/admin/hr/documents', [
-                'user_id'            => $employee->id,
-                'category_id'        => $category->id,
-                'title'              => 'NDA',
-                'file'               => $this->fakeFile(),
+                'user_id' => $employee->id,
+                'category_id' => $category->id,
+                'title' => 'NDA',
+                'file' => $this->fakeFile(),
                 'requires_signature' => true,
-                'signees'            => [$employee->id],
+                'signees' => [$employee->id],
             ])
             ->assertRedirect();
 
@@ -179,8 +180,8 @@ class HrDocumentVaultTest extends TestCase
 
         $this->assertDatabaseHas('document_signatures', [
             'document_id' => $doc->id,
-            'signee_id'   => $employee->id,
-            'status'      => 'pending',
+            'signee_id' => $employee->id,
+            'status' => 'pending',
         ]);
     }
 
@@ -189,7 +190,7 @@ class HrDocumentVaultTest extends TestCase
     public function test_hr_can_download_any_document(): void
     {
         $employee = $this->staffUser();
-        $doc      = $this->makeDocument($employee);
+        $doc = $this->makeDocument($employee);
         Storage::disk('hr')->put($doc->file_path, 'dummy content');
 
         $this->actingAs($this->hrUser())
@@ -201,7 +202,7 @@ class HrDocumentVaultTest extends TestCase
     {
         $employee1 = $this->staffUser();
         $employee2 = $this->staffUser();
-        $doc       = $this->makeDocument($employee1);
+        $doc = $this->makeDocument($employee1);
         Storage::disk('hr')->put($doc->file_path, 'dummy content');
 
         $this->actingAs($employee2)
@@ -224,8 +225,7 @@ class HrDocumentVaultTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('MyDocumentsPage')
-                ->where('documents', fn ($docs) =>
-                    collect($docs)->contains('title', 'Mine') &&
+                ->where('documents', fn ($docs) => collect($docs)->contains('title', 'Mine') &&
                     ! collect($docs)->contains('title', 'Theirs')
                 )
             );
@@ -236,12 +236,12 @@ class HrDocumentVaultTest extends TestCase
     public function test_employee_can_sign_a_pending_document(): void
     {
         $employee = $this->staffUser();
-        $doc      = $this->makeDocument($employee, ['requires_signature' => true]);
+        $doc = $this->makeDocument($employee, ['requires_signature' => true]);
 
         DocumentSignature::create([
             'document_id' => $doc->id,
-            'signee_id'   => $employee->id,
-            'status'      => 'pending',
+            'signee_id' => $employee->id,
+            'status' => 'pending',
         ]);
 
         $this->actingAs($employee)
@@ -250,21 +250,21 @@ class HrDocumentVaultTest extends TestCase
 
         $this->assertDatabaseHas('document_signatures', [
             'document_id' => $doc->id,
-            'signee_id'   => $employee->id,
-            'status'      => 'signed',
+            'signee_id' => $employee->id,
+            'status' => 'signed',
         ]);
     }
 
     public function test_employee_cannot_sign_a_document_not_assigned_to_them(): void
     {
-        $owner   = $this->staffUser();
-        $other   = $this->staffUser();
-        $doc     = $this->makeDocument($owner, ['requires_signature' => true]);
+        $owner = $this->staffUser();
+        $other = $this->staffUser();
+        $doc = $this->makeDocument($owner, ['requires_signature' => true]);
 
         DocumentSignature::create([
             'document_id' => $doc->id,
-            'signee_id'   => $owner->id,
-            'status'      => 'pending',
+            'signee_id' => $owner->id,
+            'status' => 'pending',
         ]);
 
         $this->actingAs($other)
@@ -277,12 +277,12 @@ class HrDocumentVaultTest extends TestCase
     public function test_employee_can_decline_a_pending_document(): void
     {
         $employee = $this->staffUser();
-        $doc      = $this->makeDocument($employee, ['requires_signature' => true]);
+        $doc = $this->makeDocument($employee, ['requires_signature' => true]);
 
         DocumentSignature::create([
             'document_id' => $doc->id,
-            'signee_id'   => $employee->id,
-            'status'      => 'pending',
+            'signee_id' => $employee->id,
+            'status' => 'pending',
         ]);
 
         $this->actingAs($employee)
@@ -290,9 +290,9 @@ class HrDocumentVaultTest extends TestCase
             ->assertRedirect();
 
         $this->assertDatabaseHas('document_signatures', [
-            'document_id'    => $doc->id,
-            'signee_id'      => $employee->id,
-            'status'         => 'declined',
+            'document_id' => $doc->id,
+            'signee_id' => $employee->id,
+            'status' => 'declined',
             'decline_reason' => 'I disagree with clause 4.',
         ]);
     }
@@ -301,8 +301,8 @@ class HrDocumentVaultTest extends TestCase
     {
         $sig = new DocumentSignature([
             'document_id' => 1,
-            'signee_id'   => 1,
-            'status'      => 'pending',
+            'signee_id' => 1,
+            'status' => 'pending',
         ]);
 
         $this->assertNull(DocumentSignature::UPDATED_AT);
@@ -313,7 +313,7 @@ class HrDocumentVaultTest extends TestCase
     public function test_hr_can_delete_a_document(): void
     {
         $employee = $this->staffUser();
-        $doc      = $this->makeDocument($employee);
+        $doc = $this->makeDocument($employee);
         Storage::disk('hr')->put($doc->file_path, 'content');
 
         $this->actingAs($this->hrUser())
@@ -327,7 +327,7 @@ class HrDocumentVaultTest extends TestCase
     public function test_staff_cannot_delete_documents(): void
     {
         $employee = $this->staffUser();
-        $doc      = $this->makeDocument($employee);
+        $doc = $this->makeDocument($employee);
 
         $this->actingAs($employee)
             ->delete("/admin/hr/documents/{$doc->id}")
@@ -348,12 +348,12 @@ class HrDocumentVaultTest extends TestCase
     public function test_document_is_pending_signature_for_user(): void
     {
         $employee = $this->staffUser();
-        $doc      = $this->makeDocument($employee, ['requires_signature' => true]);
+        $doc = $this->makeDocument($employee, ['requires_signature' => true]);
 
         DocumentSignature::create([
             'document_id' => $doc->id,
-            'signee_id'   => $employee->id,
-            'status'      => 'pending',
+            'signee_id' => $employee->id,
+            'status' => 'pending',
         ]);
 
         $this->assertTrue($doc->isPendingSignatureFrom($employee->id));
@@ -362,7 +362,7 @@ class HrDocumentVaultTest extends TestCase
     public function test_user_has_hr_documents_relationship(): void
     {
         $employee = $this->staffUser();
-        $doc      = $this->makeDocument($employee);
+        $doc = $this->makeDocument($employee);
 
         $this->assertTrue($employee->hrDocuments()->where('id', $doc->id)->exists());
     }
@@ -370,12 +370,12 @@ class HrDocumentVaultTest extends TestCase
     public function test_user_has_document_signatures_relationship(): void
     {
         $employee = $this->staffUser();
-        $doc      = $this->makeDocument($employee, ['requires_signature' => true]);
+        $doc = $this->makeDocument($employee, ['requires_signature' => true]);
 
         $sig = DocumentSignature::create([
             'document_id' => $doc->id,
-            'signee_id'   => $employee->id,
-            'status'      => 'pending',
+            'signee_id' => $employee->id,
+            'status' => 'pending',
         ]);
 
         $this->assertTrue($employee->documentSignatures()->where('id', $sig->id)->exists());

@@ -27,13 +27,13 @@ class MatchingController extends Controller
 
         // Approved reqs that don't yet have a matched invoice
         $pending = Requisition::with([
-                'requester:id,name,department',
-                'vendor:id,name',
-                'costCentre:id,code,name',
-                'accountCode:id,code,description',
-                'invoices',
-                'goodsReceipts',
-            ])
+            'requester:id,name,department',
+            'vendor:id,name',
+            'costCentre:id,code,name',
+            'accountCode:id,code,description',
+            'invoices',
+            'goodsReceipts',
+        ])
             ->whereIn('status', ['approved', 'approving'])
             ->orderByDesc('approved_at')
             ->get()
@@ -64,11 +64,11 @@ class MatchingController extends Controller
         $request->validate([
             'invoice_number' => ['required', 'string', 'max:100', 'unique:invoices,invoice_number'],
             'invoice_amount' => ['required', 'numeric', 'min:1'],
-            'invoice_date'   => ['required', 'date'],
-            'invoice_file'   => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
-            'receipt_date'   => ['required', 'date'],
-            'receipt_notes'  => ['nullable', 'string', 'max:500'],
-            'receipt_file'   => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+            'invoice_date' => ['required', 'date'],
+            'invoice_file' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+            'receipt_date' => ['required', 'date'],
+            'receipt_notes' => ['nullable', 'string', 'max:500'],
+            'receipt_file' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
         ]);
 
         DB::transaction(function () use ($request, $req) {
@@ -80,22 +80,22 @@ class MatchingController extends Controller
 
             Invoice::create([
                 'requisition_id' => $req->id,
-                'vendor_id'      => $req->vendor_id,
+                'vendor_id' => $req->vendor_id,
                 'invoice_number' => $request->input('invoice_number'),
-                'amount_kobo'    => MoneyHelper::toKobo((float) $request->input('invoice_amount')),
-                'received_at'    => $request->input('invoice_date'),
-                'file_path'      => $invoicePath,
-                'match_status'   => 'pending',
-                'created_by'     => $request->user()->id,
+                'amount_kobo' => MoneyHelper::toKobo((float) $request->input('invoice_amount')),
+                'received_at' => $request->input('invoice_date'),
+                'file_path' => $invoicePath,
+                'match_status' => 'pending',
+                'created_by' => $request->user()->id,
             ]);
 
             GoodsReceipt::create([
                 'requisition_id' => $req->id,
-                'received_by'    => $request->user()->id,
-                'received_at'    => $request->input('receipt_date'),
-                'notes'          => $request->input('receipt_notes'),
-                'file_path'      => $receiptPath,
-                'created_by'     => $request->user()->id,
+                'received_by' => $request->user()->id,
+                'received_at' => $request->input('receipt_date'),
+                'notes' => $request->input('receipt_notes'),
+                'file_path' => $receiptPath,
+                'created_by' => $request->user()->id,
             ]);
         });
 
@@ -121,9 +121,9 @@ class MatchingController extends Controller
 
         $result = ThreeWayMatcher::match($req, $invoice, $receipt);
 
-        DB::transaction(function () use ($req, $invoice, $result, $request) {
+        DB::transaction(function () use ($req, $invoice, $result) {
             $invoice->update([
-                'match_status'  => $result['match_status'],
+                'match_status' => $result['match_status'],
                 'variance_kobo' => $result['variance_kobo'],
             ]);
 
@@ -145,7 +145,7 @@ class MatchingController extends Controller
         }
 
         if ($result['match_status'] === 'blocked') {
-            return back()->withErrors(['match' => 'Match blocked: ' . collect($result['flags'])->pluck('description')->implode(' ')]);
+            return back()->withErrors(['match' => 'Match blocked: '.collect($result['flags'])->pluck('description')->implode(' ')]);
         }
 
         return back()->with('success', 'Three-way match confirmed. Requisition is ready for payment.');
@@ -180,17 +180,17 @@ class MatchingController extends Controller
             // F2-04: Explicit audit entry so override reasons are searchable in the
             // finance audit log independently of the model observer.
             FinanceAuditLog::insert([
-                'user_id'     => $user->id,
-                'model_type'  => Requisition::class,
-                'model_id'    => $req->id,
-                'action'      => 'variance_accepted',
+                'user_id' => $user->id,
+                'model_type' => Requisition::class,
+                'model_id' => $req->id,
+                'action' => 'variance_accepted',
                 'before_json' => json_encode(['match_status' => 'variance']),
-                'after_json'  => json_encode([
-                    'match_status'    => 'matched',
+                'after_json' => json_encode([
+                    'match_status' => 'matched',
                     'override_reason' => $request->input('override_reason'),
-                    'override_by'     => $user->id,
+                    'override_by' => $user->id,
                 ]),
-                'logged_at'   => now()->toDateTimeString(),
+                'logged_at' => now()->toDateTimeString(),
             ]);
         });
 
@@ -202,33 +202,33 @@ class MatchingController extends Controller
     private function formatRequisition(Requisition $r): array
     {
         $latestInvoice = $r->invoices->first();
-        $hasReceipt    = $r->goodsReceipts->isNotEmpty();
+        $hasReceipt = $r->goodsReceipts->isNotEmpty();
 
         return [
-            'id'               => $r->id,
-            'request_id'       => $r->request_id,
-            'status'           => $r->status,
-            'type'             => $r->type,
-            'amount_kobo'      => $r->amount_kobo,
-            'amount_fmt'       => MoneyHelper::format($r->amount_kobo),
-            'description'      => $r->description,
-            'requester'        => $r->requester?->name,
-            'department'       => $r->requester?->department,
-            'vendor'           => $r->vendor?->name,
-            'cost_centre'      => $r->costCentre ? $r->costCentre->code . ' ' . $r->costCentre->name : null,
-            'requires_match'   => ThreeWayMatcher::isMatchRequired($r),
-            'has_invoice'      => $latestInvoice !== null,
-            'has_receipt'      => $hasReceipt,
+            'id' => $r->id,
+            'request_id' => $r->request_id,
+            'status' => $r->status,
+            'type' => $r->type,
+            'amount_kobo' => $r->amount_kobo,
+            'amount_fmt' => MoneyHelper::format($r->amount_kobo),
+            'description' => $r->description,
+            'requester' => $r->requester?->name,
+            'department' => $r->requester?->department,
+            'vendor' => $r->vendor?->name,
+            'cost_centre' => $r->costCentre ? $r->costCentre->code.' '.$r->costCentre->name : null,
+            'requires_match' => ThreeWayMatcher::isMatchRequired($r),
+            'has_invoice' => $latestInvoice !== null,
+            'has_receipt' => $hasReceipt,
             'invoice' => $latestInvoice ? [
-                'id'             => $latestInvoice->id,
+                'id' => $latestInvoice->id,
                 'invoice_number' => $latestInvoice->invoice_number,
-                'amount_fmt'     => MoneyHelper::format($latestInvoice->amount_kobo),
-                'match_status'   => $latestInvoice->match_status,
-                'variance_fmt'   => MoneyHelper::format(\abs($latestInvoice->variance_kobo)),
-                'variance_kobo'  => $latestInvoice->variance_kobo,
-                'file_url'       => route('finance.document.invoice', $latestInvoice->id),
+                'amount_fmt' => MoneyHelper::format($latestInvoice->amount_kobo),
+                'match_status' => $latestInvoice->match_status,
+                'variance_fmt' => MoneyHelper::format(\abs($latestInvoice->variance_kobo)),
+                'variance_kobo' => $latestInvoice->variance_kobo,
+                'file_url' => route('finance.document.invoice', $latestInvoice->id),
             ] : null,
-            'approved_at'      => $r->approved_at?->toDateString(),
+            'approved_at' => $r->approved_at?->toDateString(),
         ];
     }
 

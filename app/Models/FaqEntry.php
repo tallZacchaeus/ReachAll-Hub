@@ -16,7 +16,7 @@ class FaqEntry extends Model
 
     protected $casts = [
         'is_published' => 'boolean',
-        'sort_order'   => 'integer',
+        'sort_order' => 'integer',
     ];
 
     public function scopePublished($query)

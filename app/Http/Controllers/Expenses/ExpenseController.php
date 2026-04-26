@@ -23,7 +23,7 @@ class ExpenseController extends Controller
      */
     public function index(Request $request): Response
     {
-        $user  = $request->user();
+        $user = $request->user();
         $isAdminView = $user->hasPermission('expenses.approve') || $user->hasPermission('expenses.finance');
 
         $query = ExpenseClaim::with([
@@ -56,9 +56,9 @@ class ExpenseController extends Controller
         if ($isAdminView) {
             $stats = [
                 'pending_count' => ExpenseClaim::where('status', 'submitted')->count(),
-                'pending_ngn'   => ExpenseClaim::where('status', 'submitted')->sum('amount_ngn_kobo') / 100,
+                'pending_ngn' => ExpenseClaim::where('status', 'submitted')->sum('amount_ngn_kobo') / 100,
                 'approved_count' => ExpenseClaim::where('status', 'approved')->count(),
-                'approved_ngn'   => ExpenseClaim::where('status', 'approved')->sum('amount_ngn_kobo') / 100,
+                'approved_ngn' => ExpenseClaim::where('status', 'approved')->sum('amount_ngn_kobo') / 100,
                 'paid_month_count' => ExpenseClaim::where('status', 'paid')
                     ->whereMonth('finance_paid_at', now()->month)
                     ->whereYear('finance_paid_at', now()->year)
@@ -71,12 +71,12 @@ class ExpenseController extends Controller
         }
 
         return Inertia::render('Expenses/ExpenseClaimsPage', [
-            'claims'      => $claims,
-            'stats'       => $stats,
+            'claims' => $claims,
+            'stats' => $stats,
             'isAdminView' => $isAdminView,
-            'filters'     => $request->only(['status', 'category', 'date_from', 'date_to']),
-            'canApprove'  => $user->hasPermission('expenses.approve'),
-            'canFinance'  => $user->hasPermission('expenses.finance'),
+            'filters' => $request->only(['status', 'category', 'date_from', 'date_to']),
+            'canApprove' => $user->hasPermission('expenses.approve'),
+            'canFinance' => $user->hasPermission('expenses.finance'),
         ]);
     }
 
@@ -120,10 +120,10 @@ class ExpenseController extends Controller
         ]);
 
         return Inertia::render('Expenses/ExpenseClaimPage', [
-            'claim'     => $this->formatDetail($expenseClaim),
+            'claim' => $this->formatDetail($expenseClaim),
             'canApprove' => $user->hasPermission('expenses.approve') && $expenseClaim->status === 'submitted',
             'canFinance' => $user->hasPermission('expenses.finance') && $expenseClaim->status === 'approved',
-            'isOwner'   => $expenseClaim->user_id === $user->id,
+            'isOwner' => $expenseClaim->user_id === $user->id,
         ]);
     }
 
@@ -136,15 +136,15 @@ class ExpenseController extends Controller
         }
 
         $validated = $request->validate([
-            'title'         => ['required', 'string', 'max:200'],
-            'description'   => ['nullable', 'string', 'max:5000'],
-            'category'      => ['required', 'in:travel,accommodation,meals,equipment,training,communication,medical,other'],
-            'currency'      => ['required', 'string', 'size:3'],
-            'amount'        => ['required', 'numeric', 'min:0.01'],
+            'title' => ['required', 'string', 'max:200'],
+            'description' => ['nullable', 'string', 'max:5000'],
+            'category' => ['required', 'in:travel,accommodation,meals,equipment,training,communication,medical,other'],
+            'currency' => ['required', 'string', 'size:3'],
+            'amount' => ['required', 'numeric', 'min:0.01'],
             'exchange_rate' => ['nullable', 'numeric', 'min:0.000001'],
-            'expense_date'  => ['required', 'date', 'before_or_equal:today'],
-            'receipts'      => ['nullable', 'array'],
-            'receipts.*'    => ['file', 'mimes:pdf,jpg,jpeg,png,webp', 'max:10240'],
+            'expense_date' => ['required', 'date', 'before_or_equal:today'],
+            'receipts' => ['nullable', 'array'],
+            'receipts.*' => ['file', 'mimes:pdf,jpg,jpeg,png,webp', 'max:10240'],
         ]);
 
         // Force exchange_rate to 1 when currency is NGN
@@ -156,27 +156,27 @@ class ExpenseController extends Controller
         $amountNgnKobo = (int) round((float) $validated['amount'] * $exchangeRate * 100);
 
         $claim = ExpenseClaim::create([
-            'user_id'        => $request->user()->id,
-            'title'          => $validated['title'],
-            'description'    => $validated['description'] ?? null,
-            'category'       => $validated['category'],
-            'currency'       => strtoupper($validated['currency']),
-            'amount'         => $validated['amount'],
-            'exchange_rate'  => $exchangeRate,
+            'user_id' => $request->user()->id,
+            'title' => $validated['title'],
+            'description' => $validated['description'] ?? null,
+            'category' => $validated['category'],
+            'currency' => strtoupper($validated['currency']),
+            'amount' => $validated['amount'],
+            'exchange_rate' => $exchangeRate,
             'amount_ngn_kobo' => $amountNgnKobo,
-            'expense_date'   => $validated['expense_date'],
-            'status'         => 'draft',
+            'expense_date' => $validated['expense_date'],
+            'status' => 'draft',
         ]);
 
         // Upload any immediately attached receipts
         foreach ($request->file('receipts', []) as $file) {
             $path = $file->store("expenses/{$claim->id}", 'hr');
             $claim->receipts()->create([
-                'file_path'         => $path,
-                'disk'              => 'hr',
+                'file_path' => $path,
+                'disk' => 'hr',
                 'original_filename' => $file->getClientOriginalName(),
-                'mime_type'         => $file->getMimeType(),
-                'file_size_bytes'   => $file->getSize(),
+                'mime_type' => $file->getMimeType(),
+                'file_size_bytes' => $file->getSize(),
             ]);
         }
 
@@ -209,7 +209,7 @@ class ExpenseController extends Controller
 
         $old = $expenseClaim->status;
         $expenseClaim->update([
-            'status'       => 'submitted',
+            'status' => 'submitted',
             'submitted_at' => now(),
         ]);
 
@@ -244,10 +244,10 @@ class ExpenseController extends Controller
 
         $old = $expenseClaim->status;
         $expenseClaim->update([
-            'status'         => 'approved',
+            'status' => 'approved',
             'reviewed_by_id' => $request->user()->id,
-            'reviewed_at'    => now(),
-            'review_notes'   => $validated['review_notes'] ?? null,
+            'reviewed_at' => now(),
+            'review_notes' => $validated['review_notes'] ?? null,
         ]);
 
         AuditLogger::record(
@@ -281,10 +281,10 @@ class ExpenseController extends Controller
 
         $old = $expenseClaim->status;
         $expenseClaim->update([
-            'status'         => 'rejected',
+            'status' => 'rejected',
             'reviewed_by_id' => $request->user()->id,
-            'reviewed_at'    => now(),
-            'review_notes'   => $validated['review_notes'],
+            'reviewed_at' => now(),
+            'review_notes' => $validated['review_notes'],
         ]);
 
         AuditLogger::record(
@@ -314,9 +314,9 @@ class ExpenseController extends Controller
 
         $old = $expenseClaim->status;
         $expenseClaim->update([
-            'status'              => 'paid',
-            'finance_paid_by_id'  => $request->user()->id,
-            'finance_paid_at'     => now(),
+            'status' => 'paid',
+            'finance_paid_by_id' => $request->user()->id,
+            'finance_paid_at' => now(),
         ]);
 
         AuditLogger::record(
@@ -348,7 +348,7 @@ class ExpenseController extends Controller
         }
 
         $request->validate([
-            'receipt'     => ['required', 'file', 'mimes:pdf,jpg,jpeg,png,webp', 'max:10240'],
+            'receipt' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png,webp', 'max:10240'],
             'description' => ['nullable', 'string', 'max:300'],
         ]);
 
@@ -356,12 +356,12 @@ class ExpenseController extends Controller
         $path = $file->store("expenses/{$expenseClaim->id}", 'hr');
 
         $receipt = $expenseClaim->receipts()->create([
-            'file_path'         => $path,
-            'disk'              => 'hr',
+            'file_path' => $path,
+            'disk' => 'hr',
             'original_filename' => $file->getClientOriginalName(),
-            'mime_type'         => $file->getMimeType(),
-            'file_size_bytes'   => $file->getSize(),
-            'description'       => $request->input('description'),
+            'mime_type' => $file->getMimeType(),
+            'file_size_bytes' => $file->getSize(),
+            'description' => $request->input('description'),
         ]);
 
         AuditLogger::record(
@@ -381,7 +381,7 @@ class ExpenseController extends Controller
 
     public function downloadReceipt(Request $request, ExpenseReceipt $expenseReceipt): StreamedResponse
     {
-        $user  = $request->user();
+        $user = $request->user();
         $claim = $expenseReceipt->expenseClaim;
 
         // Owner, approver, or finance team can download
@@ -410,19 +410,19 @@ class ExpenseController extends Controller
     private function formatForList(ExpenseClaim $c): array
     {
         return [
-            'id'              => $c->id,
-            'title'           => $c->title,
-            'category'        => $c->category,
-            'currency'        => $c->currency,
-            'amount'          => (float) $c->amount,
-            'exchange_rate'   => (float) $c->exchange_rate,
+            'id' => $c->id,
+            'title' => $c->title,
+            'category' => $c->category,
+            'currency' => $c->currency,
+            'amount' => (float) $c->amount,
+            'exchange_rate' => (float) $c->exchange_rate,
             'amount_ngn_kobo' => $c->amount_ngn_kobo,
-            'amount_ngn'      => $c->amountNgn(),
-            'expense_date'    => $c->expense_date?->toDateString(),
-            'status'          => $c->status,
-            'submitted_at'    => $c->submitted_at?->toISOString(),
-            'receipts_count'  => $c->receipts->count(),
-            'user'            => $c->user
+            'amount_ngn' => $c->amountNgn(),
+            'expense_date' => $c->expense_date?->toDateString(),
+            'status' => $c->status,
+            'submitted_at' => $c->submitted_at?->toISOString(),
+            'receipts_count' => $c->receipts->count(),
+            'user' => $c->user
                 ? ['id' => $c->user->id, 'name' => $c->user->name, 'employee_id' => $c->user->employee_id]
                 : null,
         ];
@@ -431,37 +431,37 @@ class ExpenseController extends Controller
     private function formatDetail(ExpenseClaim $c): array
     {
         return [
-            'id'              => $c->id,
-            'title'           => $c->title,
-            'description'     => $c->description,
-            'category'        => $c->category,
-            'currency'        => $c->currency,
-            'amount'          => (float) $c->amount,
-            'exchange_rate'   => (float) $c->exchange_rate,
+            'id' => $c->id,
+            'title' => $c->title,
+            'description' => $c->description,
+            'category' => $c->category,
+            'currency' => $c->currency,
+            'amount' => (float) $c->amount,
+            'exchange_rate' => (float) $c->exchange_rate,
             'amount_ngn_kobo' => $c->amount_ngn_kobo,
-            'amount_ngn'      => $c->amountNgn(),
-            'expense_date'    => $c->expense_date?->toDateString(),
-            'status'          => $c->status,
-            'submitted_at'    => $c->submitted_at?->toISOString(),
-            'reviewed_at'     => $c->reviewed_at?->toISOString(),
-            'review_notes'    => $c->review_notes,
+            'amount_ngn' => $c->amountNgn(),
+            'expense_date' => $c->expense_date?->toDateString(),
+            'status' => $c->status,
+            'submitted_at' => $c->submitted_at?->toISOString(),
+            'reviewed_at' => $c->reviewed_at?->toISOString(),
+            'review_notes' => $c->review_notes,
             'finance_paid_at' => $c->finance_paid_at?->toISOString(),
-            'user'            => $c->user
+            'user' => $c->user
                 ? ['id' => $c->user->id, 'name' => $c->user->name, 'employee_id' => $c->user->employee_id]
                 : null,
-            'reviewed_by'     => $c->reviewedBy
+            'reviewed_by' => $c->reviewedBy
                 ? ['id' => $c->reviewedBy->id, 'name' => $c->reviewedBy->name]
                 : null,
             'finance_paid_by' => $c->financePayBy
                 ? ['id' => $c->financePayBy->id, 'name' => $c->financePayBy->name]
                 : null,
-            'receipts'        => $c->receipts->map(fn (ExpenseReceipt $r) => [
-                'id'                => $r->id,
+            'receipts' => $c->receipts->map(fn (ExpenseReceipt $r) => [
+                'id' => $r->id,
                 'original_filename' => $r->original_filename,
-                'mime_type'         => $r->mime_type,
-                'file_size_bytes'   => $r->file_size_bytes,
-                'description'       => $r->description,
-                'created_at'        => $r->created_at?->toISOString(),
+                'mime_type' => $r->mime_type,
+                'file_size_bytes' => $r->file_size_bytes,
+                'description' => $r->description,
+                'created_at' => $r->created_at?->toISOString(),
             ])->values()->all(),
         ];
     }

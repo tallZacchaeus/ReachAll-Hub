@@ -21,10 +21,10 @@ class InterviewScorecard extends Model
     ];
 
     protected $casts = [
-        'overall_rating'       => 'integer',
-        'technical_rating'     => 'integer',
+        'overall_rating' => 'integer',
+        'technical_rating' => 'integer',
         'communication_rating' => 'integer',
-        'culture_fit_rating'   => 'integer',
+        'culture_fit_rating' => 'integer',
     ];
 
     public function schedule(): BelongsTo

@@ -22,7 +22,7 @@ class AccountCode extends Model
     protected $casts = [
         'tax_vat_applicable' => 'boolean',
         'tax_wht_applicable' => 'boolean',
-        'wht_rate'           => 'integer',
+        'wht_rate' => 'integer',
     ];
 
     public function creator(): BelongsTo
@@ -42,9 +42,9 @@ class AccountCode extends Model
             str_starts_with($this->category, '6') => 'Operations',
             str_starts_with($this->category, '7') => 'Travel & Transport',
             str_starts_with($this->category, '8') => 'Programs & Production',
-            $this->category >= '9500'             => 'Capital Expenditure',
+            $this->category >= '9500' => 'Capital Expenditure',
             str_starts_with($this->category, '9') => 'Technology & Software',
-            default                                => 'Other',
+            default => 'Other',
         };
     }
 }

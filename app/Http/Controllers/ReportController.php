@@ -39,7 +39,7 @@ class ReportController extends Controller
             'generatedAt' => now()->format('F j, Y g:i A'),
         ]);
 
-        return $pdf->download('report_' . $reportType . '_' . date('Y-m-d') . '.pdf');
+        return $pdf->download('report_'.$reportType.'_'.date('Y-m-d').'.pdf');
     }
 
     public function exportCSV(Request $request)
@@ -47,7 +47,7 @@ class ReportController extends Controller
         $reportPeriod = $this->normalizePeriod($request->input('period'));
         $reportType = $this->normalizeType($request->input('type'));
         $data = $this->buildReportData($reportPeriod);
-        $filename = 'report_' . $reportType . '_' . date('Y-m-d') . '.csv';
+        $filename = 'report_'.$reportType.'_'.date('Y-m-d').'.csv';
 
         $callback = function () use ($data, $reportType): void {
             $file = fopen('php://output', 'w');
@@ -105,7 +105,7 @@ class ReportController extends Controller
                         $performer['rank'],
                         $performer['staffId'],
                         $performer['name'],
-                        $performer['score'] . '%',
+                        $performer['score'].'%',
                         $performer['completedTasks'],
                         $performer['assignedTasks'],
                     ]);
@@ -129,7 +129,7 @@ class ReportController extends Controller
 
         return Response::stream($callback, 200, [
             'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
         ]);
     }
 
@@ -146,7 +146,7 @@ class ReportController extends Controller
             'generatedAt' => now()->format('F j, Y g:i A'),
         ]);
 
-        return $pdf->download('progress_report_' . $data['staff']['name'] . '_' . $year . '.pdf');
+        return $pdf->download('progress_report_'.$data['staff']['name'].'_'.$year.'.pdf');
     }
 
     public function exportProgressCSV(Request $request)
@@ -166,9 +166,9 @@ class ReportController extends Controller
 
             fputcsv($file, ['Summary Statistics']);
             fputcsv($file, ['Avg Tasks/Month', $data['summary']['avgTasks']]);
-            fputcsv($file, ['Avg Attendance', $data['summary']['avgAttendance'] . '%']);
-            fputcsv($file, ['Avg Engagement', $data['summary']['avgEngagement'] . '%']);
-            fputcsv($file, ['Overall Score', $data['summary']['avgScore'] . '%']);
+            fputcsv($file, ['Avg Attendance', $data['summary']['avgAttendance'].'%']);
+            fputcsv($file, ['Avg Engagement', $data['summary']['avgEngagement'].'%']);
+            fputcsv($file, ['Overall Score', $data['summary']['avgScore'].'%']);
             fputcsv($file, []);
 
             fputcsv($file, ['Month', 'Tasks Completed', 'Attendance %', 'Engagement %', 'Score %']);
@@ -187,7 +187,7 @@ class ReportController extends Controller
 
         return Response::stream($callback, 200, [
             'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="progress_report_' . $data['staff']['name'] . '_' . $year . '.csv"',
+            'Content-Disposition' => 'attachment; filename="progress_report_'.$data['staff']['name'].'_'.$year.'.csv"',
         ]);
     }
 
@@ -225,22 +225,22 @@ class ReportController extends Controller
                 [
                     'label' => 'Total Staff',
                     'value' => (string) $totalStaff,
-                    'meta' => $activeStaff . ' active staff',
+                    'meta' => $activeStaff.' active staff',
                 ],
                 [
                     'label' => 'Tasks In Period',
                     'value' => (string) $totalTasks,
-                    'meta' => $completedTasks . ' completed tasks',
+                    'meta' => $completedTasks.' completed tasks',
                 ],
                 [
                     'label' => 'Completion Rate',
-                    'value' => $completionRate . '%',
-                    'meta' => $overdueTasks . ' overdue tasks',
+                    'value' => $completionRate.'%',
+                    'meta' => $overdueTasks.' overdue tasks',
                 ],
                 [
                     'label' => 'Comment Activity',
                     'value' => (string) $commentActivity,
-                    'meta' => $discussedTasks . ' discussed tasks',
+                    'meta' => $discussedTasks.' discussed tasks',
                 ],
             ],
             'taskTrend' => $this->buildTaskTrend(),

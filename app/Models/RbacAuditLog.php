@@ -45,14 +45,14 @@ class RbacAuditLog extends Model
     ): void {
         try {
             static::create([
-                'actor_id'    => $actorId,
-                'action'      => $action,
+                'actor_id' => $actorId,
+                'action' => $action,
                 'target_type' => $targetType,
-                'target_id'   => $targetId,
-                'old_value'   => $oldValue,
-                'new_value'   => $newValue,
-                'ip_address'  => $ipAddress,
-                'user_agent'  => $userAgent,
+                'target_id' => $targetId,
+                'old_value' => $oldValue,
+                'new_value' => $newValue,
+                'ip_address' => $ipAddress,
+                'user_agent' => $userAgent,
             ]);
         } catch (\Throwable) {
             // Silently swallow — audit log failure must not interrupt the primary operation.

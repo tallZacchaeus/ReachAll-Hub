@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Payroll;
 
 use App\Http\Controllers\Controller;
 use App\Models\PayrollEntry;
-use App\Models\PayrollRun;
 use App\Services\Finance\MoneyHelper;
 use App\Services\Payroll\PayslipGenerator;
 use Illuminate\Support\Facades\Auth;
@@ -28,16 +27,16 @@ class PayslipController extends Controller
             ->orderByDesc('created_at')
             ->get()
             ->map(fn (PayrollEntry $e) => [
-                'id'               => $e->id,
-                'period_label'     => $e->run?->period_label,
-                'period_start'     => $e->run?->period_start?->toDateString(),
-                'status'           => $e->run?->status,
-                'gross'            => MoneyHelper::format($e->gross_kobo),
-                'net'              => MoneyHelper::format($e->net_kobo),
-                'paye'             => MoneyHelper::format($e->paye_kobo),
-                'pension'          => MoneyHelper::format($e->pension_employee_kobo),
-                'payslip_generated'=> $e->payslip_generated,
-                'download_url'     => route('payroll.payslip.download', $e->id),
+                'id' => $e->id,
+                'period_label' => $e->run?->period_label,
+                'period_start' => $e->run?->period_start?->toDateString(),
+                'status' => $e->run?->status,
+                'gross' => MoneyHelper::format($e->gross_kobo),
+                'net' => MoneyHelper::format($e->net_kobo),
+                'paye' => MoneyHelper::format($e->paye_kobo),
+                'pension' => MoneyHelper::format($e->pension_employee_kobo),
+                'payslip_generated' => $e->payslip_generated,
+                'download_url' => route('payroll.payslip.download', $e->id),
             ]);
 
         return Inertia::render('Payroll/MyPayslipsPage', [
@@ -52,7 +51,7 @@ class PayslipController extends Controller
 
         // HR/payroll managers can download any payslip; employees only their own.
         $canManage = $user?->hasPermission('payroll.manage') || $user?->hasPermission('payroll.view');
-        $isOwner   = $payrollEntry->user_id === $user?->id;
+        $isOwner = $payrollEntry->user_id === $user?->id;
 
         abort_unless($canManage || $isOwner, 403);
 

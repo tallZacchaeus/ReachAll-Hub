@@ -203,9 +203,9 @@ class StaffEnrollmentController extends Controller
 
                 foreach ($defaults as [$type, $title, $dept, $order]) {
                     $checklist->tasks()->create([
-                        'task_type'  => $type,
-                        'title'      => $title,
-                        'status'     => 'pending',
+                        'task_type' => $type,
+                        'title' => $title,
+                        'status' => 'pending',
                         'sort_order' => $order,
                     ]);
                 }

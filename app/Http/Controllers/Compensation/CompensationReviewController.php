@@ -40,18 +40,18 @@ class CompensationReviewController extends Controller
         $this->authorise();
 
         $validated = $request->validate([
-            'name'               => ['required', 'string', 'max:200'],
-            'cycle_type'         => ['required', 'in:annual,mid_year,off_cycle,promotion'],
-            'review_start_date'  => ['required', 'date'],
-            'review_end_date'    => ['required', 'date', 'after:review_start_date'],
-            'effective_date'     => ['required', 'date'],
-            'budget_kobo'        => ['required', 'integer', 'min:0'],
-            'notes'              => ['nullable', 'string', 'max:2000'],
+            'name' => ['required', 'string', 'max:200'],
+            'cycle_type' => ['required', 'in:annual,mid_year,off_cycle,promotion'],
+            'review_start_date' => ['required', 'date'],
+            'review_end_date' => ['required', 'date', 'after:review_start_date'],
+            'effective_date' => ['required', 'date'],
+            'budget_kobo' => ['required', 'integer', 'min:0'],
+            'notes' => ['nullable', 'string', 'max:2000'],
         ]);
 
         CompensationReviewCycle::create(array_merge($validated, [
-            'status'         => 'draft',
-            'created_by_id'  => Auth::id(),
+            'status' => 'draft',
+            'created_by_id' => Auth::id(),
         ]));
 
         return back()->with('success', 'Review cycle created.');
@@ -65,26 +65,26 @@ class CompensationReviewController extends Controller
             ->with('employee:id,name,employee_id,department,role')
             ->get()
             ->map(fn ($e) => [
-                'id'                    => $e->id,
-                'user_id'               => $e->user_id,
-                'employee_name'         => $e->employee->name,
-                'employee_id'           => $e->employee->employee_id,
-                'department'            => $e->employee->department,
-                'current_salary'        => MoneyHelper::format($e->current_salary_kobo),
-                'current_salary_kobo'   => $e->current_salary_kobo,
-                'proposed_salary'       => $e->proposed_salary_kobo ? MoneyHelper::format($e->proposed_salary_kobo) : null,
-                'proposed_salary_kobo'  => $e->proposed_salary_kobo,
-                'merit_basis_points'    => $e->merit_basis_points,
-                'merit_percent'         => number_format($e->meritPercent() * 100, 2),
-                'increase'              => MoneyHelper::format($e->increaseKobo()),
-                'recommendation'        => $e->recommendation,
-                'rationale'             => $e->rationale,
-                'status'                => $e->status,
-                'approved_at'           => $e->approved_at?->toDateTimeString(),
+                'id' => $e->id,
+                'user_id' => $e->user_id,
+                'employee_name' => $e->employee->name,
+                'employee_id' => $e->employee->employee_id,
+                'department' => $e->employee->department,
+                'current_salary' => MoneyHelper::format($e->current_salary_kobo),
+                'current_salary_kobo' => $e->current_salary_kobo,
+                'proposed_salary' => $e->proposed_salary_kobo ? MoneyHelper::format($e->proposed_salary_kobo) : null,
+                'proposed_salary_kobo' => $e->proposed_salary_kobo,
+                'merit_basis_points' => $e->merit_basis_points,
+                'merit_percent' => number_format($e->meritPercent() * 100, 2),
+                'increase' => MoneyHelper::format($e->increaseKobo()),
+                'recommendation' => $e->recommendation,
+                'rationale' => $e->rationale,
+                'status' => $e->status,
+                'approved_at' => $e->approved_at?->toDateTimeString(),
             ]);
 
         return Inertia::render('Compensation/ReviewCycleDetailPage', [
-            'cycle'   => $compensationReviewCycle,
+            'cycle' => $compensationReviewCycle,
             'entries' => $entries,
         ]);
     }
@@ -104,13 +104,15 @@ class CompensationReviewController extends Controller
 
             foreach ($employees as $employee) {
                 $salary = $employee->salaries->first();
-                if (! $salary) continue;
+                if (! $salary) {
+                    continue;
+                }
 
                 CompensationReviewEntry::firstOrCreate(
                     ['cycle_id' => $compensationReviewCycle->id, 'user_id' => $employee->id],
                     [
                         'current_salary_kobo' => $salary->grossKobo(),
-                        'status'              => 'pending',
+                        'status' => 'pending',
                     ]
                 );
             }
@@ -134,14 +136,14 @@ class CompensationReviewController extends Controller
 
         $validated = $request->validate([
             'proposed_salary_kobo' => ['nullable', 'integer', 'min:0'],
-            'merit_basis_points'   => ['nullable', 'integer', 'min:0', 'max:50000'],
-            'recommendation'       => ['nullable', 'in:increase,no_change,decrease,promotion,offcycle'],
-            'rationale'            => ['nullable', 'string', 'max:2000'],
+            'merit_basis_points' => ['nullable', 'integer', 'min:0', 'max:50000'],
+            'recommendation' => ['nullable', 'in:increase,no_change,decrease,promotion,offcycle'],
+            'rationale' => ['nullable', 'string', 'max:2000'],
         ]);
 
         $compensationReviewEntry->update(array_merge($validated, [
             'reviewed_by_id' => Auth::id(),
-            'status'         => 'submitted',
+            'status' => 'submitted',
         ]));
 
         return back()->with('success', 'Review entry updated.');
@@ -156,9 +158,9 @@ class CompensationReviewController extends Controller
 
         DB::transaction(function () use ($compensationReviewEntry) {
             $compensationReviewEntry->update([
-                'status'          => 'approved',
-                'approved_by_id'  => Auth::id(),
-                'approved_at'     => now(),
+                'status' => 'approved',
+                'approved_by_id' => Auth::id(),
+                'approved_at' => now(),
             ]);
 
             // Apply the salary change if proposed salary differs from current
@@ -166,9 +168,9 @@ class CompensationReviewController extends Controller
                 $compensationReviewEntry->proposed_salary_kobo &&
                 $compensationReviewEntry->proposed_salary_kobo !== $compensationReviewEntry->current_salary_kobo
             ) {
-                $cycle      = $compensationReviewEntry->cycle;
+                $cycle = $compensationReviewEntry->cycle;
                 $effectiveDate = $cycle->effective_date->toDateString();
-                $employee   = $compensationReviewEntry->employee;
+                $employee = $compensationReviewEntry->employee;
 
                 // Close the current salary record
                 EmployeeSalary::where('user_id', $employee->id)
@@ -180,18 +182,18 @@ class CompensationReviewController extends Controller
                     ->orderByDesc('effective_date')
                     ->first();
 
-                $ratio   = $current && $current->grossKobo() > 0
+                $ratio = $current && $current->grossKobo() > 0
                     ? $compensationReviewEntry->proposed_salary_kobo / $current->grossKobo()
                     : 1;
 
                 EmployeeSalary::create([
-                    'user_id'               => $employee->id,
-                    'basic_kobo'            => (int) round(($current?->basic_kobo ?? 0) * $ratio),
-                    'housing_kobo'          => $current?->housing_kobo ?? 0,
-                    'transport_kobo'        => $current?->transport_kobo ?? 0,
+                    'user_id' => $employee->id,
+                    'basic_kobo' => (int) round(($current?->basic_kobo ?? 0) * $ratio),
+                    'housing_kobo' => $current?->housing_kobo ?? 0,
+                    'transport_kobo' => $current?->transport_kobo ?? 0,
                     'other_allowances_kobo' => $current?->other_allowances_kobo ?? 0,
-                    'nhf_enrolled'          => $current?->nhf_enrolled ?? false,
-                    'effective_date'        => $effectiveDate,
+                    'nhf_enrolled' => $current?->nhf_enrolled ?? false,
+                    'effective_date' => $effectiveDate,
                 ]);
             }
         });
@@ -206,10 +208,10 @@ class CompensationReviewController extends Controller
         $request->validate(['rationale' => ['nullable', 'string', 'max:1000']]);
 
         $compensationReviewEntry->update([
-            'status'          => 'rejected',
-            'approved_by_id'  => Auth::id(),
-            'approved_at'     => now(),
-            'rationale'       => $request->rationale ?? $compensationReviewEntry->rationale,
+            'status' => 'rejected',
+            'approved_by_id' => Auth::id(),
+            'approved_at' => now(),
+            'rationale' => $request->rationale ?? $compensationReviewEntry->rationale,
         ]);
 
         return back()->with('success', 'Entry rejected.');

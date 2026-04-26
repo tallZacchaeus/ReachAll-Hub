@@ -52,18 +52,18 @@ class BudgetEnforcer
             $query->where('financial_period_id', $periodId);
         }
 
-        $usedKobo      = (int) $query->sum('amount_kobo');
+        $usedKobo = (int) $query->sum('amount_kobo');
         $projectedKobo = $usedKobo + $newAmountKobo;
-        $budgetKobo    = $costCentre->budget_kobo;
+        $budgetKobo = $costCentre->budget_kobo;
 
         // If no budget is set, allow unconditionally
         if ($budgetKobo <= 0) {
             return [
-                'status'         => 'allow',
-                'percentage'     => 0.0,
-                'used_kobo'      => $usedKobo,
+                'status' => 'allow',
+                'percentage' => 0.0,
+                'used_kobo' => $usedKobo,
                 'projected_kobo' => $projectedKobo,
-                'budget_kobo'    => $budgetKobo,
+                'budget_kobo' => $budgetKobo,
             ];
         }
 
@@ -71,17 +71,17 @@ class BudgetEnforcer
 
         $status = match (true) {
             $pct >= 100.0 => 'block_100',
-            $pct >= 90.0  => 'warn_90',
-            $pct >= 80.0  => 'warn_80',
-            default       => 'allow',
+            $pct >= 90.0 => 'warn_90',
+            $pct >= 80.0 => 'warn_80',
+            default => 'allow',
         };
 
         return [
-            'status'         => $status,
-            'percentage'     => round($pct, 2),
-            'used_kobo'      => $usedKobo,
+            'status' => $status,
+            'percentage' => round($pct, 2),
+            'used_kobo' => $usedKobo,
             'projected_kobo' => $projectedKobo,
-            'budget_kobo'    => $budgetKobo,
+            'budget_kobo' => $budgetKobo,
         ];
     }
 
@@ -96,6 +96,7 @@ class BudgetEnforcer
         if ($result['budget_kobo'] <= 0) {
             return 0.0;
         }
+
         return round(($result['used_kobo'] / $result['budget_kobo']) * 100.0, 2);
     }
 }

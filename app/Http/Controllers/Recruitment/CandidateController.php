@@ -24,15 +24,15 @@ class CandidateController extends Controller
         }
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('email', 'like', '%' . $request->search . '%')
-                  ->orWhere('current_company', 'like', '%' . $request->search . '%');
+                $q->where('name', 'like', '%'.$request->search.'%')
+                    ->orWhere('email', 'like', '%'.$request->search.'%')
+                    ->orWhere('current_company', 'like', '%'.$request->search.'%');
             });
         }
 
         return Inertia::render('Recruitment/CandidatesPage', [
             'candidates' => $query->paginate(25)->withQueryString(),
-            'filters'    => $request->only('status', 'search'),
+            'filters' => $request->only('status', 'search'),
         ]);
     }
 
@@ -41,15 +41,15 @@ class CandidateController extends Controller
         abort_unless($request->user()->hasPermission('recruitment.manage'), 403);
 
         $data = $request->validate([
-            'name'            => 'required|string|max:200',
-            'email'           => 'required|email|max:200|unique:candidates,email',
-            'phone'           => 'nullable|string|max:30',
-            'source'          => 'nullable|string|max:100',
+            'name' => 'required|string|max:200',
+            'email' => 'required|email|max:200|unique:candidates,email',
+            'phone' => 'nullable|string|max:30',
+            'source' => 'nullable|string|max:100',
             'current_company' => 'nullable|string|max:200',
-            'current_title'   => 'nullable|string|max:200',
-            'linkedin_url'    => 'nullable|url|max:500',
-            'resume'          => 'nullable|file|mimes:pdf,doc,docx|max:5120',
-            'notes'           => 'nullable|string|max:2000',
+            'current_title' => 'nullable|string|max:200',
+            'linkedin_url' => 'nullable|url|max:500',
+            'resume' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'notes' => 'nullable|string|max:2000',
         ]);
 
         $resumePath = null;
@@ -58,18 +58,18 @@ class CandidateController extends Controller
         }
 
         Candidate::create([
-            'name'            => $data['name'],
-            'email'           => $data['email'],
-            'phone'           => $data['phone'] ?? null,
-            'source'          => $data['source'] ?? null,
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'] ?? null,
+            'source' => $data['source'] ?? null,
             'current_company' => $data['current_company'] ?? null,
-            'current_title'   => $data['current_title'] ?? null,
-            'linkedin_url'    => $data['linkedin_url'] ?? null,
-            'resume_path'     => $resumePath,
-            'resume_disk'     => $resumePath ? 'hr' : null,
-            'status'          => 'active',
-            'notes'           => $data['notes'] ?? null,
-            'added_by_id'     => $request->user()->id,
+            'current_title' => $data['current_title'] ?? null,
+            'linkedin_url' => $data['linkedin_url'] ?? null,
+            'resume_path' => $resumePath,
+            'resume_disk' => $resumePath ? 'hr' : null,
+            'status' => 'active',
+            'notes' => $data['notes'] ?? null,
+            'added_by_id' => $request->user()->id,
         ]);
 
         return back()->with('success', 'Candidate added to talent pool.');
@@ -80,14 +80,14 @@ class CandidateController extends Controller
         abort_unless($request->user()->hasPermission('recruitment.manage'), 403);
 
         $data = $request->validate([
-            'name'            => 'required|string|max:200',
-            'phone'           => 'nullable|string|max:30',
-            'source'          => 'nullable|string|max:100',
+            'name' => 'required|string|max:200',
+            'phone' => 'nullable|string|max:30',
+            'source' => 'nullable|string|max:100',
             'current_company' => 'nullable|string|max:200',
-            'current_title'   => 'nullable|string|max:200',
-            'linkedin_url'    => 'nullable|url|max:500',
-            'status'          => 'required|in:active,inactive,hired,blacklisted',
-            'notes'           => 'nullable|string|max:2000',
+            'current_title' => 'nullable|string|max:200',
+            'linkedin_url' => 'nullable|url|max:500',
+            'status' => 'required|in:active,inactive,hired,blacklisted',
+            'notes' => 'nullable|string|max:2000',
         ]);
 
         $candidate->update($data);
@@ -107,7 +107,7 @@ class CandidateController extends Controller
 
         return Storage::disk($disk)->download(
             $candidate->resume_path,
-            $candidate->name . '_resume.pdf'
+            $candidate->name.'_resume.pdf'
         );
     }
 }

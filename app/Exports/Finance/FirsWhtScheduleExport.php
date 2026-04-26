@@ -23,7 +23,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
  *   S/N | Vendor Name | TIN | Contract/Invoice Ref | Nature of Transaction
  *   | Gross Amount (₦) | WHT Rate (%) | WHT Amount (₦) | Period
  */
-class FirsWhtScheduleExport implements FromCollection, WithHeadings, WithMapping, WithStyles, ShouldAutoSize, WithTitle
+class FirsWhtScheduleExport implements FromCollection, ShouldAutoSize, WithHeadings, WithMapping, WithStyles, WithTitle
 {
     public function __construct(private readonly array $filters = []) {}
 
@@ -42,22 +42,20 @@ class FirsWhtScheduleExport implements FromCollection, WithHeadings, WithMapping
         ])
         // T10-01: Exclude voided reversal entries (amount_kobo < 0) and
         // entries explicitly marked 'voided' so they net to zero in the export.
-        ->where('status', 'pending')
-        ->where('amount_kobo', '>', 0);
+            ->where('status', 'pending')
+            ->where('amount_kobo', '>', 0);
 
         if (! empty($this->filters['period_id'])) {
             $query->where('financial_period_id', $this->filters['period_id']);
         }
 
         if (! empty($this->filters['from'])) {
-            $query->whereHas('financialPeriod', fn ($q) =>
-                $q->whereRaw("strftime('%Y-%m', year || '-' || printf('%02d', month)) >= ?", [$this->filters['from']])
+            $query->whereHas('financialPeriod', fn ($q) => $q->whereRaw("strftime('%Y-%m', year || '-' || printf('%02d', month)) >= ?", [$this->filters['from']])
             );
         }
 
         if (! empty($this->filters['to'])) {
-            $query->whereHas('financialPeriod', fn ($q) =>
-                $q->whereRaw("strftime('%Y-%m', year || '-' || printf('%02d', month)) <= ?", [$this->filters['to']])
+            $query->whereHas('financialPeriod', fn ($q) => $q->whereRaw("strftime('%Y-%m', year || '-' || printf('%02d', month)) <= ?", [$this->filters['to']])
             );
         }
 
@@ -108,7 +106,7 @@ class FirsWhtScheduleExport implements FromCollection, WithHeadings, WithMapping
                 'font' => ['bold' => true],
                 'fill' => [
                     'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                    'color'    => ['rgb' => 'FEF3C7'], // amber-100 for FIRS/tax context
+                    'color' => ['rgb' => 'FEF3C7'], // amber-100 for FIRS/tax context
                 ],
             ],
         ];

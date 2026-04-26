@@ -12,7 +12,6 @@ use App\Models\User;
 use App\Services\Finance\ClosedPeriodGuard;
 use App\Services\Finance\PeriodCloser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
@@ -67,9 +66,9 @@ class Phase5Test extends TestCase
     private function makeOpenPeriod(): FinancialPeriod
     {
         return FinancialPeriod::create([
-            'year'      => now()->year,
-            'month'     => now()->month,
-            'status'    => 'open',
+            'year' => now()->year,
+            'month' => now()->month,
+            'status' => 'open',
             'opened_at' => now()->startOfMonth(),
         ]);
     }
@@ -77,9 +76,9 @@ class Phase5Test extends TestCase
     private function makeClosedPeriod(): FinancialPeriod
     {
         return FinancialPeriod::create([
-            'year'      => now()->subMonth()->year,
-            'month'     => now()->subMonth()->month,
-            'status'    => 'closed',
+            'year' => now()->subMonth()->year,
+            'month' => now()->subMonth()->month,
+            'status' => 'closed',
             'opened_at' => now()->subMonth()->startOfMonth(),
             'closed_at' => now()->subMonth()->endOfMonth(),
         ]);
@@ -89,25 +88,25 @@ class Phase5Test extends TestCase
     {
         static $seq = 0;
         $seq++;
-        $admin  = $this->makeAdmin();
+        $admin = $this->makeAdmin();
         $vendor = Vendor::create(['name' => "V{$seq}", 'status' => 'active', 'created_by' => $admin->id]);
-        $cc     = CostCentre::create(['code' => "T{$seq}", 'name' => "T{$seq}", 'budget_kobo' => 100_000_000, 'status' => 'active', 'created_by' => $admin->id]);
-        $ac     = AccountCode::create(['code' => "A{$seq}", 'category' => '6000', 'description' => 'Test', 'tax_vat_applicable' => false, 'tax_wht_applicable' => false, 'status' => 'active', 'created_by' => $admin->id]);
+        $cc = CostCentre::create(['code' => "T{$seq}", 'name' => "T{$seq}", 'budget_kobo' => 100_000_000, 'status' => 'active', 'created_by' => $admin->id]);
+        $ac = AccountCode::create(['code' => "A{$seq}", 'category' => '6000', 'description' => 'Test', 'tax_vat_applicable' => false, 'tax_wht_applicable' => false, 'status' => 'active', 'created_by' => $admin->id]);
 
         return Requisition::create(array_merge([
-            'request_id'      => "REQ5-{$seq}",
-            'requester_id'    => $admin->id,
-            'type'            => 'OPEX',
-            'amount_kobo'     => 10_000_000,
-            'cost_centre_id'  => $cc->id,
+            'request_id' => "REQ5-{$seq}",
+            'requester_id' => $admin->id,
+            'type' => 'OPEX',
+            'amount_kobo' => 10_000_000,
+            'cost_centre_id' => $cc->id,
             'account_code_id' => $ac->id,
-            'vendor_id'       => $vendor->id,
-            'description'     => 'Test Phase 5 requisition',
-            'status'          => 'approved',
-            'tax_vat_kobo'    => 0,
-            'tax_wht_kobo'    => 0,
-            'total_kobo'      => 10_000_000,
-            'created_by'      => $admin->id,
+            'vendor_id' => $vendor->id,
+            'description' => 'Test Phase 5 requisition',
+            'status' => 'approved',
+            'tax_vat_kobo' => 0,
+            'tax_wht_kobo' => 0,
+            'total_kobo' => 10_000_000,
+            'created_by' => $admin->id,
         ], $overrides));
     }
 
@@ -133,10 +132,9 @@ class Phase5Test extends TestCase
 
         $response = $this->actingAs($user)->get('/finance/dashboard');
 
-        $response->assertInertia(fn ($page) =>
-            $page->component('Finance/DashboardPage')
-                ->has('widgets')
-                ->where('user_role', 'finance')
+        $response->assertInertia(fn ($page) => $page->component('Finance/DashboardPage')
+            ->has('widgets')
+            ->where('user_role', 'finance')
         );
     }
 
@@ -194,7 +192,7 @@ class Phase5Test extends TestCase
     public function test_closed_period_guard_blocks_write(): void
     {
         $closed = $this->makeClosedPeriod();
-        $user   = $this->makeStaff();
+        $user = $this->makeStaff();
 
         $date = now()->setYear($closed->year)->setMonth($closed->month)->startOfMonth();
 
@@ -207,7 +205,7 @@ class Phase5Test extends TestCase
     public function test_closed_period_guard_allows_ceo_override(): void
     {
         $closed = $this->makeClosedPeriod();
-        $ceo    = $this->makeCeo();
+        $ceo = $this->makeCeo();
 
         $date = now()->setYear($closed->year)->setMonth($closed->month)->startOfMonth();
 
@@ -233,7 +231,7 @@ class Phase5Test extends TestCase
     {
         Notification::fake();
 
-        $period  = $this->makeOpenPeriod();
+        $period = $this->makeOpenPeriod();
         $finance = $this->makeFinanceUser();
 
         PeriodCloser::initiate($period, $finance);
@@ -245,7 +243,7 @@ class Phase5Test extends TestCase
     /** Waive adds a waiver record */
     public function test_period_closer_waive_records_waiver(): void
     {
-        $period  = $this->makeOpenPeriod();
+        $period = $this->makeOpenPeriod();
         $finance = $this->makeFinanceUser();
         $period->update(['status' => 'closing', 'close_initiated_by' => $finance->id]);
 
@@ -258,7 +256,7 @@ class Phase5Test extends TestCase
     public function test_coauthorizer_must_differ_from_initiator(): void
     {
         $finance = $this->makeFinanceUser();
-        $period  = $this->makeOpenPeriod();
+        $period = $this->makeOpenPeriod();
         $period->update(['status' => 'closing', 'close_initiated_by' => $finance->id]);
 
         $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
@@ -269,9 +267,9 @@ class Phase5Test extends TestCase
     /** Non-CEO/superadmin cannot co-authorise */
     public function test_only_ceo_or_superadmin_can_coauthorize(): void
     {
-        $finance  = $this->makeFinanceUser();
+        $finance = $this->makeFinanceUser();
         $finance2 = $this->makeFinanceUser();
-        $period   = $this->makeOpenPeriod();
+        $period = $this->makeOpenPeriod();
         $period->update(['status' => 'closing', 'close_initiated_by' => $finance->id]);
 
         $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
@@ -283,7 +281,7 @@ class Phase5Test extends TestCase
     public function test_close_requires_coauth(): void
     {
         $finance = $this->makeFinanceUser();
-        $period  = $this->makeOpenPeriod();
+        $period = $this->makeOpenPeriod();
         $period->update(['status' => 'closing', 'close_initiated_by' => $finance->id]);
 
         $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
@@ -298,7 +296,7 @@ class Phase5Test extends TestCase
     {
         Notification::fake();
 
-        $period  = $this->makeOpenPeriod();
+        $period = $this->makeOpenPeriod();
         $finance = $this->makeFinanceUser();
 
         $response = $this->actingAs($finance)
@@ -312,15 +310,15 @@ class Phase5Test extends TestCase
     public function test_period_close_waive_endpoint(): void
     {
         $finance = $this->makeFinanceUser();
-        $period  = $this->makeOpenPeriod();
+        $period = $this->makeOpenPeriod();
         $period->update(['status' => 'closing', 'close_initiated_by' => $finance->id]);
 
         $response = $this->actingAs($finance)
             ->post('/finance/period-close/waive', [
                 'period_id' => $period->id,
                 'item_type' => 'variance_item',
-                'item_id'   => 1,
-                'reason'    => 'Accepted variance within tolerance for period end.',
+                'item_id' => 1,
+                'reason' => 'Accepted variance within tolerance for period end.',
             ]);
 
         $response->assertRedirect();
@@ -337,9 +335,8 @@ class Phase5Test extends TestCase
         $response = $this->actingAs($admin)->get('/finance/go-live');
 
         $response->assertOk();
-        $response->assertInertia(fn ($p) =>
-            $p->component('Finance/GoLiveChecklistPage')
-              ->has('checks')
+        $response->assertInertia(fn ($p) => $p->component('Finance/GoLiveChecklistPage')
+            ->has('checks')
         );
     }
 

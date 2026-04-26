@@ -7,7 +7,6 @@ use App\Models\Finance\AccountCode;
 use App\Models\Finance\CostCentre;
 use App\Models\Finance\FinancialPeriod;
 use App\Models\Finance\PettyCashFloat;
-use App\Models\Finance\PettyCashTransaction;
 use App\Models\Finance\Requisition;
 use App\Models\Finance\Vendor;
 use App\Models\User;
@@ -17,7 +16,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
 use Tests\TestCase;
@@ -57,27 +55,28 @@ class Sprint4RegressionTest extends TestCase
     {
         self::$seq++;
         $admin = User::factory()->create(['role' => 'superadmin', 'status' => 'active']);
+
         return AccountCode::create(array_merge([
-            'code'               => '5000' . self::$seq,
-            'description'        => 'Test Code ' . self::$seq,
-            'category'           => 'opex',
-            'status'             => 'active',
+            'code' => '5000'.self::$seq,
+            'description' => 'Test Code '.self::$seq,
+            'category' => 'opex',
+            'status' => 'active',
             'tax_vat_applicable' => false,
             'tax_wht_applicable' => false,
-            'wht_rate'           => 0,
-            'created_by'         => $admin->id,
+            'wht_rate' => 0,
+            'created_by' => $admin->id,
         ], $overrides));
     }
 
     private function makeFloat(User $custodian, array $overrides = []): PettyCashFloat
     {
         return PettyCashFloat::create(array_merge([
-            'custodian_id'          => $custodian->id,
-            'float_limit_kobo'      => 5_000_000,
-            'current_balance_kobo'  => 5_000_000,
-            'low_alert_threshold'   => 20,
-            'status'                => 'active',
-            'created_by'            => $custodian->id,
+            'custodian_id' => $custodian->id,
+            'float_limit_kobo' => 5_000_000,
+            'current_balance_kobo' => 5_000_000,
+            'low_alert_threshold' => 20,
+            'status' => 'active',
+            'created_by' => $custodian->id,
         ], $overrides));
     }
 
@@ -130,14 +129,14 @@ class Sprint4RegressionTest extends TestCase
     {
         Storage::fake('public');
         $custodian = $this->makeUser('staff');
-        $float     = $this->makeFloat($custodian);
+        $float = $this->makeFloat($custodian);
         $this->makeAccountCode();
 
         $response = $this->actingAs($custodian)->post('/finance/petty-cash/expense', [
             'amount_naira' => '500',
-            'description'  => 'Test stationery purchase',
-            'date'         => now()->toDateString(),
-            'receipt'      => UploadedFile::fake()->create('receipt.pdf', 100, 'application/pdf'),
+            'description' => 'Test stationery purchase',
+            'date' => now()->toDateString(),
+            'receipt' => UploadedFile::fake()->create('receipt.pdf', 100, 'application/pdf'),
         ]);
 
         $response->assertSessionHasNoErrors();
@@ -153,9 +152,9 @@ class Sprint4RegressionTest extends TestCase
 
         $response = $this->actingAs($custodian)->post('/finance/petty-cash/expense', [
             'amount_naira' => '500',
-            'description'  => 'Over-limit purchase',
-            'date'         => now()->toDateString(),
-            'receipt'      => UploadedFile::fake()->create('r.pdf', 50, 'application/pdf'),
+            'description' => 'Over-limit purchase',
+            'date' => now()->toDateString(),
+            'receipt' => UploadedFile::fake()->create('r.pdf', 50, 'application/pdf'),
         ]);
 
         $response->assertSessionHasErrors('amount_naira');
@@ -226,8 +225,8 @@ class Sprint4RegressionTest extends TestCase
 
         // "password" — lowercase only, too simple
         $response = $this->actingAs($user)->put('/settings/password', [
-            'current_password'      => 'password',
-            'password'              => 'password',
+            'current_password' => 'password',
+            'password' => 'password',
             'password_confirmation' => 'password',
         ]);
 
@@ -244,8 +243,7 @@ class Sprint4RegressionTest extends TestCase
 
         $response->assertOk();
         // Page renders without error; committed_pipeline is in widget data
-        $response->assertInertia(fn ($page) =>
-            $page->has('widgets.committed_pipeline')
+        $response->assertInertia(fn ($page) => $page->has('widgets.committed_pipeline')
         );
     }
 
@@ -272,8 +270,7 @@ class Sprint4RegressionTest extends TestCase
 
         $response = $this->actingAs($finance)->get('/finance/reports/export/excel?report_type=budget_vs_actual');
 
-        Bus::assertDispatched(ExportReportJob::class, fn ($job) =>
-            $job->reportType === 'budget_vs_actual' && $job->userId === $finance->id
+        Bus::assertDispatched(ExportReportJob::class, fn ($job) => $job->reportType === 'budget_vs_actual' && $job->userId === $finance->id
         );
         $response->assertRedirect();
         $response->assertSessionHas('success');
@@ -284,40 +281,40 @@ class Sprint4RegressionTest extends TestCase
     public function test_requisition_update_recalculates_vat(): void
     {
         Storage::fake('public');
-        $requester   = $this->makeUser('staff');
-        $admin       = User::factory()->create(['role' => 'superadmin', 'status' => 'active']);
-        $vendor      = Vendor::create(['name' => 'VendorUpd', 'status' => 'active', 'created_by' => $admin->id]);
-        $cc          = CostCentre::create(['code' => 'ADM99', 'name' => 'Admin', 'budget_kobo' => 10_000_000_00, 'status' => 'active', 'created_by' => $admin->id]);
-        $ac          = $this->makeAccountCode(['tax_vat_applicable' => true]);
-        $period      = FinancialPeriod::create(['year' => now()->year, 'month' => now()->month, 'status' => 'open', 'opened_at' => now()]);
+        $requester = $this->makeUser('staff');
+        $admin = User::factory()->create(['role' => 'superadmin', 'status' => 'active']);
+        $vendor = Vendor::create(['name' => 'VendorUpd', 'status' => 'active', 'created_by' => $admin->id]);
+        $cc = CostCentre::create(['code' => 'ADM99', 'name' => 'Admin', 'budget_kobo' => 10_000_000_00, 'status' => 'active', 'created_by' => $admin->id]);
+        $ac = $this->makeAccountCode(['tax_vat_applicable' => true]);
+        $period = FinancialPeriod::create(['year' => now()->year, 'month' => now()->month, 'status' => 'open', 'opened_at' => now()]);
 
         $req = Requisition::create([
-            'request_id'          => 'REQ-UPD-001',
-            'requester_id'        => $requester->id,
-            'type'                => 'OPEX',
-            'amount_kobo'         => 1_000_000,
-            'currency'            => 'NGN',
-            'exchange_rate'       => 1.0,
-            'cost_centre_id'      => $cc->id,
-            'account_code_id'     => $ac->id,
-            'vendor_id'           => $vendor->id,
-            'urgency'             => 'standard',
-            'description'         => 'Initial description at least 20 chars',
-            'supporting_docs'     => ['doc.pdf'],
-            'status'              => 'draft',
-            'tax_vat_kobo'        => 0,
-            'tax_wht_kobo'        => 0,
-            'total_kobo'          => 1_000_000,
+            'request_id' => 'REQ-UPD-001',
+            'requester_id' => $requester->id,
+            'type' => 'OPEX',
+            'amount_kobo' => 1_000_000,
+            'currency' => 'NGN',
+            'exchange_rate' => 1.0,
+            'cost_centre_id' => $cc->id,
+            'account_code_id' => $ac->id,
+            'vendor_id' => $vendor->id,
+            'urgency' => 'standard',
+            'description' => 'Initial description at least 20 chars',
+            'supporting_docs' => ['doc.pdf'],
+            'status' => 'draft',
+            'tax_vat_kobo' => 0,
+            'tax_wht_kobo' => 0,
+            'total_kobo' => 1_000_000,
             'financial_period_id' => $period->id,
-            'created_by'          => $requester->id,
-            'submitted_at'        => now(),
+            'created_by' => $requester->id,
+            'submitted_at' => now(),
         ]);
 
         $response = $this->actingAs($requester)->put("/finance/requisitions/{$req->id}", [
-            'amount_naira'    => '20000',  // ₦20,000 = 2,000,000 kobo
+            'amount_naira' => '20000',  // ₦20,000 = 2,000,000 kobo
             'account_code_id' => $ac->id,
-            'description'     => 'Updated description for the requisition request',
-            'urgency'         => 'standard',
+            'description' => 'Updated description for the requisition request',
+            'urgency' => 'standard',
         ]);
 
         $response->assertSessionHasNoErrors();
@@ -334,32 +331,32 @@ class Sprint4RegressionTest extends TestCase
     {
         Storage::fake('public');
         $requester = $this->makeUser('staff');
-        $admin     = User::factory()->create(['role' => 'superadmin', 'status' => 'active']);
-        $vendor    = Vendor::create(['name' => 'VendorFX', 'status' => 'active', 'created_by' => $admin->id]);
-        $cc        = CostCentre::create(['code' => 'FX001', 'name' => 'FX', 'budget_kobo' => 10_000_000_00, 'status' => 'active', 'created_by' => $admin->id]);
-        $ac        = $this->makeAccountCode();
-        $period    = FinancialPeriod::create(['year' => now()->year, 'month' => now()->month, 'status' => 'open', 'opened_at' => now()]);
+        $admin = User::factory()->create(['role' => 'superadmin', 'status' => 'active']);
+        $vendor = Vendor::create(['name' => 'VendorFX', 'status' => 'active', 'created_by' => $admin->id]);
+        $cc = CostCentre::create(['code' => 'FX001', 'name' => 'FX', 'budget_kobo' => 10_000_000_00, 'status' => 'active', 'created_by' => $admin->id]);
+        $ac = $this->makeAccountCode();
+        $period = FinancialPeriod::create(['year' => now()->year, 'month' => now()->month, 'status' => 'open', 'opened_at' => now()]);
 
         $req = Requisition::create([
-            'request_id'          => 'REQ-FX-001',
-            'requester_id'        => $requester->id,
-            'type'                => 'OPEX',
-            'amount_kobo'         => 1_000_000,
-            'currency'            => 'USD',
-            'exchange_rate'       => 1234.567891, // 6 decimal places
-            'cost_centre_id'      => $cc->id,
-            'account_code_id'     => $ac->id,
-            'vendor_id'           => $vendor->id,
-            'urgency'             => 'standard',
-            'description'         => 'FX test description long enough',
-            'supporting_docs'     => ['doc.pdf'],
-            'status'              => 'draft',
-            'tax_vat_kobo'        => 0,
-            'tax_wht_kobo'        => 0,
-            'total_kobo'          => 1_000_000,
+            'request_id' => 'REQ-FX-001',
+            'requester_id' => $requester->id,
+            'type' => 'OPEX',
+            'amount_kobo' => 1_000_000,
+            'currency' => 'USD',
+            'exchange_rate' => 1234.567891, // 6 decimal places
+            'cost_centre_id' => $cc->id,
+            'account_code_id' => $ac->id,
+            'vendor_id' => $vendor->id,
+            'urgency' => 'standard',
+            'description' => 'FX test description long enough',
+            'supporting_docs' => ['doc.pdf'],
+            'status' => 'draft',
+            'tax_vat_kobo' => 0,
+            'tax_wht_kobo' => 0,
+            'total_kobo' => 1_000_000,
             'financial_period_id' => $period->id,
-            'created_by'          => $requester->id,
-            'submitted_at'        => now(),
+            'created_by' => $requester->id,
+            'submitted_at' => now(),
         ]);
 
         $req->refresh();

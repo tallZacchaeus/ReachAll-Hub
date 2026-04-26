@@ -10,7 +10,7 @@ class Role extends Model
     protected $fillable = ['name', 'label', 'description', 'is_system', 'feature_flags'];
 
     protected $casts = [
-        'is_system'     => 'boolean',
+        'is_system' => 'boolean',
         'feature_flags' => 'array',
     ];
 
@@ -19,8 +19,8 @@ class Role extends Model
     {
         return Permission::whereIn('id', function ($q) {
             $q->select('permission_id')
-              ->from('role_permissions')
-              ->where('role', $this->name);
+                ->from('role_permissions')
+                ->where('role', $this->name);
         })->get();
     }
 

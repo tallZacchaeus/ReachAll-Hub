@@ -26,19 +26,19 @@ class PaymentController extends Controller
 
         // Matched reqs + (optionally) approved reqs < ₦500K that skipped matching
         $ready = Requisition::with([
-                'requester:id,name,department',
-                'vendor:id,name,bank_account,bank_name',
-                'costCentre:id,code,name',
-                'accountCode:id,code,description,tax_vat_applicable,tax_wht_applicable,wht_rate',
-                'payment',
-            ])
+            'requester:id,name,department',
+            'vendor:id,name,bank_account,bank_name',
+            'costCentre:id,code,name',
+            'accountCode:id,code,description,tax_vat_applicable,tax_wht_applicable,wht_rate',
+            'payment',
+        ])
             ->where(function ($q) {
                 $q->where('status', 'matched')
-                  ->orWhere(function ($q2) {
-                      // < ₦500K can be paid from 'approved' state
-                      $q2->where('status', 'approved')
-                         ->where('amount_kobo', '<', 50_000_000);
-                  });
+                    ->orWhere(function ($q2) {
+                        // < ₦500K can be paid from 'approved' state
+                        $q2->where('status', 'approved')
+                            ->where('amount_kobo', '<', 50_000_000);
+                    });
             })
             ->whereDoesntHave('payment') // not yet paid
             ->orderByDesc('approved_at')
@@ -47,26 +47,26 @@ class PaymentController extends Controller
 
         // Recent payments (last 30) for the history table
         $recent = Payment::with([
-                'requisition:id,request_id,description,amount_kobo',
-                'requisition.requester:id,name',
-                'paidBy:id,name',
-            ])
+            'requisition:id,request_id,description,amount_kobo',
+            'requisition.requester:id,name',
+            'paidBy:id,name',
+        ])
             ->latest('paid_at')
             ->limit(30)
             ->get()
             ->map(fn (Payment $p) => [
-                'id'          => $p->id,
-                'request_id'  => $p->requisition?->request_id,
+                'id' => $p->id,
+                'request_id' => $p->requisition?->request_id,
                 'description' => $p->requisition?->description,
-                'amount_fmt'  => MoneyHelper::format($p->amount_kobo),
-                'method'      => $p->method,
-                'reference'   => $p->reference,
-                'paid_at'     => $p->paid_at->toDateString(),
-                'paid_by'     => $p->paidBy?->name,
+                'amount_fmt' => MoneyHelper::format($p->amount_kobo),
+                'method' => $p->method,
+                'reference' => $p->reference,
+                'paid_at' => $p->paid_at->toDateString(),
+                'paid_by' => $p->paidBy?->name,
             ]);
 
         return Inertia::render('Finance/PaymentsPage', [
-            'ready'  => $ready,
+            'ready' => $ready,
             'recent' => $recent,
         ]);
     }
@@ -101,10 +101,10 @@ class PaymentController extends Controller
         }
 
         $request->validate([
-            'method'    => ['required', 'in:bank_transfer,cheque,cash'],
+            'method' => ['required', 'in:bank_transfer,cheque,cash'],
             'reference' => ['required', 'string', 'max:100'],
-            'paid_at'   => ['required', 'date'],
-            'proof'     => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+            'paid_at' => ['required', 'date'],
+            'proof' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
         ]);
 
         // Recompute tax in case account code changed since submission
@@ -116,7 +116,7 @@ class PaymentController extends Controller
         $req->update([
             'tax_vat_kobo' => $tax['vat_kobo'],
             'tax_wht_kobo' => $tax['wht_kobo'],
-            'total_kobo'   => $tax['total_kobo'],
+            'total_kobo' => $tax['total_kobo'],
         ]);
 
         // F2-03: Store the proof file INSIDE the transaction so that if the DB
@@ -138,16 +138,16 @@ class PaymentController extends Controller
             try {
                 $payment = Payment::create([
                     'requisition_id' => $req->id,
-                    'amount_kobo'    => $tax['total_kobo'], // net payable
-                    'method'         => $request->input('method'),
-                    'reference'      => $request->input('reference'),
-                    'paid_at'        => $request->input('paid_at'),
-                    'paid_by'        => $request->user()->id,
-                    'proof_path'     => $proofPath,
+                    'amount_kobo' => $tax['total_kobo'], // net payable
+                    'method' => $request->input('method'),
+                    'reference' => $request->input('reference'),
+                    'paid_at' => $request->input('paid_at'),
+                    'paid_by' => $request->user()->id,
+                    'proof_path' => $proofPath,
                 ]);
 
                 $req->update([
-                    'status'  => 'paid',
+                    'status' => 'paid',
                     'paid_at' => $request->input('paid_at'),
                 ]);
 
@@ -187,8 +187,8 @@ class PaymentController extends Controller
 
             // Record void on the payment
             $payment->update([
-                'voided_at'   => now(),
-                'voided_by'   => $request->user()->id,
+                'voided_at' => now(),
+                'voided_by' => $request->user()->id,
                 'void_reason' => $request->input('void_reason'),
             ]);
 
@@ -197,14 +197,14 @@ class PaymentController extends Controller
             $wht = $payment->whtLiability;
             if ($wht && $wht->amount_kobo > 0) {
                 WhtLiability::create([
-                    'requisition_id'      => $wht->requisition_id,
-                    'payment_id'          => $payment->id,
-                    'vendor_id'           => $wht->vendor_id,
-                    'amount_kobo'         => -$wht->amount_kobo,
-                    'rate_percent'        => $wht->rate_percent,
-                    'status'              => 'voided',
+                    'requisition_id' => $wht->requisition_id,
+                    'payment_id' => $payment->id,
+                    'vendor_id' => $wht->vendor_id,
+                    'amount_kobo' => -$wht->amount_kobo,
+                    'rate_percent' => $wht->rate_percent,
+                    'status' => 'voided',
                     'financial_period_id' => $wht->financial_period_id,
-                    'created_by'          => $request->user()->id,
+                    'created_by' => $request->user()->id,
                 ]);
             }
 
@@ -214,7 +214,7 @@ class PaymentController extends Controller
                     ? 'approved'
                     : $req->status;
                 $req->update([
-                    'status'  => $prevStatus,
+                    'status' => $prevStatus,
                     'paid_at' => null,
                 ]);
             }
@@ -233,26 +233,26 @@ class PaymentController extends Controller
             : ['vat' => '₦0', 'wht' => '₦0', 'total' => MoneyHelper::format($r->amount_kobo), 'total_kobo' => $r->amount_kobo];
 
         return [
-            'id'             => $r->id,
-            'request_id'     => $r->request_id,
-            'type'           => $r->type,
-            'status'         => $r->status,
-            'amount_kobo'    => $r->amount_kobo,
-            'amount_fmt'     => MoneyHelper::format($r->amount_kobo),
-            'description'    => $r->description,
-            'requester'      => $r->requester?->name,
-            'department'     => $r->requester?->department,
-            'vendor'         => $r->vendor ? [
-                'name'         => $r->vendor->name,
-                'bank_name'    => $r->vendor->bank_name,
+            'id' => $r->id,
+            'request_id' => $r->request_id,
+            'type' => $r->type,
+            'status' => $r->status,
+            'amount_kobo' => $r->amount_kobo,
+            'amount_fmt' => MoneyHelper::format($r->amount_kobo),
+            'description' => $r->description,
+            'requester' => $r->requester?->name,
+            'department' => $r->requester?->department,
+            'vendor' => $r->vendor ? [
+                'name' => $r->vendor->name,
+                'bank_name' => $r->vendor->bank_name,
                 'bank_account' => $r->vendor->bank_account,
             ] : null,
-            'tax_vat_fmt'    => $tax['vat'] ?? MoneyHelper::format($r->tax_vat_kobo),
-            'tax_wht_fmt'    => $tax['wht'] ?? MoneyHelper::format($r->tax_wht_kobo),
-            'total_fmt'      => $tax['total'] ?? MoneyHelper::format($r->total_kobo),
-            'total_kobo'     => $tax['total_kobo'] ?? $r->total_kobo,
+            'tax_vat_fmt' => $tax['vat'] ?? MoneyHelper::format($r->tax_vat_kobo),
+            'tax_wht_fmt' => $tax['wht'] ?? MoneyHelper::format($r->tax_wht_kobo),
+            'total_fmt' => $tax['total'] ?? MoneyHelper::format($r->total_kobo),
+            'total_kobo' => $tax['total_kobo'] ?? $r->total_kobo,
             'requires_match' => $r->requiresThreeWayMatch(),
-            'approved_at'    => $r->approved_at?->toDateString(),
+            'approved_at' => $r->approved_at?->toDateString(),
         ];
     }
 

@@ -14,7 +14,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('emoji', 10); // Store emoji character
             $table->timestamps();
-            
+
             // Prevent duplicate reactions from same user on same message
             $table->unique(['message_id', 'user_id', 'emoji']);
         });

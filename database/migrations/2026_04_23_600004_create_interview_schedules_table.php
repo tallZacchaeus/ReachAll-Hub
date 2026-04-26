@@ -15,10 +15,10 @@ return new class extends Migration
             $table->timestamp('scheduled_at');
             $table->unsignedSmallInteger('duration_minutes')->default(60);
             $table->string('format', 30)->default('video')
-                  ->comment('video|phone|in_person');
+                ->comment('video|phone|in_person');
             $table->string('location_or_link', 500)->nullable();
             $table->string('status', 30)->default('scheduled')
-                  ->comment('scheduled|completed|cancelled|rescheduled');
+                ->comment('scheduled|completed|cancelled|rescheduled');
             $table->text('notes')->nullable();
             $table->timestamps();
 

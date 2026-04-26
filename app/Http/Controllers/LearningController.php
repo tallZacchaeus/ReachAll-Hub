@@ -176,7 +176,7 @@ class LearningController extends Controller
         $this->requireAdmin($request);
         $validated = $this->validateCourse($request);
         $validated['description'] = HtmlSanitizer::clean($validated['description'] ?? '');
-        $validated['content']     = HtmlSanitizer::clean($validated['content'] ?? '');
+        $validated['content'] = HtmlSanitizer::clean($validated['content'] ?? '');
 
         Course::create($validated);
 
@@ -218,7 +218,7 @@ class LearningController extends Controller
         $course = Course::findOrFail($id);
         $validated = $this->validateCourse($request);
         $validated['description'] = HtmlSanitizer::clean($validated['description'] ?? '');
-        $validated['content']     = HtmlSanitizer::clean($validated['content'] ?? '');
+        $validated['content'] = HtmlSanitizer::clean($validated['content'] ?? '');
         $course->update($validated);
 
         return back()->with('success', 'Course updated.');

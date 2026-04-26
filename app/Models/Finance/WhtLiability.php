@@ -2,7 +2,6 @@
 
 namespace App\Models\Finance;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -20,7 +19,7 @@ class WhtLiability extends Model
     ];
 
     protected $casts = [
-        'amount_kobo'  => 'integer',
+        'amount_kobo' => 'integer',
         'rate_percent' => 'integer',
     ];
 

@@ -21,12 +21,12 @@ class ApplicationPipelineController extends Controller
                      $request->user()->hasPermission('recruitment.view'), 403);
 
         $query = JobApplication::with([
-                'jobPosting',
-                'applicant:id,name,email',
-                'candidate:id,name,email',
-                'interviews.scorecards',
-                'offer',
-            ])
+            'jobPosting',
+            'applicant:id,name,email',
+            'candidate:id,name,email',
+            'interviews.scorecards',
+            'offer',
+        ])
             ->latest();
 
         if ($request->filled('posting_id')) {
@@ -38,8 +38,8 @@ class ApplicationPipelineController extends Controller
 
         return Inertia::render('Recruitment/ApplicationPipelinePage', [
             'applications' => $query->paginate(30)->withQueryString(),
-            'postings'     => JobPosting::select('id', 'title')->where('status', 'open')->get(),
-            'filters'      => $request->only('posting_id', 'stage'),
+            'postings' => JobPosting::select('id', 'title')->where('status', 'open')->get(),
+            'filters' => $request->only('posting_id', 'stage'),
         ]);
     }
 
@@ -68,21 +68,21 @@ class ApplicationPipelineController extends Controller
         abort_unless($request->user()->hasPermission('recruitment.manage'), 403);
 
         $data = $request->validate([
-            'stage'     => 'required|in:' . implode(',', self::VALID_STAGES),
+            'stage' => 'required|in:'.implode(',', self::VALID_STAGES),
             'ats_notes' => 'nullable|string|max:2000',
         ]);
 
         $updates = [
-            'stage'     => $data['stage'],
+            'stage' => $data['stage'],
             'ats_notes' => $data['ats_notes'] ?? $jobApplication->ats_notes,
         ];
 
         if ($data['stage'] === 'hired') {
             $updates['hired_at'] = now();
-            $updates['status']   = 'shortlisted'; // keep existing status field aligned
+            $updates['status'] = 'shortlisted'; // keep existing status field aligned
         } elseif ($data['stage'] === 'rejected') {
             $updates['rejected_at'] = now();
-            $updates['status']      = 'rejected';
+            $updates['status'] = 'rejected';
         }
 
         $jobApplication->update($updates);
@@ -96,8 +96,8 @@ class ApplicationPipelineController extends Controller
 
         $data = $request->validate([
             'job_posting_id' => 'required|exists:job_postings,id',
-            'candidate_id'   => 'required|exists:candidates,id',
-            'cover_letter'   => 'nullable|string|max:5000',
+            'candidate_id' => 'required|exists:candidates,id',
+            'cover_letter' => 'nullable|string|max:5000',
         ]);
 
         // Prevent duplicate application for same candidate + posting
@@ -109,11 +109,11 @@ class ApplicationPipelineController extends Controller
 
         JobApplication::create([
             'job_posting_id' => $data['job_posting_id'],
-            'candidate_id'   => $data['candidate_id'],
-            'cover_letter'   => $data['cover_letter'] ?? null,
-            'status'         => 'applied',
-            'stage'          => 'new',
-            'applied_at'     => now(),
+            'candidate_id' => $data['candidate_id'],
+            'cover_letter' => $data['cover_letter'] ?? null,
+            'status' => 'applied',
+            'stage' => 'new',
+            'applied_at' => now(),
         ]);
 
         return back()->with('success', 'External application added to pipeline.');

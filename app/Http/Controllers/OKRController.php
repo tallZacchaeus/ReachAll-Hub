@@ -14,7 +14,7 @@ class OKRController extends Controller
 {
     public function index(Request $request): Response
     {
-        $user    = $request->user();
+        $user = $request->user();
         $isAdmin = $user->hasPermission('okr.manage');
 
         $query = Objective::with(['keyResults', 'owner:id,name'])
@@ -28,16 +28,16 @@ class OKRController extends Controller
             $query->where('department', $request->department);
         }
 
-        $objectives  = $query->latest()->get()->map(fn (Objective $obj) => $this->transformObjective($obj));
-        $periods     = Objective::distinct()->orderBy('period')->pluck('period')->filter()->values();
+        $objectives = $query->latest()->get()->map(fn (Objective $obj) => $this->transformObjective($obj));
+        $periods = Objective::distinct()->orderBy('period')->pluck('period')->filter()->values();
         $departments = Objective::distinct()->orderBy('department')->pluck('department')->filter()->values();
 
         return Inertia::render('OKRPage', [
-            'objectives'  => $objectives,
-            'periods'     => $periods,
+            'objectives' => $objectives,
+            'periods' => $periods,
             'departments' => $departments,
-            'filters'     => $request->only(['period', 'department']),
-            'isAdmin'     => $isAdmin,
+            'filters' => $request->only(['period', 'department']),
+            'isAdmin' => $isAdmin,
         ]);
     }
 
@@ -48,7 +48,7 @@ class OKRController extends Controller
 
         return Inertia::render('OKRDetailPage', [
             'objective' => $this->transformObjectiveFull($objective),
-            'isAdmin'   => $request->user()->hasPermission('okr.manage'),
+            'isAdmin' => $request->user()->hasPermission('okr.manage'),
         ]);
     }
 
@@ -61,35 +61,35 @@ class OKRController extends Controller
         }
 
         $validated = $request->validate([
-            'title'                      => ['required', 'string', 'max:255'],
-            'description'                => ['nullable', 'string'],
-            'department'                 => ['nullable', 'string', 'max:100'],
-            'period'                     => ['required', 'string', 'max:20'],
-            'status'                     => ['required', Rule::in(['draft', 'active', 'completed'])],
-            'parent_id'                  => ['nullable', 'exists:objectives,id'],
-            'key_results'                => ['nullable', 'array', 'max:10'],
-            'key_results.*.title'        => ['required', 'string', 'max:255'],
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'department' => ['nullable', 'string', 'max:100'],
+            'period' => ['required', 'string', 'max:20'],
+            'status' => ['required', Rule::in(['draft', 'active', 'completed'])],
+            'parent_id' => ['nullable', 'exists:objectives,id'],
+            'key_results' => ['nullable', 'array', 'max:10'],
+            'key_results.*.title' => ['required', 'string', 'max:255'],
             'key_results.*.target_value' => ['required', 'numeric', 'min:0'],
-            'key_results.*.unit'         => ['required', 'string', 'max:50'],
+            'key_results.*.unit' => ['required', 'string', 'max:50'],
         ]);
 
         $objective = Objective::create([
-            'title'         => $validated['title'],
-            'description'   => $validated['description'] ?? null,
+            'title' => $validated['title'],
+            'description' => $validated['description'] ?? null,
             'owner_user_id' => $user->id,
-            'department'    => $validated['department'] ?? null,
-            'period'        => $validated['period'],
-            'status'        => $validated['status'],
-            'parent_id'     => $validated['parent_id'] ?? null,
+            'department' => $validated['department'] ?? null,
+            'period' => $validated['period'],
+            'status' => $validated['status'],
+            'parent_id' => $validated['parent_id'] ?? null,
         ]);
 
         foreach ($validated['key_results'] ?? [] as $kr) {
             $objective->keyResults()->create([
-                'title'         => $kr['title'],
-                'target_value'  => $kr['target_value'],
+                'title' => $kr['title'],
+                'target_value' => $kr['target_value'],
                 'current_value' => 0,
-                'unit'          => $kr['unit'],
-                'status'        => 'on_track',
+                'unit' => $kr['unit'],
+                'status' => 'on_track',
             ]);
         }
 
@@ -107,11 +107,11 @@ class OKRController extends Controller
         $objective = Objective::findOrFail($id);
 
         $validated = $request->validate([
-            'title'       => ['sometimes', 'string', 'max:255'],
+            'title' => ['sometimes', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'department'  => ['nullable', 'string', 'max:100'],
-            'period'      => ['sometimes', 'string', 'max:20'],
-            'status'      => ['sometimes', Rule::in(['draft', 'active', 'completed'])],
+            'department' => ['nullable', 'string', 'max:100'],
+            'period' => ['sometimes', 'string', 'max:20'],
+            'status' => ['sometimes', Rule::in(['draft', 'active', 'completed'])],
         ]);
 
         $objective->update($validated);
@@ -125,7 +125,7 @@ class OKRController extends Controller
 
         $validated = $request->validate([
             'current_value' => ['required', 'numeric', 'min:0'],
-            'status'        => ['required', Rule::in(['on_track', 'at_risk', 'behind'])],
+            'status' => ['required', Rule::in(['on_track', 'at_risk', 'behind'])],
         ]);
 
         $kr->update($validated);
@@ -140,14 +140,14 @@ class OKRController extends Controller
     private function transformObjective(Objective $obj): array
     {
         return [
-            'id'          => $obj->id,
-            'title'       => $obj->title,
+            'id' => $obj->id,
+            'title' => $obj->title,
             'description' => $obj->description,
-            'department'  => $obj->department,
-            'period'      => $obj->period,
-            'status'      => $obj->status,
-            'progress'    => $obj->progress,
-            'owner'       => $obj->owner?->name ?? 'Unknown',
+            'department' => $obj->department,
+            'period' => $obj->period,
+            'status' => $obj->status,
+            'progress' => $obj->progress,
+            'owner' => $obj->owner?->name ?? 'Unknown',
             'key_results' => $obj->keyResults
                 ->map(fn (KeyResult $kr) => $this->transformKR($kr))
                 ->values()
@@ -158,7 +158,7 @@ class OKRController extends Controller
     /** @return array<string, mixed> */
     private function transformObjectiveFull(Objective $obj): array
     {
-        $base             = $this->transformObjective($obj);
+        $base = $this->transformObjective($obj);
         $base['children'] = $obj->children
             ->map(fn (Objective $child) => $this->transformObjective($child))
             ->values()
@@ -171,13 +171,13 @@ class OKRController extends Controller
     private function transformKR(KeyResult $kr): array
     {
         return [
-            'id'            => $kr->id,
-            'title'         => $kr->title,
-            'target_value'  => $kr->target_value,
+            'id' => $kr->id,
+            'title' => $kr->title,
+            'target_value' => $kr->target_value,
             'current_value' => $kr->current_value,
-            'unit'          => $kr->unit,
-            'status'        => $kr->status,
-            'progress'      => $kr->target_value > 0
+            'unit' => $kr->unit,
+            'status' => $kr->status,
+            'progress' => $kr->target_value > 0
                 ? min(100, (int) round($kr->current_value / $kr->target_value * 100))
                 : 0,
         ];

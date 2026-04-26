@@ -22,9 +22,9 @@ class CompensationReviewCycle extends Model
 
     protected $casts = [
         'review_start_date' => 'date',
-        'review_end_date'   => 'date',
-        'effective_date'    => 'date',
-        'budget_kobo'       => 'integer',
+        'review_end_date' => 'date',
+        'effective_date' => 'date',
+        'budget_kobo' => 'integer',
     ];
 
     public function entries(): HasMany

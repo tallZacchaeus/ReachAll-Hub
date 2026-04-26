@@ -17,8 +17,8 @@ class SearchController extends Controller
 {
     public function search(Request $request): Response
     {
-        $q     = trim($request->get('q', ''));
-        $user  = $request->user();
+        $q = trim($request->get('q', ''));
+        $user = $request->user();
         $stage = $user?->employee_stage ?? 'performer';
 
         $results = [];
@@ -36,11 +36,11 @@ class SearchController extends Controller
                 ->limit(5)
                 ->get(['id', 'name', 'department', 'position', 'employee_id'])
                 ->map(fn ($u) => [
-                    'id'      => $u->id,
-                    'title'   => $u->name,
-                    'excerpt' => trim(($u->position ?? '') . ' — ' . ($u->department ?? '')),
-                    'url'     => '/directory',
-                    'badge'   => $u->employee_id ?? '',
+                    'id' => $u->id,
+                    'title' => $u->name,
+                    'excerpt' => trim(($u->position ?? '').' — '.($u->department ?? '')),
+                    'url' => '/directory',
+                    'badge' => $u->employee_id ?? '',
                 ])
                 ->values()
                 ->all();
@@ -59,11 +59,11 @@ class SearchController extends Controller
                 ->limit(5)
                 ->get(['id', 'title', 'slug', 'body'])
                 ->map(fn ($p) => [
-                    'id'      => $p->id,
-                    'title'   => $p->title,
+                    'id' => $p->id,
+                    'title' => $p->title,
                     'excerpt' => $this->excerpt($p->body, $q),
-                    'url'     => "/content/{$p->slug}",
-                    'badge'   => 'Content',
+                    'url' => "/content/{$p->slug}",
+                    'badge' => 'Content',
                 ])
                 ->values()
                 ->all();
@@ -81,11 +81,11 @@ class SearchController extends Controller
                 ->limit(5)
                 ->get(['id', 'question', 'answer', 'category'])
                 ->map(fn ($f) => [
-                    'id'      => $f->id,
-                    'title'   => $f->question,
+                    'id' => $f->id,
+                    'title' => $f->question,
                     'excerpt' => $this->excerpt($f->answer, $q),
-                    'url'     => '/faqs',
-                    'badge'   => $f->category,
+                    'url' => '/faqs',
+                    'badge' => $f->category,
                 ])
                 ->values()
                 ->all();
@@ -103,11 +103,11 @@ class SearchController extends Controller
                 ->limit(5)
                 ->get(['id', 'title', 'body'])
                 ->map(fn ($n) => [
-                    'id'      => $n->id,
-                    'title'   => $n->title,
+                    'id' => $n->id,
+                    'title' => $n->title,
                     'excerpt' => $this->excerpt($n->body, $q),
-                    'url'     => "/newsletters/{$n->id}",
-                    'badge'   => 'Newsletter',
+                    'url' => "/newsletters/{$n->id}",
+                    'badge' => 'Newsletter',
                 ])
                 ->values()
                 ->all();
@@ -125,11 +125,11 @@ class SearchController extends Controller
                 ->limit(5)
                 ->get(['id', 'title', 'body'])
                 ->map(fn ($b) => [
-                    'id'      => $b->id,
-                    'title'   => $b->title,
+                    'id' => $b->id,
+                    'title' => $b->title,
                     'excerpt' => $this->excerpt($b->body, $q),
-                    'url'     => '/bulletins',
-                    'badge'   => 'Bulletin',
+                    'url' => '/bulletins',
+                    'badge' => 'Bulletin',
                 ])
                 ->values()
                 ->all();
@@ -148,11 +148,11 @@ class SearchController extends Controller
                 ->limit(5)
                 ->get(['id', 'title', 'description'])
                 ->map(fn ($c) => [
-                    'id'      => $c->id,
-                    'title'   => $c->title,
+                    'id' => $c->id,
+                    'title' => $c->title,
                     'excerpt' => $this->excerpt($c->description ?? '', $q),
-                    'url'     => "/learning/{$c->id}",
-                    'badge'   => 'Course',
+                    'url' => "/learning/{$c->id}",
+                    'badge' => 'Course',
                 ])
                 ->values()
                 ->all();
@@ -171,11 +171,11 @@ class SearchController extends Controller
                     ->limit(5)
                     ->get(['id', 'title', 'description', 'status'])
                     ->map(fn ($t) => [
-                        'id'      => $t->id,
-                        'title'   => $t->title,
+                        'id' => $t->id,
+                        'title' => $t->title,
                         'excerpt' => $this->excerpt($t->description ?? '', $q),
-                        'url'     => '/tasks',
-                        'badge'   => ucfirst(str_replace('_', ' ', $t->status)),
+                        'url' => '/tasks',
+                        'badge' => ucfirst(str_replace('_', ' ', $t->status)),
                     ])
                     ->values()
                     ->all();
@@ -189,8 +189,8 @@ class SearchController extends Controller
         $totalCount = collect($results)->sum(fn ($group) => count($group['items']));
 
         return Inertia::render('SearchResultsPage', [
-            'query'      => $q,
-            'results'    => $results,
+            'query' => $q,
+            'results' => $results,
             'totalCount' => $totalCount,
         ]);
     }
@@ -212,7 +212,7 @@ class SearchController extends Controller
             $snippet = mb_substr($plain, $start, $length);
 
             if ($start > 0) {
-                $snippet = '…' . $snippet;
+                $snippet = '…'.$snippet;
             }
 
             if (mb_strlen($plain) > $start + $length) {
@@ -223,7 +223,7 @@ class SearchController extends Controller
         }
 
         return mb_strlen($plain) > $length
-            ? mb_substr($plain, 0, $length) . '…'
+            ? mb_substr($plain, 0, $length).'…'
             : $plain;
     }
 }

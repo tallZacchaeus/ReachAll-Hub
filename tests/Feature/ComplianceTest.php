@@ -39,11 +39,11 @@ class ComplianceTest extends TestCase
     private function makePolicy(array $attrs = []): CompliancePolicy
     {
         $policy = CompliancePolicy::create(array_merge([
-            'title'                    => 'Test Policy',
-            'slug'                     => 'test-policy-' . uniqid(),
-            'category'                 => 'hr',
+            'title' => 'Test Policy',
+            'slug' => 'test-policy-'.uniqid(),
+            'category' => 'hr',
             'requires_acknowledgement' => true,
-            'is_active'                => true,
+            'is_active' => true,
         ], $attrs));
 
         return $policy;
@@ -52,13 +52,14 @@ class ComplianceTest extends TestCase
     private function publishVersion(CompliancePolicy $policy, string $version = '1.0', ?User $publisher = null): CompliancePolicyVersion
     {
         $ver = CompliancePolicyVersion::create([
-            'policy_id'       => $policy->id,
-            'version'         => $version,
-            'content'         => 'Policy content for version ' . $version,
+            'policy_id' => $policy->id,
+            'version' => $version,
+            'content' => 'Policy content for version '.$version,
             'published_by_id' => $publisher?->id,
-            'published_at'    => now(),
+            'published_at' => now(),
         ]);
         $policy->update(['current_version' => $version, 'published_at' => now()]);
+
         return $ver;
     }
 
@@ -72,62 +73,62 @@ class ComplianceTest extends TestCase
     public function test_staff_cannot_access_compliance_documents_admin(): void
     {
         $this->actingAs($this->staffUser())
-             ->get('/compliance/documents')
-             ->assertStatus(403);
+            ->get('/compliance/documents')
+            ->assertStatus(403);
     }
 
     public function test_hr_can_access_compliance_documents(): void
     {
         $this->actingAs($this->hrUser())
-             ->get('/compliance/documents')
-             ->assertOk()
-             ->assertInertia(fn ($page) => $page->component('Compliance/ComplianceDocumentsPage'));
+            ->get('/compliance/documents')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('Compliance/ComplianceDocumentsPage'));
     }
 
     public function test_staff_can_access_my_compliance(): void
     {
         $this->actingAs($this->staffUser())
-             ->get('/compliance/my')
-             ->assertOk()
-             ->assertInertia(fn ($page) => $page->component('Compliance/MyCompliancePage'));
+            ->get('/compliance/my')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('Compliance/MyCompliancePage'));
     }
 
     // ── Compliance documents ──────────────────────────────────────────────────
 
     public function test_hr_can_add_compliance_document(): void
     {
-        $hr    = $this->hrUser();
+        $hr = $this->hrUser();
         $staff = $this->staffUser();
 
         $this->actingAs($hr)
-             ->post('/compliance/documents', [
-                 'user_id'          => $staff->id,
-                 'type'             => 'passport',
-                 'document_number'  => 'A1234567',
-                 'country_of_issue' => 'Nigeria',
-                 'expires_at'       => now()->addYears(5)->toDateString(),
-             ])
-             ->assertRedirect();
+            ->post('/compliance/documents', [
+                'user_id' => $staff->id,
+                'type' => 'passport',
+                'document_number' => 'A1234567',
+                'country_of_issue' => 'Nigeria',
+                'expires_at' => now()->addYears(5)->toDateString(),
+            ])
+            ->assertRedirect();
 
         $this->assertDatabaseHas('compliance_documents', [
             'user_id' => $staff->id,
-            'type'    => 'passport',
-            'status'  => 'pending',
+            'type' => 'passport',
+            'status' => 'pending',
         ]);
     }
 
     public function test_hr_can_verify_document(): void
     {
-        $hr  = $this->hrUser();
+        $hr = $this->hrUser();
         $doc = ComplianceDocument::create([
             'user_id' => $this->staffUser()->id,
-            'type'    => 'national_id',
-            'status'  => 'pending',
+            'type' => 'national_id',
+            'status' => 'pending',
         ]);
 
         $this->actingAs($hr)
-             ->post("/compliance/documents/{$doc->id}/verify")
-             ->assertRedirect();
+            ->post("/compliance/documents/{$doc->id}/verify")
+            ->assertRedirect();
 
         $doc->refresh();
         $this->assertEquals('active', $doc->status);
@@ -137,18 +138,18 @@ class ComplianceTest extends TestCase
 
     public function test_hr_can_reject_document(): void
     {
-        $hr  = $this->hrUser();
+        $hr = $this->hrUser();
         $doc = ComplianceDocument::create([
             'user_id' => $this->staffUser()->id,
-            'type'    => 'visa',
-            'status'  => 'pending',
+            'type' => 'visa',
+            'status' => 'pending',
         ]);
 
         $this->actingAs($hr)
-             ->post("/compliance/documents/{$doc->id}/reject", [
-                 'notes' => 'Document appears altered.',
-             ])
-             ->assertRedirect();
+            ->post("/compliance/documents/{$doc->id}/reject", [
+                'notes' => 'Document appears altered.',
+            ])
+            ->assertRedirect();
 
         $doc->refresh();
         $this->assertEquals('rejected', $doc->status);
@@ -157,16 +158,16 @@ class ComplianceTest extends TestCase
 
     public function test_reject_requires_notes(): void
     {
-        $hr  = $this->hrUser();
+        $hr = $this->hrUser();
         $doc = ComplianceDocument::create([
             'user_id' => $this->staffUser()->id,
-            'type'    => 'visa',
-            'status'  => 'pending',
+            'type' => 'visa',
+            'status' => 'pending',
         ]);
 
         $this->actingAs($hr)
-             ->post("/compliance/documents/{$doc->id}/reject", [])
-             ->assertSessionHasErrors('notes');
+            ->post("/compliance/documents/{$doc->id}/reject", [])
+            ->assertSessionHasErrors('notes');
     }
 
     public function test_staff_can_upload_own_document(): void
@@ -174,16 +175,16 @@ class ComplianceTest extends TestCase
         $staff = $this->staffUser();
 
         $this->actingAs($staff)
-             ->post('/compliance/my/documents', [
-                 'type'             => 'right_to_work',
-                 'document_number'  => 'RTW-001',
-             ])
-             ->assertRedirect();
+            ->post('/compliance/my/documents', [
+                'type' => 'right_to_work',
+                'document_number' => 'RTW-001',
+            ])
+            ->assertRedirect();
 
         $this->assertDatabaseHas('compliance_documents', [
             'user_id' => $staff->id,
-            'type'    => 'right_to_work',
-            'status'  => 'pending',
+            'type' => 'right_to_work',
+            'status' => 'pending',
         ]);
     }
 
@@ -192,23 +193,23 @@ class ComplianceTest extends TestCase
     public function test_hr_can_access_dsr_list(): void
     {
         $this->actingAs($this->hrUser())
-             ->get('/compliance/dsr')
-             ->assertOk()
-             ->assertInertia(fn ($page) => $page->component('Compliance/DataSubjectRequestsPage'));
+            ->get('/compliance/dsr')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('Compliance/DataSubjectRequestsPage'));
     }
 
     public function test_staff_cannot_access_dsr_admin_list(): void
     {
         $this->actingAs($this->staffUser())
-             ->get('/compliance/dsr')
-             ->assertStatus(403);
+            ->get('/compliance/dsr')
+            ->assertStatus(403);
     }
 
     public function test_dsr_request_number_auto_generated(): void
     {
         $dsr = DataSubjectRequest::create([
-            'user_id'     => $this->staffUser()->id,
-            'type'        => 'access',
+            'user_id' => $this->staffUser()->id,
+            'type' => 'access',
             'description' => 'I want to see all data held about me.',
         ]);
 
@@ -218,8 +219,8 @@ class ComplianceTest extends TestCase
     public function test_dsr_due_at_auto_set_to_30_days(): void
     {
         $dsr = DataSubjectRequest::create([
-            'user_id'     => $this->staffUser()->id,
-            'type'        => 'access',
+            'user_id' => $this->staffUser()->id,
+            'type' => 'access',
             'description' => 'Please provide my data.',
         ]);
 
@@ -232,31 +233,31 @@ class ComplianceTest extends TestCase
         $staff = $this->staffUser();
 
         $this->actingAs($staff)
-             ->post('/compliance/my/dsr', [
-                 'type'        => 'erasure',
-                 'description' => 'Please delete my personal data from all systems.',
-             ])
-             ->assertRedirect();
+            ->post('/compliance/my/dsr', [
+                'type' => 'erasure',
+                'description' => 'Please delete my personal data from all systems.',
+            ])
+            ->assertRedirect();
 
         $this->assertDatabaseHas('data_subject_requests', [
             'user_id' => $staff->id,
-            'type'    => 'erasure',
-            'status'  => 'pending',
+            'type' => 'erasure',
+            'status' => 'pending',
         ]);
     }
 
     public function test_hr_can_acknowledge_dsr(): void
     {
-        $hr  = $this->hrUser();
+        $hr = $this->hrUser();
         $dsr = DataSubjectRequest::create([
-            'user_id'     => $this->staffUser()->id,
-            'type'        => 'access',
+            'user_id' => $this->staffUser()->id,
+            'type' => 'access',
             'description' => 'Please provide my data.',
         ]);
 
         $this->actingAs($hr)
-             ->post("/compliance/dsr/{$dsr->id}/acknowledge")
-             ->assertRedirect();
+            ->post("/compliance/dsr/{$dsr->id}/acknowledge")
+            ->assertRedirect();
 
         $dsr->refresh();
         $this->assertEquals('acknowledged', $dsr->status);
@@ -266,20 +267,20 @@ class ComplianceTest extends TestCase
 
     public function test_hr_can_complete_dsr_with_response(): void
     {
-        $hr  = $this->hrUser();
+        $hr = $this->hrUser();
         $dsr = DataSubjectRequest::create([
-            'user_id'     => $this->staffUser()->id,
-            'type'        => 'access',
+            'user_id' => $this->staffUser()->id,
+            'type' => 'access',
             'description' => 'Please provide my data.',
-            'status'      => 'in_progress',
+            'status' => 'in_progress',
         ]);
 
         $this->actingAs($hr)
-             ->put("/compliance/dsr/{$dsr->id}", [
-                 'status'   => 'completed',
-                 'response' => 'Your data export has been sent to your email.',
-             ])
-             ->assertRedirect();
+            ->put("/compliance/dsr/{$dsr->id}", [
+                'status' => 'completed',
+                'response' => 'Your data export has been sent to your email.',
+            ])
+            ->assertRedirect();
 
         $dsr->refresh();
         $this->assertEquals('completed', $dsr->status);
@@ -290,15 +291,15 @@ class ComplianceTest extends TestCase
     public function test_staff_can_withdraw_pending_dsr(): void
     {
         $staff = $this->staffUser();
-        $dsr   = DataSubjectRequest::create([
-            'user_id'     => $staff->id,
-            'type'        => 'erasure',
+        $dsr = DataSubjectRequest::create([
+            'user_id' => $staff->id,
+            'type' => 'erasure',
             'description' => 'Please delete.',
         ]);
 
         $this->actingAs($staff)
-             ->post("/compliance/my/dsr/{$dsr->id}/withdraw")
-             ->assertRedirect();
+            ->post("/compliance/my/dsr/{$dsr->id}/withdraw")
+            ->assertRedirect();
 
         $this->assertDatabaseHas('data_subject_requests', ['id' => $dsr->id, 'status' => 'withdrawn']);
     }
@@ -307,15 +308,15 @@ class ComplianceTest extends TestCase
     {
         $staff = $this->staffUser();
         $other = $this->staffUser();
-        $dsr   = DataSubjectRequest::create([
-            'user_id'     => $other->id,
-            'type'        => 'access',
+        $dsr = DataSubjectRequest::create([
+            'user_id' => $other->id,
+            'type' => 'access',
             'description' => 'Not mine.',
         ]);
 
         $this->actingAs($staff)
-             ->post("/compliance/my/dsr/{$dsr->id}/withdraw")
-             ->assertStatus(403);
+            ->post("/compliance/my/dsr/{$dsr->id}/withdraw")
+            ->assertStatus(403);
     }
 
     // ── Compliance Trainings ──────────────────────────────────────────────────
@@ -323,37 +324,37 @@ class ComplianceTest extends TestCase
     public function test_hr_can_create_training(): void
     {
         $this->actingAs($this->hrUser())
-             ->post('/compliance/trainings', [
-                 'title'        => 'Data Protection Awareness',
-                 'category'     => 'data_protection',
-                 'is_mandatory' => true,
-             ])
-             ->assertRedirect();
+            ->post('/compliance/trainings', [
+                'title' => 'Data Protection Awareness',
+                'category' => 'data_protection',
+                'is_mandatory' => true,
+            ])
+            ->assertRedirect();
 
         $this->assertDatabaseHas('compliance_trainings', [
-            'title'    => 'Data Protection Awareness',
+            'title' => 'Data Protection Awareness',
             'category' => 'data_protection',
         ]);
     }
 
     public function test_hr_can_assign_training_to_users(): void
     {
-        $hr       = $this->hrUser();
-        $staff1   = $this->staffUser();
-        $staff2   = $this->staffUser();
+        $hr = $this->hrUser();
+        $staff1 = $this->staffUser();
+        $staff2 = $this->staffUser();
         $training = ComplianceTraining::create([
-            'title'        => 'Code of Conduct',
-            'category'     => 'code_of_conduct',
+            'title' => 'Code of Conduct',
+            'category' => 'code_of_conduct',
             'is_mandatory' => true,
-            'is_active'    => true,
+            'is_active' => true,
         ]);
 
         $this->actingAs($hr)
-             ->post("/compliance/trainings/{$training->id}/assign", [
-                 'user_ids' => [$staff1->id, $staff2->id],
-                 'due_at'   => now()->addDays(30)->toDateString(),
-             ])
-             ->assertRedirect();
+            ->post("/compliance/trainings/{$training->id}/assign", [
+                'user_ids' => [$staff1->id, $staff2->id],
+                'due_at' => now()->addDays(30)->toDateString(),
+            ])
+            ->assertRedirect();
 
         $this->assertDatabaseHas('compliance_training_assignments', ['training_id' => $training->id, 'user_id' => $staff1->id]);
         $this->assertDatabaseHas('compliance_training_assignments', ['training_id' => $training->id, 'user_id' => $staff2->id]);
@@ -361,25 +362,25 @@ class ComplianceTest extends TestCase
 
     public function test_duplicate_assignment_is_skipped(): void
     {
-        $hr       = $this->hrUser();
-        $staff    = $this->staffUser();
+        $hr = $this->hrUser();
+        $staff = $this->staffUser();
         $training = ComplianceTraining::create([
             'title' => 'Cybersecurity', 'category' => 'cybersecurity', 'is_mandatory' => true, 'is_active' => true,
         ]);
 
         ComplianceTrainingAssignment::create([
             'training_id' => $training->id,
-            'user_id'     => $staff->id,
-            'due_at'      => now()->addDays(30)->toDateString(),
-            'status'      => 'pending',
+            'user_id' => $staff->id,
+            'due_at' => now()->addDays(30)->toDateString(),
+            'status' => 'pending',
         ]);
 
         $this->actingAs($hr)
-             ->post("/compliance/trainings/{$training->id}/assign", [
-                 'user_ids' => [$staff->id],
-                 'due_at'   => now()->addDays(60)->toDateString(),
-             ])
-             ->assertRedirect();
+            ->post("/compliance/trainings/{$training->id}/assign", [
+                'user_ids' => [$staff->id],
+                'due_at' => now()->addDays(60)->toDateString(),
+            ])
+            ->assertRedirect();
 
         $this->assertEquals(
             1,
@@ -389,22 +390,22 @@ class ComplianceTest extends TestCase
 
     public function test_staff_can_complete_own_training_assignment(): void
     {
-        $staff    = $this->staffUser();
+        $staff = $this->staffUser();
         $training = ComplianceTraining::create([
             'title' => 'Health & Safety', 'category' => 'health_safety', 'is_mandatory' => true, 'is_active' => true,
         ]);
         ComplianceTrainingAssignment::create([
             'training_id' => $training->id,
-            'user_id'     => $staff->id,
-            'due_at'      => now()->addDays(14)->toDateString(),
-            'status'      => 'pending',
+            'user_id' => $staff->id,
+            'due_at' => now()->addDays(14)->toDateString(),
+            'status' => 'pending',
         ]);
 
         $this->actingAs($staff)
-             ->post("/compliance/trainings/{$training->id}/complete", [
-                 'completion_notes' => 'Completed the online module.',
-             ])
-             ->assertRedirect();
+            ->post("/compliance/trainings/{$training->id}/complete", [
+                'completion_notes' => 'Completed the online module.',
+            ])
+            ->assertRedirect();
 
         $assignment = ComplianceTrainingAssignment::where('training_id', $training->id)->where('user_id', $staff->id)->first();
         $this->assertEquals('completed', $assignment->status);
@@ -413,21 +414,21 @@ class ComplianceTest extends TestCase
 
     public function test_cannot_complete_already_completed_training(): void
     {
-        $staff    = $this->staffUser();
+        $staff = $this->staffUser();
         $training = ComplianceTraining::create([
             'title' => 'Anti-Bribery', 'category' => 'anti_bribery', 'is_mandatory' => true, 'is_active' => true,
         ]);
         ComplianceTrainingAssignment::create([
-            'training_id'  => $training->id,
-            'user_id'      => $staff->id,
-            'due_at'       => now()->addDays(14)->toDateString(),
-            'status'       => 'completed',
+            'training_id' => $training->id,
+            'user_id' => $staff->id,
+            'due_at' => now()->addDays(14)->toDateString(),
+            'status' => 'completed',
             'completed_at' => now(),
         ]);
 
         $this->actingAs($staff)
-             ->post("/compliance/trainings/{$training->id}/complete")
-             ->assertStatus(422);
+            ->post("/compliance/trainings/{$training->id}/complete")
+            ->assertStatus(422);
     }
 
     // ── Compliance Policies ───────────────────────────────────────────────────
@@ -435,58 +436,58 @@ class ComplianceTest extends TestCase
     public function test_hr_can_create_policy(): void
     {
         $this->actingAs($this->hrUser())
-             ->post('/compliance/policies', [
-                 'title'                    => 'Remote Work Policy',
-                 'category'                 => 'hr',
-                 'requires_acknowledgement' => true,
-             ])
-             ->assertRedirect();
+            ->post('/compliance/policies', [
+                'title' => 'Remote Work Policy',
+                'category' => 'hr',
+                'requires_acknowledgement' => true,
+            ])
+            ->assertRedirect();
 
         $this->assertDatabaseHas('compliance_policies', ['title' => 'Remote Work Policy']);
     }
 
     public function test_hr_can_publish_policy_version(): void
     {
-        $hr     = $this->hrUser();
+        $hr = $this->hrUser();
         $policy = $this->makePolicy();
 
         $this->actingAs($hr)
-             ->post("/compliance/policies/{$policy->id}/versions", [
-                 'version' => '1.0',
-                 'content' => 'This is the full text of the Remote Work Policy version 1.0.',
-             ])
-             ->assertRedirect();
+            ->post("/compliance/policies/{$policy->id}/versions", [
+                'version' => '1.0',
+                'content' => 'This is the full text of the Remote Work Policy version 1.0.',
+            ])
+            ->assertRedirect();
 
         $policy->refresh();
         $this->assertEquals('1.0', $policy->current_version);
         $this->assertDatabaseHas('compliance_policy_versions', [
             'policy_id' => $policy->id,
-            'version'   => '1.0',
+            'version' => '1.0',
         ]);
     }
 
     public function test_staff_can_acknowledge_policy(): void
     {
-        $staff  = $this->staffUser();
+        $staff = $this->staffUser();
         $policy = $this->makePolicy();
-        $ver    = $this->publishVersion($policy, '1.0');
+        $ver = $this->publishVersion($policy, '1.0');
 
         $this->actingAs($staff)
-             ->post("/compliance/policies/{$policy->id}/acknowledge")
-             ->assertRedirect();
+            ->post("/compliance/policies/{$policy->id}/acknowledge")
+            ->assertRedirect();
 
         $this->assertDatabaseHas('compliance_policy_acknowledgements', [
-            'policy_id'         => $policy->id,
+            'policy_id' => $policy->id,
             'policy_version_id' => $ver->id,
-            'user_id'           => $staff->id,
+            'user_id' => $staff->id,
         ]);
     }
 
     public function test_acknowledging_twice_is_idempotent(): void
     {
-        $staff  = $this->staffUser();
+        $staff = $this->staffUser();
         $policy = $this->makePolicy();
-        $ver    = $this->publishVersion($policy, '1.0');
+        $ver = $this->publishVersion($policy, '1.0');
 
         $this->actingAs($staff)->post("/compliance/policies/{$policy->id}/acknowledge");
         $this->actingAs($staff)->post("/compliance/policies/{$policy->id}/acknowledge");
@@ -499,9 +500,9 @@ class ComplianceTest extends TestCase
 
     public function test_new_version_requires_re_acknowledgement(): void
     {
-        $staff  = $this->staffUser();
+        $staff = $this->staffUser();
         $policy = $this->makePolicy();
-        $ver1   = $this->publishVersion($policy, '1.0');
+        $ver1 = $this->publishVersion($policy, '1.0');
 
         // Acknowledge v1.0
         $this->actingAs($staff)->post("/compliance/policies/{$policy->id}/acknowledge");
@@ -514,12 +515,12 @@ class ComplianceTest extends TestCase
 
     public function test_policy_without_version_cannot_be_acknowledged(): void
     {
-        $staff  = $this->staffUser();
+        $staff = $this->staffUser();
         $policy = $this->makePolicy(['current_version' => null]);
 
         $this->actingAs($staff)
-             ->post("/compliance/policies/{$policy->id}/acknowledge")
-             ->assertStatus(422);
+            ->post("/compliance/policies/{$policy->id}/acknowledge")
+            ->assertStatus(422);
     }
 
     // ── Model unit tests ──────────────────────────────────────────────────────

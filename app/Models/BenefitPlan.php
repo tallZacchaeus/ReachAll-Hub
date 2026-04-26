@@ -24,9 +24,9 @@ class BenefitPlan extends Model
     protected $casts = [
         'employee_contribution_value' => 'integer',
         'employer_contribution_value' => 'integer',
-        'is_waivable'                 => 'boolean',
-        'is_active'                   => 'boolean',
-        'sort_order'                  => 'integer',
+        'is_waivable' => 'boolean',
+        'is_active' => 'boolean',
+        'sort_order' => 'integer',
     ];
 
     public function enrollments(): HasMany
@@ -74,10 +74,10 @@ class BenefitPlan extends Model
     private function computeContribution(string $type, int $value, EmployeeSalary $salary): int
     {
         return match ($type) {
-            'fixed'                 => $value,
-            'percentage_of_basic'   => (int) round($salary->basic_kobo * $value / 10000),
-            'percentage_of_gross'   => (int) round($salary->grossKobo() * $value / 10000),
-            default                 => 0,
+            'fixed' => $value,
+            'percentage_of_basic' => (int) round($salary->basic_kobo * $value / 10000),
+            'percentage_of_gross' => (int) round($salary->grossKobo() * $value / 10000),
+            default => 0,
         };
     }
 }

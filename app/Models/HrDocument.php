@@ -27,11 +27,11 @@ class HrDocument extends Model
     ];
 
     protected $casts = [
-        'file_size'          => 'integer',
-        'version'            => 'integer',
+        'file_size' => 'integer',
+        'version' => 'integer',
         'requires_signature' => 'boolean',
-        'effective_date'     => 'date',
-        'expires_at'         => 'date',
+        'effective_date' => 'date',
+        'expires_at' => 'date',
     ];
 
     public function employee(): BelongsTo

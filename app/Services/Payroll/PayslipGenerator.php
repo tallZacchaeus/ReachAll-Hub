@@ -31,8 +31,8 @@ class PayslipGenerator
         Storage::disk('hr')->put($filename, $pdf->output());
 
         $entry->update([
-            'payslip_path'      => $filename,
-            'payslip_disk'      => 'hr',
+            'payslip_path' => $filename,
+            'payslip_disk' => 'hr',
             'payslip_generated' => true,
         ]);
 

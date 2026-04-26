@@ -60,11 +60,11 @@ class CostCentreSeeder extends Seeder
             $cc = CostCentre::firstOrCreate(
                 ['code' => $row['code']],
                 [
-                    'name'        => $row['name'],
-                    'parent_id'   => null,
+                    'name' => $row['name'],
+                    'parent_id' => null,
                     'budget_kobo' => $row['budget_kobo'],
-                    'status'      => 'active',
-                    'created_by'  => $createdBy,
+                    'status' => 'active',
+                    'created_by' => $createdBy,
                 ]
             );
             $codeToId[$row['code']] = $cc->id;

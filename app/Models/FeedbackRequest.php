@@ -65,7 +65,7 @@ class FeedbackRequest extends Model
         foreach ($submitted as $response) {
             $ratings = $response->ratings ?? [];
             foreach ($ratings as $slug => $value) {
-                if (!isset($totals[$slug])) {
+                if (! isset($totals[$slug])) {
                     $totals[$slug] = 0;
                     $counts[$slug] = 0;
                 }

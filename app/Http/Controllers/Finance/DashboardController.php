@@ -7,12 +7,10 @@ use App\Models\Finance\CostCentre;
 use App\Models\Finance\FinancialPeriod;
 use App\Models\Finance\PettyCashFloat;
 use App\Models\Finance\Requisition;
-use App\Models\Finance\Invoice;
 use App\Services\Finance\BudgetEnforcer;
 use App\Services\Finance\MoneyHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -24,9 +22,9 @@ class DashboardController extends Controller
      */
     public function index(Request $request): Response
     {
-        $user    = $request->user();
-        $role    = $user->role;
-        $period  = FinancialPeriod::where('year', now()->year)
+        $user = $request->user();
+        $role = $user->role;
+        $period = FinancialPeriod::where('year', now()->year)
             ->where('month', now()->month)
             ->first();
 
@@ -34,12 +32,9 @@ class DashboardController extends Controller
         // The route is already guarded by finance.access. Widget selection
         // reflects role "persona", not permission enforcement.
         $widgets = match (true) {
-            \in_array($role, ['ceo', 'general_management', 'management'], true)
-                => $this->execWidgets($user, $period),
-            \in_array($role, ['finance', 'superadmin', 'hr'], true)
-                => $this->financeWidgets($user, $period),
-            default
-                => $this->staffWidgets($user, $period),
+            \in_array($role, ['ceo', 'general_management', 'management'], true) => $this->execWidgets($user, $period),
+            \in_array($role, ['finance', 'superadmin', 'hr'], true) => $this->financeWidgets($user, $period),
+            default => $this->staffWidgets($user, $period),
         };
 
         // Dept heads also get a budget meter
@@ -51,12 +46,12 @@ class DashboardController extends Controller
         }
 
         return Inertia::render('Finance/DashboardPage', [
-            'widgets'    => $widgets,
-            'user_role'  => $role,
-            'period'     => $period ? [
-                'label'  => $period->getLabel(),
+            'widgets' => $widgets,
+            'user_role' => $role,
+            'period' => $period ? [
+                'label' => $period->getLabel(),
                 'status' => $period->status,
-                'id'     => $period->id,
+                'id' => $period->id,
             ] : null,
         ]);
     }
@@ -66,7 +61,8 @@ class DashboardController extends Controller
     private function staffWidgets($user, ?FinancialPeriod $period): array
     {
         $key = "finance_dash_staff_{$user->id}";
-        return Cache::remember($key, 300, function () use ($user, $period) {
+
+        return Cache::remember($key, 300, function () use ($user) {
             $mine = Requisition::where('requester_id', $user->id);
 
             $pending = (clone $mine)->whereIn('status', ['draft', 'submitted', 'approving'])->count();
@@ -79,12 +75,12 @@ class DashboardController extends Controller
                 ->limit(5)
                 ->get(['id', 'request_id', 'description', 'amount_kobo', 'status', 'created_at'])
                 ->map(fn ($r) => [
-                    'id'          => $r->id,
-                    'request_id'  => $r->request_id,
+                    'id' => $r->id,
+                    'request_id' => $r->request_id,
                     'description' => $r->description,
-                    'amount_fmt'  => MoneyHelper::format($r->amount_kobo),
-                    'status'      => $r->status,
-                    'date'        => $r->created_at->toDateString(),
+                    'amount_fmt' => MoneyHelper::format($r->amount_kobo),
+                    'status' => $r->status,
+                    'date' => $r->created_at->toDateString(),
                 ]);
 
             return [
@@ -102,6 +98,7 @@ class DashboardController extends Controller
     private function financeWidgets($user, ?FinancialPeriod $period): array
     {
         $key = "finance_dash_finance_{$period?->id}";
+
         return Cache::remember($key, 300, function () use ($period) {
             // Pending validations (submitted)
             $pendingSubmitted = Requisition::where('status', 'submitted')->count();
@@ -140,9 +137,9 @@ class DashboardController extends Controller
                 ->limit(10)
                 ->get()
                 ->map(fn ($r) => [
-                    'code'      => $r->code,
-                    'name'      => $r->name,
-                    'count'     => (int) $r->count,
+                    'code' => $r->code,
+                    'name' => $r->name,
+                    'count' => (int) $r->count,
                     'total_fmt' => MoneyHelper::compact((int) $r->total_kobo),
                 ]);
 
@@ -160,7 +157,7 @@ class DashboardController extends Controller
                     'vat_fmt' => MoneyHelper::format($vatMtd),
                     'wht_fmt' => MoneyHelper::format($whtMtd),
                 ],
-                'trend'              => $trend,
+                'trend' => $trend,
                 'committed_pipeline' => $committedPipeline,
             ];
         });
@@ -169,6 +166,7 @@ class DashboardController extends Controller
     private function execWidgets($user, ?FinancialPeriod $period): array
     {
         $key = "finance_dash_exec_{$period?->id}";
+
         return Cache::remember($key, 300, function () use ($period) {
             // Org-wide spend MTD
             $mtdSpend = 0;
@@ -207,10 +205,10 @@ class DashboardController extends Controller
                 ->limit(10)
                 ->get()
                 ->map(fn ($cc) => [
-                    'name'       => $cc->name,
-                    'code'       => $cc->code,
+                    'name' => $cc->name,
+                    'code' => $cc->code,
                     'budget_fmt' => MoneyHelper::compact($cc->budget_kobo),
-                    'pct'        => BudgetEnforcer::currentPercentage($cc),
+                    'pct' => BudgetEnforcer::currentPercentage($cc),
                 ]);
 
             $trend = $this->buildSpendTrend(6);
@@ -223,8 +221,8 @@ class DashboardController extends Controller
                     ['label' => 'Override Actions (30d)', 'value' => $overrides,                'color' => 'purple'],
                 ],
                 'capex_pipeline_fmt' => MoneyHelper::compact($capexPending),
-                'budget_health'      => $budgetHealth,
-                'trend'              => $trend,
+                'budget_health' => $budgetHealth,
+                'trend' => $trend,
             ];
         });
     }
@@ -232,12 +230,13 @@ class DashboardController extends Controller
     private function buildBudgetMeter(CostCentre $cc, ?FinancialPeriod $period): array
     {
         $result = BudgetEnforcer::check($cc, 0, $period?->id);
+
         return [
-            'name'       => $cc->name,
-            'pct'        => $result['percentage'],
-            'used_fmt'   => MoneyHelper::compact($result['used_kobo']),
+            'name' => $cc->name,
+            'pct' => $result['percentage'],
+            'used_fmt' => MoneyHelper::compact($result['used_kobo']),
             'budget_fmt' => MoneyHelper::compact($result['budget_kobo']),
-            'status'     => $result['status'],
+            'status' => $result['status'],
         ];
     }
 
@@ -253,10 +252,11 @@ class DashboardController extends Controller
                 ->sum('total_kobo');
             $rows[] = [
                 'month' => $m->format('M y'),
-                'kobo'  => (int) $spend,
-                'fmt'   => MoneyHelper::compact((int) $spend),
+                'kobo' => (int) $spend,
+                'fmt' => MoneyHelper::compact((int) $spend),
             ];
         }
+
         return $rows;
     }
 }

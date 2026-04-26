@@ -140,8 +140,8 @@ class RbacTest extends TestCase
     {
         $this->actingAs(User::factory()->create(['role' => 'superadmin']))
             ->post('/admin/roles', [
-                'name'        => 'content_editor',
-                'label'       => 'Content Editor',
+                'name' => 'content_editor',
+                'label' => 'Content Editor',
                 'description' => 'Manages content only',
                 'permissions' => ['content.manage'],
             ])
@@ -161,7 +161,7 @@ class RbacTest extends TestCase
     {
         $this->actingAs(User::factory()->create(['role' => 'superadmin']))
             ->post('/admin/roles', [
-                'name'  => 'hr', // already exists as a system role
+                'name' => 'hr', // already exists as a system role
                 'label' => 'HR Duplicate',
             ])
             ->assertSessionHasErrors('name');
@@ -171,7 +171,7 @@ class RbacTest extends TestCase
     {
         $this->actingAs(User::factory()->create(['role' => 'superadmin']))
             ->post('/admin/roles', [
-                'name'  => 'Invalid Role Name!',
+                'name' => 'Invalid Role Name!',
                 'label' => 'Invalid',
             ])
             ->assertSessionHasErrors('name');
@@ -182,14 +182,14 @@ class RbacTest extends TestCase
     public function test_superadmin_can_update_a_role_label_and_permissions(): void
     {
         $role = Role::create([
-            'name'      => 'test_role',
-            'label'     => 'Old Label',
+            'name' => 'test_role',
+            'label' => 'Old Label',
             'is_system' => false,
         ]);
 
         $this->actingAs(User::factory()->create(['role' => 'superadmin']))
             ->put("/admin/roles/{$role->id}", [
-                'label'       => 'New Label',
+                'label' => 'New Label',
                 'permissions' => ['content.manage', 'reports.view'],
             ])
             ->assertRedirect();
@@ -219,17 +219,17 @@ class RbacTest extends TestCase
     public function test_superadmin_can_delete_a_custom_role(): void
     {
         $role = Role::create([
-            'name'      => 'custom_deletable',
-            'label'     => 'Deletable Role',
+            'name' => 'custom_deletable',
+            'label' => 'Deletable Role',
             'is_system' => false,
         ]);
 
         $permId = Permission::where('name', 'content.manage')->value('id');
         DB::table('role_permissions')->insert([
-            'role'          => 'custom_deletable',
+            'role' => 'custom_deletable',
             'permission_id' => $permId,
-            'created_at'    => now(),
-            'updated_at'    => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         $this->actingAs(User::factory()->create(['role' => 'superadmin']))
@@ -246,8 +246,8 @@ class RbacTest extends TestCase
     public function test_non_superadmin_cannot_delete_any_role(): void
     {
         $role = Role::create([
-            'name'      => 'another_role',
-            'label'     => 'Another',
+            'name' => 'another_role',
+            'label' => 'Another',
             'is_system' => false,
         ]);
 
@@ -264,22 +264,22 @@ class RbacTest extends TestCase
     {
         $this->actingAs(User::factory()->create(['role' => 'superadmin']))
             ->post('/admin/roles', [
-                'name'  => 'audited_role',
+                'name' => 'audited_role',
                 'label' => 'Audited Role',
             ]);
 
         $this->assertDatabaseHas('rbac_audit_logs', [
-            'action'      => 'role.created',
+            'action' => 'role.created',
             'target_type' => 'role',
-            'target_id'   => 'audited_role',
+            'target_id' => 'audited_role',
         ]);
     }
 
     public function test_deleting_a_role_writes_audit_log(): void
     {
         $role = Role::create([
-            'name'      => 'deleted_role',
-            'label'     => 'To Delete',
+            'name' => 'deleted_role',
+            'label' => 'To Delete',
             'is_system' => false,
         ]);
 
@@ -287,8 +287,8 @@ class RbacTest extends TestCase
             ->delete("/admin/roles/{$role->id}");
 
         $this->assertDatabaseHas('rbac_audit_logs', [
-            'action'      => 'role.deleted',
-            'target_id'   => 'deleted_role',
+            'action' => 'role.deleted',
+            'target_id' => 'deleted_role',
         ]);
     }
 }

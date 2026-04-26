@@ -23,12 +23,12 @@ class PettyCashLowFloat extends Notification
         $pct = $float->balancePercentage();
 
         return [
-            'type'         => 'petty_cash_low_float',
-            'title'        => 'Low Petty Cash Balance',
-            'body'         => "Your petty cash balance is at {$pct}% ({$float->balanceFmt()} of {$float->limitFmt()}). Consider submitting a reconciliation for replenishment.",
-            'float_id'     => $float->id,
+            'type' => 'petty_cash_low_float',
+            'title' => 'Low Petty Cash Balance',
+            'body' => "Your petty cash balance is at {$pct}% ({$float->balanceFmt()} of {$float->limitFmt()}). Consider submitting a reconciliation for replenishment.",
+            'float_id' => $float->id,
             'balance_kobo' => $float->current_balance_kobo,
-            'limit_kobo'   => $float->float_limit_kobo,
+            'limit_kobo' => $float->float_limit_kobo,
         ];
     }
 }

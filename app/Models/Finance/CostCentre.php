@@ -56,8 +56,13 @@ class CostCentre extends Model
     /** Depth: 0 = root, 1 = child, 2 = grandchild */
     public function getDepthAttribute(): int
     {
-        if (! $this->parent_id) return 0;
-        if (! $this->parent?->parent_id) return 1;
+        if (! $this->parent_id) {
+            return 0;
+        }
+        if (! $this->parent?->parent_id) {
+            return 1;
+        }
+
         return 2;
     }
 }

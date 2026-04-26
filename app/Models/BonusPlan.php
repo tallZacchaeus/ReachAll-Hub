@@ -21,7 +21,7 @@ class BonusPlan extends Model
 
     protected $casts = [
         'total_budget_kobo' => 'integer',
-        'payout_date'       => 'date',
+        'payout_date' => 'date',
     ];
 
     public function awards(): HasMany

@@ -19,8 +19,8 @@ class BenefitEnrollmentWindow extends Model
     ];
 
     protected $casts = [
-        'open_date'      => 'date',
-        'close_date'     => 'date',
+        'open_date' => 'date',
+        'close_date' => 'date',
         'effective_date' => 'date',
     ];
 
@@ -42,6 +42,7 @@ class BenefitEnrollmentWindow extends Model
     public function isCurrentlyOpen(): bool
     {
         $today = now()->toDateString();
+
         return $this->status === 'open'
             && $this->open_date->toDateString() <= $today
             && $this->close_date->toDateString() >= $today;

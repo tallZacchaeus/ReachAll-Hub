@@ -34,14 +34,14 @@ class BenefitSelfController extends Controller
             ->orderBy('effective_date')
             ->get()
             ->map(fn ($e) => [
-                'id'                         => $e->id,
-                'plan_name'                  => $e->plan->name,
-                'plan_type'                  => $e->plan->type,
-                'provider'                   => $e->plan->provider,
-                'effective_date'             => $e->effective_date->toDateString(),
-                'employee_contribution'      => MoneyHelper::format($e->employee_contribution_kobo),
-                'employer_contribution'      => MoneyHelper::format($e->employer_contribution_kobo),
-                'member_id'                  => $e->member_id,
+                'id' => $e->id,
+                'plan_name' => $e->plan->name,
+                'plan_type' => $e->plan->type,
+                'provider' => $e->plan->provider,
+                'effective_date' => $e->effective_date->toDateString(),
+                'employee_contribution' => MoneyHelper::format($e->employee_contribution_kobo),
+                'employer_contribution' => MoneyHelper::format($e->employer_contribution_kobo),
+                'member_id' => $e->member_id,
             ]);
 
         $dependents = EmployeeDependent::where('user_id', $user->id)
@@ -61,20 +61,20 @@ class BenefitSelfController extends Controller
             'employer_contribution_type', 'employer_contribution_value', 'is_waivable']);
 
         return Inertia::render('Benefits/MyBenefitsPage', [
-            'enrollments'    => $enrollments,
-            'dependents'     => $dependents,
-            'open_window'    => $openWindow ? [
-                'id'             => $openWindow->id,
-                'name'           => $openWindow->name,
-                'description'    => $openWindow->description,
-                'close_date'     => $openWindow->close_date->toDateString(),
+            'enrollments' => $enrollments,
+            'dependents' => $dependents,
+            'open_window' => $openWindow ? [
+                'id' => $openWindow->id,
+                'name' => $openWindow->name,
+                'description' => $openWindow->description,
+                'close_date' => $openWindow->close_date->toDateString(),
                 'effective_date' => $openWindow->effective_date->toDateString(),
-                'my_elections'   => $openWindow->elections->map(fn ($el) => [
-                    'id'          => $el->id,
-                    'plan_id'     => $el->benefit_plan_id,
-                    'plan_name'   => $el->plan->name,
-                    'election'    => $el->election,
-                    'status'      => $el->status,
+                'my_elections' => $openWindow->elections->map(fn ($el) => [
+                    'id' => $el->id,
+                    'plan_id' => $el->benefit_plan_id,
+                    'plan_name' => $el->plan->name,
+                    'election' => $el->election,
+                    'status' => $el->status,
                 ]),
             ] : null,
             'available_plans' => $availablePlans,
@@ -88,8 +88,8 @@ class BenefitSelfController extends Controller
 
         $validated = $request->validate([
             'enrollment_window_id' => ['required', 'exists:benefit_enrollment_windows,id'],
-            'benefit_plan_id'      => ['required', 'exists:benefit_plans,id'],
-            'election'             => ['required', 'in:enroll,waive'],
+            'benefit_plan_id' => ['required', 'exists:benefit_plans,id'],
+            'election' => ['required', 'in:enroll,waive'],
         ]);
 
         $window = BenefitEnrollmentWindow::findOrFail($validated['enrollment_window_id']);
@@ -105,12 +105,12 @@ class BenefitSelfController extends Controller
         BenefitEnrollmentElection::updateOrCreate(
             [
                 'enrollment_window_id' => $validated['enrollment_window_id'],
-                'user_id'              => Auth::id(),
-                'benefit_plan_id'      => $validated['benefit_plan_id'],
+                'user_id' => Auth::id(),
+                'benefit_plan_id' => $validated['benefit_plan_id'],
             ],
             [
                 'election' => $validated['election'],
-                'status'   => 'draft',
+                'status' => 'draft',
             ]
         );
 
@@ -134,7 +134,7 @@ class BenefitSelfController extends Controller
             ->where('user_id', Auth::id())
             ->where('status', 'draft')
             ->update([
-                'status'       => 'submitted',
+                'status' => 'submitted',
                 'submitted_at' => now(),
             ]);
 
@@ -148,15 +148,15 @@ class BenefitSelfController extends Controller
         $this->authorise();
 
         $validated = $request->validate([
-            'name'          => ['required', 'string', 'max:200'],
-            'relationship'  => ['required', 'in:spouse,child,parent,sibling,other'],
+            'name' => ['required', 'string', 'max:200'],
+            'relationship' => ['required', 'in:spouse,child,parent,sibling,other'],
             'date_of_birth' => ['nullable', 'date', 'before:today'],
-            'gender'        => ['nullable', 'in:male,female,other'],
-            'notes'         => ['nullable', 'string', 'max:500'],
+            'gender' => ['nullable', 'in:male,female,other'],
+            'notes' => ['nullable', 'string', 'max:500'],
         ]);
 
         EmployeeDependent::create(array_merge($validated, [
-            'user_id'   => Auth::id(),
+            'user_id' => Auth::id(),
             'is_active' => true,
         ]));
 
@@ -170,11 +170,11 @@ class BenefitSelfController extends Controller
         abort_unless($employeeDependent->user_id === Auth::id(), 403);
 
         $validated = $request->validate([
-            'name'          => ['required', 'string', 'max:200'],
-            'relationship'  => ['required', 'in:spouse,child,parent,sibling,other'],
+            'name' => ['required', 'string', 'max:200'],
+            'relationship' => ['required', 'in:spouse,child,parent,sibling,other'],
             'date_of_birth' => ['nullable', 'date', 'before:today'],
-            'gender'        => ['nullable', 'in:male,female,other'],
-            'notes'         => ['nullable', 'string', 'max:500'],
+            'gender' => ['nullable', 'in:male,female,other'],
+            'notes' => ['nullable', 'string', 'max:500'],
         ]);
 
         $employeeDependent->update($validated);

@@ -30,19 +30,19 @@ class PayrollRun extends Model
     ];
 
     protected $casts = [
-        'period_start'               => 'date',
-        'period_end'                 => 'date',
-        'is_off_cycle'               => 'boolean',
-        'total_gross_kobo'           => 'integer',
-        'total_paye_kobo'            => 'integer',
-        'total_pension_employee_kobo'=> 'integer',
-        'total_pension_employer_kobo'=> 'integer',
-        'total_nhf_kobo'             => 'integer',
-        'total_nsitf_kobo'           => 'integer',
-        'total_net_kobo'             => 'integer',
-        'employee_count'             => 'integer',
-        'approved_at'                => 'datetime',
-        'paid_at'                    => 'datetime',
+        'period_start' => 'date',
+        'period_end' => 'date',
+        'is_off_cycle' => 'boolean',
+        'total_gross_kobo' => 'integer',
+        'total_paye_kobo' => 'integer',
+        'total_pension_employee_kobo' => 'integer',
+        'total_pension_employer_kobo' => 'integer',
+        'total_nhf_kobo' => 'integer',
+        'total_nsitf_kobo' => 'integer',
+        'total_net_kobo' => 'integer',
+        'employee_count' => 'integer',
+        'approved_at' => 'datetime',
+        'paid_at' => 'datetime',
     ];
 
     public function entries(): HasMany

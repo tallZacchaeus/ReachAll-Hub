@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Benefits;
 use App\Http\Controllers\Controller;
 use App\Models\BenefitEnrollmentElection;
 use App\Models\BenefitEnrollmentWindow;
-use App\Models\BenefitPlan;
 use App\Models\EmployeeBenefitEnrollment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,16 +23,16 @@ class EnrollmentWindowController extends Controller
         $this->authorise();
 
         $validated = $request->validate([
-            'name'           => ['required', 'string', 'max:200'],
-            'description'    => ['nullable', 'string', 'max:2000'],
-            'open_date'      => ['required', 'date'],
-            'close_date'     => ['required', 'date', 'after:open_date'],
+            'name' => ['required', 'string', 'max:200'],
+            'description' => ['nullable', 'string', 'max:2000'],
+            'open_date' => ['required', 'date'],
+            'close_date' => ['required', 'date', 'after:open_date'],
             'effective_date' => ['required', 'date', 'after_or_equal:close_date'],
         ]);
 
         BenefitEnrollmentWindow::create(array_merge($validated, [
-            'status'         => 'upcoming',
-            'created_by_id'  => Auth::id(),
+            'status' => 'upcoming',
+            'created_by_id' => Auth::id(),
         ]));
 
         return back()->with('success', 'Enrollment window created.');
@@ -74,13 +73,13 @@ class EnrollmentWindowController extends Controller
                         ->update(['status' => 'terminated', 'end_date' => $benefitEnrollmentWindow->effective_date->toDateString()]);
 
                     EmployeeBenefitEnrollment::create([
-                        'user_id'                    => $election->user_id,
-                        'benefit_plan_id'            => $election->benefit_plan_id,
-                        'status'                     => 'active',
-                        'effective_date'             => $benefitEnrollmentWindow->effective_date->toDateString(),
+                        'user_id' => $election->user_id,
+                        'benefit_plan_id' => $election->benefit_plan_id,
+                        'status' => 'active',
+                        'effective_date' => $benefitEnrollmentWindow->effective_date->toDateString(),
                         'employee_contribution_kobo' => $election->plan->employee_contribution_value,
                         'employer_contribution_kobo' => $election->plan->employer_contribution_value,
-                        'enrolled_by_id'             => Auth::id(),
+                        'enrolled_by_id' => Auth::id(),
                     ]);
                 } elseif ($election->election === 'waive') {
                     // Waive = terminate active enrollment for this plan
@@ -91,8 +90,8 @@ class EnrollmentWindowController extends Controller
                 }
 
                 $election->update([
-                    'status'          => 'approved',
-                    'processed_at'    => now(),
+                    'status' => 'approved',
+                    'processed_at' => now(),
                     'processed_by_id' => Auth::id(),
                 ]);
             }

@@ -23,9 +23,9 @@ class ApprovalStep extends Model
     ];
 
     protected $casts = [
-        'acted_at'           => 'datetime',
-        'sla_deadline'       => 'datetime',
-        'reminder_sent'      => 'boolean',
+        'acted_at' => 'datetime',
+        'sla_deadline' => 'datetime',
+        'reminder_sent' => 'boolean',
         'is_budget_override' => 'boolean',
     ];
 

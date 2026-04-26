@@ -40,12 +40,13 @@ class EmployeeRelationsTest extends TestCase
     private function makeCase(array $attrs = []): HrCase
     {
         $hr = $this->hrUser();
+
         return HrCase::create(array_merge([
-            'type'        => 'helpdesk',
-            'subject'     => 'Test case',
+            'type' => 'helpdesk',
+            'subject' => 'Test case',
             'description' => 'Some description.',
-            'priority'    => 'normal',
-            'status'      => 'open',
+            'priority' => 'normal',
+            'status' => 'open',
         ], $attrs));
     }
 
@@ -59,24 +60,24 @@ class EmployeeRelationsTest extends TestCase
     public function test_staff_cannot_access_case_management(): void
     {
         $this->actingAs($this->staffUser())
-             ->get('/employee-relations/cases')
-             ->assertStatus(403);
+            ->get('/employee-relations/cases')
+            ->assertStatus(403);
     }
 
     public function test_hr_can_access_case_management(): void
     {
         $this->actingAs($this->hrUser())
-             ->get('/employee-relations/cases')
-             ->assertOk()
-             ->assertInertia(fn ($page) => $page->component('EmployeeRelations/CaseManagementPage'));
+            ->get('/employee-relations/cases')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('EmployeeRelations/CaseManagementPage'));
     }
 
     public function test_staff_can_access_my_cases(): void
     {
         $this->actingAs($this->staffUser())
-             ->get('/employee-relations/my-cases')
-             ->assertOk()
-             ->assertInertia(fn ($page) => $page->component('EmployeeRelations/MyCasesPage'));
+            ->get('/employee-relations/my-cases')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('EmployeeRelations/MyCasesPage'));
     }
 
     // ── Case number auto-generation ──────────────────────────────────────────
@@ -98,18 +99,18 @@ class EmployeeRelationsTest extends TestCase
 
     public function test_hr_can_open_a_case(): void
     {
-        $hr      = $this->hrUser();
-        $staff   = $this->staffUser();
+        $hr = $this->hrUser();
+        $staff = $this->staffUser();
 
         $this->actingAs($hr)
-             ->post('/employee-relations/cases', [
-                 'type'            => 'grievance',
-                 'subject'         => 'Pay dispute',
-                 'description'     => 'Employee disputes pay calculation.',
-                 'priority'        => 'high',
-                 'reported_by_id'  => $staff->id,
-             ])
-             ->assertRedirect();
+            ->post('/employee-relations/cases', [
+                'type' => 'grievance',
+                'subject' => 'Pay dispute',
+                'description' => 'Employee disputes pay calculation.',
+                'priority' => 'high',
+                'reported_by_id' => $staff->id,
+            ])
+            ->assertRedirect();
 
         $case = HrCase::first();
         $this->assertNotNull($case);
@@ -120,8 +121,8 @@ class EmployeeRelationsTest extends TestCase
         // Complainant party auto-added
         $this->assertDatabaseHas('hr_case_parties', [
             'hr_case_id' => $case->id,
-            'user_id'    => $staff->id,
-            'role'       => 'complainant',
+            'user_id' => $staff->id,
+            'role' => 'complainant',
         ]);
     }
 
@@ -130,13 +131,13 @@ class EmployeeRelationsTest extends TestCase
         $hr = $this->hrUser();
 
         $this->actingAs($hr)
-             ->post('/employee-relations/cases', [
-                 'type'        => 'whistleblower',
-                 'subject'     => 'Policy violation',
-                 'description' => 'Observed misconduct.',
-                 'priority'    => 'high',
-             ])
-             ->assertRedirect();
+            ->post('/employee-relations/cases', [
+                'type' => 'whistleblower',
+                'subject' => 'Policy violation',
+                'description' => 'Observed misconduct.',
+                'priority' => 'high',
+            ])
+            ->assertRedirect();
 
         $case = HrCase::first();
         $this->assertTrue((bool) $case->confidential);
@@ -144,29 +145,29 @@ class EmployeeRelationsTest extends TestCase
 
     public function test_hr_can_update_case_status(): void
     {
-        $hr   = $this->hrUser();
+        $hr = $this->hrUser();
         $case = $this->makeCase();
 
         $this->actingAs($hr)
-             ->put("/employee-relations/cases/{$case->id}", [
-                 'status' => 'under_review',
-             ])
-             ->assertRedirect();
+            ->put("/employee-relations/cases/{$case->id}", [
+                'status' => 'under_review',
+            ])
+            ->assertRedirect();
 
         $this->assertDatabaseHas('hr_cases', ['id' => $case->id, 'status' => 'under_review']);
     }
 
     public function test_resolving_case_sets_resolved_at(): void
     {
-        $hr   = $this->hrUser();
+        $hr = $this->hrUser();
         $case = $this->makeCase();
 
         $this->actingAs($hr)
-             ->put("/employee-relations/cases/{$case->id}", [
-                 'status'  => 'resolved',
-                 'outcome' => 'Issue addressed and resolved.',
-             ])
-             ->assertRedirect();
+            ->put("/employee-relations/cases/{$case->id}", [
+                'status' => 'resolved',
+                'outcome' => 'Issue addressed and resolved.',
+            ])
+            ->assertRedirect();
 
         $case->refresh();
         $this->assertEquals('resolved', $case->status);
@@ -176,21 +177,21 @@ class EmployeeRelationsTest extends TestCase
 
     public function test_hr_can_assign_investigator(): void
     {
-        $hr          = $this->hrUser();
+        $hr = $this->hrUser();
         $investigator = $this->managementUser();
-        $case        = $this->makeCase();
+        $case = $this->makeCase();
 
         $this->actingAs($hr)
-             ->put("/employee-relations/cases/{$case->id}", [
-                 'assigned_to_id' => $investigator->id,
-                 'status'         => 'investigating',
-             ])
-             ->assertRedirect();
+            ->put("/employee-relations/cases/{$case->id}", [
+                'assigned_to_id' => $investigator->id,
+                'status' => 'investigating',
+            ])
+            ->assertRedirect();
 
         $this->assertDatabaseHas('hr_cases', [
-            'id'              => $case->id,
-            'assigned_to_id'  => $investigator->id,
-            'status'          => 'investigating',
+            'id' => $case->id,
+            'assigned_to_id' => $investigator->id,
+            'status' => 'investigating',
         ]);
     }
 
@@ -198,42 +199,42 @@ class EmployeeRelationsTest extends TestCase
 
     public function test_hr_can_add_party_to_case(): void
     {
-        $hr      = $this->hrUser();
-        $staff   = $this->staffUser();
-        $case    = $this->makeCase();
+        $hr = $this->hrUser();
+        $staff = $this->staffUser();
+        $case = $this->makeCase();
 
         $this->actingAs($hr)
-             ->post("/employee-relations/cases/{$case->id}/parties", [
-                 'user_id' => $staff->id,
-                 'role'    => 'respondent',
-             ])
-             ->assertRedirect();
+            ->post("/employee-relations/cases/{$case->id}/parties", [
+                'user_id' => $staff->id,
+                'role' => 'respondent',
+            ])
+            ->assertRedirect();
 
         $this->assertDatabaseHas('hr_case_parties', [
             'hr_case_id' => $case->id,
-            'user_id'    => $staff->id,
-            'role'       => 'respondent',
+            'user_id' => $staff->id,
+            'role' => 'respondent',
         ]);
     }
 
     public function test_duplicate_party_role_is_silently_deduplicated(): void
     {
-        $hr    = $this->hrUser();
+        $hr = $this->hrUser();
         $staff = $this->staffUser();
-        $case  = $this->makeCase();
+        $case = $this->makeCase();
 
         HrCaseParty::create([
             'hr_case_id' => $case->id,
-            'user_id'    => $staff->id,
-            'role'       => 'respondent',
+            'user_id' => $staff->id,
+            'role' => 'respondent',
         ]);
 
         $this->actingAs($hr)
-             ->post("/employee-relations/cases/{$case->id}/parties", [
-                 'user_id' => $staff->id,
-                 'role'    => 'respondent',
-             ])
-             ->assertRedirect();
+            ->post("/employee-relations/cases/{$case->id}/parties", [
+                'user_id' => $staff->id,
+                'role' => 'respondent',
+            ])
+            ->assertRedirect();
 
         $this->assertEquals(
             1,
@@ -243,18 +244,18 @@ class EmployeeRelationsTest extends TestCase
 
     public function test_hr_can_remove_party(): void
     {
-        $hr    = $this->hrUser();
+        $hr = $this->hrUser();
         $staff = $this->staffUser();
-        $case  = $this->makeCase();
+        $case = $this->makeCase();
         $party = HrCaseParty::create([
             'hr_case_id' => $case->id,
-            'user_id'    => $staff->id,
-            'role'       => 'witness',
+            'user_id' => $staff->id,
+            'role' => 'witness',
         ]);
 
         $this->actingAs($hr)
-             ->delete("/employee-relations/cases/{$case->id}/parties/{$party->id}")
-             ->assertRedirect();
+            ->delete("/employee-relations/cases/{$case->id}/parties/{$party->id}")
+            ->assertRedirect();
 
         $this->assertDatabaseMissing('hr_case_parties', ['id' => $party->id]);
     }
@@ -263,56 +264,56 @@ class EmployeeRelationsTest extends TestCase
 
     public function test_hr_can_add_internal_note(): void
     {
-        $hr   = $this->hrUser();
+        $hr = $this->hrUser();
         $case = $this->makeCase();
 
         $this->actingAs($hr)
-             ->post("/employee-relations/cases/{$case->id}/notes", [
-                 'content'     => 'Internal assessment.',
-                 'is_internal' => true,
-             ])
-             ->assertRedirect();
+            ->post("/employee-relations/cases/{$case->id}/notes", [
+                'content' => 'Internal assessment.',
+                'is_internal' => true,
+            ])
+            ->assertRedirect();
 
         $this->assertDatabaseHas('hr_case_notes', [
-            'hr_case_id'  => $case->id,
-            'content'     => 'Internal assessment.',
+            'hr_case_id' => $case->id,
+            'content' => 'Internal assessment.',
             'is_internal' => 1,
-            'author_id'   => $hr->id,
+            'author_id' => $hr->id,
         ]);
     }
 
     public function test_investigator_cannot_add_internal_note(): void
     {
         $investigator = $this->managementUser();
-        $case         = $this->makeCase(['assigned_to_id' => $investigator->id]);
+        $case = $this->makeCase(['assigned_to_id' => $investigator->id]);
 
         $this->actingAs($investigator)
-             ->post("/employee-relations/cases/{$case->id}/notes", [
-                 'content'     => 'My observation.',
-                 'is_internal' => true,  // should be stripped
-             ])
-             ->assertRedirect();
+            ->post("/employee-relations/cases/{$case->id}/notes", [
+                'content' => 'My observation.',
+                'is_internal' => true,  // should be stripped
+            ])
+            ->assertRedirect();
 
         $this->assertDatabaseHas('hr_case_notes', [
-            'hr_case_id'  => $case->id,
+            'hr_case_id' => $case->id,
             'is_internal' => 0,
         ]);
     }
 
     public function test_hr_can_delete_note(): void
     {
-        $hr   = $this->hrUser();
+        $hr = $this->hrUser();
         $case = $this->makeCase();
         $note = HrCaseNote::create([
-            'hr_case_id'  => $case->id,
-            'author_id'   => $hr->id,
-            'content'     => 'To be deleted.',
+            'hr_case_id' => $case->id,
+            'author_id' => $hr->id,
+            'content' => 'To be deleted.',
             'is_internal' => false,
         ]);
 
         $this->actingAs($hr)
-             ->delete("/employee-relations/cases/{$case->id}/notes/{$note->id}")
-             ->assertRedirect();
+            ->delete("/employee-relations/cases/{$case->id}/notes/{$note->id}")
+            ->assertRedirect();
 
         $this->assertDatabaseMissing('hr_case_notes', ['id' => $note->id]);
     }
@@ -324,14 +325,14 @@ class EmployeeRelationsTest extends TestCase
         $staff = $this->staffUser();
 
         $this->actingAs($staff)
-             ->post('/employee-relations/my-cases', [
-                 'type'        => 'helpdesk',
-                 'subject'     => 'IT issue',
-                 'description' => 'My laptop won\'t connect to VPN.',
-                 'priority'    => 'normal',
-                 'anonymous'   => false,
-             ])
-             ->assertRedirect();
+            ->post('/employee-relations/my-cases', [
+                'type' => 'helpdesk',
+                'subject' => 'IT issue',
+                'description' => 'My laptop won\'t connect to VPN.',
+                'priority' => 'normal',
+                'anonymous' => false,
+            ])
+            ->assertRedirect();
 
         $case = HrCase::first();
         $this->assertNotNull($case);
@@ -345,14 +346,14 @@ class EmployeeRelationsTest extends TestCase
         $staff = $this->staffUser();
 
         $this->actingAs($staff)
-             ->post('/employee-relations/my-cases', [
-                 'type'        => 'whistleblower',
-                 'subject'     => 'Financial irregularity',
-                 'description' => 'I observed suspicious behaviour.',
-                 'priority'    => 'normal',
-                 'anonymous'   => true,
-             ])
-             ->assertRedirect();
+            ->post('/employee-relations/my-cases', [
+                'type' => 'whistleblower',
+                'subject' => 'Financial irregularity',
+                'description' => 'I observed suspicious behaviour.',
+                'priority' => 'normal',
+                'anonymous' => true,
+            ])
+            ->assertRedirect();
 
         $case = HrCase::first();
         $this->assertNull($case->reported_by_id);
@@ -361,36 +362,36 @@ class EmployeeRelationsTest extends TestCase
 
     public function test_staff_cannot_view_another_persons_case(): void
     {
-        $staff  = $this->staffUser();
-        $other  = $this->staffUser();
-        $case   = $this->makeCase(['reported_by_id' => $other->id]);
+        $staff = $this->staffUser();
+        $other = $this->staffUser();
+        $case = $this->makeCase(['reported_by_id' => $other->id]);
 
         $this->actingAs($staff)
-             ->get("/employee-relations/my-cases/{$case->id}")
-             ->assertStatus(403);
+            ->get("/employee-relations/my-cases/{$case->id}")
+            ->assertStatus(403);
     }
 
     public function test_staff_can_add_note_to_own_open_case(): void
     {
         $staff = $this->staffUser();
-        $case  = HrCase::create([
-            'type'           => 'helpdesk',
-            'subject'        => 'My issue',
-            'description'    => 'Details.',
-            'priority'       => 'normal',
-            'status'         => 'open',
+        $case = HrCase::create([
+            'type' => 'helpdesk',
+            'subject' => 'My issue',
+            'description' => 'Details.',
+            'priority' => 'normal',
+            'status' => 'open',
             'reported_by_id' => $staff->id,
         ]);
 
         $this->actingAs($staff)
-             ->post("/employee-relations/my-cases/{$case->id}/notes", [
-                 'content' => 'Additional detail.',
-             ])
-             ->assertRedirect();
+            ->post("/employee-relations/my-cases/{$case->id}/notes", [
+                'content' => 'Additional detail.',
+            ])
+            ->assertRedirect();
 
         $this->assertDatabaseHas('hr_case_notes', [
-            'hr_case_id'  => $case->id,
-            'author_id'   => $staff->id,
+            'hr_case_id' => $case->id,
+            'author_id' => $staff->id,
             'is_internal' => 0,
         ]);
     }
@@ -398,20 +399,20 @@ class EmployeeRelationsTest extends TestCase
     public function test_staff_cannot_note_on_resolved_case(): void
     {
         $staff = $this->staffUser();
-        $case  = HrCase::create([
-            'type'           => 'helpdesk',
-            'subject'        => 'Done',
-            'description'    => 'Resolved.',
-            'priority'       => 'normal',
-            'status'         => 'resolved',
+        $case = HrCase::create([
+            'type' => 'helpdesk',
+            'subject' => 'Done',
+            'description' => 'Resolved.',
+            'priority' => 'normal',
+            'status' => 'resolved',
             'reported_by_id' => $staff->id,
         ]);
 
         $this->actingAs($staff)
-             ->post("/employee-relations/my-cases/{$case->id}/notes", [
-                 'content' => 'Too late.',
-             ])
-             ->assertStatus(422);
+            ->post("/employee-relations/my-cases/{$case->id}/notes", [
+                'content' => 'Too late.',
+            ])
+            ->assertStatus(422);
     }
 
     // ── Access control for case detail ────────────────────────────────────────
@@ -419,21 +420,21 @@ class EmployeeRelationsTest extends TestCase
     public function test_investigator_can_view_assigned_case(): void
     {
         $investigator = $this->managementUser();
-        $case         = $this->makeCase(['assigned_to_id' => $investigator->id]);
+        $case = $this->makeCase(['assigned_to_id' => $investigator->id]);
 
         $this->actingAs($investigator)
-             ->get("/employee-relations/cases/{$case->id}")
-             ->assertOk();
+            ->get("/employee-relations/cases/{$case->id}")
+            ->assertOk();
     }
 
     public function test_investigator_cannot_view_unassigned_case(): void
     {
         $investigator = $this->managementUser();
-        $case         = $this->makeCase(); // assigned_to_id = null
+        $case = $this->makeCase(); // assigned_to_id = null
 
         $this->actingAs($investigator)
-             ->get("/employee-relations/cases/{$case->id}")
-             ->assertStatus(403);
+            ->get("/employee-relations/cases/{$case->id}")
+            ->assertStatus(403);
     }
 
     // ── Model unit tests ──────────────────────────────────────────────────────

@@ -23,8 +23,8 @@ class JobApplication extends Model
     ];
 
     protected $casts = [
-        'applied_at'  => 'datetime',
-        'hired_at'    => 'datetime',
+        'applied_at' => 'datetime',
+        'hired_at' => 'datetime',
         'rejected_at' => 'datetime',
     ];
 

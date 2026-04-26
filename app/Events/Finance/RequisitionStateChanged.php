@@ -38,10 +38,10 @@ class RequisitionStateChanged implements ShouldBroadcast
     {
         return [
             'requisition_id' => $this->requisition->id,
-            'request_id'     => $this->requisition->request_id,
-            'status'         => $this->requisition->status,
+            'request_id' => $this->requisition->request_id,
+            'status' => $this->requisition->status,
             'previous_status' => $this->previousStatus,
-            'amount_kobo'    => $this->requisition->amount_kobo,
+            'amount_kobo' => $this->requisition->amount_kobo,
         ];
     }
 }

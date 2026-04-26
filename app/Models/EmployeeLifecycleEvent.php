@@ -18,8 +18,8 @@ class EmployeeLifecycleEvent extends Model
     {
         return [
             'effective_date' => 'date',
-            'old_values'     => 'array',
-            'new_values'     => 'array',
+            'old_values' => 'array',
+            'new_values' => 'array',
         ];
     }
 
@@ -44,12 +44,12 @@ class EmployeeLifecycleEvent extends Model
     ): void {
         try {
             static::create([
-                'user_id'        => $userId,
-                'event_type'     => $eventType,
+                'user_id' => $userId,
+                'event_type' => $eventType,
                 'effective_date' => $effectiveDate,
-                'old_values'     => $oldValues,
-                'new_values'     => $newValues,
-                'notes'          => $notes,
+                'old_values' => $oldValues,
+                'new_values' => $newValues,
+                'notes' => $notes,
                 'recorded_by_id' => $recordedById,
             ]);
         } catch (\Throwable) {

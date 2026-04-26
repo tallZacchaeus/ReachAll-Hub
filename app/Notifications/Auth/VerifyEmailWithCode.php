@@ -24,7 +24,7 @@ class VerifyEmailWithCode extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        if (!$notifiable instanceof User) {
+        if (! $notifiable instanceof User) {
             throw new \InvalidArgumentException('VerifyEmailWithCode expects a User notifiable.');
         }
 

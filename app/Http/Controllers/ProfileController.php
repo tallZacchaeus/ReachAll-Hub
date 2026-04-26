@@ -19,7 +19,7 @@ class ProfileController extends Controller
 
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'sometimes|email|max:255|unique:users,email,'.$user->id,
             'phone' => 'nullable|string|max:20',
             'location' => 'nullable|string|max:255',
             'role' => 'sometimes|string|max:255',
@@ -71,13 +71,13 @@ class ProfileController extends Controller
         $this->authorizeAdmin();
 
         $changeRequest = ProfileChangeRequest::findOrFail($id);
-        
+
         if ($changeRequest->status !== 'pending') {
             return back()->with('error', 'This request has already been processed.');
         }
 
         $user = User::findOrFail($changeRequest->user_id);
-        
+
         // Apply changes to the user
         $user->update($changeRequest->changes);
 

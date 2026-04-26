@@ -24,17 +24,17 @@ class PeriodCloseController extends Controller
             ->limit(24)
             ->get()
             ->map(fn ($p) => [
-                'id'                  => $p->id,
-                'label'               => $p->getLabel(),
-                'year'                => $p->year,
-                'month'               => $p->month,
-                'status'              => $p->status,
-                'close_initiated_by'  => $p->closeInitiatedBy?->name,
-                'close_initiated_at'  => $p->close_initiated_at?->toDateString(),
-                'co_authorized_by'    => $p->coAuthorizedBy?->name,
-                'closed_by'           => $p->closedBy?->name,
-                'closed_at'           => $p->closed_at?->toDateString(),
-                'close_report_path'   => $p->close_report_path,
+                'id' => $p->id,
+                'label' => $p->getLabel(),
+                'year' => $p->year,
+                'month' => $p->month,
+                'status' => $p->status,
+                'close_initiated_by' => $p->closeInitiatedBy?->name,
+                'close_initiated_at' => $p->close_initiated_at?->toDateString(),
+                'co_authorized_by' => $p->coAuthorizedBy?->name,
+                'closed_by' => $p->closedBy?->name,
+                'closed_at' => $p->closed_at?->toDateString(),
+                'close_report_path' => $p->close_report_path,
             ]);
 
         // Current or most-recent closing period for the checklist
@@ -42,17 +42,17 @@ class PeriodCloseController extends Controller
         $checklist = $closing ? PeriodCloser::checklist($closing) : [];
 
         return Inertia::render('Finance/PeriodClosePage', [
-            'periods'  => $periods,
-            'closing'  => $closing ? [
-                'id'               => $closing->id,
-                'label'            => $closing->getLabel(),
-                'checklist_clear'  => PeriodCloser::checklistClear($closing),
-                'has_co_auth'      => (bool) $closing->co_authorized_by,
-                'initiated_by'     => $closing->closeInitiatedBy?->name,
+            'periods' => $periods,
+            'closing' => $closing ? [
+                'id' => $closing->id,
+                'label' => $closing->getLabel(),
+                'checklist_clear' => PeriodCloser::checklistClear($closing),
+                'has_co_auth' => (bool) $closing->co_authorized_by,
+                'initiated_by' => $closing->closeInitiatedBy?->name,
             ] : null,
-            'checklist'  => $checklist,
-            'user_role'  => $request->user()->role,
-            'flash'      => session()->only(['success', 'error']),
+            'checklist' => $checklist,
+            'user_role' => $request->user()->role,
+            'flash' => session()->only(['success', 'error']),
         ]);
     }
 
@@ -69,10 +69,11 @@ class PeriodCloseController extends Controller
         } catch (\Throwable $e) {
             Log::error('PeriodCloseController@initiate failed', [
                 'period_id' => $period->id,
-                'user_id'   => $request->user()->id,
-                'error'     => $e->getMessage(),
-                'trace'     => $e->getTraceAsString(),
+                'user_id' => $request->user()->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
             ]);
+
             return back()->with('error', $e->getMessage());
         }
 
@@ -87,8 +88,8 @@ class PeriodCloseController extends Controller
         $request->validate([
             'period_id' => ['required', 'integer', 'exists:financial_periods,id'],
             'item_type' => ['required', 'string', 'in:unreconciled_float,unpaid_requisition,unposted_payment,variance_item'],
-            'item_id'   => ['nullable', 'integer'],
-            'reason'    => ['required', 'string', 'min:20'],
+            'item_id' => ['nullable', 'integer'],
+            'reason' => ['required', 'string', 'min:20'],
         ]);
 
         $period = FinancialPeriod::findOrFail($request->integer('period_id'));
@@ -105,11 +106,12 @@ class PeriodCloseController extends Controller
             Log::error('PeriodCloseController@waive failed', [
                 'period_id' => $period->id,
                 'item_type' => $request->input('item_type'),
-                'item_id'   => $request->input('item_id'),
-                'user_id'   => $request->user()->id,
-                'error'     => $e->getMessage(),
-                'trace'     => $e->getTraceAsString(),
+                'item_id' => $request->input('item_id'),
+                'user_id' => $request->user()->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
             ]);
+
             return back()->with('error', $e->getMessage());
         }
 
@@ -129,14 +131,15 @@ class PeriodCloseController extends Controller
         } catch (\Throwable $e) {
             Log::error('PeriodCloseController@coAuthorize failed', [
                 'period_id' => $period->id,
-                'user_id'   => $request->user()->id,
-                'error'     => $e->getMessage(),
-                'trace'     => $e->getTraceAsString(),
+                'user_id' => $request->user()->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
             ]);
+
             return back()->with('error', $e->getMessage());
         }
 
-        return redirect('/finance/period-close')->with('success', "Co-authorisation recorded. Finance can now finalise the close.");
+        return redirect('/finance/period-close')->with('success', 'Co-authorisation recorded. Finance can now finalise the close.');
     }
 
     /** Step 4: Finalise the close. */
@@ -152,10 +155,11 @@ class PeriodCloseController extends Controller
         } catch (\Throwable $e) {
             Log::error('PeriodCloseController@close failed', [
                 'period_id' => $period->id,
-                'user_id'   => $request->user()->id,
-                'error'     => $e->getMessage(),
-                'trace'     => $e->getTraceAsString(),
+                'user_id' => $request->user()->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
             ]);
+
             return back()->with('error', $e->getMessage());
         }
 
@@ -175,16 +179,17 @@ class PeriodCloseController extends Controller
         } catch (\Throwable $e) {
             Log::error('PeriodCloseController@reopen failed', [
                 'period_id' => $period->id,
-                'user_id'   => $request->user()->id,
-                'error'     => $e->getMessage(),
-                'trace'     => $e->getTraceAsString(),
+                'user_id' => $request->user()->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
             ]);
+
             return back()->with('error', $e->getMessage());
         }
 
         $msg = $result === 'reopened'
             ? "{$period->getLabel()} has been reopened."
-            : "Reopen request recorded. A second authoriser (CEO or Superadmin) must confirm within 30 minutes.";
+            : 'Reopen request recorded. A second authoriser (CEO or Superadmin) must confirm within 30 minutes.';
 
         return redirect('/finance/period-close')->with('success', $msg);
     }

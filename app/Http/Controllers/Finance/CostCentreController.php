@@ -28,7 +28,7 @@ class CostCentreController extends Controller
             ->get(['id', 'name', 'department']);
 
         return Inertia::render('Finance/CostCentreAdminPage', [
-            'tree'  => $roots,
+            'tree' => $roots,
             'users' => $users,
         ]);
     }
@@ -38,12 +38,12 @@ class CostCentreController extends Controller
         $this->authorise($request->user());
 
         $validated = $request->validate([
-            'code'         => ['required', 'string', 'size:4', 'unique:cost_centres,code'],
-            'name'         => ['required', 'string', 'max:100'],
-            'parent_id'    => ['nullable', 'integer', 'exists:cost_centres,id'],
+            'code' => ['required', 'string', 'size:4', 'unique:cost_centres,code'],
+            'name' => ['required', 'string', 'max:100'],
+            'parent_id' => ['nullable', 'integer', 'exists:cost_centres,id'],
             'head_user_id' => ['nullable', 'integer', 'exists:users,id'],
-            'budget_kobo'  => ['required', 'integer', 'min:0'],
-            'status'       => ['required', 'in:active,inactive'],
+            'budget_kobo' => ['required', 'integer', 'min:0'],
+            'status' => ['required', 'in:active,inactive'],
         ]);
 
         CostCentre::create(array_merge($validated, ['created_by' => $request->user()->id]));
@@ -58,11 +58,11 @@ class CostCentreController extends Controller
         $cc = CostCentre::findOrFail($id);
 
         $validated = $request->validate([
-            'name'         => ['required', 'string', 'max:100'],
-            'parent_id'    => ['nullable', 'integer', 'exists:cost_centres,id'],
+            'name' => ['required', 'string', 'max:100'],
+            'parent_id' => ['nullable', 'integer', 'exists:cost_centres,id'],
             'head_user_id' => ['nullable', 'integer', 'exists:users,id'],
-            'budget_kobo'  => ['required', 'integer', 'min:0'],
-            'status'       => ['required', 'in:active,inactive'],
+            'budget_kobo' => ['required', 'integer', 'min:0'],
+            'status' => ['required', 'in:active,inactive'],
         ]);
 
         // Prevent a node from being its own parent or a circular reference
@@ -78,15 +78,15 @@ class CostCentreController extends Controller
     private function formatNode(CostCentre $cc, bool $withChildren = false): array
     {
         $node = [
-            'id'           => $cc->id,
-            'code'         => $cc->code,
-            'name'         => $cc->name,
-            'parent_id'    => $cc->parent_id,
+            'id' => $cc->id,
+            'code' => $cc->code,
+            'name' => $cc->name,
+            'parent_id' => $cc->parent_id,
             'head_user_id' => $cc->head_user_id,
-            'head_name'    => $cc->head?->name,
-            'budget_kobo'  => $cc->budget_kobo,
-            'status'       => $cc->status,
-            'depth'        => $cc->depth,
+            'head_name' => $cc->head?->name,
+            'budget_kobo' => $cc->budget_kobo,
+            'status' => $cc->status,
+            'depth' => $cc->depth,
         ];
 
         if ($withChildren && $cc->relationLoaded('children')) {

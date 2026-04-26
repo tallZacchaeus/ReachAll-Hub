@@ -33,9 +33,9 @@ class TotalRewardsController extends Controller
             ->orderBy('effective_date')
             ->get()
             ->map(fn ($e) => [
-                'plan_name'             => $e->plan->name,
-                'plan_type'             => $e->plan->type,
-                'provider'              => $e->plan->provider,
+                'plan_name' => $e->plan->name,
+                'plan_type' => $e->plan->type,
+                'provider' => $e->plan->provider,
                 'employee_contribution' => MoneyHelper::format($e->employee_contribution_kobo),
                 'employer_contribution' => MoneyHelper::format($e->employer_contribution_kobo),
             ]);
@@ -47,11 +47,11 @@ class TotalRewardsController extends Controller
             ->orderByDesc('approved_at')
             ->get()
             ->map(fn ($a) => [
-                'plan_name'   => $a->plan->name,
-                'bonus_type'  => $a->plan->bonus_type,
-                'period'      => $a->plan->period_label,
-                'amount'      => MoneyHelper::format($a->amount_kobo),
-                'status'      => $a->status,
+                'plan_name' => $a->plan->name,
+                'bonus_type' => $a->plan->bonus_type,
+                'period' => $a->plan->period_label,
+                'amount' => MoneyHelper::format($a->amount_kobo),
+                'status' => $a->status,
                 'approved_at' => $a->approved_at?->toDateString(),
             ]);
 
@@ -64,14 +64,14 @@ class TotalRewardsController extends Controller
 
             if ($band) {
                 $grossKobo = $salary->grossKobo();
-                $bandData  = [
-                    'grade'          => $band->grade,
-                    'title'          => $band->title,
-                    'min'            => MoneyHelper::format($band->min_kobo),
-                    'midpoint'       => MoneyHelper::format($band->midpoint_kobo),
-                    'max'            => MoneyHelper::format($band->max_kobo),
-                    'comparatio'     => number_format($band->comparatio($grossKobo) * 100, 1) . '%',
-                    'range_position' => number_format($band->rangePosition($grossKobo) * 100, 1) . '%',
+                $bandData = [
+                    'grade' => $band->grade,
+                    'title' => $band->title,
+                    'min' => MoneyHelper::format($band->min_kobo),
+                    'midpoint' => MoneyHelper::format($band->midpoint_kobo),
+                    'max' => MoneyHelper::format($band->max_kobo),
+                    'comparatio' => number_format($band->comparatio($grossKobo) * 100, 1).'%',
+                    'range_position' => number_format($band->rangePosition($grossKobo) * 100, 1).'%',
                 ];
             }
         }
@@ -83,18 +83,18 @@ class TotalRewardsController extends Controller
             ->sum('employer_contribution_kobo');
 
         return Inertia::render('Compensation/TotalRewardsPage', [
-            'salary'            => $salary ? [
-                'basic'             => MoneyHelper::format($salary->basic_kobo),
-                'housing'           => MoneyHelper::format($salary->housing_kobo),
-                'transport'         => MoneyHelper::format($salary->transport_kobo),
-                'other_allowances'  => MoneyHelper::format($salary->other_allowances_kobo),
-                'gross'             => MoneyHelper::format($salary->grossKobo()),
-                'effective_date'    => $salary->effective_date->toDateString(),
+            'salary' => $salary ? [
+                'basic' => MoneyHelper::format($salary->basic_kobo),
+                'housing' => MoneyHelper::format($salary->housing_kobo),
+                'transport' => MoneyHelper::format($salary->transport_kobo),
+                'other_allowances' => MoneyHelper::format($salary->other_allowances_kobo),
+                'gross' => MoneyHelper::format($salary->grossKobo()),
+                'effective_date' => $salary->effective_date->toDateString(),
             ] : null,
-            'benefits'                  => $benefits,
-            'total_employer_benefits'   => MoneyHelper::format((int) $rawBenefitEnrollments),
-            'bonuses'                   => $bonuses,
-            'band'                      => $bandData,
+            'benefits' => $benefits,
+            'total_employer_benefits' => MoneyHelper::format((int) $rawBenefitEnrollments),
+            'bonuses' => $bonuses,
+            'band' => $bandData,
         ]);
     }
 }

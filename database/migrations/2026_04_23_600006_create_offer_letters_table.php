@@ -16,7 +16,7 @@ return new class extends Migration
             $table->date('offer_date');
             $table->date('expiry_date')->nullable();
             $table->string('status', 30)->default('draft')
-                  ->comment('draft|sent|accepted|declined|expired|withdrawn');
+                ->comment('draft|sent|accepted|declined|expired|withdrawn');
             $table->string('document_path')->nullable();
             $table->string('document_disk')->nullable()->default('hr');
             $table->text('notes')->nullable();

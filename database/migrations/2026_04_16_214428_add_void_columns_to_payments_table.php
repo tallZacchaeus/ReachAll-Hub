@@ -18,7 +18,7 @@ return new class extends Migration
         Schema::table('payments', function (Blueprint $table) {
             $table->timestamp('voided_at')->nullable()->after('proof_path');
             $table->foreignId('voided_by')->nullable()->after('voided_at')
-                  ->constrained('users')->nullOnDelete();
+                ->constrained('users')->nullOnDelete();
             $table->text('void_reason')->nullable()->after('voided_by');
         });
     }

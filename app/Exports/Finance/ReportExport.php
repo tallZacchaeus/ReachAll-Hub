@@ -2,17 +2,15 @@
 
 namespace App\Exports\Finance;
 
-use App\Models\Finance\AccountCode;
 use App\Models\Finance\CostCentre;
 use App\Models\Finance\Requisition;
-use App\Services\Finance\BudgetEnforcer;
 use App\Services\Finance\MoneyHelper;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
@@ -21,34 +19,34 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
  * reportType: budget_vs_actual | spend_by_cost_centre | spend_by_account_code
  *             | approval_throughput | tax_summary
  */
-class ReportExport implements FromCollection, WithHeadings, WithMapping, WithStyles, ShouldAutoSize, WithTitle
+class ReportExport implements FromCollection, ShouldAutoSize, WithHeadings, WithMapping, WithStyles, WithTitle
 {
     public function __construct(
         private readonly string $reportType,
-        private readonly array  $filters = []
+        private readonly array $filters = []
     ) {}
 
     public function title(): string
     {
         return match ($this->reportType) {
-            'budget_vs_actual'      => 'Budget vs Actual',
-            'spend_by_cost_centre'  => 'Spend by Cost Centre',
+            'budget_vs_actual' => 'Budget vs Actual',
+            'spend_by_cost_centre' => 'Spend by Cost Centre',
             'spend_by_account_code' => 'Spend by Account Code',
-            'approval_throughput'   => 'Approval Throughput',
-            'tax_summary'           => 'Tax Summary',
-            default                 => 'Finance Report',
+            'approval_throughput' => 'Approval Throughput',
+            'tax_summary' => 'Tax Summary',
+            default => 'Finance Report',
         };
     }
 
     public function collection(): Collection
     {
         return match ($this->reportType) {
-            'budget_vs_actual'      => $this->budgetVsActual(),
-            'spend_by_cost_centre'  => $this->spendByCostCentre(),
+            'budget_vs_actual' => $this->budgetVsActual(),
+            'spend_by_cost_centre' => $this->spendByCostCentre(),
             'spend_by_account_code' => $this->spendByAccountCode(),
-            'approval_throughput'   => $this->approvalThroughput(),
-            'tax_summary'           => $this->taxSummary(),
-            default                 => collect(),
+            'approval_throughput' => $this->approvalThroughput(),
+            'tax_summary' => $this->taxSummary(),
+            default => collect(),
         };
     }
 
@@ -89,7 +87,7 @@ class ReportExport implements FromCollection, WithHeadings, WithMapping, WithSty
         return [
             1 => ['font' => ['bold' => true], 'fill' => [
                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                'color'    => ['rgb' => 'DBEAFE'], // blue-100
+                'color' => ['rgb' => 'DBEAFE'], // blue-100
             ]],
         ];
     }
@@ -104,22 +102,20 @@ class ReportExport implements FromCollection, WithHeadings, WithMapping, WithSty
             ->map(function (CostCentre $cc) {
                 $actual = Requisition::where('cost_centre_id', $cc->id)
                     ->whereIn('status', ['paid', 'posted'])
-                    ->when(! empty($this->filters['from']), fn ($q) =>
-                        $q->where('submitted_at', '>=', $this->filters['from'])
+                    ->when(! empty($this->filters['from']), fn ($q) => $q->where('submitted_at', '>=', $this->filters['from'])
                     )
-                    ->when(! empty($this->filters['to']), fn ($q) =>
-                        $q->where('submitted_at', '<=', $this->filters['to'] . ' 23:59:59')
+                    ->when(! empty($this->filters['to']), fn ($q) => $q->where('submitted_at', '<=', $this->filters['to'].' 23:59:59')
                     )
                     ->sum('total_kobo');
 
-                $budget   = $cc->budget_kobo;
+                $budget = $cc->budget_kobo;
                 $variance = $budget - $actual;
-                $pct      = $budget > 0 ? round(($actual / $budget) * 100, 2) : 0.0;
-                $status   = match (true) {
+                $pct = $budget > 0 ? round(($actual / $budget) * 100, 2) : 0.0;
+                $status = match (true) {
                     $pct >= 100 => 'Over Budget',
-                    $pct >= 90  => 'Critical',
-                    $pct >= 80  => 'Warning',
-                    default     => 'On Track',
+                    $pct >= 90 => 'Critical',
+                    $pct >= 80 => 'Warning',
+                    default => 'On Track',
                 };
 
                 return [
@@ -138,11 +134,9 @@ class ReportExport implements FromCollection, WithHeadings, WithMapping, WithSty
     {
         $query = Requisition::with('costCentre:id,code,name')
             ->whereIn('status', ['paid', 'posted'])
-            ->when(! empty($this->filters['from']), fn ($q) =>
-                $q->where('submitted_at', '>=', $this->filters['from'])
+            ->when(! empty($this->filters['from']), fn ($q) => $q->where('submitted_at', '>=', $this->filters['from'])
             )
-            ->when(! empty($this->filters['to']), fn ($q) =>
-                $q->where('submitted_at', '<=', $this->filters['to'] . ' 23:59:59')
+            ->when(! empty($this->filters['to']), fn ($q) => $q->where('submitted_at', '<=', $this->filters['to'].' 23:59:59')
             )
             ->selectRaw('cost_centre_id, SUM(total_kobo) as total, COUNT(*) as cnt, AVG(total_kobo) as avg_kobo')
             ->groupBy('cost_centre_id')
@@ -162,11 +156,9 @@ class ReportExport implements FromCollection, WithHeadings, WithMapping, WithSty
     {
         $query = Requisition::with('accountCode:id,code,category,description')
             ->whereIn('status', ['paid', 'posted'])
-            ->when(! empty($this->filters['from']), fn ($q) =>
-                $q->where('submitted_at', '>=', $this->filters['from'])
+            ->when(! empty($this->filters['from']), fn ($q) => $q->where('submitted_at', '>=', $this->filters['from'])
             )
-            ->when(! empty($this->filters['to']), fn ($q) =>
-                $q->where('submitted_at', '<=', $this->filters['to'] . ' 23:59:59')
+            ->when(! empty($this->filters['to']), fn ($q) => $q->where('submitted_at', '<=', $this->filters['to'].' 23:59:59')
             )
             ->selectRaw('account_code_id, SUM(total_kobo) as total, COUNT(*) as cnt')
             ->groupBy('account_code_id')
@@ -186,11 +178,9 @@ class ReportExport implements FromCollection, WithHeadings, WithMapping, WithSty
     {
         return Requisition::with('approvalSteps:id,requisition_id,status,decided_at')
             ->whereNotNull('submitted_at')
-            ->when(! empty($this->filters['from']), fn ($q) =>
-                $q->where('submitted_at', '>=', $this->filters['from'])
+            ->when(! empty($this->filters['from']), fn ($q) => $q->where('submitted_at', '>=', $this->filters['from'])
             )
-            ->when(! empty($this->filters['to']), fn ($q) =>
-                $q->where('submitted_at', '<=', $this->filters['to'] . ' 23:59:59')
+            ->when(! empty($this->filters['to']), fn ($q) => $q->where('submitted_at', '<=', $this->filters['to'].' 23:59:59')
             )
             ->orderByDesc('submitted_at')
             ->limit(5000) // cap for performance
@@ -219,11 +209,9 @@ class ReportExport implements FromCollection, WithHeadings, WithMapping, WithSty
     {
         return Requisition::with('costCentre:id,code,name', 'financialPeriod:id,year,month')
             ->whereIn('status', ['paid', 'posted'])
-            ->when(! empty($this->filters['from']), fn ($q) =>
-                $q->where('submitted_at', '>=', $this->filters['from'])
+            ->when(! empty($this->filters['from']), fn ($q) => $q->where('submitted_at', '>=', $this->filters['from'])
             )
-            ->when(! empty($this->filters['to']), fn ($q) =>
-                $q->where('submitted_at', '<=', $this->filters['to'] . ' 23:59:59')
+            ->when(! empty($this->filters['to']), fn ($q) => $q->where('submitted_at', '<=', $this->filters['to'].' 23:59:59')
             )
             ->selectRaw('financial_period_id, cost_centre_id,
                 SUM(amount_kobo) as gross,
@@ -234,7 +222,7 @@ class ReportExport implements FromCollection, WithHeadings, WithMapping, WithSty
             ->orderBy('financial_period_id')
             ->get()
             ->map(fn ($row) => [
-                $row->financialPeriod ? date('M Y', mktime(0,0,0,$row->financialPeriod->month,1,$row->financialPeriod->year)) : '—',
+                $row->financialPeriod ? date('M Y', mktime(0, 0, 0, $row->financialPeriod->month, 1, $row->financialPeriod->year)) : '—',
                 $row->costCentre?->name ?? 'Unknown',
                 MoneyHelper::fromKobo((int) $row->gross),
                 MoneyHelper::fromKobo((int) $row->vat),

@@ -4,12 +4,12 @@ namespace Tests\Feature;
 
 use App\Models\Finance\AccountCode;
 use App\Models\Finance\CostCentre;
+use App\Models\Finance\GoodsReceipt;
+use App\Models\Finance\Invoice;
 use App\Models\Finance\Requisition;
 use App\Models\Finance\Vendor;
 use App\Models\User;
 use App\Services\Finance\ThreeWayMatcher;
-use App\Models\Finance\GoodsReceipt;
-use App\Models\Finance\Invoice;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\RateLimiter;
@@ -42,10 +42,10 @@ class Sprint1RegressionTest extends TestCase
 
         $response = $this->actingAs($admin)
             ->post(route('admin.bulletins.store'), [
-                'title'        => 'Test Bulletin',
-                'body'         => $dirtyBody,
-                'priority'     => 'info',
-                'is_pinned'    => false,
+                'title' => 'Test Bulletin',
+                'body' => $dirtyBody,
+                'priority' => 'info',
+                'is_pinned' => false,
                 'is_published' => false,
             ]);
 
@@ -67,18 +67,18 @@ class Sprint1RegressionTest extends TestCase
         $admin = User::factory()->create(['role' => 'management', 'status' => 'active']);
 
         $bulletin = \App\Models\Bulletin::create([
-            'title'     => 'Original',
-            'body'      => '<p>Original content</p>',
-            'priority'  => 'info',
+            'title' => 'Original',
+            'body' => '<p>Original content</p>',
+            'priority' => 'info',
             'author_id' => $admin->id,
         ]);
 
         $this->actingAs($admin)
             ->put(route('admin.bulletins.update', $bulletin->id), [
-                'title'        => 'Updated',
-                'body'         => '<img src=x onerror="alert(1)"><p>Updated content</p>',
-                'priority'     => 'info',
-                'is_pinned'    => false,
+                'title' => 'Updated',
+                'body' => '<img src=x onerror="alert(1)"><p>Updated content</p>',
+                'priority' => 'info',
+                'is_pinned' => false,
                 'is_published' => false,
             ]);
 
@@ -133,31 +133,31 @@ class Sprint1RegressionTest extends TestCase
         $accountCode = AccountCode::create(['code' => '8001', 'category' => '8000', 'description' => 'General', 'tax_vat_applicable' => false, 'tax_wht_applicable' => false, 'wht_rate' => 0, 'status' => 'active', 'created_by' => $admin->id]);
 
         $req = Requisition::create([
-            'request_id'      => 'REQ-TEST-001',
-            'requester_id'    => $admin->id,
-            'type'            => 'OPEX',
-            'amount_kobo'     => 60_000_000,   // ₦600,000
-            'currency'        => 'NGN',
-            'exchange_rate'   => 1.0,
-            'cost_centre_id'  => $costCentre->id,
+            'request_id' => 'REQ-TEST-001',
+            'requester_id' => $admin->id,
+            'type' => 'OPEX',
+            'amount_kobo' => 60_000_000,   // ₦600,000
+            'currency' => 'NGN',
+            'exchange_rate' => 1.0,
+            'cost_centre_id' => $costCentre->id,
             'account_code_id' => $accountCode->id,
-            'vendor_id'       => $vendor->id,
-            'urgency'         => 'standard',
-            'description'     => 'Software subscription renewal for the finance team.',
+            'vendor_id' => $vendor->id,
+            'urgency' => 'standard',
+            'description' => 'Software subscription renewal for the finance team.',
             'supporting_docs' => [],
-            'status'          => 'approved',
-            'tax_vat_kobo'    => 0,
-            'tax_wht_kobo'    => 0,
-            'total_kobo'      => 60_000_000,
-            'created_by'      => $admin->id,
-            'submitted_at'    => now(),
+            'status' => 'approved',
+            'tax_vat_kobo' => 0,
+            'tax_wht_kobo' => 0,
+            'total_kobo' => 60_000_000,
+            'created_by' => $admin->id,
+            'submitted_at' => now(),
         ]);
 
-        $invoice = new Invoice();
+        $invoice = new Invoice;
         $invoice->amount_kobo = 60_005_000;   // ₦600,050 — variance ₦50
-        $invoice->vendor_id   = $vendor->id;
+        $invoice->vendor_id = $vendor->id;
 
-        $receipt = new GoodsReceipt();
+        $receipt = new GoodsReceipt;
 
         $result = ThreeWayMatcher::match($req, $invoice, $receipt);
 
@@ -177,31 +177,31 @@ class Sprint1RegressionTest extends TestCase
         $accountCode = AccountCode::create(['code' => '8002', 'category' => '8000', 'description' => 'General2', 'tax_vat_applicable' => false, 'tax_wht_applicable' => false, 'wht_rate' => 0, 'status' => 'active', 'created_by' => $admin->id]);
 
         $req = Requisition::create([
-            'request_id'      => 'REQ-TEST-002',
-            'requester_id'    => $admin->id,
-            'type'            => 'OPEX',
-            'amount_kobo'     => 60_000_000,   // ₦600,000
-            'currency'        => 'NGN',
-            'exchange_rate'   => 1.0,
-            'cost_centre_id'  => $costCentre->id,
+            'request_id' => 'REQ-TEST-002',
+            'requester_id' => $admin->id,
+            'type' => 'OPEX',
+            'amount_kobo' => 60_000_000,   // ₦600,000
+            'currency' => 'NGN',
+            'exchange_rate' => 1.0,
+            'cost_centre_id' => $costCentre->id,
             'account_code_id' => $accountCode->id,
-            'vendor_id'       => $vendor->id,
-            'urgency'         => 'standard',
-            'description'     => 'Software subscription renewal for the procurement team.',
+            'vendor_id' => $vendor->id,
+            'urgency' => 'standard',
+            'description' => 'Software subscription renewal for the procurement team.',
             'supporting_docs' => [],
-            'status'          => 'approved',
-            'tax_vat_kobo'    => 0,
-            'tax_wht_kobo'    => 0,
-            'total_kobo'      => 60_000_000,
-            'created_by'      => $admin->id,
-            'submitted_at'    => now(),
+            'status' => 'approved',
+            'tax_vat_kobo' => 0,
+            'tax_wht_kobo' => 0,
+            'total_kobo' => 60_000_000,
+            'created_by' => $admin->id,
+            'submitted_at' => now(),
         ]);
 
-        $invoice = new Invoice();
+        $invoice = new Invoice;
         $invoice->amount_kobo = 60_015_000;   // ₦600,150 — variance ₦150
-        $invoice->vendor_id   = $vendor->id;
+        $invoice->vendor_id = $vendor->id;
 
-        $receipt = new GoodsReceipt();
+        $receipt = new GoodsReceipt;
 
         $result = ThreeWayMatcher::match($req, $invoice, $receipt);
 
@@ -288,27 +288,27 @@ class Sprint1RegressionTest extends TestCase
     private function makeMinimalFixtures(User $user): array
     {
         $costCentre = CostCentre::create([
-            'code'        => '9999',
-            'name'        => 'Regression Test CC',
+            'code' => '9999',
+            'name' => 'Regression Test CC',
             'budget_kobo' => 100_000_000_00,
-            'status'      => 'active',
-            'created_by'  => $user->id,
+            'status' => 'active',
+            'created_by' => $user->id,
         ]);
 
         $accountCode = AccountCode::create([
-            'code'               => '9999',
-            'category'           => '9000',
-            'description'        => 'Regression Test AC',
+            'code' => '9999',
+            'category' => '9000',
+            'description' => 'Regression Test AC',
             'tax_vat_applicable' => false,
             'tax_wht_applicable' => false,
-            'wht_rate'           => 0,
-            'status'             => 'active',
-            'created_by'         => $user->id,
+            'wht_rate' => 0,
+            'status' => 'active',
+            'created_by' => $user->id,
         ]);
 
         $vendor = Vendor::create([
-            'name'       => 'Regression Test Vendor',
-            'status'     => 'active',
+            'name' => 'Regression Test Vendor',
+            'status' => 'active',
             'created_by' => $user->id,
         ]);
 
@@ -319,15 +319,15 @@ class Sprint1RegressionTest extends TestCase
     private function basePayload(CostCentre $cc, AccountCode $ac, Vendor $vendor): array
     {
         return [
-            'type'            => 'OPEX',
-            'amount_naira'    => 50_000,
-            'currency'        => 'NGN',
-            'exchange_rate'   => '1',
-            'cost_centre_id'  => $cc->id,
+            'type' => 'OPEX',
+            'amount_naira' => 50_000,
+            'currency' => 'NGN',
+            'exchange_rate' => '1',
+            'cost_centre_id' => $cc->id,
             'account_code_id' => $ac->id,
-            'vendor_id'       => $vendor->id,
-            'urgency'         => 'standard',
-            'description'     => 'Regression test requisition for Sprint 1 validation checks.',
+            'vendor_id' => $vendor->id,
+            'urgency' => 'standard',
+            'description' => 'Regression test requisition for Sprint 1 validation checks.',
             'supporting_docs' => [
                 UploadedFile::fake()->create('doc.pdf', 100, 'application/pdf'),
             ],

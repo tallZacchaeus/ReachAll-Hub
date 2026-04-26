@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Auth\EmailVerificationCodeController;
-use App\Http\Controllers\PageController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\Auth\EmailVerificationCodeController;
 use App\Http\Controllers\LeaveRequestController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ResourceRequestController;
 use App\Http\Controllers\StaffEnrollmentController;
@@ -96,7 +96,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('staff-enrollment/{user}/status', [StaffEnrollmentController::class, 'toggleStatus'])->name('staff-enrollment.toggle-status');
     Route::delete('staff-enrollment/{user}', [StaffEnrollmentController::class, 'destroy'])->name('staff-enrollment.destroy');
     Route::get('settings-overview', [PageController::class, 'settings'])->name('settings-overview');
-    
+
     // Chat API routes
     Route::prefix('api/chat')->group(function () {
         Route::get('conversations', [\App\Http\Controllers\ChatController::class, 'getConversations']);
@@ -104,20 +104,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('conversations/{conversationId}/messages', [\App\Http\Controllers\ChatController::class, 'sendMessage']);
         Route::get('direct-messages', [\App\Http\Controllers\ChatController::class, 'getDirectMessages']);
         Route::post('conversations', [\App\Http\Controllers\ChatController::class, 'createConversation']);
-        
+
         // Message reactions
         Route::post('messages/{messageId}/reactions', [\App\Http\Controllers\ChatController::class, 'addReaction']);
-        
+
         // Message editing and deletion
         Route::put('messages/{messageId}', [\App\Http\Controllers\ChatController::class, 'editMessage']);
         Route::delete('messages/{messageId}', [\App\Http\Controllers\ChatController::class, 'deleteMessage']);
-        
+
         // Typing indicator
         Route::post('conversations/{conversationId}/typing', [\App\Http\Controllers\ChatController::class, 'typing']);
-        
+
         // Search
         Route::get('conversations/{conversationId}/search', [\App\Http\Controllers\ChatController::class, 'searchMessages']);
-        
+
         // File upload
         Route::post('conversations/{conversationId}/upload', [\App\Http\Controllers\ChatController::class, 'uploadFile']);
     });
@@ -269,21 +269,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('finance')->group(function () {
         // Requisitions — read
         Route::prefix('requisitions')->group(function () {
-            Route::get('/',        [\App\Http\Controllers\Finance\RequisitionController::class, 'index'])->name('finance.requisitions.index');
-            Route::get('/create',  [\App\Http\Controllers\Finance\RequisitionController::class, 'create'])->name('finance.requisitions.create');
-            Route::get('/{id}',    [\App\Http\Controllers\Finance\RequisitionController::class, 'show'])->name('finance.requisitions.show');
+            Route::get('/', [\App\Http\Controllers\Finance\RequisitionController::class, 'index'])->name('finance.requisitions.index');
+            Route::get('/create', [\App\Http\Controllers\Finance\RequisitionController::class, 'create'])->name('finance.requisitions.create');
+            Route::get('/{id}', [\App\Http\Controllers\Finance\RequisitionController::class, 'show'])->name('finance.requisitions.show');
         });
         // Approvals — read
         Route::prefix('approvals')->group(function () {
-            Route::get('/',      [\App\Http\Controllers\Finance\ApprovalController::class, 'index'])->name('finance.approvals.index');
-            Route::get('/{id}',  [\App\Http\Controllers\Finance\ApprovalController::class, 'show'])->name('finance.approvals.show');
+            Route::get('/', [\App\Http\Controllers\Finance\ApprovalController::class, 'index'])->name('finance.approvals.index');
+            Route::get('/{id}', [\App\Http\Controllers\Finance\ApprovalController::class, 'show'])->name('finance.approvals.show');
         });
         // Petty Cash — read
         Route::get('petty-cash', [\App\Http\Controllers\Finance\PettyCashController::class, 'show'])->name('finance.petty-cash.show');
         // Reconciliation — read
         Route::prefix('reconciliation')->group(function () {
-            Route::get('/',       [\App\Http\Controllers\Finance\ReconciliationController::class, 'index'])->name('finance.reconciliation.index');
-            Route::get('/{id}',   [\App\Http\Controllers\Finance\ReconciliationController::class, 'show'])->name('finance.reconciliation.show');
+            Route::get('/', [\App\Http\Controllers\Finance\ReconciliationController::class, 'index'])->name('finance.reconciliation.index');
+            Route::get('/{id}', [\App\Http\Controllers\Finance\ReconciliationController::class, 'show'])->name('finance.reconciliation.show');
         });
         // Matching — read
         Route::get('matching', [\App\Http\Controllers\Finance\MatchingController::class, 'index'])->name('finance.matching.index');
@@ -292,62 +292,62 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Dashboard, reports, help, go-live — read
         Route::get('dashboard', [\App\Http\Controllers\Finance\DashboardController::class, 'index'])->name('finance.dashboard');
         Route::prefix('reports')->group(function () {
-            Route::get('/',            [\App\Http\Controllers\Finance\ReportsController::class, 'index'])->name('finance.reports.index');
+            Route::get('/', [\App\Http\Controllers\Finance\ReportsController::class, 'index'])->name('finance.reports.index');
             Route::get('export/excel', [\App\Http\Controllers\Finance\ReportsController::class, 'exportExcel'])->name('finance.reports.excel');
-            Route::get('export/pdf',   [\App\Http\Controllers\Finance\ReportsController::class, 'exportPdf'])->name('finance.reports.pdf');
+            Route::get('export/pdf', [\App\Http\Controllers\Finance\ReportsController::class, 'exportPdf'])->name('finance.reports.pdf');
         });
         Route::get('period-close', [\App\Http\Controllers\Finance\PeriodCloseController::class, 'index'])->name('finance.period-close.index');
         Route::prefix('help')->group(function () {
             Route::get('getting-started', [\App\Http\Controllers\Finance\HelpController::class, 'gettingStarted'])->name('finance.help.getting-started');
-            Route::get('approvers',       [\App\Http\Controllers\Finance\HelpController::class, 'approvers'])->name('finance.help.approvers');
-            Route::get('finance-team',    [\App\Http\Controllers\Finance\HelpController::class, 'financeTeam'])->name('finance.help.finance-team');
+            Route::get('approvers', [\App\Http\Controllers\Finance\HelpController::class, 'approvers'])->name('finance.help.approvers');
+            Route::get('finance-team', [\App\Http\Controllers\Finance\HelpController::class, 'financeTeam'])->name('finance.help.finance-team');
         });
         Route::get('go-live', [\App\Http\Controllers\Finance\GoLiveController::class, 'index'])->name('finance.go-live');
         Route::get('audit-log', [\App\Http\Controllers\Finance\AuditLogController::class, 'index'])->name('finance.audit-log');
         Route::prefix('admin')->group(function () {
-            Route::get('cost-centres',   [\App\Http\Controllers\Finance\CostCentreController::class, 'index'])->name('finance.cost-centres.index');
-            Route::get('account-codes',  [\App\Http\Controllers\Finance\AccountCodeController::class, 'index'])->name('finance.account-codes.index');
-            Route::get('vendors',        [\App\Http\Controllers\Finance\VendorController::class, 'index'])->name('finance.vendors.index');
+            Route::get('cost-centres', [\App\Http\Controllers\Finance\CostCentreController::class, 'index'])->name('finance.cost-centres.index');
+            Route::get('account-codes', [\App\Http\Controllers\Finance\AccountCodeController::class, 'index'])->name('finance.account-codes.index');
+            Route::get('vendors', [\App\Http\Controllers\Finance\VendorController::class, 'index'])->name('finance.vendors.index');
         });
     });
 
     // ── Finance: State-changing routes (throttle: 30 writes/minute/user) ────
     Route::prefix('finance')->middleware('throttle:30,1')->group(function () {
         // Requisitions — write
-        Route::post('requisitions',               [\App\Http\Controllers\Finance\RequisitionController::class, 'store'])->name('finance.requisitions.store');
-        Route::put('requisitions/{id}',           [\App\Http\Controllers\Finance\RequisitionController::class, 'update'])->name('finance.requisitions.update');
-        Route::post('requisitions/{id}/cancel',   [\App\Http\Controllers\Finance\RequisitionController::class, 'cancel'])->name('finance.requisitions.cancel');
+        Route::post('requisitions', [\App\Http\Controllers\Finance\RequisitionController::class, 'store'])->name('finance.requisitions.store');
+        Route::put('requisitions/{id}', [\App\Http\Controllers\Finance\RequisitionController::class, 'update'])->name('finance.requisitions.update');
+        Route::post('requisitions/{id}/cancel', [\App\Http\Controllers\Finance\RequisitionController::class, 'cancel'])->name('finance.requisitions.cancel');
         // Approvals — write
         Route::post('approvals/steps/{stepId}/decide', [\App\Http\Controllers\Finance\ApprovalController::class, 'decide'])->name('finance.approvals.decide');
         // Petty Cash — write
-        Route::post('petty-cash/expense',        [\App\Http\Controllers\Finance\PettyCashController::class, 'expense'])->name('finance.petty-cash.expense');
+        Route::post('petty-cash/expense', [\App\Http\Controllers\Finance\PettyCashController::class, 'expense'])->name('finance.petty-cash.expense');
         Route::post('petty-cash/reconciliation', [\App\Http\Controllers\Finance\PettyCashController::class, 'submitReconciliation'])->name('finance.petty-cash.reconciliation');
         // Reconciliation — write
         Route::post('reconciliation/{id}/approve', [\App\Http\Controllers\Finance\ReconciliationController::class, 'approve'])->name('finance.reconciliation.approve');
-        Route::post('reconciliation/{id}/reject',  [\App\Http\Controllers\Finance\ReconciliationController::class, 'reject'])->name('finance.reconciliation.reject');
+        Route::post('reconciliation/{id}/reject', [\App\Http\Controllers\Finance\ReconciliationController::class, 'reject'])->name('finance.reconciliation.reject');
         // Matching — write
-        Route::post('matching/{id}/upload',          [\App\Http\Controllers\Finance\MatchingController::class, 'upload'])->name('finance.matching.upload');
-        Route::post('matching/{id}/match',           [\App\Http\Controllers\Finance\MatchingController::class, 'match'])->name('finance.matching.match');
+        Route::post('matching/{id}/upload', [\App\Http\Controllers\Finance\MatchingController::class, 'upload'])->name('finance.matching.upload');
+        Route::post('matching/{id}/match', [\App\Http\Controllers\Finance\MatchingController::class, 'match'])->name('finance.matching.match');
         Route::post('matching/{id}/accept-variance', [\App\Http\Controllers\Finance\MatchingController::class, 'acceptVariance'])->name('finance.matching.accept-variance');
         // Payments — write
-        Route::post('payments/{id}/pay',  [\App\Http\Controllers\Finance\PaymentController::class, 'pay'])->name('finance.payments.pay');
+        Route::post('payments/{id}/pay', [\App\Http\Controllers\Finance\PaymentController::class, 'pay'])->name('finance.payments.pay');
         Route::post('payments/{id}/void', [\App\Http\Controllers\Finance\PaymentController::class, 'voidPayment'])->name('finance.payments.void');
         // Period Close — write
-        Route::post('period-close/initiate',    [\App\Http\Controllers\Finance\PeriodCloseController::class, 'initiate'])->name('finance.period-close.initiate');
-        Route::post('period-close/waive',       [\App\Http\Controllers\Finance\PeriodCloseController::class, 'waive'])->name('finance.period-close.waive');
+        Route::post('period-close/initiate', [\App\Http\Controllers\Finance\PeriodCloseController::class, 'initiate'])->name('finance.period-close.initiate');
+        Route::post('period-close/waive', [\App\Http\Controllers\Finance\PeriodCloseController::class, 'waive'])->name('finance.period-close.waive');
         Route::post('period-close/co-authorize', [\App\Http\Controllers\Finance\PeriodCloseController::class, 'coAuthorize'])->name('finance.period-close.co-authorize');
-        Route::post('period-close/close',       [\App\Http\Controllers\Finance\PeriodCloseController::class, 'close'])->name('finance.period-close.close');
-        Route::post('period-close/reopen',      [\App\Http\Controllers\Finance\PeriodCloseController::class, 'reopen'])->name('finance.period-close.reopen');
+        Route::post('period-close/close', [\App\Http\Controllers\Finance\PeriodCloseController::class, 'close'])->name('finance.period-close.close');
+        Route::post('period-close/reopen', [\App\Http\Controllers\Finance\PeriodCloseController::class, 'reopen'])->name('finance.period-close.reopen');
         // Admin — write
-        Route::post('admin/cost-centres',          [\App\Http\Controllers\Finance\CostCentreController::class, 'store'])->name('finance.cost-centres.store');
-        Route::put('admin/cost-centres/{id}',      [\App\Http\Controllers\Finance\CostCentreController::class, 'update'])->name('finance.cost-centres.update');
-        Route::post('admin/account-codes',         [\App\Http\Controllers\Finance\AccountCodeController::class, 'store'])->name('finance.account-codes.store');
-        Route::put('admin/account-codes/{id}',     [\App\Http\Controllers\Finance\AccountCodeController::class, 'update'])->name('finance.account-codes.update');
-        Route::post('admin/vendors',               [\App\Http\Controllers\Finance\VendorController::class, 'store'])->name('finance.vendors.store');
-        Route::put('admin/vendors/{id}',           [\App\Http\Controllers\Finance\VendorController::class, 'update'])->name('finance.vendors.update');
+        Route::post('admin/cost-centres', [\App\Http\Controllers\Finance\CostCentreController::class, 'store'])->name('finance.cost-centres.store');
+        Route::put('admin/cost-centres/{id}', [\App\Http\Controllers\Finance\CostCentreController::class, 'update'])->name('finance.cost-centres.update');
+        Route::post('admin/account-codes', [\App\Http\Controllers\Finance\AccountCodeController::class, 'store'])->name('finance.account-codes.store');
+        Route::put('admin/account-codes/{id}', [\App\Http\Controllers\Finance\AccountCodeController::class, 'update'])->name('finance.account-codes.update');
+        Route::post('admin/vendors', [\App\Http\Controllers\Finance\VendorController::class, 'store'])->name('finance.vendors.store');
+        Route::put('admin/vendors/{id}', [\App\Http\Controllers\Finance\VendorController::class, 'update'])->name('finance.vendors.update');
         // Archive (not delete) — financial entities are immutable; status='archived' instead of hard-delete
-        Route::delete('admin/vendors/{id}',        [\App\Http\Controllers\Finance\VendorController::class, 'destroy'])->name('finance.vendors.destroy');
-        Route::delete('admin/cost-centres/{id}',   [\App\Http\Controllers\Finance\CostCentreController::class, 'destroy'])->name('finance.cost-centres.destroy');
+        Route::delete('admin/vendors/{id}', [\App\Http\Controllers\Finance\VendorController::class, 'destroy'])->name('finance.vendors.destroy');
+        Route::delete('admin/cost-centres/{id}', [\App\Http\Controllers\Finance\CostCentreController::class, 'destroy'])->name('finance.cost-centres.destroy');
     });
 
     // Profile Change Requests

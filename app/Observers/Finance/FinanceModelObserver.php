@@ -30,23 +30,23 @@ class FinanceModelObserver
             FinanceAuditLog::insert([
                 // E7-01 + Q12-03: null user_id means the write was made by a system
                 // process (queued job, CLI command) with no authenticated session.
-                'user_id'     => Auth::id(),
-                'model_type'  => get_class($model),
-                'model_id'    => $model->getKey(),
-                'action'      => $action,
+                'user_id' => Auth::id(),
+                'model_type' => get_class($model),
+                'model_id' => $model->getKey(),
+                'action' => $action,
                 'before_json' => $before ? json_encode($before) : null,
-                'after_json'  => $after  ? json_encode($after)  : null,
-                'logged_at'   => now()->toDateTimeString(),
+                'after_json' => $after ? json_encode($after) : null,
+                'logged_at' => now()->toDateTimeString(),
             ]);
         } catch (\Throwable $e) {
             // E7-01: NEVER let an audit log failure block the originating business write.
             // Report to Sentry and log locally, but do not rethrow.
             report($e);
             Log::error('FinanceAuditLog write failed — audit entry skipped', [
-                'model'    => get_class($model),
+                'model' => get_class($model),
                 'model_id' => $model->getKey(),
-                'action'   => $action,
-                'error'    => $e->getMessage(),
+                'action' => $action,
+                'error' => $e->getMessage(),
             ]);
         }
     }

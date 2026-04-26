@@ -27,7 +27,7 @@ class FinancialPeriodSeeder extends Seeder
             FinancialPeriod::firstOrCreate(
                 ['year' => $year, 'month' => $month],
                 [
-                    'status'    => $status,
+                    'status' => $status,
                     'opened_at' => now()->setMonth($month)->startOfMonth(),
                     'closed_at' => $closedAt,
                     'closed_by' => null,

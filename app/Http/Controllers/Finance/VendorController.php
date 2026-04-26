@@ -22,8 +22,8 @@ class VendorController extends Controller
             $q = $request->get('q');
             $query->where(function ($qb) use ($q) {
                 $qb->where('name', 'like', "%{$q}%")
-                   ->orWhere('contact_email', 'like', "%{$q}%")
-                   ->orWhere('tax_id', 'like', "%{$q}%");
+                    ->orWhere('contact_email', 'like', "%{$q}%")
+                    ->orWhere('tax_id', 'like', "%{$q}%");
             });
         }
 
@@ -32,15 +32,15 @@ class VendorController extends Controller
         }
 
         $vendors = $query->get()->map(fn (Vendor $v) => [
-            'id'            => $v->id,
-            'name'          => $v->name,
-            'tin'           => $v->tin,
-            'tax_id'        => $v->tax_id,
-            'bank_name'     => $v->bank_name,
-            'bank_account'  => $v->bank_account,
+            'id' => $v->id,
+            'name' => $v->name,
+            'tin' => $v->tin,
+            'tax_id' => $v->tax_id,
+            'bank_name' => $v->bank_name,
+            'bank_account' => $v->bank_account,
             'contact_email' => $v->contact_email,
             'contact_phone' => $v->contact_phone,
-            'status'        => $v->status,
+            'status' => $v->status,
         ]);
 
         return Inertia::render('Finance/VendorAdminPage', [
@@ -54,14 +54,14 @@ class VendorController extends Controller
         $this->authorise($request->user());
 
         $validated = $request->validate([
-            'name'          => ['required', 'string', 'max:200', 'unique:vendors,name'],
-            'tin'           => ['nullable', 'string', 'max:14', 'regex:/^[A-Z0-9]{8,14}$/'],
-            'tax_id'        => ['nullable', 'string', 'max:50'],
-            'bank_name'     => ['nullable', 'string', 'max:100'],
-            'bank_account'  => ['nullable', 'string', 'max:20'],
+            'name' => ['required', 'string', 'max:200', 'unique:vendors,name'],
+            'tin' => ['nullable', 'string', 'max:14', 'regex:/^[A-Z0-9]{8,14}$/'],
+            'tax_id' => ['nullable', 'string', 'max:50'],
+            'bank_name' => ['nullable', 'string', 'max:100'],
+            'bank_account' => ['nullable', 'string', 'max:20'],
             'contact_email' => ['nullable', 'email', 'max:200'],
             'contact_phone' => ['nullable', 'string', 'max:20'],
-            'status'        => ['required', 'in:active,inactive'],
+            'status' => ['required', 'in:active,inactive'],
         ]);
 
         Vendor::create(array_merge($validated, ['created_by' => $request->user()->id]));
@@ -76,14 +76,14 @@ class VendorController extends Controller
         $vendor = Vendor::findOrFail($id);
 
         $validated = $request->validate([
-            'name'          => ['required', 'string', 'max:200', "unique:vendors,name,{$id}"],
-            'tin'           => ['nullable', 'string', 'max:14', 'regex:/^[A-Z0-9]{8,14}$/'],
-            'tax_id'        => ['nullable', 'string', 'max:50'],
-            'bank_name'     => ['nullable', 'string', 'max:100'],
-            'bank_account'  => ['nullable', 'string', 'max:20'],
+            'name' => ['required', 'string', 'max:200', "unique:vendors,name,{$id}"],
+            'tin' => ['nullable', 'string', 'max:14', 'regex:/^[A-Z0-9]{8,14}$/'],
+            'tax_id' => ['nullable', 'string', 'max:50'],
+            'bank_name' => ['nullable', 'string', 'max:100'],
+            'bank_account' => ['nullable', 'string', 'max:20'],
             'contact_email' => ['nullable', 'email', 'max:200'],
             'contact_phone' => ['nullable', 'string', 'max:20'],
-            'status'        => ['required', 'in:active,inactive'],
+            'status' => ['required', 'in:active,inactive'],
         ]);
 
         $vendor->update($validated);

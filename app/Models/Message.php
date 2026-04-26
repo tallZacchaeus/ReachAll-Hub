@@ -25,9 +25,9 @@ class Message extends Model
 
     protected $casts = [
         'conversation_id' => 'integer',
-        'user_id'         => 'integer',
-        'is_edited'       => 'boolean',
-        'edited_at'       => 'datetime',
+        'user_id' => 'integer',
+        'is_edited' => 'boolean',
+        'edited_at' => 'datetime',
     ];
 
     public function conversation(): BelongsTo

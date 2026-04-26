@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Notifications\Auth\VerifyEmailWithCode;
-use App\Services\Finance\FinanceRoleHelper;
 use App\Services\Auth\EmailVerificationCodeService;
+use App\Services\Finance\FinanceRoleHelper;
 use App\Services\PermissionService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -85,17 +85,17 @@ class User extends Authenticatable implements MustVerifyEmail
     protected function casts(): array
     {
         return [
-            'email_verified_at'    => 'datetime',
-            'password'             => 'hashed',
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
-            'hire_date'            => 'date',
-            'date_of_birth'        => 'date',
-            'probation_end_date'   => 'date',
-            'role_id'              => 'integer',
+            'hire_date' => 'date',
+            'date_of_birth' => 'date',
+            'probation_end_date' => 'date',
+            'role_id' => 'integer',
             // Encrypted at rest — requires APP_KEY to decrypt.
             // Never rotate APP_KEY without first decrypting and re-encrypting.
-            'bank_account_number'  => 'encrypted',
-            'bvn'                  => 'encrypted',
+            'bank_account_number' => 'encrypted',
+            'bvn' => 'encrypted',
         ];
     }
 
@@ -205,14 +205,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getRoleWeightAttribute(): int
     {
         return match ($this->role) {
-            'staff'              => 1,
-            'management'         => 2,
-            'hr'                 => 3,
-            'finance'            => 4,
+            'staff' => 1,
+            'management' => 2,
+            'hr' => 3,
+            'finance' => 4,
             'general_management' => 5,
-            'ceo'                => 6,
-            'superadmin'         => 7,
-            default              => 1,
+            'ceo' => 6,
+            'superadmin' => 7,
+            default => 1,
         };
     }
 
@@ -228,7 +228,7 @@ class User extends Authenticatable implements MustVerifyEmail
             return true;
         }
 
-        if (!$this->role) {
+        if (! $this->role) {
             return false;
         }
 
@@ -250,7 +250,7 @@ class User extends Authenticatable implements MustVerifyEmail
             );
         }
 
-        if (!$this->role) {
+        if (! $this->role) {
             return [];
         }
 

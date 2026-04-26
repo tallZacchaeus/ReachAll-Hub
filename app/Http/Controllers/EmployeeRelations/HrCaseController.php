@@ -21,12 +21,12 @@ class HrCaseController extends Controller
             403
         );
 
-        $user  = $request->user();
+        $user = $request->user();
         $query = HrCase::with(['reportedBy:id,name', 'assignedTo:id,name'])
             ->latest();
 
         // Investigators see only their assigned cases; managers see all
-        if (!$user->hasPermission('er.manage')) {
+        if (! $user->hasPermission('er.manage')) {
             $query->where('assigned_to_id', $user->id);
         }
 
@@ -40,17 +40,18 @@ class HrCaseController extends Controller
         // Hide confidential case subjects/descriptions from investigators unless they're HR
         $cases = $query->paginate(25)->withQueryString();
 
-        if (!$user->hasPermission('er.manage')) {
+        if (! $user->hasPermission('er.manage')) {
             $cases->getCollection()->transform(function (HrCase $case) {
                 if ($case->confidential) {
                     $case->description = '[Confidential]';
                 }
+
                 return $case;
             });
         }
 
         return Inertia::render('EmployeeRelations/CaseManagementPage', [
-            'cases'   => $cases,
+            'cases' => $cases,
             'filters' => $request->only('type', 'status'),
         ]);
     }
@@ -59,7 +60,7 @@ class HrCaseController extends Controller
     {
         $user = $request->user();
 
-        $canManage     = $user->hasPermission('er.manage');
+        $canManage = $user->hasPermission('er.manage');
         $isInvestigator = $hrCase->assigned_to_id === $user->id &&
                           $user->hasPermission('er.investigate');
 
@@ -73,7 +74,7 @@ class HrCaseController extends Controller
         ]);
 
         // Filter notes for investigators — no internal notes
-        if (!$canManage) {
+        if (! $canManage) {
             $hrCase->setRelation(
                 'notes',
                 $hrCase->notes->where('is_internal', false)->values()
@@ -81,7 +82,7 @@ class HrCaseController extends Controller
         }
 
         return Inertia::render('EmployeeRelations/CaseDetailPage', [
-            'case'       => $hrCase,
+            'case' => $hrCase,
             'can_manage' => $canManage,
             'staff_list' => $canManage
                 ? User::select('id', 'name')->where('status', 'active')->orderBy('name')->get()
@@ -94,30 +95,30 @@ class HrCaseController extends Controller
         abort_unless($request->user()->hasPermission('er.manage'), 403);
 
         $data = $request->validate([
-            'type'        => 'required|in:helpdesk,grievance,whistleblower,disciplinary,investigation',
-            'subject'     => 'required|string|max:200',
+            'type' => 'required|in:helpdesk,grievance,whistleblower,disciplinary,investigation',
+            'subject' => 'required|string|max:200',
             'description' => 'required|string|max:10000',
-            'priority'    => 'required|in:low,normal,high,urgent',
+            'priority' => 'required|in:low,normal,high,urgent',
             'confidential' => 'boolean',
             'reported_by_id' => 'nullable|exists:users,id',
         ]);
 
         $data['confidential'] = $data['confidential'] ?? ($data['type'] === 'whistleblower');
-        $data['status']        = 'open';
+        $data['status'] = 'open';
 
         $case = HrCase::create($data);
 
         // Auto-add reporter as complainant party if known
-        if (!empty($data['reported_by_id'])) {
+        if (! empty($data['reported_by_id'])) {
             HrCaseParty::create([
                 'hr_case_id' => $case->id,
-                'user_id'    => $data['reported_by_id'],
-                'role'       => 'complainant',
+                'user_id' => $data['reported_by_id'],
+                'role' => 'complainant',
             ]);
         }
 
         return redirect()->route('er.cases.show', $case)
-                         ->with('success', "Case {$case->case_number} opened.");
+            ->with('success', "Case {$case->case_number} opened.");
     }
 
     public function update(Request $request, HrCase $hrCase): RedirectResponse
@@ -125,19 +126,19 @@ class HrCaseController extends Controller
         abort_unless($request->user()->hasPermission('er.manage'), 403);
 
         $data = $request->validate([
-            'subject'       => 'sometimes|string|max:200',
-            'description'   => 'sometimes|string|max:10000',
-            'priority'      => 'sometimes|in:low,normal,high,urgent',
-            'status'        => 'sometimes|in:open,under_review,investigating,pending_action,resolved,closed,dismissed',
+            'subject' => 'sometimes|string|max:200',
+            'description' => 'sometimes|string|max:10000',
+            'priority' => 'sometimes|in:low,normal,high,urgent',
+            'status' => 'sometimes|in:open,under_review,investigating,pending_action,resolved,closed,dismissed',
             'assigned_to_id' => 'nullable|exists:users,id',
-            'outcome'       => 'nullable|string|max:5000',
+            'outcome' => 'nullable|string|max:5000',
         ]);
 
         if (isset($data['status'])) {
-            if (in_array($data['status'], ['resolved'], true) && !$hrCase->resolved_at) {
+            if (in_array($data['status'], ['resolved'], true) && ! $hrCase->resolved_at) {
                 $data['resolved_at'] = now();
             }
-            if (in_array($data['status'], ['closed', 'dismissed'], true) && !$hrCase->closed_at) {
+            if (in_array($data['status'], ['closed', 'dismissed'], true) && ! $hrCase->closed_at) {
                 $data['closed_at'] = now();
             }
         }
@@ -153,7 +154,7 @@ class HrCaseController extends Controller
 
         $data = $request->validate([
             'user_id' => 'required|exists:users,id',
-            'role'    => 'required|in:complainant,respondent,witness,investigator',
+            'role' => 'required|in:complainant,respondent,witness,investigator',
         ]);
 
         HrCaseParty::firstOrCreate(

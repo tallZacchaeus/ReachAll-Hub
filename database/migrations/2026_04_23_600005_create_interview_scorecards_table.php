@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('strengths')->nullable();
             $table->text('concerns')->nullable();
             $table->string('recommendation', 30)
-                  ->comment('strong_yes|yes|no|strong_no');
+                ->comment('strong_yes|yes|no|strong_no');
             $table->text('notes')->nullable();
             $table->timestamps();
 

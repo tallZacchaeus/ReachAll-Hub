@@ -33,14 +33,14 @@ class CompensationBandController extends Controller
         $this->authorise();
 
         $validated = $request->validate([
-            'grade'          => ['required', 'string', 'max:50'],
-            'title'          => ['required', 'string', 'max:150'],
-            'category'       => ['required', 'in:individual_contributor,manager,executive'],
-            'min_kobo'       => ['required', 'integer', 'min:0'],
-            'midpoint_kobo'  => ['required', 'integer', 'gt:min_kobo'],
-            'max_kobo'       => ['required', 'integer', 'gt:midpoint_kobo'],
+            'grade' => ['required', 'string', 'max:50'],
+            'title' => ['required', 'string', 'max:150'],
+            'category' => ['required', 'in:individual_contributor,manager,executive'],
+            'min_kobo' => ['required', 'integer', 'min:0'],
+            'midpoint_kobo' => ['required', 'integer', 'gt:min_kobo'],
+            'max_kobo' => ['required', 'integer', 'gt:midpoint_kobo'],
             'effective_date' => ['required', 'date'],
-            'notes'          => ['nullable', 'string', 'max:1000'],
+            'notes' => ['nullable', 'string', 'max:1000'],
         ]);
 
         CompensationBand::create(array_merge($validated, ['is_active' => true]));
@@ -53,14 +53,14 @@ class CompensationBandController extends Controller
         $this->authorise();
 
         $validated = $request->validate([
-            'title'          => ['required', 'string', 'max:150'],
-            'category'       => ['required', 'in:individual_contributor,manager,executive'],
-            'min_kobo'       => ['required', 'integer', 'min:0'],
-            'midpoint_kobo'  => ['required', 'integer', 'gt:min_kobo'],
-            'max_kobo'       => ['required', 'integer', 'gt:midpoint_kobo'],
+            'title' => ['required', 'string', 'max:150'],
+            'category' => ['required', 'in:individual_contributor,manager,executive'],
+            'min_kobo' => ['required', 'integer', 'min:0'],
+            'midpoint_kobo' => ['required', 'integer', 'gt:min_kobo'],
+            'max_kobo' => ['required', 'integer', 'gt:midpoint_kobo'],
             'effective_date' => ['required', 'date'],
-            'is_active'      => ['boolean'],
-            'notes'          => ['nullable', 'string', 'max:1000'],
+            'is_active' => ['boolean'],
+            'notes' => ['nullable', 'string', 'max:1000'],
         ]);
 
         $compensationBand->update($validated);

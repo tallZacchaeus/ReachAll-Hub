@@ -22,10 +22,10 @@ class CompensationReviewEntry extends Model
     ];
 
     protected $casts = [
-        'current_salary_kobo'  => 'integer',
+        'current_salary_kobo' => 'integer',
         'proposed_salary_kobo' => 'integer',
-        'merit_basis_points'   => 'integer',
-        'approved_at'          => 'datetime',
+        'merit_basis_points' => 'integer',
+        'approved_at' => 'datetime',
     ];
 
     public function cycle(): BelongsTo

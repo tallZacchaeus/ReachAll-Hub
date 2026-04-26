@@ -26,8 +26,8 @@ class HrCase extends Model
 
     protected $casts = [
         'confidential' => 'boolean',
-        'resolved_at'  => 'datetime',
-        'closed_at'    => 'datetime',
+        'resolved_at' => 'datetime',
+        'closed_at' => 'datetime',
     ];
 
     protected static function boot(): void
@@ -78,7 +78,7 @@ class HrCase extends Model
 
     public function isOpen(): bool
     {
-        return !in_array($this->status, ['resolved', 'closed', 'dismissed'], true);
+        return ! in_array($this->status, ['resolved', 'closed', 'dismissed'], true);
     }
 
     public function isConfidential(): bool

@@ -20,7 +20,7 @@ class InterviewSchedule extends Model
     ];
 
     protected $casts = [
-        'scheduled_at'     => 'datetime',
+        'scheduled_at' => 'datetime',
         'duration_minutes' => 'integer',
     ];
 

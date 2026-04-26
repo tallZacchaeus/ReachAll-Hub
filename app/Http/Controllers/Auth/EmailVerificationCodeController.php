@@ -18,7 +18,7 @@ class EmailVerificationCodeController extends Controller
 
         $user = $request->user();
 
-        if (!$user) {
+        if (! $user) {
             abort(401);
         }
 

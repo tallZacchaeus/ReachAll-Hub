@@ -12,10 +12,13 @@ use App\Models\Finance\PettyCashTransaction;
 class PettyCashEnforcer
 {
     // Hard caps (kobo)
-    const CAP_SINGLE  =  2_000_000; // ₦20,000
-    const CAP_DAILY   =  5_000_000; // ₦50,000
-    const CAP_WEEKLY  = 20_000_000; // ₦200,000
-    const RECON_DAYS  = 30;
+    const CAP_SINGLE = 2_000_000; // ₦20,000
+
+    const CAP_DAILY = 5_000_000; // ₦50,000
+
+    const CAP_WEEKLY = 20_000_000; // ₦200,000
+
+    const RECON_DAYS = 30;
 
     /**
      * Validate a proposed expense against all hard rules.
@@ -31,7 +34,7 @@ class PettyCashEnforcer
 
         // 2. Sufficient balance
         if ($amountKobo > $float->current_balance_kobo) {
-            return self::block('Insufficient float balance. Available: ' . MoneyHelper::format($float->current_balance_kobo) . '.');
+            return self::block('Insufficient float balance. Available: '.MoneyHelper::format($float->current_balance_kobo).'.');
         }
 
         // 3. Single expense cap
@@ -51,9 +54,10 @@ class PettyCashEnforcer
 
         if (($todayTotal + $amountKobo) > self::CAP_DAILY) {
             $remaining = self::CAP_DAILY - $todayTotal;
+
             return self::block(
                 'This expense would exceed the ₦50,000 daily cap. '
-                . 'Remaining today: ' . MoneyHelper::format(max(0, $remaining)) . '.'
+                .'Remaining today: '.MoneyHelper::format(max(0, $remaining)).'.'
             );
         }
 
@@ -67,9 +71,10 @@ class PettyCashEnforcer
 
         if (($weeklyTotal + $amountKobo) > self::CAP_WEEKLY) {
             $remaining = self::CAP_WEEKLY - $weeklyTotal;
+
             return self::block(
                 'This expense would exceed the ₦200,000 weekly cap. '
-                . 'Remaining this week: ' . MoneyHelper::format(max(0, $remaining)) . '.'
+                .'Remaining this week: '.MoneyHelper::format(max(0, $remaining)).'.'
             );
         }
 
@@ -78,7 +83,7 @@ class PettyCashEnforcer
         if ($daysSince > self::RECON_DAYS) {
             return self::block(
                 "Reconciliation overdue ({$daysSince} days since last reconciliation). "
-                . 'Submit a reconciliation before logging new expenses.'
+                .'Submit a reconciliation before logging new expenses.'
             );
         }
 

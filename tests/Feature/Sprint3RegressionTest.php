@@ -46,29 +46,29 @@ class Sprint3RegressionTest extends TestCase
     private function makeRequisition(User $requester, array $overrides = []): Requisition
     {
         self::$seq++;
-        $admin  = User::factory()->create(['role' => 'superadmin', 'status' => 'active']);
-        $vendor = Vendor::create(['name' => 'RV3-' . self::$seq, 'status' => 'active', 'created_by' => $admin->id]);
-        $cc     = CostCentre::create(['code' => 'S3C' . self::$seq, 'name' => 'S3-' . self::$seq, 'budget_kobo' => 100_000_000_00, 'status' => 'active', 'created_by' => $admin->id]);
-        $ac     = AccountCode::create(['code' => 'S3A' . self::$seq, 'category' => '6000', 'description' => 'S3 Test', 'tax_vat_applicable' => false, 'tax_wht_applicable' => false, 'status' => 'active', 'created_by' => $admin->id]);
+        $admin = User::factory()->create(['role' => 'superadmin', 'status' => 'active']);
+        $vendor = Vendor::create(['name' => 'RV3-'.self::$seq, 'status' => 'active', 'created_by' => $admin->id]);
+        $cc = CostCentre::create(['code' => 'S3C'.self::$seq, 'name' => 'S3-'.self::$seq, 'budget_kobo' => 100_000_000_00, 'status' => 'active', 'created_by' => $admin->id]);
+        $ac = AccountCode::create(['code' => 'S3A'.self::$seq, 'category' => '6000', 'description' => 'S3 Test', 'tax_vat_applicable' => false, 'tax_wht_applicable' => false, 'status' => 'active', 'created_by' => $admin->id]);
 
         return Requisition::create(array_merge([
-            'request_id'      => 'REQS3-' . self::$seq,
-            'requester_id'    => $requester->id,
-            'type'            => 'OPEX',
-            'amount_kobo'     => 5_000_000,
-            'currency'        => 'NGN',
-            'exchange_rate'   => 1.0,
-            'cost_centre_id'  => $cc->id,
+            'request_id' => 'REQS3-'.self::$seq,
+            'requester_id' => $requester->id,
+            'type' => 'OPEX',
+            'amount_kobo' => 5_000_000,
+            'currency' => 'NGN',
+            'exchange_rate' => 1.0,
+            'cost_centre_id' => $cc->id,
             'account_code_id' => $ac->id,
-            'vendor_id'       => $vendor->id,
-            'urgency'         => 'standard',
-            'description'     => 'Sprint 3 regression test requisition.',
-            'status'          => 'approving',
-            'tax_vat_kobo'    => 0,
-            'tax_wht_kobo'    => 0,
-            'total_kobo'      => 5_000_000,
-            'created_by'      => $requester->id,
-            'submitted_at'    => now(),
+            'vendor_id' => $vendor->id,
+            'urgency' => 'standard',
+            'description' => 'Sprint 3 regression test requisition.',
+            'status' => 'approving',
+            'tax_vat_kobo' => 0,
+            'tax_wht_kobo' => 0,
+            'total_kobo' => 5_000_000,
+            'created_by' => $requester->id,
+            'submitted_at' => now(),
         ], $overrides));
     }
 
@@ -76,11 +76,11 @@ class Sprint3RegressionTest extends TestCase
     {
         return ApprovalStep::create(array_merge([
             'requisition_id' => $req->id,
-            'approver_id'    => $approver->id,
-            'level'          => 1,
-            'role_label'     => 'Line Manager',
-            'status'         => 'pending',
-            'sla_deadline'   => now()->subHours(49), // overdue
+            'approver_id' => $approver->id,
+            'level' => 1,
+            'role_label' => 'Line Manager',
+            'status' => 'pending',
+            'sla_deadline' => now()->subHours(49), // overdue
         ], $overrides));
     }
 
@@ -95,10 +95,10 @@ class Sprint3RegressionTest extends TestCase
         Notification::fake();
 
         $requester = $this->makeUser('staff');
-        $approver  = $this->makeUser('management');
-        $manager   = $this->makeUser('finance');
+        $approver = $this->makeUser('management');
+        $manager = $this->makeUser('finance');
 
-        $req  = $this->makeRequisition($requester);
+        $req = $this->makeRequisition($requester);
         $step = $this->makeApprovalStep($req, $approver, [
             'sla_deadline' => now()->subHours(50),
         ]);
@@ -120,9 +120,9 @@ class Sprint3RegressionTest extends TestCase
         Notification::fake();
 
         $requester = $this->makeUser('staff');
-        $approver  = $this->makeUser('management');
+        $approver = $this->makeUser('management');
 
-        $req  = $this->makeRequisition($requester);
+        $req = $this->makeRequisition($requester);
         $step = $this->makeApprovalStep($req, $approver, [
             'sla_deadline' => now()->addHours(10), // not overdue
         ]);
@@ -143,11 +143,11 @@ class Sprint3RegressionTest extends TestCase
         Notification::fake();
 
         $requester = $this->makeUser('staff');
-        $approver  = $this->makeUser('management');
+        $approver = $this->makeUser('management');
 
-        $req  = $this->makeRequisition($requester);
+        $req = $this->makeRequisition($requester);
         $step = $this->makeApprovalStep($req, $approver, [
-            'sla_deadline'  => now()->addHours(12), // within 24h
+            'sla_deadline' => now()->addHours(12), // within 24h
             'reminder_sent' => false,
         ]);
 
@@ -167,11 +167,11 @@ class Sprint3RegressionTest extends TestCase
         Notification::fake();
 
         $requester = $this->makeUser('staff');
-        $approver  = $this->makeUser('management');
+        $approver = $this->makeUser('management');
 
-        $req  = $this->makeRequisition($requester);
+        $req = $this->makeRequisition($requester);
         $this->makeApprovalStep($req, $approver, [
-            'sla_deadline'  => now()->addHours(12),
+            'sla_deadline' => now()->addHours(12),
             'reminder_sent' => true,
         ]);
 
@@ -191,8 +191,8 @@ class Sprint3RegressionTest extends TestCase
         $finance = $this->makeUser('finance');
 
         $response = $this->actingAs($finance)->post(route('finance.vendors.store'), [
-            'name'   => 'TIN Test Vendor',
-            'tin'    => 'AB12345678CD12',
+            'name' => 'TIN Test Vendor',
+            'tin' => 'AB12345678CD12',
             'status' => 'active',
         ]);
 
@@ -208,8 +208,8 @@ class Sprint3RegressionTest extends TestCase
         $finance = $this->makeUser('finance');
 
         $response = $this->actingAs($finance)->post(route('finance.vendors.store'), [
-            'name'   => 'Bad TIN Vendor',
-            'tin'    => 'AB1',  // too short
+            'name' => 'Bad TIN Vendor',
+            'tin' => 'AB1',  // too short
             'status' => 'active',
         ]);
 
@@ -224,7 +224,7 @@ class Sprint3RegressionTest extends TestCase
         $finance = $this->makeUser('finance');
 
         $response = $this->actingAs($finance)->post(route('finance.vendors.store'), [
-            'name'   => 'No TIN Vendor',
+            'name' => 'No TIN Vendor',
             'status' => 'active',
         ]);
 
@@ -263,8 +263,7 @@ class Sprint3RegressionTest extends TestCase
         $response = $this->actingAs($finance)->get(route('finance.reports.index'));
 
         $response->assertOk();
-        $response->assertInertia(fn ($page) =>
-            $page->where('report_types.wht_schedule', 'FIRS WHT Schedule (WHT-01)')
+        $response->assertInertia(fn ($page) => $page->where('report_types.wht_schedule', 'FIRS WHT Schedule (WHT-01)')
         );
     }
 
@@ -280,13 +279,13 @@ class Sprint3RegressionTest extends TestCase
         $finance = $this->makeUser('finance');
 
         FinanceAuditLog::insert([
-            'user_id'     => $finance->id,
-            'model_type'  => Requisition::class,
-            'model_id'    => 1,
-            'action'      => 'created',
+            'user_id' => $finance->id,
+            'model_type' => Requisition::class,
+            'model_id' => 1,
+            'action' => 'created',
             'before_json' => null,
-            'after_json'  => json_encode(['test' => true]),
-            'logged_at'   => now()->toDateTimeString(),
+            'after_json' => json_encode(['test' => true]),
+            'logged_at' => now()->toDateTimeString(),
         ]);
 
         $response = $this->actingAs($finance)->get(route('finance.audit-log'));
@@ -322,21 +321,21 @@ class Sprint3RegressionTest extends TestCase
         $admin = User::factory()->create(['role' => 'superadmin', 'status' => 'active']);
 
         self::$seq++;
-        $vendor = Vendor::create(['name' => 'CAPEX-V' . self::$seq, 'status' => 'active', 'created_by' => $admin->id]);
-        $cc     = CostCentre::create(['code' => 'CAP' . self::$seq, 'name' => 'CAPEX CC', 'budget_kobo' => 999_999_99_00, 'status' => 'active', 'created_by' => $admin->id]);
+        $vendor = Vendor::create(['name' => 'CAPEX-V'.self::$seq, 'status' => 'active', 'created_by' => $admin->id]);
+        $cc = CostCentre::create(['code' => 'CAP'.self::$seq, 'name' => 'CAPEX CC', 'budget_kobo' => 999_999_99_00, 'status' => 'active', 'created_by' => $admin->id]);
         // OPEX account code (does NOT start with 95)
-        $ac     = AccountCode::create(['code' => '6001X' . self::$seq, 'category' => '6000', 'description' => 'OPEX code', 'tax_vat_applicable' => false, 'tax_wht_applicable' => false, 'status' => 'active', 'created_by' => $admin->id]);
+        $ac = AccountCode::create(['code' => '6001X'.self::$seq, 'category' => '6000', 'description' => 'OPEX code', 'tax_vat_applicable' => false, 'tax_wht_applicable' => false, 'status' => 'active', 'created_by' => $admin->id]);
 
         $response = $this->actingAs($staff)->post(route('finance.requisitions.store'), [
-            'type'             => 'CAPEX',
-            'amount_naira'     => '100000',
-            'currency'         => 'NGN',
-            'cost_centre_id'   => $cc->id,
-            'account_code_id'  => $ac->id,
-            'vendor_id'        => $vendor->id,
-            'urgency'          => 'standard',
-            'description'      => 'Test CAPEX type enforcement with wrong account code at least 20 chars.',
-            'supporting_docs'  => [UploadedFile::fake()->create('doc.pdf', 100, 'application/pdf')],
+            'type' => 'CAPEX',
+            'amount_naira' => '100000',
+            'currency' => 'NGN',
+            'cost_centre_id' => $cc->id,
+            'account_code_id' => $ac->id,
+            'vendor_id' => $vendor->id,
+            'urgency' => 'standard',
+            'description' => 'Test CAPEX type enforcement with wrong account code at least 20 chars.',
+            'supporting_docs' => [UploadedFile::fake()->create('doc.pdf', 100, 'application/pdf')],
         ]);
 
         // Should come back with a validation error on account_code_id
@@ -354,21 +353,21 @@ class Sprint3RegressionTest extends TestCase
         $admin = User::factory()->create(['role' => 'superadmin', 'status' => 'active']);
 
         self::$seq++;
-        $vendor = Vendor::create(['name' => 'CAPEX-V2' . self::$seq, 'status' => 'active', 'created_by' => $admin->id]);
-        $cc     = CostCentre::create(['code' => 'CAP2' . self::$seq, 'name' => 'CAPEX CC2', 'budget_kobo' => 999_999_99_00, 'status' => 'active', 'created_by' => $admin->id]);
+        $vendor = Vendor::create(['name' => 'CAPEX-V2'.self::$seq, 'status' => 'active', 'created_by' => $admin->id]);
+        $cc = CostCentre::create(['code' => 'CAP2'.self::$seq, 'name' => 'CAPEX CC2', 'budget_kobo' => 999_999_99_00, 'status' => 'active', 'created_by' => $admin->id]);
         // CAPEX account code (starts with 95)
-        $ac     = AccountCode::create(['code' => '9500X' . self::$seq, 'category' => '9500', 'description' => 'CAPEX code', 'tax_vat_applicable' => false, 'tax_wht_applicable' => false, 'status' => 'active', 'created_by' => $admin->id]);
+        $ac = AccountCode::create(['code' => '9500X'.self::$seq, 'category' => '9500', 'description' => 'CAPEX code', 'tax_vat_applicable' => false, 'tax_wht_applicable' => false, 'status' => 'active', 'created_by' => $admin->id]);
 
         $response = $this->actingAs($staff)->post(route('finance.requisitions.store'), [
-            'type'             => 'OPEX',
-            'amount_naira'     => '100000',
-            'currency'         => 'NGN',
-            'cost_centre_id'   => $cc->id,
-            'account_code_id'  => $ac->id,
-            'vendor_id'        => $vendor->id,
-            'urgency'          => 'standard',
-            'description'      => 'Test CAPEX account code with OPEX type at least 20 chars.',
-            'supporting_docs'  => [UploadedFile::fake()->create('doc.pdf', 100, 'application/pdf')],
+            'type' => 'OPEX',
+            'amount_naira' => '100000',
+            'currency' => 'NGN',
+            'cost_centre_id' => $cc->id,
+            'account_code_id' => $ac->id,
+            'vendor_id' => $vendor->id,
+            'urgency' => 'standard',
+            'description' => 'Test CAPEX account code with OPEX type at least 20 chars.',
+            'supporting_docs' => [UploadedFile::fake()->create('doc.pdf', 100, 'application/pdf')],
         ]);
 
         $response->assertSessionHasErrors('type');

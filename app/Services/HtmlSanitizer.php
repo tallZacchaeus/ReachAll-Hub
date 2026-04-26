@@ -45,12 +45,12 @@ class HtmlSanitizer
 
         // Allow the same tags the frontend DOMPurify allowlist permits
         $config->set('HTML.Allowed',
-            'p,br,strong,em,u,s,' .
-            'h1,h2,h3,h4,h5,h6,' .
-            'ul,ol,li,' .
-            'a[href|target|rel],blockquote,code,pre,' .
-            'img[src|alt|class|style],' .
-            'table,thead,tbody,tr,th[colspan|rowspan],td[colspan|rowspan],' .
+            'p,br,strong,em,u,s,'.
+            'h1,h2,h3,h4,h5,h6,'.
+            'ul,ol,li,'.
+            'a[href|target|rel],blockquote,code,pre,'.
+            'img[src|alt|class|style],'.
+            'table,thead,tbody,tr,th[colspan|rowspan],td[colspan|rowspan],'.
             'hr,span[class|style],div[class|style],sub,sup'
         );
 

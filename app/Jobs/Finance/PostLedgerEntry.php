@@ -44,11 +44,12 @@ class PostLedgerEntry implements ShouldQueue
         $period = $req->financialPeriod;
         if ($period && $period->status === 'closed') {
             Log::warning('PostLedgerEntry skipped: period is closed', [
-                'payment_id'     => $this->paymentId,
+                'payment_id' => $this->paymentId,
                 'requisition_id' => $req->id,
-                'period_id'      => $period->id,
+                'period_id' => $period->id,
             ]);
             $this->fail(new \Exception('Cannot post to closed period.'));
+
             return;
         }
 
@@ -56,33 +57,33 @@ class PostLedgerEntry implements ShouldQueue
             // ── 1. Create ledger entry ──────────────────────────────────────
             LedgerEntry::create([
                 'requisition_id' => $req->id,
-                'payment_id'     => $payment->id,
-                'debit_account'  => $req->accountCode?->code ?? 'MISC',
+                'payment_id' => $payment->id,
+                'debit_account' => $req->accountCode?->code ?? 'MISC',
                 'credit_account' => $payment->creditAccount(),
-                'amount_kobo'    => $req->amount_kobo,
-                'wht_kobo'       => $req->tax_wht_kobo,
-                'description'    => "Payment for {$req->request_id}: {$req->description}",
-                'posted_at'      => now(),
-                'created_by'     => $payment->paid_by,
+                'amount_kobo' => $req->amount_kobo,
+                'wht_kobo' => $req->tax_wht_kobo,
+                'description' => "Payment for {$req->request_id}: {$req->description}",
+                'posted_at' => now(),
+                'created_by' => $payment->paid_by,
             ]);
 
             // ── 2. Create WHT liability if applicable ───────────────────────
             if ($req->tax_wht_kobo > 0 && $req->accountCode?->tax_wht_applicable) {
                 WhtLiability::create([
-                    'requisition_id'      => $req->id,
-                    'payment_id'          => $payment->id,
-                    'vendor_id'           => $req->vendor_id,
-                    'amount_kobo'         => $req->tax_wht_kobo,
-                    'rate_percent'        => $req->accountCode->wht_rate,
-                    'status'              => 'pending',
+                    'requisition_id' => $req->id,
+                    'payment_id' => $payment->id,
+                    'vendor_id' => $req->vendor_id,
+                    'amount_kobo' => $req->tax_wht_kobo,
+                    'rate_percent' => $req->accountCode->wht_rate,
+                    'status' => 'pending',
                     'financial_period_id' => $req->financial_period_id,
-                    'created_by'          => $payment->paid_by,
+                    'created_by' => $payment->paid_by,
                 ]);
             }
 
             // ── 3. Mark requisition as posted ───────────────────────────────
             $req->update([
-                'status'    => 'posted',
+                'status' => 'posted',
                 'posted_at' => now(),
             ]);
         });

@@ -37,29 +37,29 @@ class RequisitionTest extends TestCase
     private function makeUsers(): array
     {
         $requester = User::factory()->create([
-            'role'       => 'staff',
+            'role' => 'staff',
             'department' => 'IT & Digital',
-            'status'     => 'active',
+            'status' => 'active',
         ]);
 
         $lineManager = User::factory()->create([
-            'role'       => 'management',
+            'role' => 'management',
             'department' => 'IT & Digital',
-            'status'     => 'active',
+            'status' => 'active',
         ]);
 
         $finance = User::factory()->create([
-            'role'   => 'finance',
+            'role' => 'finance',
             'status' => 'active',
         ]);
 
         $genMgmt = User::factory()->create([
-            'role'   => 'general_management',
+            'role' => 'general_management',
             'status' => 'active',
         ]);
 
         $ceo = User::factory()->create([
-            'role'   => 'ceo',
+            'role' => 'ceo',
             'status' => 'active',
         ]);
 
@@ -69,29 +69,29 @@ class RequisitionTest extends TestCase
     private function makeFinanceFixtures(User $admin, ?User $deptHead = null): array
     {
         $costCentre = CostCentre::create([
-            'code'         => '1200',
-            'name'         => 'IT & Digital',
-            'budget_kobo'  => 15_000_000_00,
-            'status'       => 'active',
+            'code' => '1200',
+            'name' => 'IT & Digital',
+            'budget_kobo' => 15_000_000_00,
+            'status' => 'active',
             'head_user_id' => $deptHead?->id,
-            'created_by'   => $admin->id,
+            'created_by' => $admin->id,
         ]);
 
         $accountCode = AccountCode::create([
-            'code'               => '9001',
-            'category'           => '9000',
-            'description'        => 'Software Licences',
+            'code' => '9001',
+            'category' => '9000',
+            'description' => 'Software Licences',
             'tax_vat_applicable' => true,
             'tax_wht_applicable' => true,
-            'wht_rate'           => 10,
-            'status'             => 'active',
-            'created_by'         => $admin->id,
+            'wht_rate' => 10,
+            'status' => 'active',
+            'created_by' => $admin->id,
         ]);
 
         $vendor = Vendor::create([
-            'name'        => 'Test Vendor Ltd',
-            'status'      => 'active',
-            'created_by'  => $admin->id,
+            'name' => 'Test Vendor Ltd',
+            'status' => 'active',
+            'created_by' => $admin->id,
         ]);
 
         return compact('costCentre', 'accountCode', 'vendor');
@@ -100,15 +100,15 @@ class RequisitionTest extends TestCase
     private function submitPayload(array $fixtures, float $amountNaira = 50_000, string $type = 'OPEX'): array
     {
         return [
-            'type'            => $type,
-            'amount_naira'    => $amountNaira,
-            'currency'        => 'NGN',
-            'exchange_rate'   => '1',
-            'cost_centre_id'  => $fixtures['costCentre']->id,
+            'type' => $type,
+            'amount_naira' => $amountNaira,
+            'currency' => 'NGN',
+            'exchange_rate' => '1',
+            'cost_centre_id' => $fixtures['costCentre']->id,
             'account_code_id' => $fixtures['accountCode']->id,
-            'vendor_id'       => $fixtures['vendor']->id,
-            'urgency'         => 'standard',
-            'description'     => 'This is a test requisition for software licences.',
+            'vendor_id' => $fixtures['vendor']->id,
+            'urgency' => 'standard',
+            'description' => 'This is a test requisition for software licences.',
             'supporting_docs' => [
                 UploadedFile::fake()->create('quote.pdf', 100, 'application/pdf'),
             ],
@@ -161,7 +161,7 @@ class RequisitionTest extends TestCase
 
         $this->actingAs($lineManager)
             ->post("/finance/approvals/steps/{$step->id}/decide", [
-                'action'  => 'approve',
+                'action' => 'approve',
                 'comment' => null,
             ]);
 
@@ -188,7 +188,7 @@ class RequisitionTest extends TestCase
 
         $this->actingAs($lineManager)
             ->post("/finance/approvals/steps/{$step->id}/decide", [
-                'action'  => 'reject',
+                'action' => 'reject',
                 'comment' => 'Budget exceeded for this quarter.',
             ]);
 
@@ -210,7 +210,7 @@ class RequisitionTest extends TestCase
 
         // Create a dedicated dept head user so the Dept Head tier resolves
         $deptHead = User::factory()->create([
-            'role'   => 'management',
+            'role' => 'management',
             'status' => 'active',
         ]);
 
@@ -247,13 +247,13 @@ class RequisitionTest extends TestCase
 
         // Create a user who is both a manager AND the requester
         $managerRequester = User::factory()->create([
-            'role'   => 'management',
+            'role' => 'management',
             'status' => 'active',
         ]);
 
         // Second manager for the step
         $otherManager = User::factory()->create([
-            'role'   => 'management',
+            'role' => 'management',
             'status' => 'active',
         ]);
 

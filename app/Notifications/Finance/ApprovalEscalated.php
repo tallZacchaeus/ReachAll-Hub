@@ -20,17 +20,17 @@ class ApprovalEscalated extends Notification
 
     public function toDatabase(object $notifiable): array
     {
-        $req    = $this->step->requisition;
+        $req = $this->step->requisition;
         $amount = MoneyHelper::format($req->amount_kobo);
 
         return [
-            'type'           => 'approval_escalated',
-            'title'          => "Escalated Request: {$req->request_id}",
-            'body'           => "An approval for {$amount} has been escalated to you because the 48-hour SLA was exceeded.",
-            'request_id'     => $req->request_id,
+            'type' => 'approval_escalated',
+            'title' => "Escalated Request: {$req->request_id}",
+            'body' => "An approval for {$amount} has been escalated to you because the 48-hour SLA was exceeded.",
+            'request_id' => $req->request_id,
             'requisition_id' => $req->id,
-            'step_id'        => $this->step->id,
-            'url'            => "/finance/approvals/{$req->id}",
+            'step_id' => $this->step->id,
+            'url' => "/finance/approvals/{$req->id}",
         ];
     }
 }

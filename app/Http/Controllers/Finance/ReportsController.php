@@ -9,26 +9,22 @@ use App\Http\Controllers\Controller;
 use App\Jobs\Finance\ExportReportJob;
 use App\Models\Finance\AccountCode;
 use App\Models\Finance\CostCentre;
-use App\Models\Finance\Requisition;
-use App\Services\Finance\MoneyHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
-use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ReportsController extends Controller
 {
     private const REPORT_TYPES = [
-        'budget_vs_actual'      => 'Budget vs Actual',
-        'spend_by_cost_centre'  => 'Spend by Cost Centre',
+        'budget_vs_actual' => 'Budget vs Actual',
+        'spend_by_cost_centre' => 'Spend by Cost Centre',
         'spend_by_account_code' => 'Spend by Account Code',
-        'approval_throughput'   => 'Approval Throughput',
-        'tax_summary'           => 'Tax Summary',
-        'wht_schedule'          => 'FIRS WHT Schedule (WHT-01)',
+        'approval_throughput' => 'Approval Throughput',
+        'tax_summary' => 'Tax Summary',
+        'wht_schedule' => 'FIRS WHT Schedule (WHT-01)',
     ];
 
     // ── Page ─────────────────────────────────────────────────────────────────
@@ -38,17 +34,17 @@ class ReportsController extends Controller
         $this->authorizeReports($request);
 
         $costCentres = CostCentre::active()->orderBy('code')->get(['id', 'code', 'name']);
-        $categories  = AccountCode::active()
+        $categories = AccountCode::active()
             ->selectRaw('DISTINCT category')
             ->pluck('category')
             ->sort()
             ->values();
 
         // Preview data (first 50 rows) when filters are present
-        $preview    = null;
-        $headings   = [];
+        $preview = null;
+        $headings = [];
         $reportType = $request->input('report_type', 'budget_vs_actual');
-        $filters    = $request->only(['from', 'to', 'cost_centre_id', 'account_category', 'status']);
+        $filters = $request->only(['from', 'to', 'cost_centre_id', 'account_category', 'status']);
 
         if ($request->has('preview')) {
             [$headings, $preview] = $this->buildPreview($reportType, $filters, $request->user());
@@ -57,11 +53,11 @@ class ReportsController extends Controller
         return Inertia::render('Finance/ReportsPage', [
             'report_types' => self::REPORT_TYPES,
             'cost_centres' => $costCentres,
-            'categories'   => $categories,
-            'filters'      => $filters,
-            'report_type'  => $reportType,
-            'headings'     => $headings,
-            'preview'      => $preview,
+            'categories' => $categories,
+            'filters' => $filters,
+            'report_type' => $reportType,
+            'headings' => $headings,
+            'preview' => $preview,
         ]);
     }
 
@@ -76,12 +72,12 @@ class ReportsController extends Controller
     {
         $this->authorizeReports($request);
 
-        $type    = $request->input('report_type', 'budget_vs_actual');
+        $type = $request->input('report_type', 'budget_vs_actual');
         $filters = $request->only(['from', 'to', 'cost_centre_id', 'account_category', 'status']);
 
         // Row-count pre-check (uses the same export collection).
         $rowLimit = (int) config('finance.report_sync_row_limit', 5000);
-        $export   = $type === 'transactions'
+        $export = $type === 'transactions'
             ? new TransactionExport($request->user(), $filters)
             : ($type === 'wht_schedule' ? new FirsWhtScheduleExport($filters) : new ReportExport($type, $filters));
 
@@ -94,11 +90,11 @@ class ReportsController extends Controller
         }
 
         if ($type === 'transactions') {
-            $filename = 'transactions-' . now()->format('Ymd') . '.xlsx';
+            $filename = 'transactions-'.now()->format('Ymd').'.xlsx';
         } elseif ($type === 'wht_schedule') {
-            $filename = 'firs-wht-schedule-' . now()->format('Ymd') . '.xlsx';
+            $filename = 'firs-wht-schedule-'.now()->format('Ymd').'.xlsx';
         } else {
-            $filename = $type . '-' . now()->format('Ymd') . '.xlsx';
+            $filename = $type.'-'.now()->format('Ymd').'.xlsx';
         }
 
         return Excel::download($export, $filename);
@@ -110,30 +106,31 @@ class ReportsController extends Controller
     {
         $this->authorizeReports($request);
 
-        $type    = $request->input('report_type', 'budget_vs_actual');
+        $type = $request->input('report_type', 'budget_vs_actual');
         $filters = $request->only(['from', 'to', 'cost_centre_id', 'account_category', 'status']);
-        $title   = self::REPORT_TYPES[$type] ?? 'Finance Report';
+        $title = self::REPORT_TYPES[$type] ?? 'Finance Report';
 
         [$headings, $rows] = $this->buildPreview($type, $filters, $request->user(), limit: 10000);
 
         $html = view('finance.report-pdf', compact('title', 'headings', 'rows', 'filters'))->render();
-        $pdf  = app('dompdf.wrapper');
+        $pdf = app('dompdf.wrapper');
         $pdf->loadHTML($html)->setPaper('a4', 'landscape');
 
-        return $pdf->download($type . '-' . now()->format('Ymd') . '.pdf');
+        return $pdf->download($type.'-'.now()->format('Ymd').'.pdf');
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     private function buildPreview(
         string $type,
-        array  $filters,
+        array $filters,
         $user,
-        int    $limit = 50
+        int $limit = 50
     ): array {
-        $export   = new ReportExport($type, $filters);
+        $export = new ReportExport($type, $filters);
         $headings = $export->headings();
-        $rows     = $export->collection()->take($limit)->map(fn ($r) => $export->map($r))->values()->toArray();
+        $rows = $export->collection()->take($limit)->map(fn ($r) => $export->map($r))->values()->toArray();
+
         return [$headings, $rows];
     }
 

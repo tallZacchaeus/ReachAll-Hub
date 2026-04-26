@@ -56,11 +56,11 @@ class ResourceRequestController extends Controller
         $multiLevel = ['budget_approval', 'procurement'];
 
         $validated = $request->validate([
-            'type'         => ['required', Rule::in(['invoice', 'funds', 'equipment', 'budget_approval', 'procurement'])],
-            'title'        => ['required', 'string', 'max:255'],
-            'description'  => ['required', 'string'],
-            'amount'       => ['nullable', 'numeric', 'min:0'],
-            'project'      => ['required', 'string', 'max:255'],
+            'type' => ['required', Rule::in(['invoice', 'funds', 'equipment', 'budget_approval', 'procurement'])],
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'amount' => ['nullable', 'numeric', 'min:0'],
+            'project' => ['required', 'string', 'max:255'],
             'taggedPerson' => ['nullable', 'string', 'max:255'],
         ]);
 
@@ -70,16 +70,16 @@ class ResourceRequestController extends Controller
             : null;
 
         ResourceRequest::create([
-            'user_id'        => $request->user()->id,
-            'type'           => $validated['type'],
-            'title'          => $validated['title'],
-            'description'    => $validated['description'],
-            'amount'         => $validated['amount'] ?? null,
-            'project'        => $validated['project'],
-            'status'         => 'pending',
-            'tagged_person'  => $validated['taggedPerson'] ?? null,
-            'attachments'    => [],
-            'receipts'       => [],
+            'user_id' => $request->user()->id,
+            'type' => $validated['type'],
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'amount' => $validated['amount'] ?? null,
+            'project' => $validated['project'],
+            'status' => 'pending',
+            'tagged_person' => $validated['taggedPerson'] ?? null,
+            'attachments' => [],
+            'receipts' => [],
             'approval_chain' => $approvalChain,
             'approval_level' => 0,
         ]);
@@ -111,7 +111,7 @@ class ResourceRequestController extends Controller
         }
 
         $validated = $request->validate([
-            'status'  => ['required', Rule::in(['approved', 'declined'])],
+            'status' => ['required', Rule::in(['approved', 'declined'])],
             'comment' => ['nullable', 'string', 'max:5000'],
         ]);
 
@@ -120,9 +120,9 @@ class ResourceRequestController extends Controller
         if ($validated['status'] === 'declined' || empty($chain)) {
             // Flat approval or explicit decline
             $resourceRequest->update([
-                'status'               => $validated['status'],
-                'reviewed_by_user_id'  => $request->user()->id,
-                'reviewed_at'          => now(),
+                'status' => $validated['status'],
+                'reviewed_by_user_id' => $request->user()->id,
+                'reviewed_at' => now(),
             ]);
         } else {
             // Multi-level: advance approval_level
@@ -131,15 +131,15 @@ class ResourceRequestController extends Controller
             if ($nextLevel >= count($chain)) {
                 // All levels approved
                 $resourceRequest->update([
-                    'status'              => 'approved',
-                    'approval_level'      => $nextLevel,
+                    'status' => 'approved',
+                    'approval_level' => $nextLevel,
                     'reviewed_by_user_id' => $request->user()->id,
-                    'reviewed_at'         => now(),
+                    'reviewed_at' => now(),
                 ]);
             } else {
                 // Still more levels — keep pending, advance level
                 $resourceRequest->update([
-                    'status'         => 'pending',
+                    'status' => 'pending',
                     'approval_level' => $nextLevel,
                 ]);
             }
@@ -148,8 +148,8 @@ class ResourceRequestController extends Controller
         if (! empty($validated['comment'])) {
             ResourceRequestComment::create([
                 'resource_request_id' => $resourceRequest->id,
-                'user_id'             => $request->user()->id,
-                'content'             => $validated['comment'],
+                'user_id' => $request->user()->id,
+                'content' => $validated['comment'],
             ]);
         }
 
@@ -181,12 +181,12 @@ class ResourceRequestController extends Controller
                     'timestamp' => $comment->created_at?->toIso8601String() ?? '',
                 ];
             })->values()->all(),
-            'taggedPerson'        => $resourceRequest->tagged_person,
-            'requesterName'       => $resourceRequest->user?->name ?? 'Unknown',
+            'taggedPerson' => $resourceRequest->tagged_person,
+            'requesterName' => $resourceRequest->user?->name ?? 'Unknown',
             'requesterEmployeeId' => $resourceRequest->user?->employee_id ?? '',
-            'reviewerName'        => $resourceRequest->reviewer?->name,
-            'approvalChain'       => $resourceRequest->approval_chain,
-            'approvalLevel'       => $resourceRequest->approval_level ?? 0,
+            'reviewerName' => $resourceRequest->reviewer?->name,
+            'approvalChain' => $resourceRequest->approval_chain,
+            'approvalLevel' => $resourceRequest->approval_level ?? 0,
         ];
     }
 

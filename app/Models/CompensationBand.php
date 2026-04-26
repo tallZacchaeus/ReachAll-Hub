@@ -19,11 +19,11 @@ class CompensationBand extends Model
     ];
 
     protected $casts = [
-        'min_kobo'       => 'integer',
-        'midpoint_kobo'  => 'integer',
-        'max_kobo'       => 'integer',
+        'min_kobo' => 'integer',
+        'midpoint_kobo' => 'integer',
+        'max_kobo' => 'integer',
         'effective_date' => 'date',
-        'is_active'      => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     public function scopeActive($query)
@@ -34,7 +34,10 @@ class CompensationBand extends Model
     /** Return the compa-ratio for a given salary (current pay / midpoint). */
     public function comparatio(int $salaryKobo): float
     {
-        if ($this->midpoint_kobo === 0) return 0;
+        if ($this->midpoint_kobo === 0) {
+            return 0;
+        }
+
         return round($salaryKobo / $this->midpoint_kobo, 4);
     }
 
@@ -42,7 +45,10 @@ class CompensationBand extends Model
     public function rangePosition(int $salaryKobo): float
     {
         $spread = $this->max_kobo - $this->min_kobo;
-        if ($spread === 0) return 0;
+        if ($spread === 0) {
+            return 0;
+        }
+
         return round(($salaryKobo - $this->min_kobo) / $spread, 4);
     }
 }
