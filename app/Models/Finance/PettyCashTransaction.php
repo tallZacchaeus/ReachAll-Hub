@@ -24,7 +24,7 @@ class PettyCashTransaction extends Model
 
     protected $casts = [
         'amount_kobo' => 'integer',
-        'date'        => 'date',
+        'date' => 'date',
     ];
 
     // ── Relationships ────────────────────────────────────────────────────────

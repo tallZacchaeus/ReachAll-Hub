@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\User;
 use App\Models\Conversation;
 use App\Models\Message;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class ChatSeeder extends Seeder
 {
@@ -13,9 +13,10 @@ class ChatSeeder extends Seeder
     {
         // Get all users
         $users = User::all();
-        
+
         if ($users->count() < 2) {
             $this->command->warn('Not enough users to create conversations. Please seed users first.');
+
             return;
         }
 
@@ -50,7 +51,7 @@ class ChatSeeder extends Seeder
         foreach ($users as $user) {
             $hrAnnouncements->participants()->attach($user->id);
             $support->participants()->attach($user->id);
-            
+
             // Add users to their department team chat
             if ($user->department && isset($teamChats[$user->department])) {
                 $teamChats[$user->department]->participants()->attach($user->id);
@@ -59,7 +60,7 @@ class ChatSeeder extends Seeder
 
         // Create some sample messages for HR Announcements
         $hrUser = $users->where('role', 'hr')->first() ?? $users->first();
-        
+
         Message::create([
             'conversation_id' => $hrAnnouncements->id,
             'user_id' => $hrUser->id,
@@ -84,7 +85,7 @@ class ChatSeeder extends Seeder
             $techUsers = $users->where('department', 'Tech');
             if ($techUsers->count() > 0) {
                 $firstTechUser = $techUsers->first();
-                
+
                 Message::create([
                     'conversation_id' => $teamChats['Tech']->id,
                     'user_id' => $firstTechUser->id,

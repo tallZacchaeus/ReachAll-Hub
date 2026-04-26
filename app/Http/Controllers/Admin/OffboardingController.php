@@ -47,15 +47,15 @@ class OffboardingController extends Controller
 
         // Stats
         $stats = [
-            'initiated'   => OffboardingChecklist::where('status', 'initiated')->count(),
+            'initiated' => OffboardingChecklist::where('status', 'initiated')->count(),
             'in_progress' => OffboardingChecklist::where('status', 'in_progress')->count(),
-            'completed'   => OffboardingChecklist::where('status', 'completed')->count(),
+            'completed' => OffboardingChecklist::where('status', 'completed')->count(),
         ];
 
         return Inertia::render('Admin/OffboardingPage', [
             'checklists' => $checklists,
-            'stats'      => $stats,
-            'filters'    => ['status' => $status ?? ''],
+            'stats' => $stats,
+            'filters' => ['status' => $status ?? ''],
         ]);
     }
 
@@ -73,7 +73,7 @@ class OffboardingController extends Controller
         ]);
 
         return Inertia::render('Admin/OffboardingDetailPage', [
-            'checklist'          => $this->transformChecklist($offboardingChecklist),
+            'checklist' => $this->transformChecklist($offboardingChecklist),
             'can_manage_payroll' => $request->user()?->hasPermission('payroll.manage') ?? false,
         ]);
     }
@@ -104,10 +104,10 @@ class OffboardingController extends Controller
         ]);
 
         $offboardingTask->update([
-            'status'          => 'completed',
-            'completed_at'    => now(),
+            'status' => 'completed',
+            'completed_at' => now(),
             'completed_by_id' => $request->user()->id,
-            'notes'           => $validated['notes'] ?? $offboardingTask->notes,
+            'notes' => $validated['notes'] ?? $offboardingTask->notes,
         ]);
 
         // Auto-advance checklist status
@@ -144,7 +144,7 @@ class OffboardingController extends Controller
 
         $offboardingTask->update([
             'status' => 'waived',
-            'notes'  => $validated['notes'] ?? $offboardingTask->notes,
+            'notes' => $validated['notes'] ?? $offboardingTask->notes,
         ]);
 
         // Auto-advance checklist status
@@ -178,7 +178,7 @@ class OffboardingController extends Controller
         }
 
         $offboardingChecklist->update([
-            'status'            => 'completed',
+            'status' => 'completed',
             'clearance_signed_at' => now(),
         ]);
 
@@ -207,7 +207,7 @@ class OffboardingController extends Controller
 
         $offboardingChecklist->update([
             'exit_interview_completed_at' => now(),
-            'notes'                       => $validated['notes'] ?? $offboardingChecklist->notes,
+            'notes' => $validated['notes'] ?? $offboardingChecklist->notes,
         ]);
 
         // Sync status if still initiated
@@ -249,36 +249,36 @@ class OffboardingController extends Controller
     private function transformChecklist(OffboardingChecklist $checklist): array
     {
         return [
-            'id'                          => $checklist->id,
-            'status'                      => $checklist->status,
-            'termination_date'            => $checklist->termination_date?->toDateString(),
-            'reason'                      => $checklist->reason,
+            'id' => $checklist->id,
+            'status' => $checklist->status,
+            'termination_date' => $checklist->termination_date?->toDateString(),
+            'reason' => $checklist->reason,
             'exit_interview_completed_at' => $checklist->exit_interview_completed_at?->toIso8601String(),
-            'clearance_signed_at'         => $checklist->clearance_signed_at?->toIso8601String(),
-            'notes'                       => $checklist->notes,
-            'completion_percentage'       => $checklist->completionPercentage(),
-            'user'                        => [
-                'id'          => $checklist->user->id,
-                'name'        => $checklist->user->name,
+            'clearance_signed_at' => $checklist->clearance_signed_at?->toIso8601String(),
+            'notes' => $checklist->notes,
+            'completion_percentage' => $checklist->completionPercentage(),
+            'user' => [
+                'id' => $checklist->user->id,
+                'name' => $checklist->user->name,
                 'employee_id' => $checklist->user->employee_id ?? '',
-                'department'  => $checklist->user->department ?? '',
-                'position'    => $checklist->user->position ?? '',
+                'department' => $checklist->user->department ?? '',
+                'position' => $checklist->user->position ?? '',
             ],
             'initiated_by' => $checklist->initiatedBy ? [
-                'id'   => $checklist->initiatedBy->id,
+                'id' => $checklist->initiatedBy->id,
                 'name' => $checklist->initiatedBy->name,
             ] : null,
             'tasks' => $checklist->tasks->map(fn (OffboardingTask $t) => [
-                'id'           => $t->id,
-                'task_type'    => $t->task_type,
-                'title'        => $t->title,
-                'description'  => $t->description,
-                'status'       => $t->status,
+                'id' => $t->id,
+                'task_type' => $t->task_type,
+                'title' => $t->title,
+                'description' => $t->description,
+                'status' => $t->status,
                 'completed_at' => $t->completed_at?->toIso8601String(),
-                'notes'        => $t->notes,
-                'sort_order'   => $t->sort_order,
+                'notes' => $t->notes,
+                'sort_order' => $t->sort_order,
                 'completed_by' => $t->completedBy ? ['id' => $t->completedBy->id, 'name' => $t->completedBy->name] : null,
-                'assigned_to'  => $t->assignedTo  ? ['id' => $t->assignedTo->id,  'name' => $t->assignedTo->name]  : null,
+                'assigned_to' => $t->assignedTo ? ['id' => $t->assignedTo->id,  'name' => $t->assignedTo->name] : null,
             ])->values()->all(),
         ];
     }

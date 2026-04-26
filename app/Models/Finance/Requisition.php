@@ -42,19 +42,19 @@ class Requisition extends Model
     ];
 
     protected $casts = [
-        'amount_kobo'              => 'integer',
-        'tax_vat_kobo'             => 'integer',
-        'tax_wht_kobo'             => 'integer',
-        'total_kobo'               => 'integer',
-        'exchange_rate'            => 'decimal:6',
-        'supporting_docs'          => 'array',
-        'needs_board_approval'     => 'boolean',
+        'amount_kobo' => 'integer',
+        'tax_vat_kobo' => 'integer',
+        'tax_wht_kobo' => 'integer',
+        'total_kobo' => 'integer',
+        'exchange_rate' => 'decimal:6',
+        'supporting_docs' => 'array',
+        'needs_board_approval' => 'boolean',
         'budget_override_required' => 'boolean',
-        'budget_override_at'       => 'datetime',
-        'submitted_at'             => 'datetime',
-        'approved_at'              => 'datetime',
-        'paid_at'                  => 'datetime',
-        'posted_at'                => 'datetime',
+        'budget_override_at' => 'datetime',
+        'submitted_at' => 'datetime',
+        'approved_at' => 'datetime',
+        'paid_at' => 'datetime',
+        'posted_at' => 'datetime',
     ];
 
     // ── Relationships ────────────────────────────────────────────────────────
@@ -177,6 +177,7 @@ class Requisition extends Model
         if ($this->requiresThreeWayMatch()) {
             return $this->status === 'matched';
         }
+
         return \in_array($this->status, ['approved', 'matched'], true);
     }
 
@@ -189,13 +190,13 @@ class Requisition extends Model
 
     public static function generateRequestId(): string
     {
-        $prefix = 'REQ-' . now()->format('Ym') . '-';
-        $last   = static::where('request_id', 'like', $prefix . '%')
+        $prefix = 'REQ-'.now()->format('Ym').'-';
+        $last = static::where('request_id', 'like', $prefix.'%')
             ->orderByDesc('request_id')
             ->lockForUpdate()
             ->first();
         $seq = $last ? (int) substr($last->request_id, -4) + 1 : 1;
 
-        return $prefix . str_pad((string) $seq, 4, '0', STR_PAD_LEFT);
+        return $prefix.str_pad((string) $seq, 4, '0', STR_PAD_LEFT);
     }
 }

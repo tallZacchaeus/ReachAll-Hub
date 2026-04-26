@@ -102,8 +102,8 @@
             ];
 
             $permissions = [
-                'storage/' => is_writable(__DIR__ . '/storage'),
-                'bootstrap/cache/' => is_writable(__DIR__ . '/bootstrap/cache'),
+                'storage/' => is_writable(__DIR__.'/storage'),
+                'bootstrap/cache/' => is_writable(__DIR__.'/bootstrap/cache'),
             ];
 
             $passed = 0;
@@ -124,11 +124,11 @@
                 <h3><?php echo $allPassed ? '✅ All Requirements Met!' : '⚠️ Some Requirements Not Met'; ?></h3>
                 <p>
                     <?php echo $passed; ?> of <?php echo $total; ?> requirements passed.
-                    <?php if ($allPassed): ?>
+                    <?php if ($allPassed) { ?>
                         Your server is ready to host the ReachAll Hub!
-                    <?php else: ?>
+                    <?php } else { ?>
                         Please fix the failed requirements before deploying.
-                    <?php endif; ?>
+                    <?php } ?>
                 </p>
             </div>
 
@@ -140,26 +140,26 @@
                     <span class="value">Current: <?php echo PHP_VERSION; ?> (Required: >= 8.1.0)</span>
                 </div>
                 
-                <?php foreach ($requirements as $name => $status): ?>
-                    <?php if ($name !== 'PHP Version'): ?>
+                <?php foreach ($requirements as $name => $status) { ?>
+                    <?php if ($name !== 'PHP Version') { ?>
                     <div class="requirement <?php echo $status ? 'pass' : 'fail'; ?>">
                         <span class="icon"><?php echo $status ? '✅' : '❌'; ?></span>
                         <span class="label"><?php echo $name; ?></span>
                         <span class="value"><?php echo $status ? 'Enabled' : 'Not Installed'; ?></span>
                     </div>
-                    <?php endif; ?>
-                <?php endforeach; ?>
+                    <?php } ?>
+                <?php } ?>
             </div>
 
             <div class="section">
                 <h2>Directory Permissions</h2>
-                <?php foreach ($permissions as $dir => $status): ?>
+                <?php foreach ($permissions as $dir => $status) { ?>
                 <div class="requirement <?php echo $status ? 'pass' : 'fail'; ?>">
                     <span class="icon"><?php echo $status ? '✅' : '❌'; ?></span>
                     <span class="label"><?php echo $dir; ?></span>
                     <span class="value"><?php echo $status ? 'Writable' : 'Not Writable'; ?></span>
                 </div>
-                <?php endforeach; ?>
+                <?php } ?>
             </div>
 
             <div class="section">
@@ -191,7 +191,7 @@
                 </div>
             </div>
 
-            <?php if (!$allPassed): ?>
+            <?php if (! $allPassed) { ?>
             <div class="section">
                 <h2>Next Steps</h2>
                 <div class="summary" style="background: #fff3cd; border-color: #ffc107;">
@@ -203,7 +203,7 @@
                     </p>
                 </div>
             </div>
-            <?php endif; ?>
+            <?php } ?>
         </div>
 
         <div class="footer">

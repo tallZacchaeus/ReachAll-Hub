@@ -26,15 +26,15 @@ class DocumentCategorySeeder extends Seeder
             DB::table('document_categories')->upsert(
                 array_merge($cat, [
                     'description' => null,
-                    'is_active'   => true,
-                    'created_at'  => now(),
-                    'updated_at'  => now(),
+                    'is_active' => true,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]),
                 ['code'],
                 ['name', 'requires_signature', 'sort_order', 'updated_at']
             );
         }
 
-        $this->command?->info('Document categories seeded (' . count(self::CATEGORIES) . ' categories).');
+        $this->command?->info('Document categories seeded ('.count(self::CATEGORIES).' categories).');
     }
 }

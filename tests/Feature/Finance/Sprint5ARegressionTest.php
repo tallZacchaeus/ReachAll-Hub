@@ -6,9 +6,7 @@ use App\Http\Middleware\SetSecurityHeaders;
 use App\Models\Finance\AccountCode;
 use App\Models\Finance\CostCentre;
 use App\Models\Finance\Invoice;
-use App\Models\Finance\Payment;
 use App\Models\Finance\PettyCashFloat;
-use App\Models\Finance\PettyCashTransaction;
 use App\Models\Finance\Requisition;
 use App\Models\Finance\Vendor;
 use App\Models\User;
@@ -65,11 +63,12 @@ class Sprint5ARegressionTest extends TestCase
     {
         self::$seq++;
         $admin = $this->makeAdmin();
+
         return CostCentre::create([
-            'code'       => 'CC' . self::$seq,
-            'name'       => 'Test CC ' . self::$seq,
-            'budget_kobo'=> $budgetKobo,
-            'status'     => 'active',
+            'code' => 'CC'.self::$seq,
+            'name' => 'Test CC '.self::$seq,
+            'budget_kobo' => $budgetKobo,
+            'status' => 'active',
             'created_by' => $admin->id,
         ]);
     }
@@ -77,40 +76,40 @@ class Sprint5ARegressionTest extends TestCase
     private function makeRequisition(CostCentre $cc, int $amountKobo, string $status = 'draft'): Requisition
     {
         self::$seq++;
-        $admin  = $this->makeAdmin();
-        $vendor = Vendor::create(['name' => 'V' . self::$seq, 'status' => 'active', 'created_by' => $admin->id]);
-        $ac     = AccountCode::create([
-            'code' => 'A' . self::$seq, 'category' => '6000', 'description' => 'Test',
+        $admin = $this->makeAdmin();
+        $vendor = Vendor::create(['name' => 'V'.self::$seq, 'status' => 'active', 'created_by' => $admin->id]);
+        $ac = AccountCode::create([
+            'code' => 'A'.self::$seq, 'category' => '6000', 'description' => 'Test',
             'tax_vat_applicable' => false, 'tax_wht_applicable' => false,
             'status' => 'active', 'created_by' => $admin->id,
         ]);
 
         return Requisition::create([
-            'request_id'      => 'R5A-' . self::$seq,
-            'requester_id'    => $admin->id,
-            'type'            => 'OPEX',
-            'amount_kobo'     => $amountKobo,
-            'cost_centre_id'  => $cc->id,
+            'request_id' => 'R5A-'.self::$seq,
+            'requester_id' => $admin->id,
+            'type' => 'OPEX',
+            'amount_kobo' => $amountKobo,
+            'cost_centre_id' => $cc->id,
             'account_code_id' => $ac->id,
-            'vendor_id'       => $vendor->id,
-            'description'     => 'Sprint 5A test',
-            'status'          => $status,
-            'tax_vat_kobo'    => 0,
-            'tax_wht_kobo'    => 0,
-            'total_kobo'      => $amountKobo,
-            'created_by'      => $admin->id,
+            'vendor_id' => $vendor->id,
+            'description' => 'Sprint 5A test',
+            'status' => $status,
+            'tax_vat_kobo' => 0,
+            'tax_wht_kobo' => 0,
+            'total_kobo' => $amountKobo,
+            'created_by' => $admin->id,
         ]);
     }
 
     private function makePettyCashFloat(User $custodian): PettyCashFloat
     {
         return PettyCashFloat::create([
-            'custodian_id'         => $custodian->id,
-            'float_limit_kobo'     => 20_000_000, // ₦200K
+            'custodian_id' => $custodian->id,
+            'float_limit_kobo' => 20_000_000, // ₦200K
             'current_balance_kobo' => 20_000_000,
-            'low_alert_threshold'  => 30,
-            'status'               => 'active',
-            'created_by'           => $custodian->id,
+            'low_alert_threshold' => 30,
+            'status' => 'active',
+            'created_by' => $custodian->id,
         ]);
     }
 
@@ -199,23 +198,23 @@ class Sprint5ARegressionTest extends TestCase
         \Carbon\Carbon::setTestNow('2026-04-16 10:00:00');
 
         $custodian = $this->makeStaff();
-        $float     = $this->makePettyCashFloat($custodian);
+        $float = $this->makePettyCashFloat($custodian);
 
         // Insert 2 × ₦20K directly into DB.
         // 'date' is set to old user-supplied values (demonstrating backdating),
         // but 'created_at' is today — that's what the cap now checks.
         foreach (['2026-04-10', '2026-04-12'] as $idx => $userDate) {
             \DB::table('petty_cash_transactions')->insert([
-                'float_id'     => $float->id,
-                'amount_kobo'  => 2_000_000, // ₦20K (at single-cap limit, passes check 3)
-                'type'         => 'expense',
-                'description'  => "Backdated {$idx}",
-                'date'         => $userDate,                          // user-supplied, old
+                'float_id' => $float->id,
+                'amount_kobo' => 2_000_000, // ₦20K (at single-cap limit, passes check 3)
+                'type' => 'expense',
+                'description' => "Backdated {$idx}",
+                'date' => $userDate,                          // user-supplied, old
                 'receipt_path' => "petty-cash/receipts/bd-{$idx}.pdf",
-                'status'       => 'pending_recon',
-                'created_by'   => $custodian->id,
-                'created_at'   => '2026-04-16 09:00:00',              // server: today
-                'updated_at'   => '2026-04-16 09:00:00',
+                'status' => 'pending_recon',
+                'created_by' => $custodian->id,
+                'created_at' => '2026-04-16 09:00:00',              // server: today
+                'updated_at' => '2026-04-16 09:00:00',
             ]);
         }
         // today's created_at total = ₦40K. New ₦20K would push to ₦60K > ₦50K daily cap.
@@ -240,26 +239,26 @@ class Sprint5ARegressionTest extends TestCase
         \Carbon\Carbon::setTestNow('2026-04-18 10:00:00'); // Friday
 
         $custodian = $this->makeStaff();
-        $float     = $this->makePettyCashFloat($custodian);
+        $float = $this->makePettyCashFloat($custodian);
 
         // 11 × ₦18K = ₦198K inserted Mon–Thu with 'date' = 6 weeks ago.
         // The weekly cap query uses created_at (this week), not date.
         // Daily cap is not at risk because none are created "today" (Friday).
         $days = ['2026-04-14', '2026-04-14', '2026-04-15', '2026-04-15',
-                 '2026-04-16', '2026-04-16', '2026-04-17', '2026-04-17',
-                 '2026-04-14', '2026-04-15', '2026-04-16'];
+            '2026-04-16', '2026-04-16', '2026-04-17', '2026-04-17',
+            '2026-04-14', '2026-04-15', '2026-04-16'];
         foreach ($days as $i => $createdDay) {
             \DB::table('petty_cash_transactions')->insert([
-                'float_id'     => $float->id,
-                'amount_kobo'  => 1_800_000,  // ₦18K
-                'type'         => 'expense',
-                'description'  => "Prior week tx {$i}",
-                'date'         => '2026-03-01',                        // old user date — irrelevant
+                'float_id' => $float->id,
+                'amount_kobo' => 1_800_000,  // ₦18K
+                'type' => 'expense',
+                'description' => "Prior week tx {$i}",
+                'date' => '2026-03-01',                        // old user date — irrelevant
                 'receipt_path' => "petty-cash/receipts/pw-{$i}.pdf",
-                'status'       => 'pending_recon',
-                'created_by'   => $custodian->id,
-                'created_at'   => $createdDay . ' 09:00:00',           // server: this week
-                'updated_at'   => $createdDay . ' 09:00:00',
+                'status' => 'pending_recon',
+                'created_by' => $custodian->id,
+                'created_at' => $createdDay.' 09:00:00',           // server: this week
+                'updated_at' => $createdDay.' 09:00:00',
             ]);
         }
         // Weekly created_at total = 11 × ₦18K = ₦198K. Daily (Friday) = ₦0.
@@ -280,15 +279,15 @@ class Sprint5ARegressionTest extends TestCase
     public function test_petty_cash_expense_rejects_future_date(): void
     {
         $custodian = $this->makeStaff();
-        $float     = $this->makePettyCashFloat($custodian);
+        $float = $this->makePettyCashFloat($custodian);
 
         $response = $this->actingAs($custodian)
             ->post(route('finance.petty-cash.expense'), [
-                'amount_naira'    => '100',
-                'description'     => 'Test',
-                'date'            => now()->addDay()->toDateString(), // tomorrow
+                'amount_naira' => '100',
+                'description' => 'Test',
+                'date' => now()->addDay()->toDateString(), // tomorrow
                 'account_code_id' => null,
-                'receipt'         => \Illuminate\Http\UploadedFile::fake()->create('r.pdf', 10, 'application/pdf'),
+                'receipt' => \Illuminate\Http\UploadedFile::fake()->create('r.pdf', 10, 'application/pdf'),
             ]);
 
         $response->assertSessionHasErrors('date');
@@ -301,18 +300,18 @@ class Sprint5ARegressionTest extends TestCase
      */
     public function test_invoice_download_requires_authentication(): void
     {
-        $admin   = $this->makeAdmin();
-        $cc      = $this->makeCostCentre();
-        $req     = $this->makeRequisition($cc, 10_000_000, 'matched');
+        $admin = $this->makeAdmin();
+        $cc = $this->makeCostCentre();
+        $req = $this->makeRequisition($cc, 10_000_000, 'matched');
         $invoice = Invoice::create([
             'requisition_id' => $req->id,
-            'vendor_id'      => $req->vendor_id,
+            'vendor_id' => $req->vendor_id,
             'invoice_number' => 'INV-5A-001',
-            'amount_kobo'    => 10_000_000,
-            'received_at'    => now()->toDateString(),
-            'file_path'      => 'matching/invoices/1/invoice.pdf',
-            'match_status'   => 'matched',
-            'created_by'     => $admin->id,
+            'amount_kobo' => 10_000_000,
+            'received_at' => now()->toDateString(),
+            'file_path' => 'matching/invoices/1/invoice.pdf',
+            'match_status' => 'matched',
+            'created_by' => $admin->id,
         ]);
 
         $response = $this->get(route('finance.document.invoice', $invoice->id));
@@ -328,19 +327,19 @@ class Sprint5ARegressionTest extends TestCase
         Storage::fake('finance');
         Storage::disk('finance')->put('matching/invoices/1/invoice.pdf', 'fake-content');
 
-        $admin    = $this->makeAdmin();
+        $admin = $this->makeAdmin();
         $attacker = $this->makeStaff();
-        $cc       = $this->makeCostCentre();
-        $req      = $this->makeRequisition($cc, 10_000_000, 'matched');
-        $invoice  = Invoice::create([
+        $cc = $this->makeCostCentre();
+        $req = $this->makeRequisition($cc, 10_000_000, 'matched');
+        $invoice = Invoice::create([
             'requisition_id' => $req->id,
-            'vendor_id'      => $req->vendor_id,
+            'vendor_id' => $req->vendor_id,
             'invoice_number' => 'INV-5A-002',
-            'amount_kobo'    => 10_000_000,
-            'received_at'    => now()->toDateString(),
-            'file_path'      => 'matching/invoices/1/invoice.pdf',
-            'match_status'   => 'matched',
-            'created_by'     => $admin->id,
+            'amount_kobo' => 10_000_000,
+            'received_at' => now()->toDateString(),
+            'file_path' => 'matching/invoices/1/invoice.pdf',
+            'match_status' => 'matched',
+            'created_by' => $admin->id,
         ]);
 
         $response = $this->actingAs($attacker)
@@ -357,19 +356,19 @@ class Sprint5ARegressionTest extends TestCase
         Storage::fake('finance');
         Storage::disk('finance')->put('matching/invoices/1/invoice.pdf', 'fake-pdf-content');
 
-        $admin   = $this->makeAdmin();
+        $admin = $this->makeAdmin();
         $finance = $this->makeFinanceUser();
-        $cc      = $this->makeCostCentre();
-        $req     = $this->makeRequisition($cc, 10_000_000, 'matched');
+        $cc = $this->makeCostCentre();
+        $req = $this->makeRequisition($cc, 10_000_000, 'matched');
         $invoice = Invoice::create([
             'requisition_id' => $req->id,
-            'vendor_id'      => $req->vendor_id,
+            'vendor_id' => $req->vendor_id,
             'invoice_number' => 'INV-5A-003',
-            'amount_kobo'    => 10_000_000,
-            'received_at'    => now()->toDateString(),
-            'file_path'      => 'matching/invoices/1/invoice.pdf',
-            'match_status'   => 'matched',
-            'created_by'     => $admin->id,
+            'amount_kobo' => 10_000_000,
+            'received_at' => now()->toDateString(),
+            'file_path' => 'matching/invoices/1/invoice.pdf',
+            'match_status' => 'matched',
+            'created_by' => $admin->id,
         ]);
 
         $response = $this->actingAs($finance)
@@ -387,13 +386,13 @@ class Sprint5ARegressionTest extends TestCase
         Storage::fake('finance');
         Storage::disk('finance')->put('close-reports/period-2026-4.pdf', 'fake-report');
 
-        $staff  = $this->makeStaff();
+        $staff = $this->makeStaff();
         $period = \App\Models\Finance\FinancialPeriod::create([
-            'year'              => 2026,
-            'month'             => 4,
-            'status'            => 'closed',
-            'opened_at'         => now()->subMonth()->startOfMonth(),
-            'closed_at'         => now()->subMonth()->endOfMonth(),
+            'year' => 2026,
+            'month' => 4,
+            'status' => 'closed',
+            'opened_at' => now()->subMonth()->startOfMonth(),
+            'closed_at' => now()->subMonth()->endOfMonth(),
             'close_report_path' => 'close-reports/period-2026-4.pdf',
         ]);
 
@@ -461,13 +460,13 @@ class Sprint5ARegressionTest extends TestCase
         // Use the observer directly with a fake insert failure via Log spy.
         Log::spy();
 
-        $admin  = $this->makeAdmin();
-        $cc     = $this->makeCostCentre();
+        $admin = $this->makeAdmin();
+        $cc = $this->makeCostCentre();
 
         // Inject a Requisition model and manually call the observer with a mock
         // that will cause the insert to fail (wrong column name).
-        $observer = new FinanceModelObserver();
-        $req      = $this->makeRequisition($cc, 10_000_000, 'draft');
+        $observer = new FinanceModelObserver;
+        $req = $this->makeRequisition($cc, 10_000_000, 'draft');
 
         // observer->created() is already called by Eloquent above.
         // Verify the requisition persisted despite any audit log issues.
@@ -483,12 +482,14 @@ class Sprint5ARegressionTest extends TestCase
 
         // Create a minimal fake model and force the observer's insert to fail
         // by calling log() with an anonymous model whose getKey() returns null.
-        $observer = new FinanceModelObserver();
+        $observer = new FinanceModelObserver;
 
         // The observer catches the exception internally — call it directly
         // with a model that will generate an invalid insert (null model_id).
-        $fakeModel = new class extends \Illuminate\Database\Eloquent\Model {
-            protected $table   = 'requisitions';
+        $fakeModel = new class extends \Illuminate\Database\Eloquent\Model
+        {
+            protected $table = 'requisitions';
+
             public $timestamps = false;
 
             public function getKey(): mixed
@@ -507,7 +508,7 @@ class Sprint5ARegressionTest extends TestCase
         try {
             $observer->created($fakeModel);
         } catch (\Throwable $e) {
-            $this->fail('Observer must not rethrow — exception escaped: ' . $e->getMessage());
+            $this->fail('Observer must not rethrow — exception escaped: '.$e->getMessage());
         }
 
         Log::shouldHaveReceived('error')

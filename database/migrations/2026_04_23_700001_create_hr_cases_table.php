@@ -12,13 +12,13 @@ return new class extends Migration
             $table->id();
             $table->string('case_number', 20)->unique(); // ER-2026-0001
             $table->string('type', 30)
-                  ->comment('helpdesk|grievance|whistleblower|disciplinary|investigation');
+                ->comment('helpdesk|grievance|whistleblower|disciplinary|investigation');
             $table->string('subject', 200);
             $table->text('description');
             $table->string('status', 30)->default('open')
-                  ->comment('open|under_review|investigating|pending_action|resolved|closed|dismissed');
+                ->comment('open|under_review|investigating|pending_action|resolved|closed|dismissed');
             $table->string('priority', 10)->default('normal')
-                  ->comment('low|normal|high|urgent');
+                ->comment('low|normal|high|urgent');
             $table->boolean('confidential')->default(false);
             // Null = anonymous submission (whistleblower)
             $table->foreignId('reported_by_id')->nullable()->constrained('users')->nullOnDelete();

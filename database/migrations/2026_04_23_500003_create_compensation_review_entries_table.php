@@ -15,12 +15,12 @@ return new class extends Migration
             $table->unsignedBigInteger('current_salary_kobo')->default(0);
             $table->unsignedBigInteger('proposed_salary_kobo')->nullable();
             $table->integer('merit_basis_points')->default(0)
-                  ->comment('Increase as basis points, e.g. 500 = 5.00%');
+                ->comment('Increase as basis points, e.g. 500 = 5.00%');
             $table->string('recommendation', 30)->nullable()
-                  ->comment('increase|no_change|decrease|promotion|offcycle');
+                ->comment('increase|no_change|decrease|promotion|offcycle');
             $table->text('rationale')->nullable();
             $table->string('status', 30)->default('pending')
-                  ->comment('pending|submitted|approved|rejected');
+                ->comment('pending|submitted|approved|rejected');
             $table->foreignId('reviewed_by_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('approved_by_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('approved_at')->nullable();

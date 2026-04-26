@@ -22,9 +22,9 @@ class PayrollDeduction extends Model
 
     protected $casts = [
         'monthly_amount_kobo' => 'integer',
-        'remaining_kobo'      => 'integer',
-        'start_date'          => 'date',
-        'end_date'            => 'date',
+        'remaining_kobo' => 'integer',
+        'start_date' => 'date',
+        'end_date' => 'date',
     ];
 
     public function employee(): BelongsTo

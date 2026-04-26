@@ -53,17 +53,17 @@ return [
         // In production, set FINANCE_DISK=s3 and configure AWS credentials
         // to swap to S3 without changing any upload/download code.
         'finance' => [
-            'driver'     => env('FINANCE_DISK', 'local'),
-            'root'       => storage_path('app/finance'),
+            'driver' => env('FINANCE_DISK', 'local'),
+            'root' => storage_path('app/finance'),
             'visibility' => 'private',
-            'throw'      => false,
-            'report'     => false,
+            'throw' => false,
+            'report' => false,
             // S3 passthrough keys (ignored when driver=local)
-            'key'        => env('AWS_ACCESS_KEY_ID'),
-            'secret'     => env('AWS_SECRET_ACCESS_KEY'),
-            'region'     => env('AWS_DEFAULT_REGION'),
-            'bucket'     => env('AWS_FINANCE_BUCKET', env('AWS_BUCKET')),
-            'url'        => env('AWS_URL'),
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_FINANCE_BUCKET', env('AWS_BUCKET')),
+            'url' => env('AWS_URL'),
         ],
 
         // HR document vault — private disk mirroring the finance disk pattern.
@@ -71,17 +71,17 @@ return [
         // HrDocumentDownloadController. Set HR_DISK=s3 in production to swap
         // to S3 without touching upload/download logic.
         'hr' => [
-            'driver'     => env('HR_DISK', 'local'),
-            'root'       => storage_path('app/hr'),
+            'driver' => env('HR_DISK', 'local'),
+            'root' => storage_path('app/hr'),
             'visibility' => 'private',
-            'throw'      => false,
-            'report'     => false,
+            'throw' => false,
+            'report' => false,
             // S3 passthrough keys (ignored when driver=local)
-            'key'        => env('AWS_ACCESS_KEY_ID'),
-            'secret'     => env('AWS_SECRET_ACCESS_KEY'),
-            'region'     => env('AWS_DEFAULT_REGION'),
-            'bucket'     => env('AWS_HR_BUCKET', env('AWS_BUCKET')),
-            'url'        => env('AWS_URL'),
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_HR_BUCKET', env('AWS_BUCKET')),
+            'url' => env('AWS_URL'),
         ],
 
         's3' => [

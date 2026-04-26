@@ -22,8 +22,8 @@ class LeaveBalance extends Model
     protected function casts(): array
     {
         return [
-            'entitled_days'     => 'decimal:1',
-            'used_days'         => 'decimal:1',
+            'entitled_days' => 'decimal:1',
+            'used_days' => 'decimal:1',
             'carried_over_days' => 'decimal:1',
         ];
     }

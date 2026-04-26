@@ -18,7 +18,7 @@ class PayGrade extends Model
     protected $casts = [
         'min_salary_kobo' => 'integer',
         'max_salary_kobo' => 'integer',
-        'is_active'       => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     public function employeeSalaries(): HasMany

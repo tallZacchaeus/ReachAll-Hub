@@ -18,8 +18,8 @@ class DocumentCategory extends Model
 
     protected $casts = [
         'requires_signature' => 'boolean',
-        'is_active'          => 'boolean',
-        'sort_order'         => 'integer',
+        'is_active' => 'boolean',
+        'sort_order' => 'integer',
     ];
 
     public function documents(): HasMany

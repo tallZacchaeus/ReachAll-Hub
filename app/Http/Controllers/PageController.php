@@ -9,7 +9,6 @@ use App\Models\Objective;
 use App\Models\PolicyAcknowledgement;
 use App\Models\Recognition;
 use App\Models\ResourceRequest;
-use App\Models\Task;
 use App\Models\User;
 use App\Models\UserChecklist;
 use Illuminate\Http\Request;
@@ -65,11 +64,11 @@ class PageController extends Controller
                 ->limit(3)
                 ->get()
                 ->map(fn ($r) => [
-                    'id'         => $r->id,
+                    'id' => $r->id,
                     'badge_type' => $r->badge_type,
-                    'message'    => $r->message,
+                    'message' => $r->message,
                     'created_at' => $r->created_at->diffForHumans(),
-                    'sender_name'     => $r->sender?->name ?? 'Someone',
+                    'sender_name' => $r->sender?->name ?? 'Someone',
                     'sender_initials' => $r->sender
                         ? strtoupper(
                             collect(explode(' ', trim($r->sender->name)))
@@ -89,13 +88,13 @@ class PageController extends Controller
         }
 
         $sharedData = [
-            'employeeStage'      => $employeeStage,
-            'userName'           => $user?->name ?? '',
-            'daysHere'           => $daysHere,
-            'bulletins'          => $bulletins,
-            'pendingAckCount'    => $pendingAckCount,
+            'employeeStage' => $employeeStage,
+            'userName' => $user?->name ?? '',
+            'daysHere' => $daysHere,
+            'bulletins' => $bulletins,
+            'pendingAckCount' => $pendingAckCount,
             'recentRecognitions' => $recentRecognitions,
-            'receivedThisMonth'  => $receivedThisMonth,
+            'receivedThisMonth' => $receivedThisMonth,
         ];
 
         // ── Stage-specific data ─────────────────────────────────────────────────
@@ -104,10 +103,10 @@ class PageController extends Controller
             $userChecklists = UserChecklist::where('user_id', $user->id)
                 ->with(['template.items', 'progressRecords'])
                 ->get();
-            $totalItems     = 0;
+            $totalItems = 0;
             $completedItems = 0;
             foreach ($userChecklists as $uc) {
-                $totalItems     += $uc->template?->items->count() ?? 0;
+                $totalItems += $uc->template?->items->count() ?? 0;
                 $completedItems += $uc->progressRecords->whereNotNull('completed_at')->count();
             }
 
@@ -118,9 +117,9 @@ class PageController extends Controller
                 ->count();
 
             $sharedData += [
-                'checklistCompletePct'      => $totalItems > 0 ? (int) round($completedItems / $totalItems * 100) : 0,
-                'checklistCompletedItems'   => $completedItems,
-                'checklistTotalItems'       => $totalItems,
+                'checklistCompletePct' => $totalItems > 0 ? (int) round($completedItems / $totalItems * 100) : 0,
+                'checklistCompletedItems' => $completedItems,
+                'checklistTotalItems' => $totalItems,
                 'mandatoryCoursesRemaining' => $mandatoryCoursesRemaining,
             ];
         }
@@ -132,18 +131,18 @@ class PageController extends Controller
                 ->get();
 
             $learningInProgress = $enrollments->where('status', 'in_progress')->count();
-            $learningCompleted  = $enrollments->where('status', 'completed')->count();
+            $learningCompleted = $enrollments->where('status', 'completed')->count();
 
             $enrolledCourses = $enrollments->take(4)->map(fn ($e) => [
-                'title'    => $e->course?->title ?? 'Untitled',
-                'type'     => ucfirst($e->course?->type ?? 'optional'),
+                'title' => $e->course?->title ?? 'Untitled',
+                'type' => ucfirst($e->course?->type ?? 'optional'),
                 'progress' => $e->progress ?? 0,
             ])->values()->all();
 
             $sharedData += [
                 'learningInProgress' => $learningInProgress,
-                'learningCompleted'  => $learningCompleted,
-                'enrolledCourses'    => $enrolledCourses,
+                'learningCompleted' => $learningCompleted,
+                'enrolledCourses' => $enrolledCourses,
             ];
         }
 
@@ -165,16 +164,16 @@ class PageController extends Controller
             $onTrackKRsCount = $activeOKRs->where('progress', '>=', 50)->count();
 
             $activeOKRList = $activeOKRs->take(3)->map(fn ($o) => [
-                'title'    => $o->title,
+                'title' => $o->title,
                 'progress' => $o->progress,
             ])->values()->all();
 
             $sharedData += [
-                'teamSize'        => $teamSize,
-                'pendingApprovals'=> $pendingApprovals,
+                'teamSize' => $teamSize,
+                'pendingApprovals' => $pendingApprovals,
                 'activeOKRsCount' => $activeOKRsCount,
                 'onTrackKRsCount' => $onTrackKRsCount,
-                'activeOKRList'   => $activeOKRList,
+                'activeOKRList' => $activeOKRList,
             ];
         }
 
@@ -234,7 +233,7 @@ class PageController extends Controller
     public function chat()
     {
         $user = auth()->user();
-        
+
         return Inertia::render('ChatPage', [
             'userRole' => $user->role,
             'userDepartment' => $user->department ?? 'Tech',

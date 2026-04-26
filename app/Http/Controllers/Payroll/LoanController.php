@@ -49,7 +49,7 @@ class LoanController extends Controller
             ->get(['id', 'name', 'employee_id']);
 
         return Inertia::render('Payroll/LoansPage', [
-            'loans'     => $loans,
+            'loans' => $loans,
             'employees' => $employees,
         ]);
     }
@@ -62,25 +62,25 @@ class LoanController extends Controller
         $this->authorise();
 
         $validated = $request->validate([
-            'user_id'                  => ['required', 'exists:users,id'],
-            'type'                     => ['required', 'in:loan,advance'],
-            'description'              => ['nullable', 'string', 'max:300'],
-            'principal_kobo'           => ['required', 'integer', 'min:1'],
-            'monthly_instalment_kobo'  => ['required', 'integer', 'min:1', 'lte:principal_kobo'],
-            'start_date'               => ['required', 'date'],
-            'notes'                    => ['nullable', 'string', 'max:2000'],
+            'user_id' => ['required', 'exists:users,id'],
+            'type' => ['required', 'in:loan,advance'],
+            'description' => ['nullable', 'string', 'max:300'],
+            'principal_kobo' => ['required', 'integer', 'min:1'],
+            'monthly_instalment_kobo' => ['required', 'integer', 'min:1', 'lte:principal_kobo'],
+            'start_date' => ['required', 'date'],
+            'notes' => ['nullable', 'string', 'max:2000'],
         ]);
 
         $loan = PayrollLoan::create([
-            'user_id'                  => $validated['user_id'],
-            'type'                     => $validated['type'],
-            'description'              => $validated['description'] ?? null,
-            'principal_kobo'           => $validated['principal_kobo'],
-            'remaining_kobo'           => $validated['principal_kobo'],
-            'monthly_instalment_kobo'  => $validated['monthly_instalment_kobo'],
-            'start_date'               => $validated['start_date'],
-            'status'                   => 'pending',
-            'notes'                    => $validated['notes'] ?? null,
+            'user_id' => $validated['user_id'],
+            'type' => $validated['type'],
+            'description' => $validated['description'] ?? null,
+            'principal_kobo' => $validated['principal_kobo'],
+            'remaining_kobo' => $validated['principal_kobo'],
+            'monthly_instalment_kobo' => $validated['monthly_instalment_kobo'],
+            'start_date' => $validated['start_date'],
+            'status' => 'pending',
+            'notes' => $validated['notes'] ?? null,
         ]);
 
         AuditLogger::record(
@@ -89,10 +89,10 @@ class LoanController extends Controller
             subjectType: PayrollLoan::class,
             subjectId: $loan->id,
             newData: [
-                'user_id'         => $loan->user_id,
-                'type'            => $loan->type,
-                'principal_kobo'  => $loan->principal_kobo,
-                'start_date'      => $loan->start_date->toDateString(),
+                'user_id' => $loan->user_id,
+                'type' => $loan->type,
+                'principal_kobo' => $loan->principal_kobo,
+                'start_date' => $loan->start_date->toDateString(),
             ],
             request: $request,
         );
@@ -112,9 +112,9 @@ class LoanController extends Controller
         }
 
         $payrollLoan->update([
-            'status'         => 'active',
+            'status' => 'active',
             'approved_by_id' => Auth::id(),
-            'approved_at'    => now(),
+            'approved_at' => now(),
         ]);
 
         AuditLogger::record(

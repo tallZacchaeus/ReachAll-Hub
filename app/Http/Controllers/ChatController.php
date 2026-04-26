@@ -44,15 +44,15 @@ class ChatController extends Controller
                 $latestMessage = $conversation->latestMessage;
 
                 return [
-                    'id'                => $conversation->id,
-                    'type'              => $conversation->type,
-                    'name'              => $conversation->name,
-                    'department'        => $conversation->department,
-                    'is_read_only'      => $conversation->is_read_only,
-                    'is_global'         => $conversation->is_global,
-                    'is_confidential'   => $conversation->is_confidential,
-                    'unread'            => $conversation->getUnreadCountForUser($user->id),
-                    'last_message'      => $latestMessage ? $this->buildConversationPreview($latestMessage) : 'No messages yet',
+                    'id' => $conversation->id,
+                    'type' => $conversation->type,
+                    'name' => $conversation->name,
+                    'department' => $conversation->department,
+                    'is_read_only' => $conversation->is_read_only,
+                    'is_global' => $conversation->is_global,
+                    'is_confidential' => $conversation->is_confidential,
+                    'unread' => $conversation->getUnreadCountForUser($user->id),
+                    'last_message' => $latestMessage ? $this->buildConversationPreview($latestMessage) : 'No messages yet',
                     'last_message_time' => $latestMessage ? $latestMessage->created_at->diffForHumans() : null,
                 ];
             });
@@ -145,9 +145,9 @@ class ChatController extends Controller
                 // Find or create a direct conversation between these two users
                 $conversation = $this->findOrCreateDirectConversation($user->id, $otherUser->id);
                 $latestMessage = $conversation->latestMessage;
-                
+
                 return [
-                    'id' => 'dm-' . $conversation->id,
+                    'id' => 'dm-'.$conversation->id,
                     'conversation_id' => $conversation->id,
                     'user_id' => $otherUser->id,
                     'name' => $otherUser->name,
@@ -167,23 +167,23 @@ class ChatController extends Controller
     public function createConversation(Request $request)
     {
         $request->validate([
-            'type'               => 'required|in:direct,group',
-            'name'               => 'required_if:type,group|string|max:255',
-            'department'         => 'nullable|string|max:255',
-            'participant_ids'    => 'required|array|min:1',
-            'participant_ids.*'  => 'exists:users,id',
-            'is_confidential'    => 'nullable|boolean',
+            'type' => 'required|in:direct,group',
+            'name' => 'required_if:type,group|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'participant_ids' => 'required|array|min:1',
+            'participant_ids.*' => 'exists:users,id',
+            'is_confidential' => 'nullable|boolean',
         ]);
 
-        $user    = $request->user();
+        $user = $request->user();
         $isAdmin = $this->isAdmin($user);
 
         $conversation = Conversation::create([
-            'type'            => $request->input('type'),
-            'name'            => $request->input('name'),
-            'department'      => $request->input('department'),
-            'is_read_only'    => false,
-            'is_global'       => false,
+            'type' => $request->input('type'),
+            'name' => $request->input('name'),
+            'department' => $request->input('department'),
+            'is_read_only' => false,
+            'is_global' => false,
             'is_confidential' => $isAdmin && $request->boolean('is_confidential'),
         ]);
 
@@ -209,7 +209,7 @@ class ChatController extends Controller
             })
             ->first();
 
-        if (!$conversation) {
+        if (! $conversation) {
             // Create new direct conversation
             $conversation = Conversation::create([
                 'type' => 'direct',
@@ -222,6 +222,7 @@ class ChatController extends Controller
         }
 
         $conversation->load('latestMessage');
+
         return $conversation;
     }
 
@@ -229,13 +230,13 @@ class ChatController extends Controller
     {
         $words = explode(' ', $name);
         $initials = '';
-        
+
         foreach ($words as $word) {
-            if (!empty($word)) {
+            if (! empty($word)) {
                 $initials .= strtoupper($word[0]);
             }
         }
-        
+
         return substr($initials, 0, 2);
     }
 
@@ -375,12 +376,12 @@ class ChatController extends Controller
         }
 
         $messages = Message::where('conversation_id', $conversationId)
-            ->where('content', 'like', '%' . $request->query . '%')
+            ->where('content', 'like', '%'.$request->query.'%')
             ->with('user')
             ->orderBy('created_at', 'desc')
             ->limit(50)
             ->get()
-            ->map(function ($message) use ($user) {
+            ->map(function ($message) {
                 return [
                     'id' => $message->id,
                     'sender' => $message->user->name,
@@ -419,7 +420,7 @@ class ChatController extends Controller
         $originalName = $file->getClientOriginalName();
         $extension = $file->getClientOriginalExtension();
         $size = $file->getSize();
-        
+
         // Determine file type
         $mimeType = $file->getMimeType();
         $fileType = 'document';

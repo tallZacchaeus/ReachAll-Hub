@@ -20,17 +20,17 @@ class ApprovalReminder extends Notification
 
     public function toDatabase(object $notifiable): array
     {
-        $req    = $this->step->requisition;
+        $req = $this->step->requisition;
         $amount = MoneyHelper::format($req->amount_kobo);
 
         return [
-            'type'           => 'approval_reminder',
-            'title'          => "Reminder: Pending Approval {$req->request_id}",
-            'body'           => "You have a pending approval request ({$amount}) — SLA deadline is in 24 hours.",
-            'request_id'     => $req->request_id,
+            'type' => 'approval_reminder',
+            'title' => "Reminder: Pending Approval {$req->request_id}",
+            'body' => "You have a pending approval request ({$amount}) — SLA deadline is in 24 hours.",
+            'request_id' => $req->request_id,
             'requisition_id' => $req->id,
-            'step_id'        => $this->step->id,
-            'url'            => "/finance/approvals/{$req->id}",
+            'step_id' => $this->step->id,
+            'url' => "/finance/approvals/{$req->id}",
         ];
     }
 }

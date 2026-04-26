@@ -42,8 +42,8 @@ class TaxCalculator
         $totalKobo = $amountKobo + $vatKobo - $whtKobo;
 
         return [
-            'vat_kobo'   => $vatKobo,
-            'wht_kobo'   => $whtKobo,
+            'vat_kobo' => $vatKobo,
+            'wht_kobo' => $whtKobo,
             'total_kobo' => $totalKobo,
         ];
     }
@@ -58,16 +58,16 @@ class TaxCalculator
         $result = self::calculate($amountKobo, $accountCode);
 
         return [
-            'gross'          => MoneyHelper::format($amountKobo),
-            'vat'            => MoneyHelper::format($result['vat_kobo']),
-            'wht'            => MoneyHelper::format($result['wht_kobo']),
-            'total'          => MoneyHelper::format($result['total_kobo']),
-            'vat_kobo'       => $result['vat_kobo'],
-            'wht_kobo'       => $result['wht_kobo'],
-            'total_kobo'     => $result['total_kobo'],
+            'gross' => MoneyHelper::format($amountKobo),
+            'vat' => MoneyHelper::format($result['vat_kobo']),
+            'wht' => MoneyHelper::format($result['wht_kobo']),
+            'total' => MoneyHelper::format($result['total_kobo']),
+            'vat_kobo' => $result['vat_kobo'],
+            'wht_kobo' => $result['wht_kobo'],
+            'total_kobo' => $result['total_kobo'],
             'vat_applicable' => $accountCode->tax_vat_applicable,
             'wht_applicable' => $accountCode->tax_wht_applicable,
-            'wht_rate'       => $accountCode->wht_rate,
+            'wht_rate' => $accountCode->wht_rate,
         ];
     }
 }

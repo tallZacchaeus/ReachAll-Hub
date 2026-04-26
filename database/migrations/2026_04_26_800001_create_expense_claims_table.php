@@ -11,8 +11,8 @@ return new class extends Migration
         Schema::create('expense_claims', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')
-                  ->constrained('users')
-                  ->cascadeOnDelete();
+                ->constrained('users')
+                ->cascadeOnDelete();
 
             $table->string('title', 200);
             $table->text('description')->nullable();
@@ -38,21 +38,21 @@ return new class extends Migration
             $table->date('expense_date');
 
             $table->enum('status', ['draft', 'submitted', 'approved', 'rejected', 'paid'])
-                  ->default('draft');
+                ->default('draft');
 
             $table->timestamp('submitted_at')->nullable();
 
             $table->foreignId('reviewed_by_id')
-                  ->nullable()
-                  ->constrained('users')
-                  ->nullOnDelete();
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
             $table->timestamp('reviewed_at')->nullable();
             $table->text('review_notes')->nullable();
 
             $table->foreignId('finance_paid_by_id')
-                  ->nullable()
-                  ->constrained('users')
-                  ->nullOnDelete();
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
             $table->timestamp('finance_paid_at')->nullable();
 
             $table->timestamps();

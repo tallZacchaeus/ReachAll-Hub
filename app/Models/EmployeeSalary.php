@@ -21,13 +21,13 @@ class EmployeeSalary extends Model
     ];
 
     protected $casts = [
-        'basic_kobo'           => 'integer',
-        'housing_kobo'         => 'integer',
-        'transport_kobo'       => 'integer',
-        'other_allowances_kobo'=> 'integer',
-        'nhf_enrolled'         => 'boolean',
-        'effective_date'       => 'date',
-        'end_date'             => 'date',
+        'basic_kobo' => 'integer',
+        'housing_kobo' => 'integer',
+        'transport_kobo' => 'integer',
+        'other_allowances_kobo' => 'integer',
+        'nhf_enrolled' => 'boolean',
+        'effective_date' => 'date',
+        'end_date' => 'date',
     ];
 
     public function employee(): BelongsTo

@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('hr_case_id')->constrained('hr_cases')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('role', 20)
-                  ->comment('complainant|respondent|witness|investigator');
+                ->comment('complainant|respondent|witness|investigator');
             $table->timestamps();
 
             $table->unique(['hr_case_id', 'user_id', 'role']);

@@ -39,14 +39,15 @@ class MyComplianceController extends Controller
             ->get()
             ->map(function (CompliancePolicy $policy) use ($user) {
                 $policy->acknowledged = $policy->isAcknowledgedBy($user);
+
                 return $policy;
             });
 
         return Inertia::render('Compliance/MyCompliancePage', [
-            'docs'        => $docs,
+            'docs' => $docs,
             'assignments' => $assignments,
-            'dsrs'        => $dsrs,
-            'policies'    => $policies,
+            'dsrs' => $dsrs,
+            'policies' => $policies,
         ]);
     }
 
@@ -55,12 +56,12 @@ class MyComplianceController extends Controller
         abort_unless($request->user()->hasPermission('compliance.self'), 403);
 
         $data = $request->validate([
-            'type'             => ['required', 'in:visa,work_permit,right_to_work,passport,national_id,residence_permit'],
-            'document_number'  => ['nullable', 'string', 'max:100'],
+            'type' => ['required', 'in:visa,work_permit,right_to_work,passport,national_id,residence_permit'],
+            'document_number' => ['nullable', 'string', 'max:100'],
             'country_of_issue' => ['nullable', 'string', 'max:100'],
-            'issued_at'        => ['nullable', 'date'],
-            'expires_at'       => ['nullable', 'date', 'after_or_equal:issued_at'],
-            'file'             => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+            'issued_at' => ['nullable', 'date'],
+            'expires_at' => ['nullable', 'date', 'after_or_equal:issued_at'],
+            'file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
         ]);
 
         $filePath = null;
@@ -69,15 +70,15 @@ class MyComplianceController extends Controller
         }
 
         ComplianceDocument::create([
-            'user_id'          => $request->user()->id,
-            'type'             => $data['type'],
-            'document_number'  => $data['document_number'] ?? null,
+            'user_id' => $request->user()->id,
+            'type' => $data['type'],
+            'document_number' => $data['document_number'] ?? null,
             'country_of_issue' => $data['country_of_issue'] ?? null,
-            'issued_at'        => $data['issued_at'] ?? null,
-            'expires_at'       => $data['expires_at'] ?? null,
-            'file_path'        => $filePath,
-            'file_disk'        => 'hr',
-            'status'           => 'pending',
+            'issued_at' => $data['issued_at'] ?? null,
+            'expires_at' => $data['expires_at'] ?? null,
+            'file_path' => $filePath,
+            'file_disk' => 'hr',
+            'status' => 'pending',
         ]);
 
         return back()->with('success', 'Document submitted for review.');
@@ -88,13 +89,13 @@ class MyComplianceController extends Controller
         abort_unless($request->user()->hasPermission('compliance.self'), 403);
 
         $data = $request->validate([
-            'type'        => ['required', 'in:access,rectification,erasure,restriction,portability,objection'],
+            'type' => ['required', 'in:access,rectification,erasure,restriction,portability,objection'],
             'description' => ['required', 'string', 'max:2000'],
         ]);
 
         DataSubjectRequest::create([
-            'user_id'     => $request->user()->id,
-            'type'        => $data['type'],
+            'user_id' => $request->user()->id,
+            'type' => $data['type'],
             'description' => $data['description'],
         ]);
 

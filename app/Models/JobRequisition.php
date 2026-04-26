@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class JobRequisition extends Model
 {
@@ -25,7 +24,7 @@ class JobRequisition extends Model
 
     protected $casts = [
         'approved_at' => 'datetime',
-        'headcount'   => 'integer',
+        'headcount' => 'integer',
     ];
 
     public function requestedBy(): BelongsTo

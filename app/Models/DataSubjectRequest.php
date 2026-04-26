@@ -15,9 +15,9 @@ class DataSubjectRequest extends Model
     ];
 
     protected $casts = [
-        'due_at'           => 'datetime',
-        'acknowledged_at'  => 'datetime',
-        'completed_at'     => 'datetime',
+        'due_at' => 'datetime',
+        'acknowledged_at' => 'datetime',
+        'completed_at' => 'datetime',
     ];
 
     protected static function boot(): void

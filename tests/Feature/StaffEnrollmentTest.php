@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Notifications\Auth\VerifyEmailWithCode;
 use App\Models\User;
+use App\Notifications\Auth\VerifyEmailWithCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;

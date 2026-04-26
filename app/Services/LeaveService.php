@@ -24,7 +24,7 @@ class LeaveService
 
         $workingDays = 0;
         $current = $start->copy()->startOfDay();
-        $finish  = $end->copy()->startOfDay();
+        $finish = $end->copy()->startOfDay();
 
         while ($current->lte($finish)) {
             // Skip weekends
@@ -48,13 +48,13 @@ class LeaveService
     {
         return LeaveBalance::firstOrCreate(
             [
-                'user_id'       => $user->id,
+                'user_id' => $user->id,
                 'leave_type_id' => $leaveType->id,
-                'year'          => $year,
+                'year' => $year,
             ],
             [
-                'entitled_days'     => $leaveType->days_per_year,
-                'used_days'         => 0,
+                'entitled_days' => $leaveType->days_per_year,
+                'used_days' => 0,
                 'carried_over_days' => 0,
             ]
         );

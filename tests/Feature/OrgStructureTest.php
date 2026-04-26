@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Department;
-use App\Models\JobLevel;
 use App\Models\JobPosition;
 use App\Models\OfficeLocation;
 use App\Models\User;
@@ -91,8 +90,8 @@ class OrgStructureTest extends TestCase
     {
         $this->actingAs(User::factory()->create(['role' => 'hr']))
             ->post('/admin/org/departments', [
-                'code'      => 'ENGR',
-                'name'      => 'Engineering',
+                'code' => 'ENGR',
+                'name' => 'Engineering',
                 'is_active' => true,
             ])
             ->assertRedirect();
@@ -152,8 +151,8 @@ class OrgStructureTest extends TestCase
 
         $this->actingAs(User::factory()->create(['role' => 'hr']))
             ->put("/admin/org/departments/{$dept->id}", [
-                'code'                 => 'SELF',
-                'name'                 => 'Self',
+                'code' => 'SELF',
+                'name' => 'Self',
                 'parent_department_id' => $dept->id,
             ])
             ->assertSessionHasErrors('parent_department_id');
@@ -165,8 +164,8 @@ class OrgStructureTest extends TestCase
     {
         $this->actingAs(User::factory()->create(['role' => 'hr']))
             ->post('/admin/org/positions', [
-                'code'      => 'SWE_SEN',
-                'title'     => 'Senior Software Engineer',
+                'code' => 'SWE_SEN',
+                'title' => 'Senior Software Engineer',
                 'is_active' => true,
             ])
             ->assertRedirect();
@@ -190,10 +189,10 @@ class OrgStructureTest extends TestCase
     {
         $this->actingAs(User::factory()->create(['role' => 'hr']))
             ->post('/admin/org/locations', [
-                'code'    => 'IBADAN',
-                'name'    => 'Ibadan Office',
-                'city'    => 'Ibadan',
-                'state'   => 'Oyo',
+                'code' => 'IBADAN',
+                'name' => 'Ibadan Office',
+                'city' => 'Ibadan',
+                'state' => 'Oyo',
                 'country' => 'Nigeria',
             ])
             ->assertRedirect();
@@ -216,15 +215,14 @@ class OrgStructureTest extends TestCase
     public function test_org_chart_includes_reports_to_data(): void
     {
         $manager = User::factory()->create(['role' => 'management', 'status' => 'active', 'name' => 'Alpha Manager']);
-        $report  = User::factory()->create(['role' => 'staff', 'status' => 'active', 'reports_to_id' => $manager->id]);
+        $report = User::factory()->create(['role' => 'staff', 'status' => 'active', 'reports_to_id' => $manager->id]);
 
         $this->actingAs(User::factory()->create(['role' => 'superadmin']))
             ->get('/admin/org/chart')
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('Admin/OrgChartPage')
-                ->where('employees', fn ($employees) =>
-                    collect($employees)->contains('id', $report->id) &&
+                ->where('employees', fn ($employees) => collect($employees)->contains('id', $report->id) &&
                     collect($employees)->contains('id', $manager->id)
                 )
             );
@@ -243,7 +241,7 @@ class OrgStructureTest extends TestCase
     public function test_user_reports_to_manager(): void
     {
         $manager = User::factory()->create(['role' => 'management']);
-        $report  = User::factory()->create(['role' => 'staff', 'reports_to_id' => $manager->id]);
+        $report = User::factory()->create(['role' => 'staff', 'reports_to_id' => $manager->id]);
 
         $this->assertEquals($manager->id, $report->fresh()->manager->id);
         $this->assertTrue($manager->directReports()->where('id', $report->id)->exists());

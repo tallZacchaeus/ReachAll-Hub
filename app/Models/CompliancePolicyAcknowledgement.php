@@ -13,7 +13,7 @@ class CompliancePolicyAcknowledgement extends Model
 
     protected $casts = [
         'acknowledged_at' => 'datetime',
-        'reminded_at'     => 'datetime',
+        'reminded_at' => 'datetime',
     ];
 
     public function policy(): BelongsTo

@@ -22,8 +22,8 @@ class LedgerEntry extends Model
 
     protected $casts = [
         'amount_kobo' => 'integer',
-        'wht_kobo'    => 'integer',
-        'posted_at'   => 'datetime',
+        'wht_kobo' => 'integer',
+        'posted_at' => 'datetime',
     ];
 
     public function requisition(): BelongsTo

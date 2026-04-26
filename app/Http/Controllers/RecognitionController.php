@@ -52,8 +52,8 @@ class RecognitionController extends Controller
         $user = $request->user();
 
         $validated = $request->validate([
-            'to_user_id' => ['required', 'integer', 'exists:users,id', 'different:' . ($user?->id ?? 0)],
-            'message'    => ['required', 'string', 'max:500'],
+            'to_user_id' => ['required', 'integer', 'exists:users,id', 'different:'.($user?->id ?? 0)],
+            'message' => ['required', 'string', 'max:500'],
             'badge_type' => ['required', 'in:shoutout,teamwork,innovation,leadership,above_and_beyond'],
         ]);
 
@@ -63,10 +63,10 @@ class RecognitionController extends Controller
 
         Recognition::create([
             'from_user_id' => $user->id,
-            'to_user_id'   => $validated['to_user_id'],
-            'message'      => $validated['message'],
-            'badge_type'   => $validated['badge_type'],
-            'is_public'    => true,
+            'to_user_id' => $validated['to_user_id'],
+            'message' => $validated['message'],
+            'badge_type' => $validated['badge_type'],
+            'is_public' => true,
         ]);
 
         return back()->with('success', 'Recognition sent!');
@@ -81,14 +81,14 @@ class RecognitionController extends Controller
             ->latest()
             ->get()
             ->map(fn ($r) => [
-                'id'         => $r->id,
+                'id' => $r->id,
                 'badge_type' => $r->badge_type,
-                'message'    => $r->message,
+                'message' => $r->message,
                 'created_at' => $r->created_at->toDateString(),
-                'sender'     => [
-                    'name'       => $r->sender?->name ?? 'Unknown',
+                'sender' => [
+                    'name' => $r->sender?->name ?? 'Unknown',
                     'department' => $r->sender?->department,
-                    'initials'   => $this->initials($r->sender?->name ?? '?'),
+                    'initials' => $this->initials($r->sender?->name ?? '?'),
                 ],
             ]);
 
@@ -97,20 +97,20 @@ class RecognitionController extends Controller
             ->latest()
             ->get()
             ->map(fn ($r) => [
-                'id'         => $r->id,
+                'id' => $r->id,
                 'badge_type' => $r->badge_type,
-                'message'    => $r->message,
+                'message' => $r->message,
                 'created_at' => $r->created_at->toDateString(),
-                'receiver'   => [
-                    'name'       => $r->receiver?->name ?? 'Unknown',
+                'receiver' => [
+                    'name' => $r->receiver?->name ?? 'Unknown',
                     'department' => $r->receiver?->department,
-                    'initials'   => $this->initials($r->receiver?->name ?? '?'),
+                    'initials' => $this->initials($r->receiver?->name ?? '?'),
                 ],
             ]);
 
         return Inertia::render('RecognitionMinePage', [
             'received' => $received,
-            'sent'     => $sent,
+            'sent' => $sent,
         ]);
     }
 
@@ -120,22 +120,22 @@ class RecognitionController extends Controller
     private function transform(Recognition $r): array
     {
         return [
-            'id'         => $r->id,
+            'id' => $r->id,
             'badge_type' => $r->badge_type,
-            'message'    => $r->message,
-            'is_public'  => $r->is_public,
+            'message' => $r->message,
+            'is_public' => $r->is_public,
             'created_at' => $r->created_at->diffForHumans(),
             'sender' => [
-                'name'       => $r->sender?->name ?? 'Unknown',
+                'name' => $r->sender?->name ?? 'Unknown',
                 'department' => $r->sender?->department,
-                'position'   => $r->sender?->position,
-                'initials'   => $this->initials($r->sender?->name ?? '?'),
+                'position' => $r->sender?->position,
+                'initials' => $this->initials($r->sender?->name ?? '?'),
             ],
             'receiver' => [
-                'name'       => $r->receiver?->name ?? 'Unknown',
+                'name' => $r->receiver?->name ?? 'Unknown',
                 'department' => $r->receiver?->department,
-                'position'   => $r->receiver?->position,
-                'initials'   => $this->initials($r->receiver?->name ?? '?'),
+                'position' => $r->receiver?->position,
+                'initials' => $this->initials($r->receiver?->name ?? '?'),
             ],
         ];
     }
@@ -144,7 +144,7 @@ class RecognitionController extends Controller
     {
         $parts = explode(' ', trim($name));
         if (count($parts) >= 2) {
-            return strtoupper(substr($parts[0], 0, 1) . substr(end($parts), 0, 1));
+            return strtoupper(substr($parts[0], 0, 1).substr(end($parts), 0, 1));
         }
 
         return strtoupper(substr($name, 0, 2));

@@ -28,12 +28,12 @@ class ExpenseClaim extends Model
     ];
 
     protected $casts = [
-        'amount'           => 'decimal:2',
-        'exchange_rate'    => 'decimal:6',
-        'expense_date'     => 'date',
-        'submitted_at'     => 'datetime',
-        'reviewed_at'      => 'datetime',
-        'finance_paid_at'  => 'datetime',
+        'amount' => 'decimal:2',
+        'exchange_rate' => 'decimal:6',
+        'expense_date' => 'date',
+        'submitted_at' => 'datetime',
+        'reviewed_at' => 'datetime',
+        'finance_paid_at' => 'datetime',
     ];
 
     // ── Relationships ────────────────────────────────────────────────────────

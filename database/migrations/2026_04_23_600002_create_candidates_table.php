@@ -14,14 +14,14 @@ return new class extends Migration
             $table->string('email', 200)->unique();
             $table->string('phone', 50)->nullable();
             $table->string('source', 80)->nullable()
-                  ->comment('linkedin|referral|job_board|direct|agency|other');
+                ->comment('linkedin|referral|job_board|direct|agency|other');
             $table->string('current_company', 200)->nullable();
             $table->string('current_title', 200)->nullable();
             $table->string('linkedin_url', 500)->nullable();
             $table->string('resume_path')->nullable();
             $table->string('resume_disk')->nullable()->default('hr');
             $table->string('status', 30)->default('active')
-                  ->comment('active|inactive|hired|blacklisted');
+                ->comment('active|inactive|hired|blacklisted');
             $table->text('notes')->nullable();
             $table->foreignId('added_by_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();

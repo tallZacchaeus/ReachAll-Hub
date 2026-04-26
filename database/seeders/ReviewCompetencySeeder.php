@@ -24,10 +24,10 @@ class ReviewCompetencySeeder extends Seeder
             ReviewCompetency::firstOrCreate(
                 ['slug' => $slug],
                 [
-                    'name'        => $name,
+                    'name' => $name,
                     'description' => $description,
-                    'is_active'   => true,
-                    'sort_order'  => $sort,
+                    'is_active' => true,
+                    'sort_order' => $sort,
                 ],
             );
         }

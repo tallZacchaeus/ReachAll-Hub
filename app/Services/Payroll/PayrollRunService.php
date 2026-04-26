@@ -22,12 +22,12 @@ class PayrollRunService
     public function createRun(
         Carbon $periodStart,
         Carbon $periodEnd,
-        int    $createdById,
-        bool   $isOffCycle = false,
+        int $createdById,
+        bool $isOffCycle = false,
         ?string $notes = null
     ): PayrollRun {
         $label = $isOffCycle
-            ? $periodStart->format('Y-m') . '-OC' . now()->format('His')
+            ? $periodStart->format('Y-m').'-OC'.now()->format('His')
             : $periodStart->format('Y-m');
 
         if (PayrollRun::where('period_label', $label)->exists()) {
@@ -36,13 +36,13 @@ class PayrollRunService
 
         return DB::transaction(function () use ($periodStart, $periodEnd, $createdById, $isOffCycle, $notes, $label) {
             $run = PayrollRun::create([
-                'period_label'  => $label,
-                'period_start'  => $periodStart->toDateString(),
-                'period_end'    => $periodEnd->toDateString(),
-                'status'        => 'draft',
-                'is_off_cycle'  => $isOffCycle,
+                'period_label' => $label,
+                'period_start' => $periodStart->toDateString(),
+                'period_end' => $periodEnd->toDateString(),
+                'status' => 'draft',
+                'is_off_cycle' => $isOffCycle,
                 'created_by_id' => $createdById,
-                'notes'         => $notes,
+                'notes' => $notes,
             ]);
 
             $this->processEntries($run, $periodStart);
@@ -76,9 +76,9 @@ class PayrollRunService
         }
 
         $run->update([
-            'status'         => 'approved',
+            'status' => 'approved',
             'approved_by_id' => $approvedById,
-            'approved_at'    => now(),
+            'approved_at' => now(),
         ]);
     }
 
@@ -120,8 +120,7 @@ class PayrollRunService
 
         $salaries = EmployeeSalary::whereIn('user_id', $employeeIds)
             ->where('effective_date', '<=', $asOf)
-            ->where(fn ($q) =>
-                $q->whereNull('end_date')->orWhere('end_date', '>=', $asOf)
+            ->where(fn ($q) => $q->whereNull('end_date')->orWhere('end_date', '>=', $asOf)
             )
             ->orderBy('user_id')
             ->orderByDesc('effective_date')
@@ -145,14 +144,14 @@ class PayrollRunService
             ->groupBy('user_id');
 
         $totals = [
-            'total_gross_kobo'            => 0,
-            'total_paye_kobo'             => 0,
+            'total_gross_kobo' => 0,
+            'total_paye_kobo' => 0,
             'total_pension_employee_kobo' => 0,
             'total_pension_employer_kobo' => 0,
-            'total_nhf_kobo'              => 0,
-            'total_nsitf_kobo'            => 0,
-            'total_net_kobo'              => 0,
-            'employee_count'              => 0,
+            'total_nhf_kobo' => 0,
+            'total_nsitf_kobo' => 0,
+            'total_net_kobo' => 0,
+            'employee_count' => 0,
         ];
 
         foreach ($employees as $employee) {
@@ -175,18 +174,18 @@ class PayrollRunService
             $computed = PayrollCalculator::compute($salary, $deductionTotal);
 
             PayrollEntry::create(array_merge($computed, [
-                'payroll_run_id'     => $run->id,
-                'user_id'            => $employee->id,
+                'payroll_run_id' => $run->id,
+                'user_id' => $employee->id,
                 'employee_salary_id' => $salary->id,
             ]));
 
-            $totals['total_gross_kobo']            += $computed['gross_kobo'];
-            $totals['total_paye_kobo']             += $computed['paye_kobo'];
+            $totals['total_gross_kobo'] += $computed['gross_kobo'];
+            $totals['total_paye_kobo'] += $computed['paye_kobo'];
             $totals['total_pension_employee_kobo'] += $computed['pension_employee_kobo'];
             $totals['total_pension_employer_kobo'] += $computed['pension_employer_kobo'];
-            $totals['total_nhf_kobo']              += $computed['nhf_kobo'];
-            $totals['total_nsitf_kobo']            += $computed['nsitf_kobo'];
-            $totals['total_net_kobo']              += $computed['net_kobo'];
+            $totals['total_nhf_kobo'] += $computed['nhf_kobo'];
+            $totals['total_nsitf_kobo'] += $computed['nsitf_kobo'];
+            $totals['total_net_kobo'] += $computed['net_kobo'];
             $totals['employee_count']++;
         }
 
@@ -206,12 +205,12 @@ class PayrollRunService
             ->get();
 
         foreach ($activeLoans as $loan) {
-            $instalment   = min($loan->monthly_instalment_kobo, $loan->remaining_kobo);
+            $instalment = min($loan->monthly_instalment_kobo, $loan->remaining_kobo);
             $newRemaining = $loan->remaining_kobo - $instalment;
 
             $loan->update([
                 'remaining_kobo' => $newRemaining,
-                'status'         => $newRemaining <= 0 ? 'completed' : 'active',
+                'status' => $newRemaining <= 0 ? 'completed' : 'active',
             ]);
         }
     }
@@ -231,13 +230,13 @@ class PayrollRunService
                 break;
             }
 
-            $applied         = min($deduction->instalment(), $remaining);
-            $newBalance      = $deduction->remaining_kobo - $applied;
-            $remaining      -= $applied;
+            $applied = min($deduction->instalment(), $remaining);
+            $newBalance = $deduction->remaining_kobo - $applied;
+            $remaining -= $applied;
 
             $deduction->update([
                 'remaining_kobo' => $newBalance,
-                'status'         => $newBalance <= 0 ? 'completed' : 'active',
+                'status' => $newBalance <= 0 ? 'completed' : 'active',
             ]);
         }
     }

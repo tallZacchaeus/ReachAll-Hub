@@ -19,12 +19,13 @@ class SendPolicyAcknowledgementReminders extends Command
         // Load every active policy version that belongs to an active policy.
         $versions = CompliancePolicyVersion::whereHas('policy', function ($q) {
             $q->where('is_active', true)
-              ->whereNotNull('current_version')
-              ->whereColumn('current_version', 'compliance_policy_versions.version');
+                ->whereNotNull('current_version')
+                ->whereColumn('current_version', 'compliance_policy_versions.version');
         })->with('policy')->get();
 
         if ($versions->isEmpty()) {
             $this->info('No active policy versions found. Nothing to remind.');
+
             return self::SUCCESS;
         }
 
@@ -32,8 +33,8 @@ class SendPolicyAcknowledgementReminders extends Command
         $users = User::where('status', 'active')->get(['id']);
 
         $reminderThreshold = now()->subDays(3);
-        $totalReminded     = 0;
-        $policiesReminded  = 0;
+        $totalReminded = 0;
+        $policiesReminded = 0;
 
         foreach ($versions as $version) {
             $remindedForVersion = 0;
@@ -60,11 +61,11 @@ class SendPolicyAcknowledgementReminders extends Command
                 } else {
                     // Insert a placeholder record (acknowledged_at = null) to track reminder state.
                     CompliancePolicyAcknowledgement::create([
-                        'policy_id'         => $version->policy_id,
+                        'policy_id' => $version->policy_id,
                         'policy_version_id' => $version->id,
-                        'user_id'           => $user->id,
-                        'acknowledged_at'   => null,
-                        'reminded_at'       => now(),
+                        'user_id' => $user->id,
+                        'acknowledged_at' => null,
+                        'reminded_at' => now(),
                     ]);
                 }
 
@@ -79,7 +80,7 @@ class SendPolicyAcknowledgementReminders extends Command
 
         Log::info('Policy acknowledgement reminders processed.', [
             'policies_with_reminders' => $policiesReminded,
-            'total_reminders_sent'    => $totalReminded,
+            'total_reminders_sent' => $totalReminded,
         ]);
 
         $this->info("Sent reminders for {$policiesReminded} policies to {$totalReminded} employees.");

@@ -10,7 +10,6 @@ use App\Models\EmployeeDependent;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Carbon;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -39,29 +38,30 @@ class BenefitsTest extends TestCase
     private function makePlan(array $overrides = []): BenefitPlan
     {
         return BenefitPlan::create(array_merge([
-            'type'                        => 'hmo',
-            'name'                        => 'Test HMO',
-            'provider'                    => 'Test Provider',
-            'employee_contribution_type'  => 'none',
+            'type' => 'hmo',
+            'name' => 'Test HMO',
+            'provider' => 'Test Provider',
+            'employee_contribution_type' => 'none',
             'employee_contribution_value' => 0,
-            'employer_contribution_type'  => 'fixed',
+            'employer_contribution_type' => 'fixed',
             'employer_contribution_value' => 1_500_000, // ₦15,000 in kobo
-            'is_waivable'                 => true,
-            'is_active'                   => true,
-            'sort_order'                  => 0,
+            'is_waivable' => true,
+            'is_active' => true,
+            'sort_order' => 0,
         ], $overrides));
     }
 
     private function makeWindow(array $overrides = []): BenefitEnrollmentWindow
     {
         $hr = $this->hrUser();
+
         return BenefitEnrollmentWindow::create(array_merge([
-            'name'           => 'Test Window',
-            'open_date'      => now()->subDay()->toDateString(),
-            'close_date'     => now()->addDays(7)->toDateString(),
+            'name' => 'Test Window',
+            'open_date' => now()->subDay()->toDateString(),
+            'close_date' => now()->addDays(7)->toDateString(),
             'effective_date' => now()->addMonth()->toDateString(),
-            'status'         => 'open',
-            'created_by_id'  => $hr->id,
+            'status' => 'open',
+            'created_by_id' => $hr->id,
         ], $overrides));
     }
 
@@ -109,41 +109,41 @@ class BenefitsTest extends TestCase
 
         $this->actingAs($hr)
             ->post('/benefits/plans', [
-                'type'                        => 'hmo',
-                'name'                        => 'Staff HMO Plan',
-                'provider'                    => 'ABC Health',
-                'employee_contribution_type'  => 'none',
+                'type' => 'hmo',
+                'name' => 'Staff HMO Plan',
+                'provider' => 'ABC Health',
+                'employee_contribution_type' => 'none',
                 'employee_contribution_value' => 0,
-                'employer_contribution_type'  => 'fixed',
+                'employer_contribution_type' => 'fixed',
                 'employer_contribution_value' => 2_000_000,
-                'is_waivable'                 => true,
-                'is_active'                   => true,
-                'sort_order'                  => 1,
+                'is_waivable' => true,
+                'is_active' => true,
+                'sort_order' => 1,
             ])
             ->assertRedirect();
 
         $this->assertDatabaseHas('benefit_plans', [
-            'name'     => 'Staff HMO Plan',
+            'name' => 'Staff HMO Plan',
             'provider' => 'ABC Health',
         ]);
     }
 
     public function test_hr_can_update_benefit_plan(): void
     {
-        $hr   = $this->hrUser();
+        $hr = $this->hrUser();
         $plan = $this->makePlan();
 
         $this->actingAs($hr)
             ->put("/benefits/plans/{$plan->id}", [
-                'name'                        => 'Updated HMO',
-                'provider'                    => 'New Provider',
-                'employee_contribution_type'  => 'none',
+                'name' => 'Updated HMO',
+                'provider' => 'New Provider',
+                'employee_contribution_type' => 'none',
                 'employee_contribution_value' => 0,
-                'employer_contribution_type'  => 'fixed',
+                'employer_contribution_type' => 'fixed',
                 'employer_contribution_value' => 1_500_000,
-                'is_waivable'                 => true,
-                'is_active'                   => true,
-                'sort_order'                  => 0,
+                'is_waivable' => true,
+                'is_active' => true,
+                'sort_order' => 0,
             ])
             ->assertRedirect();
 
@@ -152,7 +152,7 @@ class BenefitsTest extends TestCase
 
     public function test_hr_can_delete_plan_with_no_active_enrollments(): void
     {
-        $hr   = $this->hrUser();
+        $hr = $this->hrUser();
         $plan = $this->makePlan();
 
         $this->actingAs($hr)
@@ -164,18 +164,18 @@ class BenefitsTest extends TestCase
 
     public function test_hr_cannot_delete_plan_with_active_enrollments(): void
     {
-        $hr     = $this->hrUser();
-        $staff  = $this->staffUser();
-        $plan   = $this->makePlan();
+        $hr = $this->hrUser();
+        $staff = $this->staffUser();
+        $plan = $this->makePlan();
 
         EmployeeBenefitEnrollment::create([
-            'user_id'                    => $staff->id,
-            'benefit_plan_id'            => $plan->id,
-            'status'                     => 'active',
-            'effective_date'             => now()->toDateString(),
+            'user_id' => $staff->id,
+            'benefit_plan_id' => $plan->id,
+            'status' => 'active',
+            'effective_date' => now()->toDateString(),
             'employee_contribution_kobo' => 0,
             'employer_contribution_kobo' => 1_500_000,
-            'enrolled_by_id'             => $hr->id,
+            'enrolled_by_id' => $hr->id,
         ]);
 
         $this->actingAs($hr)
@@ -200,22 +200,22 @@ class BenefitsTest extends TestCase
 
         $this->actingAs($hr)
             ->post('/benefits/windows', [
-                'name'           => 'Annual Enrollment 2026',
-                'open_date'      => now()->toDateString(),
-                'close_date'     => now()->addDays(14)->toDateString(),
+                'name' => 'Annual Enrollment 2026',
+                'open_date' => now()->toDateString(),
+                'close_date' => now()->addDays(14)->toDateString(),
                 'effective_date' => now()->addMonth()->toDateString(),
             ])
             ->assertRedirect();
 
         $this->assertDatabaseHas('benefit_enrollment_windows', [
-            'name'   => 'Annual Enrollment 2026',
+            'name' => 'Annual Enrollment 2026',
             'status' => 'upcoming',
         ]);
     }
 
     public function test_upcoming_window_can_be_opened(): void
     {
-        $hr     = $this->hrUser();
+        $hr = $this->hrUser();
         $window = $this->makeWindow(['status' => 'upcoming']);
 
         $this->actingAs($hr)
@@ -223,14 +223,14 @@ class BenefitsTest extends TestCase
             ->assertRedirect();
 
         $this->assertDatabaseHas('benefit_enrollment_windows', [
-            'id'     => $window->id,
+            'id' => $window->id,
             'status' => 'open',
         ]);
     }
 
     public function test_open_window_cannot_be_opened_again(): void
     {
-        $hr     = $this->hrUser();
+        $hr = $this->hrUser();
         $window = $this->makeWindow(['status' => 'open']);
 
         $this->actingAs($hr)
@@ -240,7 +240,7 @@ class BenefitsTest extends TestCase
 
     public function test_upcoming_window_can_be_deleted(): void
     {
-        $hr     = $this->hrUser();
+        $hr = $this->hrUser();
         $window = $this->makeWindow(['status' => 'upcoming']);
 
         $this->actingAs($hr)
@@ -252,7 +252,7 @@ class BenefitsTest extends TestCase
 
     public function test_open_window_cannot_be_deleted(): void
     {
-        $hr     = $this->hrUser();
+        $hr = $this->hrUser();
         $window = $this->makeWindow(['status' => 'open']);
 
         $this->actingAs($hr)
@@ -264,18 +264,18 @@ class BenefitsTest extends TestCase
 
     public function test_process_window_creates_enrollments_for_enroll_elections(): void
     {
-        $hr     = $this->hrUser();
-        $staff  = $this->staffUser();
-        $plan   = $this->makePlan();
+        $hr = $this->hrUser();
+        $staff = $this->staffUser();
+        $plan = $this->makePlan();
         $window = $this->makeWindow();
 
         BenefitEnrollmentElection::create([
             'enrollment_window_id' => $window->id,
-            'user_id'              => $staff->id,
-            'benefit_plan_id'      => $plan->id,
-            'election'             => 'enroll',
-            'status'               => 'submitted',
-            'submitted_at'         => now(),
+            'user_id' => $staff->id,
+            'benefit_plan_id' => $plan->id,
+            'election' => 'enroll',
+            'status' => 'submitted',
+            'submitted_at' => now(),
         ]);
 
         $this->actingAs($hr)
@@ -283,48 +283,48 @@ class BenefitsTest extends TestCase
             ->assertRedirect();
 
         $this->assertDatabaseHas('employee_benefit_enrollments', [
-            'user_id'         => $staff->id,
+            'user_id' => $staff->id,
             'benefit_plan_id' => $plan->id,
-            'status'          => 'active',
+            'status' => 'active',
         ]);
 
         $this->assertDatabaseHas('benefit_enrollment_windows', [
-            'id'     => $window->id,
+            'id' => $window->id,
             'status' => 'closed',
         ]);
 
         $this->assertDatabaseHas('benefit_enrollment_elections', [
-            'id'     => 1,
+            'id' => 1,
             'status' => 'approved',
         ]);
     }
 
     public function test_process_window_terminates_enrollment_for_waive_elections(): void
     {
-        $hr    = $this->hrUser();
+        $hr = $this->hrUser();
         $staff = $this->staffUser();
-        $plan  = $this->makePlan();
+        $plan = $this->makePlan();
 
         // Pre-existing active enrollment
         EmployeeBenefitEnrollment::create([
-            'user_id'                    => $staff->id,
-            'benefit_plan_id'            => $plan->id,
-            'status'                     => 'active',
-            'effective_date'             => now()->subMonth()->toDateString(),
+            'user_id' => $staff->id,
+            'benefit_plan_id' => $plan->id,
+            'status' => 'active',
+            'effective_date' => now()->subMonth()->toDateString(),
             'employee_contribution_kobo' => 0,
             'employer_contribution_kobo' => 1_500_000,
-            'enrolled_by_id'             => $hr->id,
+            'enrolled_by_id' => $hr->id,
         ]);
 
         $window = $this->makeWindow();
 
         BenefitEnrollmentElection::create([
             'enrollment_window_id' => $window->id,
-            'user_id'              => $staff->id,
-            'benefit_plan_id'      => $plan->id,
-            'election'             => 'waive',
-            'status'               => 'submitted',
-            'submitted_at'         => now(),
+            'user_id' => $staff->id,
+            'benefit_plan_id' => $plan->id,
+            'election' => 'waive',
+            'status' => 'submitted',
+            'submitted_at' => now(),
         ]);
 
         $this->actingAs($hr)
@@ -332,9 +332,9 @@ class BenefitsTest extends TestCase
             ->assertRedirect();
 
         $this->assertDatabaseHas('employee_benefit_enrollments', [
-            'user_id'         => $staff->id,
+            'user_id' => $staff->id,
             'benefit_plan_id' => $plan->id,
-            'status'          => 'terminated',
+            'status' => 'terminated',
         ]);
     }
 
@@ -342,41 +342,41 @@ class BenefitsTest extends TestCase
 
     public function test_hr_can_manually_enroll_employee(): void
     {
-        $hr    = $this->hrUser();
+        $hr = $this->hrUser();
         $staff = $this->staffUser();
-        $plan  = $this->makePlan();
+        $plan = $this->makePlan();
 
         $this->actingAs($hr)
             ->post('/benefits/enrollments', [
-                'user_id'                    => $staff->id,
-                'benefit_plan_id'            => $plan->id,
-                'effective_date'             => now()->toDateString(),
+                'user_id' => $staff->id,
+                'benefit_plan_id' => $plan->id,
+                'effective_date' => now()->toDateString(),
                 'employee_contribution_kobo' => 0,
                 'employer_contribution_kobo' => 1_500_000,
             ])
             ->assertRedirect();
 
         $this->assertDatabaseHas('employee_benefit_enrollments', [
-            'user_id'         => $staff->id,
+            'user_id' => $staff->id,
             'benefit_plan_id' => $plan->id,
-            'status'          => 'active',
+            'status' => 'active',
         ]);
     }
 
     public function test_hr_can_terminate_enrollment(): void
     {
-        $hr    = $this->hrUser();
+        $hr = $this->hrUser();
         $staff = $this->staffUser();
-        $plan  = $this->makePlan();
+        $plan = $this->makePlan();
 
         $enrollment = EmployeeBenefitEnrollment::create([
-            'user_id'                    => $staff->id,
-            'benefit_plan_id'            => $plan->id,
-            'status'                     => 'active',
-            'effective_date'             => now()->subMonth()->toDateString(),
+            'user_id' => $staff->id,
+            'benefit_plan_id' => $plan->id,
+            'status' => 'active',
+            'effective_date' => now()->subMonth()->toDateString(),
             'employee_contribution_kobo' => 0,
             'employer_contribution_kobo' => 1_500_000,
-            'enrolled_by_id'             => $hr->id,
+            'enrolled_by_id' => $hr->id,
         ]);
 
         $this->actingAs($hr)
@@ -384,7 +384,7 @@ class BenefitsTest extends TestCase
             ->assertRedirect();
 
         $this->assertDatabaseHas('employee_benefit_enrollments', [
-            'id'     => $enrollment->id,
+            'id' => $enrollment->id,
             'status' => 'terminated',
         ]);
     }
@@ -403,56 +403,56 @@ class BenefitsTest extends TestCase
 
     public function test_staff_can_save_enroll_election(): void
     {
-        $staff  = $this->staffUser();
-        $plan   = $this->makePlan();
+        $staff = $this->staffUser();
+        $plan = $this->makePlan();
         $window = $this->makeWindow();
 
         $this->actingAs($staff)
             ->post('/benefits/my-benefits/election', [
                 'enrollment_window_id' => $window->id,
-                'benefit_plan_id'      => $plan->id,
-                'election'             => 'enroll',
+                'benefit_plan_id' => $plan->id,
+                'election' => 'enroll',
             ])
             ->assertRedirect();
 
         $this->assertDatabaseHas('benefit_enrollment_elections', [
             'enrollment_window_id' => $window->id,
-            'user_id'              => $staff->id,
-            'benefit_plan_id'      => $plan->id,
-            'election'             => 'enroll',
-            'status'               => 'draft',
+            'user_id' => $staff->id,
+            'benefit_plan_id' => $plan->id,
+            'election' => 'enroll',
+            'status' => 'draft',
         ]);
     }
 
     public function test_staff_can_change_election_from_enroll_to_waive(): void
     {
-        $staff  = $this->staffUser();
-        $plan   = $this->makePlan(['is_waivable' => true]);
+        $staff = $this->staffUser();
+        $plan = $this->makePlan(['is_waivable' => true]);
         $window = $this->makeWindow();
 
         // First election: enroll
         BenefitEnrollmentElection::create([
             'enrollment_window_id' => $window->id,
-            'user_id'              => $staff->id,
-            'benefit_plan_id'      => $plan->id,
-            'election'             => 'enroll',
-            'status'               => 'draft',
+            'user_id' => $staff->id,
+            'benefit_plan_id' => $plan->id,
+            'election' => 'enroll',
+            'status' => 'draft',
         ]);
 
         // Change to waive
         $this->actingAs($staff)
             ->post('/benefits/my-benefits/election', [
                 'enrollment_window_id' => $window->id,
-                'benefit_plan_id'      => $plan->id,
-                'election'             => 'waive',
+                'benefit_plan_id' => $plan->id,
+                'election' => 'waive',
             ])
             ->assertRedirect();
 
         $this->assertDatabaseHas('benefit_enrollment_elections', [
             'enrollment_window_id' => $window->id,
-            'user_id'              => $staff->id,
-            'benefit_plan_id'      => $plan->id,
-            'election'             => 'waive',
+            'user_id' => $staff->id,
+            'benefit_plan_id' => $plan->id,
+            'election' => 'waive',
         ]);
 
         // Only one record, not two
@@ -461,46 +461,46 @@ class BenefitsTest extends TestCase
 
     public function test_staff_cannot_waive_non_waivable_plan(): void
     {
-        $staff  = $this->staffUser();
-        $plan   = $this->makePlan(['is_waivable' => false]);
+        $staff = $this->staffUser();
+        $plan = $this->makePlan(['is_waivable' => false]);
         $window = $this->makeWindow();
 
         $this->actingAs($staff)
             ->post('/benefits/my-benefits/election', [
                 'enrollment_window_id' => $window->id,
-                'benefit_plan_id'      => $plan->id,
-                'election'             => 'waive',
+                'benefit_plan_id' => $plan->id,
+                'election' => 'waive',
             ])
             ->assertStatus(422);
     }
 
     public function test_staff_cannot_elect_on_closed_window(): void
     {
-        $staff  = $this->staffUser();
-        $plan   = $this->makePlan();
+        $staff = $this->staffUser();
+        $plan = $this->makePlan();
         $window = $this->makeWindow(['status' => 'closed']);
 
         $this->actingAs($staff)
             ->post('/benefits/my-benefits/election', [
                 'enrollment_window_id' => $window->id,
-                'benefit_plan_id'      => $plan->id,
-                'election'             => 'enroll',
+                'benefit_plan_id' => $plan->id,
+                'election' => 'enroll',
             ])
             ->assertStatus(422);
     }
 
     public function test_staff_can_submit_elections(): void
     {
-        $staff  = $this->staffUser();
-        $plan   = $this->makePlan();
+        $staff = $this->staffUser();
+        $plan = $this->makePlan();
         $window = $this->makeWindow();
 
         BenefitEnrollmentElection::create([
             'enrollment_window_id' => $window->id,
-            'user_id'              => $staff->id,
-            'benefit_plan_id'      => $plan->id,
-            'election'             => 'enroll',
-            'status'               => 'draft',
+            'user_id' => $staff->id,
+            'benefit_plan_id' => $plan->id,
+            'election' => 'enroll',
+            'status' => 'draft',
         ]);
 
         $this->actingAs($staff)
@@ -511,14 +511,14 @@ class BenefitsTest extends TestCase
 
         $this->assertDatabaseHas('benefit_enrollment_elections', [
             'enrollment_window_id' => $window->id,
-            'user_id'              => $staff->id,
-            'status'               => 'submitted',
+            'user_id' => $staff->id,
+            'status' => 'submitted',
         ]);
     }
 
     public function test_staff_cannot_submit_elections_for_closed_window(): void
     {
-        $staff  = $this->staffUser();
+        $staff = $this->staffUser();
         $window = $this->makeWindow(['status' => 'closed']);
 
         $this->actingAs($staff)
@@ -536,16 +536,16 @@ class BenefitsTest extends TestCase
 
         $this->actingAs($staff)
             ->post('/benefits/my-benefits/dependents', [
-                'name'          => 'Jane Doe',
-                'relationship'  => 'spouse',
+                'name' => 'Jane Doe',
+                'relationship' => 'spouse',
                 'date_of_birth' => '1990-01-01',
-                'gender'        => 'female',
+                'gender' => 'female',
             ])
             ->assertRedirect();
 
         $this->assertDatabaseHas('employee_dependents', [
-            'user_id'      => $staff->id,
-            'name'         => 'Jane Doe',
+            'user_id' => $staff->id,
+            'name' => 'Jane Doe',
             'relationship' => 'spouse',
         ]);
     }
@@ -555,15 +555,15 @@ class BenefitsTest extends TestCase
         $staff = $this->staffUser();
 
         $dep = EmployeeDependent::create([
-            'user_id'      => $staff->id,
-            'name'         => 'Old Name',
+            'user_id' => $staff->id,
+            'name' => 'Old Name',
             'relationship' => 'child',
-            'is_active'    => true,
+            'is_active' => true,
         ]);
 
         $this->actingAs($staff)
             ->put("/benefits/my-benefits/dependents/{$dep->id}", [
-                'name'         => 'New Name',
+                'name' => 'New Name',
                 'relationship' => 'child',
             ])
             ->assertRedirect();
@@ -577,15 +577,15 @@ class BenefitsTest extends TestCase
         $staffB = $this->staffUser();
 
         $dep = EmployeeDependent::create([
-            'user_id'      => $staffB->id,
-            'name'         => 'B Child',
+            'user_id' => $staffB->id,
+            'name' => 'B Child',
             'relationship' => 'child',
-            'is_active'    => true,
+            'is_active' => true,
         ]);
 
         $this->actingAs($staffA)
             ->put("/benefits/my-benefits/dependents/{$dep->id}", [
-                'name'         => 'Hacked',
+                'name' => 'Hacked',
                 'relationship' => 'child',
             ])
             ->assertStatus(403);
@@ -596,10 +596,10 @@ class BenefitsTest extends TestCase
         $staff = $this->staffUser();
 
         $dep = EmployeeDependent::create([
-            'user_id'      => $staff->id,
-            'name'         => 'To Remove',
+            'user_id' => $staff->id,
+            'name' => 'To Remove',
             'relationship' => 'parent',
-            'is_active'    => true,
+            'is_active' => true,
         ]);
 
         $this->actingAs($staff)
@@ -607,7 +607,7 @@ class BenefitsTest extends TestCase
             ->assertRedirect();
 
         $this->assertDatabaseHas('employee_dependents', [
-            'id'        => $dep->id,
+            'id' => $dep->id,
             'is_active' => false,
         ]);
     }
@@ -618,10 +618,10 @@ class BenefitsTest extends TestCase
         $staffB = $this->staffUser();
 
         $dep = EmployeeDependent::create([
-            'user_id'      => $staffB->id,
-            'name'         => 'B Dep',
+            'user_id' => $staffB->id,
+            'name' => 'B Dep',
             'relationship' => 'sibling',
-            'is_active'    => true,
+            'is_active' => true,
         ]);
 
         $this->actingAs($staffA)
@@ -643,14 +643,14 @@ class BenefitsTest extends TestCase
     public function test_benefit_plan_fixed_contribution_returns_value(): void
     {
         $plan = $this->makePlan([
-            'employer_contribution_type'  => 'fixed',
+            'employer_contribution_type' => 'fixed',
             'employer_contribution_value' => 1_500_000,
         ]);
 
         $salary = new \App\Models\EmployeeSalary([
-            'basic_kobo'            => 50_000_000,
-            'housing_kobo'          => 20_000_000,
-            'transport_kobo'        => 10_000_000,
+            'basic_kobo' => 50_000_000,
+            'housing_kobo' => 20_000_000,
+            'transport_kobo' => 10_000_000,
             'other_allowances_kobo' => 0,
         ]);
 
@@ -660,14 +660,14 @@ class BenefitsTest extends TestCase
     public function test_benefit_plan_percentage_of_basic_contribution(): void
     {
         $plan = $this->makePlan([
-            'employer_contribution_type'  => 'percentage_of_basic',
+            'employer_contribution_type' => 'percentage_of_basic',
             'employer_contribution_value' => 50, // 0.50% in basis points
         ]);
 
         $salary = new \App\Models\EmployeeSalary([
-            'basic_kobo'            => 50_000_000,
-            'housing_kobo'          => 0,
-            'transport_kobo'        => 0,
+            'basic_kobo' => 50_000_000,
+            'housing_kobo' => 0,
+            'transport_kobo' => 0,
             'other_allowances_kobo' => 0,
         ]);
 
@@ -680,8 +680,8 @@ class BenefitsTest extends TestCase
     public function test_window_is_currently_open_when_status_open_and_in_date_range(): void
     {
         $window = $this->makeWindow([
-            'status'     => 'open',
-            'open_date'  => now()->subDay()->toDateString(),
+            'status' => 'open',
+            'open_date' => now()->subDay()->toDateString(),
             'close_date' => now()->addDay()->toDateString(),
         ]);
 
@@ -691,8 +691,8 @@ class BenefitsTest extends TestCase
     public function test_window_is_not_currently_open_when_status_upcoming(): void
     {
         $window = $this->makeWindow([
-            'status'     => 'upcoming',
-            'open_date'  => now()->subDay()->toDateString(),
+            'status' => 'upcoming',
+            'open_date' => now()->subDay()->toDateString(),
             'close_date' => now()->addDay()->toDateString(),
         ]);
 
@@ -702,8 +702,8 @@ class BenefitsTest extends TestCase
     public function test_window_is_not_currently_open_when_past_close_date(): void
     {
         $window = $this->makeWindow([
-            'status'     => 'open',
-            'open_date'  => now()->subDays(10)->toDateString(),
+            'status' => 'open',
+            'open_date' => now()->subDays(10)->toDateString(),
             'close_date' => now()->subDay()->toDateString(),
         ]);
 

@@ -16,18 +16,18 @@ class InterviewController extends Controller
         abort_unless($request->user()->hasPermission('recruitment.manage'), 403);
 
         $data = $request->validate([
-            'interviewer_id'   => 'required|exists:users,id',
-            'scheduled_at'     => 'required|date|after:now',
+            'interviewer_id' => 'required|exists:users,id',
+            'scheduled_at' => 'required|date|after:now',
             'duration_minutes' => 'required|integer|min:15|max:480',
-            'format'           => 'required|in:video,phone,in_person',
+            'format' => 'required|in:video,phone,in_person',
             'location_or_link' => 'nullable|string|max:500',
-            'notes'            => 'nullable|string|max:1000',
+            'notes' => 'nullable|string|max:1000',
         ]);
 
         InterviewSchedule::create([
             ...$data,
             'job_application_id' => $jobApplication->id,
-            'status'             => 'scheduled',
+            'status' => 'scheduled',
         ]);
 
         // Advance to interview stage if still at screening or new
@@ -44,7 +44,7 @@ class InterviewController extends Controller
 
         $data = $request->validate([
             'status' => 'required|in:scheduled,completed,cancelled,rescheduled',
-            'notes'  => 'nullable|string|max:1000',
+            'notes' => 'nullable|string|max:1000',
         ]);
 
         $interviewSchedule->update($data);
@@ -63,20 +63,20 @@ class InterviewController extends Controller
         abort_unless($canSubmit, 403);
 
         $data = $request->validate([
-            'overall_rating'       => 'required|integer|min:1|max:5',
-            'technical_rating'     => 'nullable|integer|min:1|max:5',
+            'overall_rating' => 'required|integer|min:1|max:5',
+            'technical_rating' => 'nullable|integer|min:1|max:5',
             'communication_rating' => 'nullable|integer|min:1|max:5',
-            'culture_fit_rating'   => 'nullable|integer|min:1|max:5',
-            'strengths'            => 'nullable|string|max:2000',
-            'concerns'             => 'nullable|string|max:2000',
-            'recommendation'       => 'required|in:strong_yes,yes,no,strong_no',
-            'notes'                => 'nullable|string|max:2000',
+            'culture_fit_rating' => 'nullable|integer|min:1|max:5',
+            'strengths' => 'nullable|string|max:2000',
+            'concerns' => 'nullable|string|max:2000',
+            'recommendation' => 'required|in:strong_yes,yes,no,strong_no',
+            'notes' => 'nullable|string|max:2000',
         ]);
 
         InterviewScorecard::updateOrCreate(
             [
                 'interview_schedule_id' => $interviewSchedule->id,
-                'evaluator_id'          => $user->id,
+                'evaluator_id' => $user->id,
             ],
             $data
         );

@@ -23,16 +23,16 @@ class OrgChartController extends Controller
             ->with(['jobPosition:id,title', 'departmentEntity:id,name'])
             ->orderBy('name')
             ->get(['id', 'name', 'employee_id', 'department', 'position', 'role',
-                   'department_id', 'job_position_id', 'reports_to_id', 'avatar'])
+                'department_id', 'job_position_id', 'reports_to_id', 'avatar'])
             ->map(fn (User $u) => [
-                'id'              => $u->id,
-                'name'            => $u->name,
-                'employee_id'     => $u->employee_id,
-                'title'           => $u->jobPosition?->title ?? $u->position,
-                'department'      => $u->departmentEntity?->name ?? $u->department,
-                'role'            => $u->role,
-                'reports_to_id'   => $u->reports_to_id,
-                'avatar'          => $u->avatar ?? null,
+                'id' => $u->id,
+                'name' => $u->name,
+                'employee_id' => $u->employee_id,
+                'title' => $u->jobPosition?->title ?? $u->position,
+                'department' => $u->departmentEntity?->name ?? $u->department,
+                'role' => $u->role,
+                'reports_to_id' => $u->reports_to_id,
+                'avatar' => $u->avatar ?? null,
             ]);
 
         return Inertia::render('Admin/OrgChartPage', [

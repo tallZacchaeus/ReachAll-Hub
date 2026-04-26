@@ -12,12 +12,12 @@ return new class extends Migration
             $table->id();
             $table->string('name', 200);
             $table->string('cycle_type', 50)->default('annual')
-                  ->comment('annual|mid_year|off_cycle|promotion');
+                ->comment('annual|mid_year|off_cycle|promotion');
             $table->date('review_start_date');
             $table->date('review_end_date');
             $table->date('effective_date')->comment('When approved changes take effect');
             $table->string('status', 30)->default('draft')
-                  ->comment('draft|active|review|approved|closed');
+                ->comment('draft|active|review|approved|closed');
             $table->unsignedBigInteger('budget_kobo')->default(0)->comment('Total merit budget');
             $table->unsignedBigInteger('created_by_id')->nullable();
             $table->text('notes')->nullable();

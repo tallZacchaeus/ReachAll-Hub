@@ -20,14 +20,14 @@ class FaqController extends Controller
         if ($search !== '') {
             $query->where(function ($q) use ($search) {
                 $q->where('question', 'like', "%{$search}%")
-                  ->orWhere('answer', 'like', "%{$search}%");
+                    ->orWhere('answer', 'like', "%{$search}%");
             });
         }
 
         $faqs = $query->get()->map(fn (FaqEntry $f) => [
-            'id'       => $f->id,
+            'id' => $f->id,
             'question' => $f->question,
-            'answer'   => $f->answer,
+            'answer' => $f->answer,
             'category' => $f->category,
         ]);
 
@@ -40,9 +40,9 @@ class FaqController extends Controller
         }
 
         return Inertia::render('FaqPage', [
-            'faqs'    => $faqs,
+            'faqs' => $faqs,
             'grouped' => $grouped,
-            'search'  => $search,
+            'search' => $search,
         ]);
     }
 
@@ -66,18 +66,18 @@ class FaqController extends Controller
         }
 
         $validated = $request->validate([
-            'question'     => ['required', 'string', 'max:500'],
-            'answer'       => ['required', 'string'],
-            'category'     => ['required', 'string', 'max:100'],
-            'sort_order'   => ['nullable', 'integer', 'min:0'],
+            'question' => ['required', 'string', 'max:500'],
+            'answer' => ['required', 'string'],
+            'category' => ['required', 'string', 'max:100'],
+            'sort_order' => ['nullable', 'integer', 'min:0'],
             'is_published' => ['boolean'],
         ]);
 
         FaqEntry::create([
-            'question'     => $validated['question'],
-            'answer'       => HtmlSanitizer::clean($validated['answer']),
-            'category'     => $validated['category'],
-            'sort_order'   => $validated['sort_order'] ?? 0,
+            'question' => $validated['question'],
+            'answer' => HtmlSanitizer::clean($validated['answer']),
+            'category' => $validated['category'],
+            'sort_order' => $validated['sort_order'] ?? 0,
             'is_published' => $validated['is_published'] ?? true,
         ]);
 
@@ -93,10 +93,10 @@ class FaqController extends Controller
         $faq = FaqEntry::findOrFail($id);
 
         $validated = $request->validate([
-            'question'     => ['required', 'string', 'max:500'],
-            'answer'       => ['required', 'string'],
-            'category'     => ['required', 'string', 'max:100'],
-            'sort_order'   => ['nullable', 'integer', 'min:0'],
+            'question' => ['required', 'string', 'max:500'],
+            'answer' => ['required', 'string'],
+            'category' => ['required', 'string', 'max:100'],
+            'sort_order' => ['nullable', 'integer', 'min:0'],
             'is_published' => ['boolean'],
         ]);
 

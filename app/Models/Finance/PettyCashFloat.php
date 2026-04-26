@@ -21,10 +21,10 @@ class PettyCashFloat extends Model
     ];
 
     protected $casts = [
-        'float_limit_kobo'      => 'integer',
-        'current_balance_kobo'  => 'integer',
-        'low_alert_threshold'   => 'integer',
-        'last_reconciled_at'    => 'datetime',
+        'float_limit_kobo' => 'integer',
+        'current_balance_kobo' => 'integer',
+        'low_alert_threshold' => 'integer',
+        'last_reconciled_at' => 'datetime',
     ];
 
     // ── Relationships ────────────────────────────────────────────────────────
@@ -58,7 +58,10 @@ class PettyCashFloat extends Model
 
     public function balancePercentage(): float
     {
-        if ($this->float_limit_kobo === 0) return 0;
+        if ($this->float_limit_kobo === 0) {
+            return 0;
+        }
+
         return round(($this->current_balance_kobo / $this->float_limit_kobo) * 100, 1);
     }
 
@@ -71,8 +74,9 @@ class PettyCashFloat extends Model
     {
         $reference = $this->last_reconciled_at ?? $this->created_at;
         // Explicit parse to date-only strings avoids fractional-day truncation
-        $refDate   = \Carbon\CarbonImmutable::parse($reference->toDateString())->startOfDay();
+        $refDate = \Carbon\CarbonImmutable::parse($reference->toDateString())->startOfDay();
         $todayDate = \Carbon\CarbonImmutable::today()->startOfDay();
+
         return (int) floor(($todayDate->getTimestamp() - $refDate->getTimestamp()) / 86400);
     }
 

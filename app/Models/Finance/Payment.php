@@ -25,8 +25,8 @@ class Payment extends Model
 
     protected $casts = [
         'amount_kobo' => 'integer',
-        'paid_at'     => 'datetime',
-        'voided_at'   => 'datetime',
+        'paid_at' => 'datetime',
+        'voided_at' => 'datetime',
     ];
 
     public function requisition(): BelongsTo
@@ -53,9 +53,9 @@ class Payment extends Model
     public function creditAccount(): string
     {
         return match ($this->method) {
-            'cash'   => 'CASH',
+            'cash' => 'CASH',
             'cheque' => 'CHEQUE',
-            default  => 'BANK',
+            default => 'BANK',
         };
     }
 }

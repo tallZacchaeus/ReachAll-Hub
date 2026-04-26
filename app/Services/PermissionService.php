@@ -13,8 +13,9 @@ use Illuminate\Support\Facades\DB;
  */
 class PermissionService
 {
-    private const CACHE_KEY    = 'rbac:role_permissions';
-    private const CACHE_TTL    = 3600; // 1 hour
+    private const CACHE_KEY = 'rbac:role_permissions';
+
+    private const CACHE_TTL = 3600; // 1 hour
 
     /**
      * Return true if the given role slug has the named permission.

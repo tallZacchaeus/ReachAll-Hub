@@ -25,15 +25,15 @@ class HrCaseSelfController extends Controller
         // Strip description from confidential cases that HR hasn't yet reviewed
         $cases->getCollection()->transform(function (HrCase $case) {
             return [
-                'id'           => $case->id,
-                'case_number'  => $case->case_number,
-                'type'         => $case->type,
-                'subject'      => $case->subject,
-                'status'       => $case->status,
-                'priority'     => $case->priority,
+                'id' => $case->id,
+                'case_number' => $case->case_number,
+                'type' => $case->type,
+                'subject' => $case->subject,
+                'status' => $case->status,
+                'priority' => $case->priority,
                 'confidential' => $case->confidential,
-                'created_at'   => $case->created_at,
-                'assigned_to'  => $case->assignedTo?->only(['id', 'name']),
+                'created_at' => $case->created_at,
+                'assigned_to' => $case->assignedTo?->only(['id', 'name']),
             ];
         });
 
@@ -47,24 +47,24 @@ class HrCaseSelfController extends Controller
         abort_unless($request->user()->hasPermission('er.self'), 403);
 
         $data = $request->validate([
-            'type'        => 'required|in:helpdesk,grievance,whistleblower',
-            'subject'     => 'required|string|max:200',
+            'type' => 'required|in:helpdesk,grievance,whistleblower',
+            'subject' => 'required|string|max:200',
             'description' => 'required|string|max:10000',
-            'priority'    => 'required|in:low,normal',
-            'anonymous'   => 'boolean',
+            'priority' => 'required|in:low,normal',
+            'anonymous' => 'boolean',
         ]);
 
-        $anonymous   = (bool) ($data['anonymous'] ?? false);
-        $reportedBy  = $anonymous ? null : $request->user()->id;
+        $anonymous = (bool) ($data['anonymous'] ?? false);
+        $reportedBy = $anonymous ? null : $request->user()->id;
         $confidential = $data['type'] === 'whistleblower';
 
         $case = HrCase::create([
-            'type'           => $data['type'],
-            'subject'        => $data['subject'],
-            'description'    => $data['description'],
-            'priority'       => $data['priority'],
-            'status'         => 'open',
-            'confidential'   => $confidential,
+            'type' => $data['type'],
+            'subject' => $data['subject'],
+            'description' => $data['description'],
+            'priority' => $data['priority'],
+            'status' => 'open',
+            'confidential' => $confidential,
             'reported_by_id' => $reportedBy,
         ]);
 
@@ -72,8 +72,8 @@ class HrCaseSelfController extends Controller
         if ($reportedBy) {
             HrCaseParty::create([
                 'hr_case_id' => $case->id,
-                'user_id'    => $reportedBy,
-                'role'       => 'complainant',
+                'user_id' => $reportedBy,
+                'role' => 'complainant',
             ]);
         }
 
@@ -106,9 +106,9 @@ class HrCaseSelfController extends Controller
         ]);
 
         HrCaseNote::create([
-            'hr_case_id'  => $hrCase->id,
-            'author_id'   => $request->user()->id,
-            'content'     => $data['content'],
+            'hr_case_id' => $hrCase->id,
+            'author_id' => $request->user()->id,
+            'content' => $data['content'],
             'is_internal' => false,
         ]);
 

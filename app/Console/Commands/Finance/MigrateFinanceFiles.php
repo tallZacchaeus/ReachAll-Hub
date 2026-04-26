@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Storage;
  */
 class MigrateFinanceFiles extends Command
 {
-    protected $signature   = 'finance:migrate-files {--dry-run : List files without moving them}';
+    protected $signature = 'finance:migrate-files {--dry-run : List files without moving them}';
+
     protected $description = 'D8-01: Move existing finance files from public disk to private finance disk';
 
     public function handle(): int
@@ -28,10 +29,11 @@ class MigrateFinanceFiles extends Command
 
         if (empty($files)) {
             $this->info('No files found under finance/ on the public disk. Nothing to migrate.');
+
             return self::SUCCESS;
         }
 
-        $moved  = 0;
+        $moved = 0;
         $failed = 0;
 
         foreach ($files as $relativePath) {
@@ -43,6 +45,7 @@ class MigrateFinanceFiles extends Command
             if ($dryRun) {
                 $this->line("  [would move] {$relativePath}  →  {$newPath}");
                 $moved++;
+
                 continue;
             }
 
@@ -61,6 +64,7 @@ class MigrateFinanceFiles extends Command
 
         if ($failed > 0) {
             $this->error("{$failed} file(s) failed to migrate. Review errors above.");
+
             return self::FAILURE;
         }
 

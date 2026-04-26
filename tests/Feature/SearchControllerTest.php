@@ -15,7 +15,7 @@ class SearchControllerTest extends TestCase
         $searcher = User::factory()->create(['status' => 'active']);
 
         $match = User::factory()->create([
-            'name'   => 'Alice ActiveUser',
+            'name' => 'Alice ActiveUser',
             'status' => 'active',
         ]);
 
@@ -24,7 +24,7 @@ class SearchControllerTest extends TestCase
         $response = $this->get(route('search', ['q' => 'Alice']));
         $response->assertOk();
 
-        $props   = $response->original->getData()['page']['props'];
+        $props = $response->original->getData()['page']['props'];
         $results = collect($props['results']);
 
         $people = $results->firstWhere('type', 'People');
@@ -39,7 +39,7 @@ class SearchControllerTest extends TestCase
         $searcher = User::factory()->create(['status' => 'active']);
 
         User::factory()->create([
-            'name'   => 'Bob InactiveUser',
+            'name' => 'Bob InactiveUser',
             'status' => 'inactive',
         ]);
 
@@ -48,7 +48,7 @@ class SearchControllerTest extends TestCase
         $response = $this->get(route('search', ['q' => 'Bob']));
         $response->assertOk();
 
-        $props   = $response->original->getData()['page']['props'];
+        $props = $response->original->getData()['page']['props'];
         $results = collect($props['results']);
 
         $people = $results->firstWhere('type', 'People');

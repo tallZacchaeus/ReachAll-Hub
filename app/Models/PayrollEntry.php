@@ -29,19 +29,19 @@ class PayrollEntry extends Model
     ];
 
     protected $casts = [
-        'basic_kobo'            => 'integer',
-        'housing_kobo'          => 'integer',
-        'transport_kobo'        => 'integer',
+        'basic_kobo' => 'integer',
+        'housing_kobo' => 'integer',
+        'transport_kobo' => 'integer',
         'other_allowances_kobo' => 'integer',
-        'gross_kobo'            => 'integer',
-        'paye_kobo'             => 'integer',
+        'gross_kobo' => 'integer',
+        'paye_kobo' => 'integer',
         'pension_employee_kobo' => 'integer',
         'pension_employer_kobo' => 'integer',
-        'nhf_kobo'              => 'integer',
-        'nsitf_kobo'            => 'integer',
+        'nhf_kobo' => 'integer',
+        'nsitf_kobo' => 'integer',
         'other_deductions_kobo' => 'integer',
-        'net_kobo'              => 'integer',
-        'payslip_generated'     => 'boolean',
+        'net_kobo' => 'integer',
+        'payslip_generated' => 'boolean',
     ];
 
     public function run(): BelongsTo

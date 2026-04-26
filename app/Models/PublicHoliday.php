@@ -21,9 +21,9 @@ class PublicHoliday extends Model
     protected function casts(): array
     {
         return [
-            'date'         => 'date',
+            'date' => 'date',
             'is_recurring' => 'boolean',
-            'is_active'    => 'boolean',
+            'is_active' => 'boolean',
         ];
     }
 

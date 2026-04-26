@@ -19,7 +19,7 @@ class PeriodCloseWaiver extends Model
 
     protected $casts = [
         'waived_at' => 'datetime',
-        'item_id'   => 'integer',
+        'item_id' => 'integer',
     ];
 
     public function period(): BelongsTo

@@ -36,7 +36,7 @@ class AuditLogController extends Controller
         $actions = AuditLog::distinct()->orderBy('action')->pluck('action');
 
         return Inertia::render('Admin/AuditLogsPage', [
-            'logs'    => $logs,
+            'logs' => $logs,
             'modules' => $modules,
             'actions' => $actions,
             'filters' => [

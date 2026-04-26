@@ -12,11 +12,10 @@ use App\Models\Finance\Requisition;
 use App\Models\Finance\Vendor;
 use App\Models\User;
 use App\Services\Finance\BudgetEnforcer;
-use App\Services\Finance\ThreeWayMatcher;
 use App\Services\Finance\TaxCalculator;
+use App\Services\Finance\ThreeWayMatcher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -42,8 +41,8 @@ class Phase4Test extends TestCase
 
     private function makeRequisition(array $overrides = []): Requisition
     {
-        $admin  = User::factory()->create(['role' => 'superadmin', 'status' => 'active']);
-        $staff  = User::factory()->create(['role' => 'staff',      'status' => 'active']);
+        $admin = User::factory()->create(['role' => 'superadmin', 'status' => 'active']);
+        $staff = User::factory()->create(['role' => 'staff',      'status' => 'active']);
         // Use a unique vendor name per call to avoid UNIQUE constraint conflicts
         static $seq = 0;
         $seq++;
@@ -61,19 +60,19 @@ class Phase4Test extends TestCase
         ]);
 
         return Requisition::create(array_merge([
-            'request_id'       => "REQ-FX{$seq}",
-            'requester_id'     => $staff->id,
-            'type'             => 'OPEX',
-            'amount_kobo'      => 60_000_000, // ₦600K
-            'cost_centre_id'   => $cc->id,
-            'account_code_id'  => $ac->id,
-            'vendor_id'        => $vendor->id,
-            'description'      => 'Test requisition',
-            'status'           => 'approved',
-            'tax_vat_kobo'     => 0,
-            'tax_wht_kobo'     => 0,
-            'total_kobo'       => 60_000_000,
-            'created_by'       => $admin->id,
+            'request_id' => "REQ-FX{$seq}",
+            'requester_id' => $staff->id,
+            'type' => 'OPEX',
+            'amount_kobo' => 60_000_000, // ₦600K
+            'cost_centre_id' => $cc->id,
+            'account_code_id' => $ac->id,
+            'vendor_id' => $vendor->id,
+            'description' => 'Test requisition',
+            'status' => 'approved',
+            'tax_vat_kobo' => 0,
+            'tax_wht_kobo' => 0,
+            'total_kobo' => 60_000_000,
+            'created_by' => $admin->id,
         ], $overrides));
     }
 
@@ -81,23 +80,24 @@ class Phase4Test extends TestCase
     {
         return Invoice::create([
             'requisition_id' => $req->id,
-            'vendor_id'      => $vendorId ?? $req->vendor_id,
-            'invoice_number' => 'INV-' . rand(1000, 9999),
-            'amount_kobo'    => $amountKobo,
-            'received_at'    => today()->toDateString(),
-            'file_path'      => 'invoices/test.pdf',
-            'match_status'   => 'pending',
+            'vendor_id' => $vendorId ?? $req->vendor_id,
+            'invoice_number' => 'INV-'.rand(1000, 9999),
+            'amount_kobo' => $amountKobo,
+            'received_at' => today()->toDateString(),
+            'file_path' => 'invoices/test.pdf',
+            'match_status' => 'pending',
         ]);
     }
 
     private function makeReceipt(Requisition $req, ?User $user = null): GoodsReceipt
     {
         $user ??= User::factory()->create(['role' => 'staff', 'status' => 'active']);
+
         return GoodsReceipt::create([
             'requisition_id' => $req->id,
-            'received_by'    => $user->id,
-            'received_at'    => today()->toDateString(),
-            'file_path'      => 'receipts/test.pdf',
+            'received_by' => $user->id,
+            'received_at' => today()->toDateString(),
+            'file_path' => 'receipts/test.pdf',
         ]);
     }
 
@@ -106,7 +106,7 @@ class Phase4Test extends TestCase
     /** ₦600K req, invoice ₦600,050 → diff = 5,000 kobo = ₦50 < ₦100 tolerance → matched */
     public function test_invoice_within_100_naira_tolerance_is_matched(): void
     {
-        $req     = $this->makeRequisition(['amount_kobo' => 60_000_000]);  // ₦600,000
+        $req = $this->makeRequisition(['amount_kobo' => 60_000_000]);  // ₦600,000
         $invoice = $this->makeInvoice($req, 60_005_000);                   // ₦600,050 (₦50 variance)
         $receipt = $this->makeReceipt($req);
 
@@ -120,7 +120,7 @@ class Phase4Test extends TestCase
     /** ₦600K req, invoice ₦650K → diff = 5,000,000 kobo → variance */
     public function test_invoice_exceeding_tolerance_is_variance(): void
     {
-        $req     = $this->makeRequisition(['amount_kobo' => 60_000_000]);  // ₦600K
+        $req = $this->makeRequisition(['amount_kobo' => 60_000_000]);  // ₦600K
         $invoice = $this->makeInvoice($req, 65_000_000);                   // ₦650K
         $receipt = $this->makeReceipt($req);
 
@@ -135,9 +135,9 @@ class Phase4Test extends TestCase
     /** Invoice vendor ≠ requisition vendor → blocked */
     public function test_vendor_mismatch_is_blocked(): void
     {
-        $admin   = User::factory()->create(['role' => 'superadmin', 'status' => 'active']);
-        $req     = $this->makeRequisition();
-        $other   = Vendor::create([
+        $admin = User::factory()->create(['role' => 'superadmin', 'status' => 'active']);
+        $req = $this->makeRequisition();
+        $other = Vendor::create([
             'name' => 'Other Vendor', 'status' => 'active', 'created_by' => $admin->id,
         ]);
         $invoice = $this->makeInvoice($req, $req->amount_kobo, $other->id);
@@ -167,7 +167,7 @@ class Phase4Test extends TestCase
     public function test_budget_blocks_at_100_percent(): void
     {
         $admin = User::factory()->create(['role' => 'superadmin', 'status' => 'active']);
-        $cc    = CostCentre::create([
+        $cc = CostCentre::create([
             'code' => '7000', 'name' => 'Marketing',
             'budget_kobo' => 100_000_000, // ₦1M (100,000,000 kobo)
             'status' => 'active', 'created_by' => $admin->id,
@@ -175,24 +175,24 @@ class Phase4Test extends TestCase
 
         // Pre-seed ₦950K in paid requisitions (95%)
         $staff = User::factory()->create(['role' => 'staff', 'status' => 'active']);
-        $ac    = AccountCode::firstOrCreate(
+        $ac = AccountCode::firstOrCreate(
             ['code' => '7010'],
             ['category' => '7000', 'description' => 'Travel', 'tax_vat_applicable' => false,
-             'tax_wht_applicable' => false, 'status' => 'active', 'created_by' => $admin->id]
+                'tax_wht_applicable' => false, 'status' => 'active', 'created_by' => $admin->id]
         );
         Requisition::create([
-            'request_id'      => 'REQ-202604-0050',
-            'requester_id'    => $staff->id,
-            'type'            => 'OPEX',
-            'amount_kobo'     => 95_000_000, // ₦950K
-            'cost_centre_id'  => $cc->id,
+            'request_id' => 'REQ-202604-0050',
+            'requester_id' => $staff->id,
+            'type' => 'OPEX',
+            'amount_kobo' => 95_000_000, // ₦950K
+            'cost_centre_id' => $cc->id,
             'account_code_id' => $ac->id,
-            'description'     => 'Existing spend',
-            'status'          => 'paid',      // counts toward budget
-            'tax_vat_kobo'    => 0,
-            'tax_wht_kobo'    => 0,
-            'total_kobo'      => 95_000_000,
-            'created_by'      => $admin->id,
+            'description' => 'Existing spend',
+            'status' => 'paid',      // counts toward budget
+            'tax_vat_kobo' => 0,
+            'tax_wht_kobo' => 0,
+            'total_kobo' => 95_000_000,
+            'created_by' => $admin->id,
         ]);
 
         // New request: ₦100K → projected = ₦1,050K = 105%
@@ -207,32 +207,32 @@ class Phase4Test extends TestCase
     public function test_budget_warns_at_80_percent(): void
     {
         $admin = User::factory()->create(['role' => 'superadmin', 'status' => 'active']);
-        $cc    = CostCentre::create([
+        $cc = CostCentre::create([
             'code' => '7001', 'name' => 'Events',
             'budget_kobo' => 100_000_000, // ₦1M (100,000,000 kobo)
             'status' => 'active', 'created_by' => $admin->id,
         ]);
 
         $staff = User::factory()->create(['role' => 'staff', 'status' => 'active']);
-        $ac    = AccountCode::firstOrCreate(
+        $ac = AccountCode::firstOrCreate(
             ['code' => '7011'],
             ['category' => '7000', 'description' => 'Events',
-             'tax_vat_applicable' => false, 'tax_wht_applicable' => false,
-             'status' => 'active', 'created_by' => $admin->id]
+                'tax_vat_applicable' => false, 'tax_wht_applicable' => false,
+                'status' => 'active', 'created_by' => $admin->id]
         );
         Requisition::create([
-            'request_id'      => 'REQ-202604-0051',
-            'requester_id'    => $staff->id,
-            'type'            => 'OPEX',
-            'amount_kobo'     => 75_000_000, // ₦750K (75%)
-            'cost_centre_id'  => $cc->id,
+            'request_id' => 'REQ-202604-0051',
+            'requester_id' => $staff->id,
+            'type' => 'OPEX',
+            'amount_kobo' => 75_000_000, // ₦750K (75%)
+            'cost_centre_id' => $cc->id,
             'account_code_id' => $ac->id,
-            'description'     => 'Events spend',
-            'status'          => 'paid',
-            'tax_vat_kobo'    => 0,
-            'tax_wht_kobo'    => 0,
-            'total_kobo'      => 75_000_000,
-            'created_by'      => $admin->id,
+            'description' => 'Events spend',
+            'status' => 'paid',
+            'tax_vat_kobo' => 0,
+            'tax_wht_kobo' => 0,
+            'total_kobo' => 75_000_000,
+            'created_by' => $admin->id,
         ]);
 
         // ₦60K → projected = ₦810K = 81%
@@ -240,14 +240,14 @@ class Phase4Test extends TestCase
 
         $this->assertSame('warn_80', $result['status']);
         $this->assertGreaterThan(80.0, $result['percentage']);
-        $this->assertLessThan(90.0,   $result['percentage']);
+        $this->assertLessThan(90.0, $result['percentage']);
     }
 
     /** No budget set → always allow */
     public function test_budget_allows_when_no_budget_set(): void
     {
         $admin = User::factory()->create(['role' => 'superadmin', 'status' => 'active']);
-        $cc    = CostCentre::create([
+        $cc = CostCentre::create([
             'code' => '7002', 'name' => 'Misc', 'budget_kobo' => 0,
             'status' => 'active', 'created_by' => $admin->id,
         ]);
@@ -263,7 +263,7 @@ class Phase4Test extends TestCase
     public function test_wht_10_percent_on_1m(): void
     {
         $admin = User::factory()->create(['role' => 'superadmin', 'status' => 'active']);
-        $ac    = AccountCode::create([
+        $ac = AccountCode::create([
             'code' => '8010', 'category' => '8000', 'description' => 'Consulting',
             'tax_vat_applicable' => false, 'tax_wht_applicable' => true, 'wht_rate' => 10,
             'status' => 'active', 'created_by' => $admin->id,
@@ -271,16 +271,16 @@ class Phase4Test extends TestCase
 
         $result = TaxCalculator::calculate(100_000_000, $ac); // ₦1M
 
-        $this->assertSame(0,           $result['vat_kobo']);
-        $this->assertSame(10_000_000,  $result['wht_kobo']);   // ₦100K
-        $this->assertSame(90_000_000,  $result['total_kobo']); // ₦900K net
+        $this->assertSame(0, $result['vat_kobo']);
+        $this->assertSame(10_000_000, $result['wht_kobo']);   // ₦100K
+        $this->assertSame(90_000_000, $result['total_kobo']); // ₦900K net
     }
 
     /** VAT 7.5% on ₦1M → ₦75K VAT, total = ₦1,075,000 */
     public function test_vat_7_5_percent_on_1m(): void
     {
         $admin = User::factory()->create(['role' => 'superadmin', 'status' => 'active']);
-        $ac    = AccountCode::create([
+        $ac = AccountCode::create([
             'code' => '8011', 'category' => '8000', 'description' => 'Production',
             'tax_vat_applicable' => true, 'tax_wht_applicable' => false,
             'status' => 'active', 'created_by' => $admin->id,
@@ -288,8 +288,8 @@ class Phase4Test extends TestCase
 
         $result = TaxCalculator::calculate(100_000_000, $ac); // ₦1M
 
-        $this->assertSame(7_500_000,   $result['vat_kobo']);   // ₦75K
-        $this->assertSame(0,           $result['wht_kobo']);
+        $this->assertSame(7_500_000, $result['vat_kobo']);   // ₦75K
+        $this->assertSame(0, $result['wht_kobo']);
         $this->assertSame(107_500_000, $result['total_kobo']); // ₦1,075,000
     }
 
@@ -297,7 +297,7 @@ class Phase4Test extends TestCase
     public function test_combined_vat_and_wht(): void
     {
         $admin = User::factory()->create(['role' => 'superadmin', 'status' => 'active']);
-        $ac    = AccountCode::create([
+        $ac = AccountCode::create([
             'code' => '8012', 'category' => '8000', 'description' => 'Ad Agency',
             'tax_vat_applicable' => true, 'tax_wht_applicable' => true, 'wht_rate' => 5,
             'status' => 'active', 'created_by' => $admin->id,
@@ -306,8 +306,8 @@ class Phase4Test extends TestCase
         // ₦1M: VAT = ₦75K, WHT = ₦50K, total = ₦1M + ₦75K - ₦50K = ₦1,025,000
         $result = TaxCalculator::calculate(100_000_000, $ac);
 
-        $this->assertSame(7_500_000,   $result['vat_kobo']);
-        $this->assertSame(5_000_000,   $result['wht_kobo']);
+        $this->assertSame(7_500_000, $result['vat_kobo']);
+        $this->assertSame(5_000_000, $result['wht_kobo']);
         $this->assertSame(102_500_000, $result['total_kobo']);
     }
 
@@ -342,14 +342,14 @@ class Phase4Test extends TestCase
         Storage::fake('public');
 
         $finance = User::factory()->create(['role' => 'finance', 'status' => 'active']);
-        $req     = $this->makeRequisition(['amount_kobo' => 60_000_000, 'status' => 'matched']);
+        $req = $this->makeRequisition(['amount_kobo' => 60_000_000, 'status' => 'matched']);
 
         $response = $this->actingAs($finance)
             ->post("/finance/payments/{$req->id}/pay", [
-                'method'    => 'bank_transfer',
+                'method' => 'bank_transfer',
                 'reference' => 'TRN-2024-001',
-                'paid_at'   => today()->toDateString(),
-                'proof'     => UploadedFile::fake()->create('proof.pdf', 100, 'application/pdf'),
+                'paid_at' => today()->toDateString(),
+                'proof' => UploadedFile::fake()->create('proof.pdf', 100, 'application/pdf'),
             ]);
 
         $response->assertRedirect('/finance/payments');
@@ -367,14 +367,14 @@ class Phase4Test extends TestCase
         Storage::fake('public');
 
         $finance = User::factory()->create(['role' => 'finance', 'status' => 'active']);
-        $req     = $this->makeRequisition(['amount_kobo' => 60_000_000, 'status' => 'approved']); // not matched
+        $req = $this->makeRequisition(['amount_kobo' => 60_000_000, 'status' => 'approved']); // not matched
 
         $response = $this->actingAs($finance)
             ->post("/finance/payments/{$req->id}/pay", [
-                'method'    => 'bank_transfer',
+                'method' => 'bank_transfer',
                 'reference' => 'TRN-2024-002',
-                'paid_at'   => today()->toDateString(),
-                'proof'     => UploadedFile::fake()->create('proof.pdf', 100, 'application/pdf'),
+                'paid_at' => today()->toDateString(),
+                'proof' => UploadedFile::fake()->create('proof.pdf', 100, 'application/pdf'),
             ]);
 
         $response->assertSessionHasErrors(['payment']);
@@ -387,21 +387,21 @@ class Phase4Test extends TestCase
     /** CEO can approve a budget-override step with a reason ≥ 30 chars */
     public function test_ceo_can_approve_budget_override_step(): void
     {
-        $ceo   = User::factory()->create(['role' => 'ceo', 'status' => 'active']);
-        $req   = $this->makeRequisition(['status' => 'approving', 'budget_override_required' => true]);
+        $ceo = User::factory()->create(['role' => 'ceo', 'status' => 'active']);
+        $req = $this->makeRequisition(['status' => 'approving', 'budget_override_required' => true]);
 
-        $step  = ApprovalStep::create([
-            'requisition_id'     => $req->id,
-            'approver_id'        => $ceo->id,
-            'level'              => 99,
-            'role_label'         => 'CEO Budget Override',
-            'status'             => 'pending',
+        $step = ApprovalStep::create([
+            'requisition_id' => $req->id,
+            'approver_id' => $ceo->id,
+            'level' => 99,
+            'role_label' => 'CEO Budget Override',
+            'status' => 'pending',
             'is_budget_override' => true,
         ]);
 
         $response = $this->actingAs($ceo)
             ->post("/finance/approvals/steps/{$step->id}/decide", [
-                'action'          => 'approve',
+                'action' => 'approve',
                 'override_reason' => 'Approved for strategic project aligned with Q2 objectives and board directive.',
             ]);
 
@@ -417,21 +417,21 @@ class Phase4Test extends TestCase
     /** CEO budget override requires reason ≥ 30 chars */
     public function test_ceo_budget_override_requires_long_reason(): void
     {
-        $ceo  = User::factory()->create(['role' => 'ceo', 'status' => 'active']);
-        $req  = $this->makeRequisition(['status' => 'approving', 'budget_override_required' => true]);
+        $ceo = User::factory()->create(['role' => 'ceo', 'status' => 'active']);
+        $req = $this->makeRequisition(['status' => 'approving', 'budget_override_required' => true]);
 
         $step = ApprovalStep::create([
-            'requisition_id'     => $req->id,
-            'approver_id'        => $ceo->id,
-            'level'              => 99,
-            'role_label'         => 'CEO Budget Override',
-            'status'             => 'pending',
+            'requisition_id' => $req->id,
+            'approver_id' => $ceo->id,
+            'level' => 99,
+            'role_label' => 'CEO Budget Override',
+            'status' => 'pending',
             'is_budget_override' => true,
         ]);
 
         $response = $this->actingAs($ceo)
             ->post("/finance/approvals/steps/{$step->id}/decide", [
-                'action'          => 'approve',
+                'action' => 'approve',
                 'override_reason' => 'Too short.', // < 30 chars
             ]);
 

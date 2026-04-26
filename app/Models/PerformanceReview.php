@@ -23,10 +23,10 @@ class PerformanceReview extends Model
     ];
 
     protected $casts = [
-        'ratings'         => 'array',
-        'submitted_at'    => 'datetime',
+        'ratings' => 'array',
+        'submitted_at' => 'datetime',
         'acknowledged_at' => 'datetime',
-        'overall_rating'  => 'integer',
+        'overall_rating' => 'integer',
     ];
 
     public function reviewCycle(): BelongsTo
@@ -51,7 +51,7 @@ class PerformanceReview extends Model
 
     public function canBeEditedBy(User $user): bool
     {
-        if (!in_array($this->status, ['pending', 'in_progress'], true)) {
+        if (! in_array($this->status, ['pending', 'in_progress'], true)) {
             return false;
         }
 

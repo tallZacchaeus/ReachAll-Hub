@@ -42,7 +42,7 @@ class AccountCodeSeeder extends Seeder
             // ── 7000s — Travel & Transport ───────────────────────────────────────
             ['code' => '7001', 'category' => '7000', 'description' => 'Staff Transportation',         'vat' => false, 'wht' => false, 'wht_rate' => null],
             ['code' => '7002', 'category' => '7000', 'description' => 'Vehicle Fuel & Oil',           'vat' => true,  'wht' => false, 'wht_rate' => null],
-            ['code' => '7003', 'category' => '7000', 'description' => 'Vehicle Maintenance & Repairs','vat' => true,  'wht' => true,  'wht_rate' => 5],
+            ['code' => '7003', 'category' => '7000', 'description' => 'Vehicle Maintenance & Repairs', 'vat' => true,  'wht' => true,  'wht_rate' => 5],
             ['code' => '7004', 'category' => '7000', 'description' => 'Domestic Air Travel',          'vat' => true,  'wht' => false, 'wht_rate' => null],
             ['code' => '7005', 'category' => '7000', 'description' => 'International Air Travel',     'vat' => false, 'wht' => false, 'wht_rate' => null],
             ['code' => '7006', 'category' => '7000', 'description' => 'Hotel & Accommodation',        'vat' => true,  'wht' => true,  'wht_rate' => 5],
@@ -60,7 +60,7 @@ class AccountCodeSeeder extends Seeder
 
             // ── 9000s — Technology & Software ────────────────────────────────────
             ['code' => '9001', 'category' => '9000', 'description' => 'Software Licences & SaaS',     'vat' => true,  'wht' => true,  'wht_rate' => 10],
-            ['code' => '9002', 'category' => '9000', 'description' => 'Cloud Hosting & Infrastructure','vat' => true,  'wht' => true,  'wht_rate' => 10],
+            ['code' => '9002', 'category' => '9000', 'description' => 'Cloud Hosting & Infrastructure', 'vat' => true,  'wht' => true,  'wht_rate' => 10],
             ['code' => '9003', 'category' => '9000', 'description' => 'IT Support & Maintenance',     'vat' => true,  'wht' => true,  'wht_rate' => 5],
             ['code' => '9004', 'category' => '9000', 'description' => 'Domain & Web Hosting',         'vat' => true,  'wht' => true,  'wht_rate' => 5],
             ['code' => '9005', 'category' => '9000', 'description' => 'Mobile & Telephone Costs',     'vat' => true,  'wht' => false, 'wht_rate' => null],
@@ -79,13 +79,13 @@ class AccountCodeSeeder extends Seeder
             AccountCode::firstOrCreate(
                 ['code' => $c['code']],
                 [
-                    'category'            => $c['category'],
-                    'description'         => $c['description'],
-                    'tax_vat_applicable'  => $c['vat'],
-                    'tax_wht_applicable'  => $c['wht'],
-                    'wht_rate'            => $c['wht_rate'],
-                    'status'              => 'active',
-                    'created_by'          => $createdBy,
+                    'category' => $c['category'],
+                    'description' => $c['description'],
+                    'tax_vat_applicable' => $c['vat'],
+                    'tax_wht_applicable' => $c['wht'],
+                    'wht_rate' => $c['wht_rate'],
+                    'status' => 'active',
+                    'created_by' => $createdBy,
                 ]
             );
         }

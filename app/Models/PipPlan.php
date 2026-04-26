@@ -22,8 +22,8 @@ class PipPlan extends Model
     ];
 
     protected $casts = [
-        'start_date'   => 'date',
-        'end_date'     => 'date',
+        'start_date' => 'date',
+        'end_date' => 'date',
         'outcome_date' => 'date',
     ];
 

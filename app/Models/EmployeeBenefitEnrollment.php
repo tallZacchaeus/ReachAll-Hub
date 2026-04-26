@@ -21,8 +21,8 @@ class EmployeeBenefitEnrollment extends Model
     ];
 
     protected $casts = [
-        'effective_date'             => 'date',
-        'end_date'                   => 'date',
+        'effective_date' => 'date',
+        'end_date' => 'date',
         'employee_contribution_kobo' => 'integer',
         'employer_contribution_kobo' => 'integer',
     ];

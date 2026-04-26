@@ -32,15 +32,15 @@ class VarianceFlagged extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'type'           => 'variance_flagged',
+            'type' => 'variance_flagged',
             'requisition_id' => $this->requisition->id,
-            'request_id'     => $this->requisition->request_id,
-            'invoice_id'     => $this->invoice->id,
+            'request_id' => $this->requisition->request_id,
+            'invoice_id' => $this->invoice->id,
             'invoice_number' => $this->invoice->invoice_number,
-            'variance_fmt'   => MoneyHelper::format(\abs($this->varianceKobo)),
-            'flag_codes'     => collect($this->flags)->pluck('code')->toArray(),
-            'message'        => "Three-way match variance on {$this->requisition->request_id}: " .
-                MoneyHelper::format(\abs($this->varianceKobo)) . " difference. CEO review required.",
+            'variance_fmt' => MoneyHelper::format(\abs($this->varianceKobo)),
+            'flag_codes' => collect($this->flags)->pluck('code')->toArray(),
+            'message' => "Three-way match variance on {$this->requisition->request_id}: ".
+                MoneyHelper::format(\abs($this->varianceKobo)).' difference. CEO review required.',
         ];
     }
 }

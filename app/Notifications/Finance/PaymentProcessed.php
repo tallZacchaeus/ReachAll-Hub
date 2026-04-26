@@ -25,14 +25,14 @@ class PaymentProcessed extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'type'           => 'payment_processed',
+            'type' => 'payment_processed',
             'requisition_id' => $this->requisition->id,
-            'request_id'     => $this->requisition->request_id,
-            'amount_fmt'     => MoneyHelper::format($this->payment->amount_kobo),
-            'method'         => $this->payment->method,
-            'reference'      => $this->payment->reference,
-            'paid_at'        => $this->payment->paid_at->toDateString(),
-            'message'        => "Payment of " . MoneyHelper::format($this->payment->amount_kobo) .
+            'request_id' => $this->requisition->request_id,
+            'amount_fmt' => MoneyHelper::format($this->payment->amount_kobo),
+            'method' => $this->payment->method,
+            'reference' => $this->payment->reference,
+            'paid_at' => $this->payment->paid_at->toDateString(),
+            'message' => 'Payment of '.MoneyHelper::format($this->payment->amount_kobo).
                 " processed for {$this->requisition->request_id}.",
         ];
     }

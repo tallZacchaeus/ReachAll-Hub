@@ -31,7 +31,7 @@ class OrgStructureSeeder extends Seeder
     private const LOCATIONS = [
         ['code' => 'HQ',    'name' => 'Head Office',   'city' => 'Lagos',   'state' => 'Lagos',  'country' => 'Nigeria'],
         ['code' => 'ABUJA', 'name' => 'Abuja Office',  'city' => 'Abuja',   'state' => 'FCT',    'country' => 'Nigeria'],
-        ['code' => 'REMOTE','name' => 'Remote',        'city' => null,      'state' => null,     'country' => 'Nigeria'],
+        ['code' => 'REMOTE', 'name' => 'Remote',        'city' => null,      'state' => null,     'country' => 'Nigeria'],
     ];
 
     public function run(): void

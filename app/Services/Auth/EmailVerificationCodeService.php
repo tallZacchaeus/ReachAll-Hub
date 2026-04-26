@@ -8,7 +8,9 @@ use App\Models\User;
 class EmailVerificationCodeService
 {
     public const CODE_LENGTH = 6;
+
     public const EXPIRY_MINUTES = 15;
+
     public const MAX_ATTEMPTS = 5;
 
     public function issue(User $user): string
@@ -31,7 +33,7 @@ class EmailVerificationCodeService
     {
         $record = EmailVerificationCode::query()->where('user_id', $user->id)->first();
 
-        if (!$record) {
+        if (! $record) {
             return 'missing';
         }
 
@@ -47,7 +49,7 @@ class EmailVerificationCodeService
             return 'too_many_attempts';
         }
 
-        if (!hash_equals($record->code_hash, $this->hashFor($user, $code))) {
+        if (! hash_equals($record->code_hash, $this->hashFor($user, $code))) {
             $record->increment('attempts');
             $record->refresh();
 

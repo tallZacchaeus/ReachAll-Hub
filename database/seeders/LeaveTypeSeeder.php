@@ -26,13 +26,13 @@ class LeaveTypeSeeder extends Seeder
             LeaveType::firstOrCreate(
                 ['code' => $code],
                 [
-                    'name'                   => $name,
-                    'days_per_year'          => $daysPerYear,
-                    'accrual_policy'         => $accrualPolicy,
-                    'carry_over_days'        => $carryOverDays,
-                    'max_carry_over_days'    => $maxCarryOverDays,
+                    'name' => $name,
+                    'days_per_year' => $daysPerYear,
+                    'accrual_policy' => $accrualPolicy,
+                    'carry_over_days' => $carryOverDays,
+                    'max_carry_over_days' => $maxCarryOverDays,
                     'requires_documentation' => $requiresDocumentation,
-                    'is_active'              => true,
+                    'is_active' => true,
                 ]
             );
         }
@@ -49,7 +49,7 @@ class LeaveTypeSeeder extends Seeder
             ['Eid el-Fitr Holiday', '2026-04-01'],
             ['Democracy Day',       '2026-06-12'],
             ['Eid el-Kabir',        '2026-06-06'],
-            ['Eid el-Kabir Holiday','2026-06-07'],
+            ['Eid el-Kabir Holiday', '2026-06-07'],
             ['Independence Day',    '2026-10-01'],
             ['Eid el-Mawlid',       '2026-09-04'],
             ['Christmas Day',       '2026-12-25'],
@@ -60,9 +60,9 @@ class LeaveTypeSeeder extends Seeder
             PublicHoliday::firstOrCreate(
                 ['date' => $date, 'country_code' => 'NG'],
                 [
-                    'name'         => $name,
+                    'name' => $name,
                     'is_recurring' => false, // these are year-specific
-                    'is_active'    => true,
+                    'is_active' => true,
                 ]
             );
         }

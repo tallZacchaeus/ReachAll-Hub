@@ -19,7 +19,7 @@ class EmployeeDependent extends Model
 
     protected $casts = [
         'date_of_birth' => 'date',
-        'is_active'     => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     public function employee(): BelongsTo

@@ -22,7 +22,6 @@ class ClosedPeriodGuard
      * Abort with 422 if $date falls in a closed period and the user
      * is not CEO/Superadmin providing an explicit override.
      *
-     * @param  \DateTimeInterface|string  $date
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException
      */
     public static function assertWriteable(

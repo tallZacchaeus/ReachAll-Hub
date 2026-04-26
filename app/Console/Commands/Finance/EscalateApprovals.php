@@ -34,6 +34,7 @@ class EscalateApprovals extends Command
 
         if ($overdue->isEmpty()) {
             $this->info('No overdue steps found.');
+
             return self::SUCCESS;
         }
 
@@ -46,16 +47,17 @@ class EscalateApprovals extends Command
                 if ($nextApprover === null) {
                     // No escalation target found — log and leave in place for manual review
                     Log::warning('EscalateApprovals: no next approver found', [
-                        'step_id'        => $step->id,
+                        'step_id' => $step->id,
                         'requisition_id' => $step->requisition_id,
-                        'role_label'     => $step->role_label,
+                        'role_label' => $step->role_label,
                     ]);
+
                     continue;
                 }
 
                 $step->update([
-                    'approver_id'       => $nextApprover->id,
-                    'sla_deadline'      => now()->addHours(ApprovalRouter::SLA_HOURS),
+                    'approver_id' => $nextApprover->id,
+                    'sla_deadline' => now()->addHours(ApprovalRouter::SLA_HOURS),
                     'escalated_from_id' => $step->escalated_from_id ?? $step->id,
                 ]);
 
@@ -64,14 +66,14 @@ class EscalateApprovals extends Command
                 $escalated++;
 
                 Log::info('EscalateApprovals: step escalated', [
-                    'step_id'          => $step->id,
-                    'new_approver_id'  => $nextApprover->id,
-                    'requisition_id'   => $step->requisition_id,
+                    'step_id' => $step->id,
+                    'new_approver_id' => $nextApprover->id,
+                    'requisition_id' => $step->requisition_id,
                 ]);
             } catch (\Throwable $e) {
                 Log::error('EscalateApprovals: failed to escalate step', [
                     'step_id' => $step->id,
-                    'error'   => $e->getMessage(),
+                    'error' => $e->getMessage(),
                 ]);
             }
         }

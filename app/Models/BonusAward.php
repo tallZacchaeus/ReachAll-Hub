@@ -21,7 +21,7 @@ class BonusAward extends Model
     protected $casts = [
         'amount_kobo' => 'integer',
         'approved_at' => 'datetime',
-        'paid_at'     => 'datetime',
+        'paid_at' => 'datetime',
     ];
 
     public function plan(): BelongsTo

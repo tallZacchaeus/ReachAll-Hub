@@ -32,7 +32,7 @@ class MoneyHelper
         $naira = self::fromKobo($kobo);
         $formatted = number_format($naira, 2);
 
-        return $symbol ? '₦' . $formatted : $formatted;
+        return $symbol ? '₦'.$formatted : $formatted;
     }
 
     /**
@@ -44,15 +44,15 @@ class MoneyHelper
         $naira = self::fromKobo($kobo);
 
         if ($naira >= 1_000_000_000) {
-            return '₦' . number_format($naira / 1_000_000_000, 1) . 'B';
+            return '₦'.number_format($naira / 1_000_000_000, 1).'B';
         }
 
         if ($naira >= 1_000_000) {
-            return '₦' . number_format($naira / 1_000_000, 1) . 'M';
+            return '₦'.number_format($naira / 1_000_000, 1).'M';
         }
 
         if ($naira >= 1_000) {
-            return '₦' . number_format($naira / 1_000, 1) . 'K';
+            return '₦'.number_format($naira / 1_000, 1).'K';
         }
 
         return self::format($kobo);

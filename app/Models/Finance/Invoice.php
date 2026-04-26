@@ -21,9 +21,9 @@ class Invoice extends Model
     ];
 
     protected $casts = [
-        'amount_kobo'   => 'integer',
+        'amount_kobo' => 'integer',
         'variance_kobo' => 'integer',
-        'received_at'   => 'date',
+        'received_at' => 'date',
     ];
 
     public function requisition(): BelongsTo

@@ -33,22 +33,22 @@ class DashboardTest extends TestCase
     public function test_leader_dashboard_team_size_counts_only_active_users()
     {
         $leader = User::factory()->create([
-            'role'           => 'superadmin',
+            'role' => 'superadmin',
             'employee_stage' => 'leader',
-            'department'     => 'Engineering',
-            'status'         => 'active',
+            'department' => 'Engineering',
+            'status' => 'active',
         ]);
 
         // Active teammate — should be counted
         User::factory()->create([
             'department' => 'Engineering',
-            'status'     => 'active',
+            'status' => 'active',
         ]);
 
         // Inactive teammate — must NOT be counted
         User::factory()->create([
             'department' => 'Engineering',
-            'status'     => 'inactive',
+            'status' => 'inactive',
         ]);
 
         $this->actingAs($leader);

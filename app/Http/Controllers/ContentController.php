@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\ContentCategory;
 use App\Models\ContentPage;
-use App\Services\HtmlSanitizer;
 use App\Models\PolicyAcknowledgement;
+use App\Services\HtmlSanitizer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -232,7 +232,7 @@ class ContentController extends Controller
     private function uploadAttachments(Request $request): array
     {
         $request->validate([
-            'new_attachments'   => ['nullable', 'array', 'max:5'],
+            'new_attachments' => ['nullable', 'array', 'max:5'],
             'new_attachments.*' => ['nullable', 'file', 'max:10240'],
         ]);
 
@@ -295,6 +295,7 @@ class ContentController extends Controller
     private function excerpt(string $html, int $length = 120): string
     {
         $text = strip_tags($html);
+
         return mb_strlen($text) > $length ? mb_substr($text, 0, $length).'…' : $text;
     }
 

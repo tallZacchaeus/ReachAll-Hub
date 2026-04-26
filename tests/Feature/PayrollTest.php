@@ -3,9 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\EmployeeSalary;
-use App\Models\PayGrade;
 use App\Models\PayrollDeduction;
-use App\Models\PayrollEntry;
 use App\Models\PayrollRun;
 use App\Models\User;
 use App\Services\Finance\MoneyHelper;
@@ -45,13 +43,13 @@ class PayrollTest extends TestCase
     private function makeSalary(User $user, array $overrides = []): EmployeeSalary
     {
         return EmployeeSalary::create(array_merge([
-            'user_id'               => $user->id,
-            'basic_kobo'            => 50_000_00,   // ₦500,000
-            'housing_kobo'          => 20_000_00,   // ₦200,000
-            'transport_kobo'        => 5_000_00,    // ₦50,000
+            'user_id' => $user->id,
+            'basic_kobo' => 50_000_00,   // ₦500,000
+            'housing_kobo' => 20_000_00,   // ₦200,000
+            'transport_kobo' => 5_000_00,    // ₦50,000
             'other_allowances_kobo' => 0,
-            'nhf_enrolled'          => false,
-            'effective_date'        => now()->subMonth()->toDateString(),
+            'nhf_enrolled' => false,
+            'effective_date' => now()->subMonth()->toDateString(),
         ], $overrides));
     }
 
@@ -104,11 +102,11 @@ class PayrollTest extends TestCase
     public function test_calculator_pension_is_8_percent_of_pensionable_pay(): void
     {
         $salary = new EmployeeSalary([
-            'basic_kobo'            => 50_000_00,
-            'housing_kobo'          => 20_000_00,
-            'transport_kobo'        => 5_000_00,
+            'basic_kobo' => 50_000_00,
+            'housing_kobo' => 20_000_00,
+            'transport_kobo' => 5_000_00,
             'other_allowances_kobo' => 0,
-            'nhf_enrolled'          => false,
+            'nhf_enrolled' => false,
         ]);
 
         $result = PayrollCalculator::compute($salary);
@@ -128,11 +126,11 @@ class PayrollTest extends TestCase
     public function test_calculator_nhf_is_2_5_percent_of_basic_when_enrolled(): void
     {
         $salary = new EmployeeSalary([
-            'basic_kobo'            => 50_000_00,
-            'housing_kobo'          => 0,
-            'transport_kobo'        => 0,
+            'basic_kobo' => 50_000_00,
+            'housing_kobo' => 0,
+            'transport_kobo' => 0,
             'other_allowances_kobo' => 0,
-            'nhf_enrolled'          => true,
+            'nhf_enrolled' => true,
         ]);
 
         $result = PayrollCalculator::compute($salary);
@@ -144,11 +142,11 @@ class PayrollTest extends TestCase
     public function test_calculator_nhf_is_zero_when_not_enrolled(): void
     {
         $salary = new EmployeeSalary([
-            'basic_kobo'            => 50_000_00,
-            'housing_kobo'          => 0,
-            'transport_kobo'        => 0,
+            'basic_kobo' => 50_000_00,
+            'housing_kobo' => 0,
+            'transport_kobo' => 0,
             'other_allowances_kobo' => 0,
-            'nhf_enrolled'          => false,
+            'nhf_enrolled' => false,
         ]);
 
         $result = PayrollCalculator::compute($salary);
@@ -159,11 +157,11 @@ class PayrollTest extends TestCase
     public function test_calculator_nsitf_is_1_percent_of_gross(): void
     {
         $salary = new EmployeeSalary([
-            'basic_kobo'            => 100_000_00,
-            'housing_kobo'          => 0,
-            'transport_kobo'        => 0,
+            'basic_kobo' => 100_000_00,
+            'housing_kobo' => 0,
+            'transport_kobo' => 0,
             'other_allowances_kobo' => 0,
-            'nhf_enrolled'          => false,
+            'nhf_enrolled' => false,
         ]);
 
         $result = PayrollCalculator::compute($salary);
@@ -174,11 +172,11 @@ class PayrollTest extends TestCase
     public function test_calculator_net_equals_gross_minus_employee_deductions(): void
     {
         $salary = new EmployeeSalary([
-            'basic_kobo'            => 100_000_00,
-            'housing_kobo'          => 30_000_00,
-            'transport_kobo'        => 10_000_00,
+            'basic_kobo' => 100_000_00,
+            'housing_kobo' => 30_000_00,
+            'transport_kobo' => 10_000_00,
             'other_allowances_kobo' => 0,
-            'nhf_enrolled'          => false,
+            'nhf_enrolled' => false,
         ]);
 
         $result = PayrollCalculator::compute($salary);
@@ -195,14 +193,14 @@ class PayrollTest extends TestCase
     public function test_calculator_other_deductions_reduce_net(): void
     {
         $salary = new EmployeeSalary([
-            'basic_kobo'            => 100_000_00,
-            'housing_kobo'          => 0,
-            'transport_kobo'        => 0,
+            'basic_kobo' => 100_000_00,
+            'housing_kobo' => 0,
+            'transport_kobo' => 0,
             'other_allowances_kobo' => 0,
-            'nhf_enrolled'          => false,
+            'nhf_enrolled' => false,
         ]);
 
-        $with    = PayrollCalculator::compute($salary, 500_000); // ₦5,000 deduction
+        $with = PayrollCalculator::compute($salary, 500_000); // ₦5,000 deduction
         $without = PayrollCalculator::compute($salary, 0);
 
         $this->assertSame($without['net_kobo'] - 500_000, $with['net_kobo']);
@@ -212,11 +210,11 @@ class PayrollTest extends TestCase
     {
         // Annual gross = ₦300,000 — below CRA threshold; net taxable ≈ 0
         $salary = new EmployeeSalary([
-            'basic_kobo'            => 25_000_00,   // ₦250,000/month
-            'housing_kobo'          => 0,
-            'transport_kobo'        => 0,
+            'basic_kobo' => 25_000_00,   // ₦250,000/month
+            'housing_kobo' => 0,
+            'transport_kobo' => 0,
             'other_allowances_kobo' => 0,
-            'nhf_enrolled'          => false,
+            'nhf_enrolled' => false,
         ]);
 
         $result = PayrollCalculator::compute($salary);
@@ -238,7 +236,7 @@ class PayrollTest extends TestCase
         // Third employee with no salary — should be skipped
         $this->staffUser();
 
-        $service = new PayrollRunService();
+        $service = new PayrollRunService;
         $run = $service->createRun(
             Carbon::parse('2026-04-01'),
             Carbon::parse('2026-04-30'),
@@ -246,9 +244,9 @@ class PayrollTest extends TestCase
         );
 
         $this->assertDatabaseHas('payroll_runs', [
-            'id'             => $run->id,
-            'period_label'   => '2026-04',
-            'status'         => 'draft',
+            'id' => $run->id,
+            'period_label' => '2026-04',
+            'status' => 'draft',
             'employee_count' => 2,
         ]);
 
@@ -259,8 +257,8 @@ class PayrollTest extends TestCase
     {
         $this->expectException(\RuntimeException::class);
 
-        $hr      = $this->hrUser();
-        $service = new PayrollRunService();
+        $hr = $this->hrUser();
+        $service = new PayrollRunService;
 
         $service->createRun(Carbon::parse('2026-04-01'), Carbon::parse('2026-04-30'), $hr->id);
         $service->createRun(Carbon::parse('2026-04-01'), Carbon::parse('2026-04-30'), $hr->id);
@@ -268,18 +266,18 @@ class PayrollTest extends TestCase
 
     public function test_approve_run_changes_status_and_records_approver(): void
     {
-        $hr  = $this->hrUser();
+        $hr = $this->hrUser();
         $emp = $this->staffUser();
         $this->makeSalary($emp);
 
-        $service = new PayrollRunService();
-        $run     = $service->createRun(Carbon::parse('2026-05-01'), Carbon::parse('2026-05-31'), $hr->id);
+        $service = new PayrollRunService;
+        $run = $service->createRun(Carbon::parse('2026-05-01'), Carbon::parse('2026-05-31'), $hr->id);
 
         $service->approveRun($run, $hr->id);
 
         $this->assertDatabaseHas('payroll_runs', [
-            'id'             => $run->id,
-            'status'         => 'approved',
+            'id' => $run->id,
+            'status' => 'approved',
             'approved_by_id' => $hr->id,
         ]);
     }
@@ -288,12 +286,12 @@ class PayrollTest extends TestCase
     {
         $this->expectException(\RuntimeException::class);
 
-        $hr  = $this->hrUser();
+        $hr = $this->hrUser();
         $emp = $this->staffUser();
         $this->makeSalary($emp);
 
-        $service = new PayrollRunService();
-        $run     = $service->createRun(Carbon::parse('2026-06-01'), Carbon::parse('2026-06-30'), $hr->id);
+        $service = new PayrollRunService;
+        $run = $service->createRun(Carbon::parse('2026-06-01'), Carbon::parse('2026-06-30'), $hr->id);
         $service->approveRun($run, $hr->id);
         // Approve again on an already-approved run
         $service->approveRun($run, $hr->id);
@@ -301,23 +299,23 @@ class PayrollTest extends TestCase
 
     public function test_mark_paid_applies_deduction_recoveries(): void
     {
-        $hr  = $this->hrUser();
+        $hr = $this->hrUser();
         $emp = $this->staffUser();
         $this->makeSalary($emp);
 
         $deduction = PayrollDeduction::create([
-            'user_id'             => $emp->id,
-            'type'                => 'loan',
-            'description'         => 'Staff loan',
+            'user_id' => $emp->id,
+            'type' => 'loan',
+            'description' => 'Staff loan',
             'monthly_amount_kobo' => 50_000_00,
-            'remaining_kobo'      => 200_000_00,
-            'status'              => 'active',
-            'start_date'          => now()->subMonth()->toDateString(),
-            'created_by_id'       => $hr->id,
+            'remaining_kobo' => 200_000_00,
+            'status' => 'active',
+            'start_date' => now()->subMonth()->toDateString(),
+            'created_by_id' => $hr->id,
         ]);
 
-        $service = new PayrollRunService();
-        $run     = $service->createRun(Carbon::parse('2026-07-01'), Carbon::parse('2026-07-31'), $hr->id);
+        $service = new PayrollRunService;
+        $run = $service->createRun(Carbon::parse('2026-07-01'), Carbon::parse('2026-07-31'), $hr->id);
         $service->approveRun($run, $hr->id);
         $service->markPaid($run);
 
@@ -328,23 +326,23 @@ class PayrollTest extends TestCase
 
     public function test_deduction_marked_completed_when_balance_cleared(): void
     {
-        $hr  = $this->hrUser();
+        $hr = $this->hrUser();
         $emp = $this->staffUser();
         $this->makeSalary($emp);
 
         $deduction = PayrollDeduction::create([
-            'user_id'             => $emp->id,
-            'type'                => 'advance',
-            'description'         => 'Salary advance',
+            'user_id' => $emp->id,
+            'type' => 'advance',
+            'description' => 'Salary advance',
             'monthly_amount_kobo' => 50_000_00,
-            'remaining_kobo'      => 50_000_00, // exactly one instalment
-            'status'              => 'active',
-            'start_date'          => now()->subMonth()->toDateString(),
-            'created_by_id'       => $hr->id,
+            'remaining_kobo' => 50_000_00, // exactly one instalment
+            'status' => 'active',
+            'start_date' => now()->subMonth()->toDateString(),
+            'created_by_id' => $hr->id,
         ]);
 
-        $service = new PayrollRunService();
-        $run     = $service->createRun(Carbon::parse('2026-08-01'), Carbon::parse('2026-08-31'), $hr->id);
+        $service = new PayrollRunService;
+        $run = $service->createRun(Carbon::parse('2026-08-01'), Carbon::parse('2026-08-31'), $hr->id);
         $service->approveRun($run, $hr->id);
         $service->markPaid($run);
 
@@ -363,7 +361,7 @@ class PayrollTest extends TestCase
         $this->actingAs($this->hrUser())
             ->post('/payroll/runs', [
                 'period_start' => '2026-09-01',
-                'period_end'   => '2026-09-30',
+                'period_end' => '2026-09-30',
             ])
             ->assertRedirect();
 
@@ -375,7 +373,7 @@ class PayrollTest extends TestCase
         $this->actingAs($this->staffUser())
             ->post('/payroll/runs', [
                 'period_start' => '2026-10-01',
-                'period_end'   => '2026-10-31',
+                'period_end' => '2026-10-31',
             ])
             ->assertForbidden();
     }
@@ -394,19 +392,19 @@ class PayrollTest extends TestCase
 
         $this->actingAs($this->hrUser())
             ->post('/payroll/salaries', [
-                'user_id'               => $emp->id,
-                'basic_naira'           => '500000',
-                'housing_naira'         => '200000',
-                'transport_naira'       => '50000',
-                'other_allowances_naira'=> '0',
-                'nhf_enrolled'          => false,
-                'effective_date'        => '2026-04-01',
+                'user_id' => $emp->id,
+                'basic_naira' => '500000',
+                'housing_naira' => '200000',
+                'transport_naira' => '50000',
+                'other_allowances_naira' => '0',
+                'nhf_enrolled' => false,
+                'effective_date' => '2026-04-01',
             ])
             ->assertRedirect();
 
         $this->assertDatabaseHas('employee_salaries', [
-            'user_id'     => $emp->id,
-            'basic_kobo'  => MoneyHelper::toKobo(500000),
+            'user_id' => $emp->id,
+            'basic_kobo' => MoneyHelper::toKobo(500000),
         ]);
     }
 
@@ -415,9 +413,9 @@ class PayrollTest extends TestCase
     public function test_employee_salary_gross_kobo(): void
     {
         $salary = new EmployeeSalary([
-            'basic_kobo'            => 100_000,
-            'housing_kobo'          => 50_000,
-            'transport_kobo'        => 20_000,
+            'basic_kobo' => 100_000,
+            'housing_kobo' => 50_000,
+            'transport_kobo' => 20_000,
             'other_allowances_kobo' => 5_000,
         ]);
 

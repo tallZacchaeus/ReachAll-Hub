@@ -3,9 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Department;
-use App\Models\JobLevel;
-use App\Models\JobPosition;
 use App\Models\OfficeLocation;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -30,19 +27,19 @@ class OfficeLocationController extends Controller
         $locations = OfficeLocation::orderBy('name')
             ->get()
             ->map(fn (OfficeLocation $l) => [
-                'id'             => $l->id,
-                'code'           => $l->code,
-                'name'           => $l->name,
-                'address'        => $l->address,
-                'city'           => $l->city,
-                'state'          => $l->state,
-                'country'        => $l->country,
-                'is_active'      => $l->is_active,
+                'id' => $l->id,
+                'code' => $l->code,
+                'name' => $l->name,
+                'address' => $l->address,
+                'city' => $l->city,
+                'state' => $l->state,
+                'country' => $l->country,
+                'is_active' => $l->is_active,
                 'employee_count' => $l->employees()->count(),
             ]);
 
         return Inertia::render('Admin/OrgStructurePage', [
-            'tab'       => 'locations',
+            'tab' => 'locations',
             'locations' => $locations,
         ]);
     }
@@ -52,12 +49,12 @@ class OfficeLocationController extends Controller
         $this->authorise($request);
 
         $data = $request->validate([
-            'code'      => ['required', 'string', 'max:20', 'alpha_dash', 'unique:office_locations,code'],
-            'name'      => ['required', 'string', 'max:200'],
-            'address'   => ['nullable', 'string', 'max:500'],
-            'city'      => ['nullable', 'string', 'max:100'],
-            'state'     => ['nullable', 'string', 'max:100'],
-            'country'   => ['nullable', 'string', 'max:100'],
+            'code' => ['required', 'string', 'max:20', 'alpha_dash', 'unique:office_locations,code'],
+            'name' => ['required', 'string', 'max:200'],
+            'address' => ['nullable', 'string', 'max:500'],
+            'city' => ['nullable', 'string', 'max:100'],
+            'state' => ['nullable', 'string', 'max:100'],
+            'country' => ['nullable', 'string', 'max:100'],
             'is_active' => ['boolean'],
         ]);
 
@@ -71,12 +68,12 @@ class OfficeLocationController extends Controller
         $this->authorise($request);
 
         $data = $request->validate([
-            'code'      => ['required', 'string', 'max:20', 'alpha_dash', Rule::unique('office_locations', 'code')->ignore($officeLocation->id)],
-            'name'      => ['required', 'string', 'max:200'],
-            'address'   => ['nullable', 'string', 'max:500'],
-            'city'      => ['nullable', 'string', 'max:100'],
-            'state'     => ['nullable', 'string', 'max:100'],
-            'country'   => ['nullable', 'string', 'max:100'],
+            'code' => ['required', 'string', 'max:20', 'alpha_dash', Rule::unique('office_locations', 'code')->ignore($officeLocation->id)],
+            'name' => ['required', 'string', 'max:200'],
+            'address' => ['nullable', 'string', 'max:500'],
+            'city' => ['nullable', 'string', 'max:100'],
+            'state' => ['nullable', 'string', 'max:100'],
+            'country' => ['nullable', 'string', 'max:100'],
             'is_active' => ['boolean'],
         ]);
 

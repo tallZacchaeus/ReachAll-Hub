@@ -14,8 +14,8 @@ class ComplianceDocument extends Model
     ];
 
     protected $casts = [
-        'issued_at'   => 'date',
-        'expires_at'  => 'date',
+        'issued_at' => 'date',
+        'expires_at' => 'date',
         'verified_at' => 'datetime',
     ];
 

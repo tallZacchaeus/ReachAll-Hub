@@ -4,7 +4,6 @@ namespace App\Console\Commands\Finance;
 
 use App\Models\Finance\ApprovalStep;
 use App\Notifications\Finance\ApprovalReminder;
-use App\Services\Finance\ApprovalRouter;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -32,6 +31,7 @@ class RemindPendingApprovals extends Command
 
         if ($approaching->isEmpty()) {
             $this->info('No steps approaching deadline.');
+
             return self::SUCCESS;
         }
 
@@ -47,7 +47,7 @@ class RemindPendingApprovals extends Command
             } catch (\Throwable $e) {
                 Log::error('RemindPendingApprovals: failed to send reminder', [
                     'step_id' => $step->id,
-                    'error'   => $e->getMessage(),
+                    'error' => $e->getMessage(),
                 ]);
             }
         }

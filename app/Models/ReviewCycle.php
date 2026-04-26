@@ -21,7 +21,7 @@ class ReviewCycle extends Model
 
     protected $casts = [
         'period_start' => 'date',
-        'period_end'   => 'date',
+        'period_end' => 'date',
     ];
 
     public function performanceReviews(): HasMany

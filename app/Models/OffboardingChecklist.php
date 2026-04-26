@@ -22,9 +22,9 @@ class OffboardingChecklist extends Model
     protected function casts(): array
     {
         return [
-            'termination_date'            => 'date',
+            'termination_date' => 'date',
             'exit_interview_completed_at' => 'datetime',
-            'clearance_signed_at'         => 'datetime',
+            'clearance_signed_at' => 'datetime',
         ];
     }
 

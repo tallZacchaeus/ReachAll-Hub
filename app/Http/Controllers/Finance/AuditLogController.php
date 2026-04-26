@@ -35,7 +35,7 @@ class AuditLogController extends Controller
             // Accept short class name (e.g. "Requisition") or FQCN
             $modelType = $request->get('model_type');
             if (! str_contains($modelType, '\\')) {
-                $modelType = 'App\\Models\\Finance\\' . $modelType;
+                $modelType = 'App\\Models\\Finance\\'.$modelType;
             }
             $query->where('model_type', $modelType);
         }
@@ -49,7 +49,7 @@ class AuditLogController extends Controller
         }
 
         if ($request->filled('to')) {
-            $query->where('logged_at', '<=', $request->get('to') . ' 23:59:59');
+            $query->where('logged_at', '<=', $request->get('to').' 23:59:59');
         }
 
         if ($request->filled('model_id')) {
@@ -57,15 +57,15 @@ class AuditLogController extends Controller
         }
 
         $logs = $query->paginate(25)->through(fn (FinanceAuditLog $log) => [
-            'id'          => $log->id,
-            'action'      => $log->action,
-            'model_type'  => class_basename($log->model_type),
-            'model_id'    => $log->model_id,
+            'id' => $log->id,
+            'action' => $log->action,
+            'model_type' => class_basename($log->model_type),
+            'model_id' => $log->model_id,
             'before_json' => $log->before_json,
-            'after_json'  => $log->after_json,
-            'logged_at'   => $log->logged_at?->toISOString(),
-            'user'        => $log->user ? [
-                'id'   => $log->user->id,
+            'after_json' => $log->after_json,
+            'logged_at' => $log->logged_at?->toISOString(),
+            'user' => $log->user ? [
+                'id' => $log->user->id,
                 'name' => $log->user->name,
                 'role' => $log->user->role,
             ] : null,
@@ -77,7 +77,7 @@ class AuditLogController extends Controller
             ->pluck('action');
 
         return Inertia::render('Finance/AuditLogPage', [
-            'logs'    => $logs,
+            'logs' => $logs,
             'actions' => $actions,
             'filters' => $request->only(['action', 'model_type', 'user_id', 'from', 'to', 'model_id']),
         ]);

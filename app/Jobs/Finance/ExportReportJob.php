@@ -9,7 +9,6 @@ use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -29,8 +28,8 @@ class ExportReportJob implements ShouldQueue
 
     public function __construct(
         public readonly string $reportType,
-        public readonly array  $filters,
-        public readonly int    $userId,
+        public readonly array $filters,
+        public readonly int $userId,
     ) {}
 
     public function handle(): void
@@ -39,17 +38,17 @@ class ExportReportJob implements ShouldQueue
         $type = $this->reportType;
 
         if ($type === 'transactions') {
-            $export   = new TransactionExport($user, $this->filters);
-            $filename = 'transactions-' . now()->format('Ymd-His') . '.xlsx';
+            $export = new TransactionExport($user, $this->filters);
+            $filename = 'transactions-'.now()->format('Ymd-His').'.xlsx';
         } elseif ($type === 'wht_schedule') {
-            $export   = new FirsWhtScheduleExport($this->filters);
-            $filename = 'firs-wht-schedule-' . now()->format('Ymd-His') . '.xlsx';
+            $export = new FirsWhtScheduleExport($this->filters);
+            $filename = 'firs-wht-schedule-'.now()->format('Ymd-His').'.xlsx';
         } else {
-            $export   = new ReportExport($type, $this->filters);
-            $filename = $type . '-' . now()->format('Ymd-His') . '.xlsx';
+            $export = new ReportExport($type, $this->filters);
+            $filename = $type.'-'.now()->format('Ymd-His').'.xlsx';
         }
 
-        $path = 'finance/exports/' . $filename;
+        $path = 'finance/exports/'.$filename;
         Excel::store($export, $path, 'public');
 
         $downloadUrl = Storage::disk('public')->url($path);
@@ -57,17 +56,17 @@ class ExportReportJob implements ShouldQueue
         $user->notify(new \App\Notifications\Finance\ReportReadyNotification($downloadUrl, $filename));
 
         Log::info('Finance report export complete', [
-            'type'   => $type,
-            'user'   => $this->userId,
-            'path'   => $path,
+            'type' => $type,
+            'user' => $this->userId,
+            'path' => $path,
         ]);
     }
 
     public function failed(\Throwable $e): void
     {
         Log::error('Finance report export failed', [
-            'type'  => $this->reportType,
-            'user'  => $this->userId,
+            'type' => $this->reportType,
+            'user' => $this->userId,
             'error' => $e->getMessage(),
         ]);
     }

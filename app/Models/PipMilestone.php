@@ -18,7 +18,7 @@ class PipMilestone extends Model
     ];
 
     protected $casts = [
-        'due_date'     => 'date',
+        'due_date' => 'date',
         'completed_at' => 'datetime',
     ];
 

@@ -36,10 +36,10 @@ class ReportReadyNotification extends Notification
     public function toDatabase(object $notifiable): array
     {
         return [
-            'type'     => 'report_ready',
-            'title'    => 'Report Export Ready',
-            'body'     => "Your export {$this->filename} is ready for download.",
-            'url'      => $this->downloadUrl,
+            'type' => 'report_ready',
+            'title' => 'Report Export Ready',
+            'body' => "Your export {$this->filename} is ready for download.",
+            'url' => $this->downloadUrl,
             'filename' => $this->filename,
         ];
     }

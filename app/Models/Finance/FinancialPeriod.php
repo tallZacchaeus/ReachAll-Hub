@@ -24,12 +24,12 @@ class FinancialPeriod extends Model
     ];
 
     protected $casts = [
-        'opened_at'          => 'datetime',
-        'closed_at'          => 'datetime',
+        'opened_at' => 'datetime',
+        'closed_at' => 'datetime',
         'close_initiated_at' => 'datetime',
-        'co_authorized_at'   => 'datetime',
-        'year'               => 'integer',
-        'month'              => 'integer',
+        'co_authorized_at' => 'datetime',
+        'year' => 'integer',
+        'month' => 'integer',
     ];
 
     // ── Relationships ────────────────────────────────────────────────────────

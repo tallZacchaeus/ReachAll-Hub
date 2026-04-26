@@ -15,8 +15,8 @@ class CompliancePolicy extends Model
 
     protected $casts = [
         'requires_acknowledgement' => 'boolean',
-        'is_active'                => 'boolean',
-        'published_at'             => 'datetime',
+        'is_active' => 'boolean',
+        'published_at' => 'datetime',
     ];
 
     public function versions(): HasMany

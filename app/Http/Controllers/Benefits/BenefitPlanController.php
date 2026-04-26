@@ -3,11 +3,8 @@
 namespace App\Http\Controllers\Benefits;
 
 use App\Http\Controllers\Controller;
-use App\Models\BenefitPlan;
 use App\Models\BenefitEnrollmentWindow;
-use App\Models\EmployeeBenefitEnrollment;
-use App\Models\User;
-use App\Services\Finance\MoneyHelper;
+use App\Models\BenefitPlan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +29,7 @@ class BenefitPlanController extends Controller
         $windows = BenefitEnrollmentWindow::orderByDesc('open_date')->limit(5)->get();
 
         return Inertia::render('Benefits/BenefitPlansPage', [
-            'plans'   => $plans,
+            'plans' => $plans,
             'windows' => $windows,
         ]);
     }
@@ -42,17 +39,17 @@ class BenefitPlanController extends Controller
         $this->authorise();
 
         $validated = $request->validate([
-            'type'                        => ['required', 'in:hmo,pension,life_insurance,disability,other'],
-            'name'                        => ['required', 'string', 'max:150'],
-            'provider'                    => ['nullable', 'string', 'max:150'],
-            'description'                 => ['nullable', 'string', 'max:2000'],
-            'employee_contribution_type'  => ['required', 'in:none,fixed,percentage_of_basic,percentage_of_gross'],
+            'type' => ['required', 'in:hmo,pension,life_insurance,disability,other'],
+            'name' => ['required', 'string', 'max:150'],
+            'provider' => ['nullable', 'string', 'max:150'],
+            'description' => ['nullable', 'string', 'max:2000'],
+            'employee_contribution_type' => ['required', 'in:none,fixed,percentage_of_basic,percentage_of_gross'],
             'employee_contribution_value' => ['required', 'integer', 'min:0'],
-            'employer_contribution_type'  => ['required', 'in:none,fixed,percentage_of_basic,percentage_of_gross'],
+            'employer_contribution_type' => ['required', 'in:none,fixed,percentage_of_basic,percentage_of_gross'],
             'employer_contribution_value' => ['required', 'integer', 'min:0'],
-            'is_waivable'                 => ['boolean'],
-            'is_active'                   => ['boolean'],
-            'sort_order'                  => ['integer', 'min:0'],
+            'is_waivable' => ['boolean'],
+            'is_active' => ['boolean'],
+            'sort_order' => ['integer', 'min:0'],
         ]);
 
         BenefitPlan::create($validated);
@@ -65,16 +62,16 @@ class BenefitPlanController extends Controller
         $this->authorise();
 
         $validated = $request->validate([
-            'name'                        => ['required', 'string', 'max:150'],
-            'provider'                    => ['nullable', 'string', 'max:150'],
-            'description'                 => ['nullable', 'string', 'max:2000'],
-            'employee_contribution_type'  => ['required', 'in:none,fixed,percentage_of_basic,percentage_of_gross'],
+            'name' => ['required', 'string', 'max:150'],
+            'provider' => ['nullable', 'string', 'max:150'],
+            'description' => ['nullable', 'string', 'max:2000'],
+            'employee_contribution_type' => ['required', 'in:none,fixed,percentage_of_basic,percentage_of_gross'],
             'employee_contribution_value' => ['required', 'integer', 'min:0'],
-            'employer_contribution_type'  => ['required', 'in:none,fixed,percentage_of_basic,percentage_of_gross'],
+            'employer_contribution_type' => ['required', 'in:none,fixed,percentage_of_basic,percentage_of_gross'],
             'employer_contribution_value' => ['required', 'integer', 'min:0'],
-            'is_waivable'                 => ['boolean'],
-            'is_active'                   => ['boolean'],
-            'sort_order'                  => ['integer', 'min:0'],
+            'is_waivable' => ['boolean'],
+            'is_active' => ['boolean'],
+            'sort_order' => ['integer', 'min:0'],
         ]);
 
         $benefitPlan->update($validated);

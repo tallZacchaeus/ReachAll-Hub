@@ -3,15 +3,12 @@
 namespace App\Services\Finance;
 
 use App\Models\Finance\FinancialPeriod;
-use App\Models\Finance\PeriodCloseWaiver;
-use App\Models\Finance\PettyCashReconciliation;
-use App\Models\Finance\Requisition;
-use App\Models\Finance\Payment;
 use App\Models\Finance\Invoice;
+use App\Models\Finance\PeriodCloseWaiver;
+use App\Models\Finance\Requisition;
 use App\Models\User;
-use App\Notifications\Finance\PeriodCloseInitiated;
 use App\Notifications\Finance\PeriodClosed;
-use Illuminate\Support\Collection;
+use App\Notifications\Finance\PeriodCloseInitiated;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -41,27 +38,26 @@ class PeriodCloser
      */
     public static function checklist(FinancialPeriod $period): array
     {
-        $items   = [];
+        $items = [];
         $waivers = $period->waivers()
             ->get()
-            ->keyBy(fn ($w) => $w->item_type . ':' . ($w->item_id ?? 0));
+            ->keyBy(fn ($w) => $w->item_type.':'.($w->item_id ?? 0));
 
         // 1. Unreconciled petty cash floats
         $floats = \App\Models\Finance\PettyCashFloat::where('status', 'active')
-            ->whereDoesntHave('reconciliations', fn ($q) =>
-                $q->where('status', 'approved')
-                  ->whereYear('created_at', $period->year)
-                  ->whereMonth('created_at', $period->month)
+            ->whereDoesntHave('reconciliations', fn ($q) => $q->where('status', 'approved')
+                ->whereYear('created_at', $period->year)
+                ->whereMonth('created_at', $period->month)
             )
             ->get();
 
         foreach ($floats as $float) {
-            $key    = "unreconciled_float:{$float->id}";
+            $key = "unreconciled_float:{$float->id}";
             $waiver = $waivers->get($key);
             $items[] = [
-                'type'   => 'unreconciled_float',
-                'id'     => $float->id,
-                'label'  => "Petty cash float #{$float->id} has no approved reconciliation for this period",
+                'type' => 'unreconciled_float',
+                'id' => $float->id,
+                'label' => "Petty cash float #{$float->id} has no approved reconciliation for this period",
                 'status' => $waiver ? 'waived' : 'pending',
                 'waiver_reason' => $waiver?->reason,
             ];
@@ -73,12 +69,12 @@ class PeriodCloser
             ->get();
 
         foreach ($unpaid as $req) {
-            $key    = "unpaid_requisition:{$req->id}";
+            $key = "unpaid_requisition:{$req->id}";
             $waiver = $waivers->get($key);
             $items[] = [
-                'type'   => 'unpaid_requisition',
-                'id'     => $req->id,
-                'label'  => "Requisition {$req->request_id} ({$req->description}) is approved but unpaid",
+                'type' => 'unpaid_requisition',
+                'id' => $req->id,
+                'label' => "Requisition {$req->request_id} ({$req->description}) is approved but unpaid",
                 'status' => $waiver ? 'waived' : 'pending',
                 'waiver_reason' => $waiver?->reason,
             ];
@@ -90,31 +86,30 @@ class PeriodCloser
             ->get();
 
         foreach ($unposted as $req) {
-            $key    = "unposted_payment:{$req->id}";
+            $key = "unposted_payment:{$req->id}";
             $waiver = $waivers->get($key);
             $items[] = [
-                'type'   => 'unposted_payment',
-                'id'     => $req->id,
-                'label'  => "Payment for {$req->request_id} has not been posted to the ledger",
+                'type' => 'unposted_payment',
+                'id' => $req->id,
+                'label' => "Payment for {$req->request_id} has not been posted to the ledger",
                 'status' => $waiver ? 'waived' : 'pending',
                 'waiver_reason' => $waiver?->reason,
             ];
         }
 
         // 4. Open variance items (invoices with match_status = 'variance')
-        $variances = Invoice::whereHas('requisition', fn ($q) =>
-                $q->where('financial_period_id', $period->id)
-            )
+        $variances = Invoice::whereHas('requisition', fn ($q) => $q->where('financial_period_id', $period->id)
+        )
             ->where('match_status', 'variance')
             ->get();
 
         foreach ($variances as $inv) {
-            $key    = "variance_item:{$inv->id}";
+            $key = "variance_item:{$inv->id}";
             $waiver = $waivers->get($key);
             $items[] = [
-                'type'   => 'variance_item',
-                'id'     => $inv->id,
-                'label'  => "Invoice {$inv->invoice_number} has an unresolved variance",
+                'type' => 'variance_item',
+                'id' => $inv->id,
+                'label' => "Invoice {$inv->invoice_number} has an unresolved variance",
                 'status' => $waiver ? 'waived' : 'pending',
                 'waiver_reason' => $waiver?->reason,
             ];
@@ -129,6 +124,7 @@ class PeriodCloser
     public static function checklistClear(FinancialPeriod $period): bool
     {
         $items = self::checklist($period);
+
         return collect($items)->every(fn ($i) => $i['status'] !== 'pending');
     }
 
@@ -146,7 +142,7 @@ class PeriodCloser
         );
 
         $period->update([
-            'status'             => 'closing',
+            'status' => 'closing',
             'close_initiated_by' => $initiator->id,
             'close_initiated_at' => now(),
         ]);
@@ -161,20 +157,20 @@ class PeriodCloser
      */
     public static function waive(
         FinancialPeriod $period,
-        string          $itemType,
-        ?int            $itemId,
-        string          $reason,
-        User            $waivedBy
+        string $itemType,
+        ?int $itemId,
+        string $reason,
+        User $waivedBy
     ): PeriodCloseWaiver {
         abort_unless($period->isClosing(), 422, 'Period is not in closing state.');
 
         return PeriodCloseWaiver::create([
             'financial_period_id' => $period->id,
-            'item_type'           => $itemType,
-            'item_id'             => $itemId,
-            'reason'              => $reason,
-            'waived_by'           => $waivedBy->id,
-            'waived_at'           => now(),
+            'item_type' => $itemType,
+            'item_id' => $itemId,
+            'reason' => $reason,
+            'waived_by' => $waivedBy->id,
+            'waived_at' => now(),
         ]);
     }
 
@@ -220,7 +216,7 @@ class PeriodCloser
         // P6-01: Fast DB transaction — status change only, no slow I/O inside the lock.
         DB::transaction(function () use ($period, $closer) {
             $period->update([
-                'status'    => 'closed',
+                'status' => 'closed',
                 'closed_at' => now(),
                 'closed_by' => $closer->id,
             ]);
@@ -236,7 +232,7 @@ class PeriodCloser
             report($e);
             Log::error('Period close report PDF generation failed — period closed but no PDF saved.', [
                 'period_id' => $period->id,
-                'error'     => $e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
         }
 
@@ -261,7 +257,7 @@ class PeriodCloser
         if (config('cache.default') === 'array' && app()->isProduction()) {
             throw new \RuntimeException(
                 'Period reopen requires a persistent cache driver (e.g. database or redis). '
-                . 'Set CACHE_STORE=database in your production .env.'
+                .'Set CACHE_STORE=database in your production .env.'
             );
         }
 
@@ -272,14 +268,15 @@ class PeriodCloser
         );
 
         $cacheKey = "period_reopen_{$period->id}";
-        $first    = Cache::get($cacheKey);
+        $first = Cache::get($cacheKey);
 
         if (! $first) {
             // Store first authorization for 30 minutes
             Cache::put($cacheKey, [
                 'user_id' => $user->id,
-                'role'    => $user->role,
+                'role' => $user->role,
             ], now()->addMinutes(30));
+
             return 'pending_second_auth';
         }
 
@@ -291,13 +288,13 @@ class PeriodCloser
         Cache::forget($cacheKey);
 
         $period->update([
-            'status'             => 'open',
-            'closed_at'          => null,
-            'closed_by'          => null,
+            'status' => 'open',
+            'closed_at' => null,
+            'closed_by' => null,
             'close_initiated_by' => null,
             'close_initiated_at' => null,
-            'co_authorized_by'   => null,
-            'co_authorized_at'   => null,
+            'co_authorized_by' => null,
+            'co_authorized_at' => null,
         ]);
 
         return 'reopened';
@@ -308,7 +305,7 @@ class PeriodCloser
     private static function generateCloseReport(FinancialPeriod $period): string
     {
         // Aggregate period summary for the PDF
-        $totalPosted  = Requisition::where('financial_period_id', $period->id)
+        $totalPosted = Requisition::where('financial_period_id', $period->id)
             ->where('status', 'posted')
             ->sum('total_kobo');
         $totalApproved = Requisition::where('financial_period_id', $period->id)
@@ -323,7 +320,7 @@ class PeriodCloser
             'period', 'totalPosted', 'totalApproved', 'vatTotal', 'whtTotal'
         ))->render();
 
-        $pdf  = app('dompdf.wrapper');
+        $pdf = app('dompdf.wrapper');
         $pdf->loadHTML($html);
         // D8-01: Close reports contain aggregate financial data and must be private.
         // Stored on the 'finance' disk (not 'public') and served through

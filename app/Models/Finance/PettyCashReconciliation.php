@@ -25,11 +25,11 @@ class PettyCashReconciliation extends Model
     ];
 
     protected $casts = [
-        'period_start'          => 'date',
-        'period_end'            => 'date',
-        'total_expenses_kobo'   => 'integer',
-        'variance_kobo'         => 'integer',
-        'reviewed_at'           => 'datetime',
+        'period_start' => 'date',
+        'period_end' => 'date',
+        'total_expenses_kobo' => 'integer',
+        'variance_kobo' => 'integer',
+        'reviewed_at' => 'datetime',
     ];
 
     // ── Relationships ────────────────────────────────────────────────────────

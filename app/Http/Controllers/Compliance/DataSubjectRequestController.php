@@ -23,7 +23,7 @@ class DataSubjectRequestController extends Controller
             ->withQueryString();
 
         return Inertia::render('Compliance/DataSubjectRequestsPage', [
-            'dsrs'    => $dsrs,
+            'dsrs' => $dsrs,
             'filters' => $request->only('status', 'type'),
         ]);
     }
@@ -33,13 +33,13 @@ class DataSubjectRequestController extends Controller
         abort_unless($request->user()->hasPermission('compliance.self'), 403);
 
         $data = $request->validate([
-            'type'        => ['required', 'in:access,rectification,erasure,restriction,portability,objection'],
+            'type' => ['required', 'in:access,rectification,erasure,restriction,portability,objection'],
             'description' => ['required', 'string', 'max:2000'],
         ]);
 
         DataSubjectRequest::create([
-            'user_id'     => $request->user()->id,
-            'type'        => $data['type'],
+            'user_id' => $request->user()->id,
+            'type' => $data['type'],
             'description' => $data['description'],
         ]);
 
@@ -51,9 +51,9 @@ class DataSubjectRequestController extends Controller
         abort_unless($request->user()->hasPermission('compliance.manage'), 403);
 
         $dsr->update([
-            'status'           => 'acknowledged',
-            'handled_by_id'    => $request->user()->id,
-            'acknowledged_at'  => now(),
+            'status' => 'acknowledged',
+            'handled_by_id' => $request->user()->id,
+            'acknowledged_at' => now(),
         ]);
 
         return back()->with('success', 'DSR acknowledged.');
@@ -64,13 +64,13 @@ class DataSubjectRequestController extends Controller
         abort_unless($request->user()->hasPermission('compliance.manage'), 403);
 
         $data = $request->validate([
-            'status'   => ['required', 'in:acknowledged,in_progress,completed,rejected'],
+            'status' => ['required', 'in:acknowledged,in_progress,completed,rejected'],
             'response' => ['nullable', 'string', 'max:5000'],
         ]);
 
         $update = [
-            'status'        => $data['status'],
-            'response'      => $data['response'] ?? $dsr->response,
+            'status' => $data['status'],
+            'response' => $data['response'] ?? $dsr->response,
             'handled_by_id' => $request->user()->id,
         ];
 

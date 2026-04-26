@@ -29,7 +29,7 @@ class ContentSeeder extends Seeder
             ['name' => 'Leave Policy',             'slug' => 'leave-policy',         'sort_order' => 2],
             ['name' => 'Payroll & Benefits',       'slug' => 'payroll-benefits',     'sort_order' => 3],
             ['name' => 'Code of Conduct',          'slug' => 'code-of-conduct',      'sort_order' => 4],
-            ['name' => 'Ethics & Whistleblowing',  'slug' => 'ethics-whistleblowing','sort_order' => 5],
+            ['name' => 'Ethics & Whistleblowing',  'slug' => 'ethics-whistleblowing', 'sort_order' => 5],
             ['name' => 'Data Privacy & Security',  'slug' => 'data-privacy',         'sort_order' => 6],
             ['name' => 'IT Setup',                 'slug' => 'it-setup',             'sort_order' => 7],
             ['name' => 'HR Essentials',            'slug' => 'hr-essentials',        'sort_order' => 8],
@@ -159,7 +159,7 @@ class ContentSeeder extends Seeder
                 ['title' => 'Acknowledge the Code of Conduct',             'description' => 'Review and sign off on the Code of Conduct policy.',                    'sort_order' => 3, 'is_required' => true],
                 ['title' => 'Meet your team lead and direct manager',      'description' => 'Schedule a 1-on-1 intro meeting in your first two days.',               'sort_order' => 4, 'is_required' => true],
                 ['title' => 'Set up your development environment',         'description' => 'Install required software, clone repos, and run local setup.',          'sort_order' => 5, 'is_required' => false],
-                ['title' => 'Complete all mandatory training courses',     'description' => 'Log in to the Learning Hub and complete all assigned mandatory courses.','sort_order' => 6, 'is_required' => true],
+                ['title' => 'Complete all mandatory training courses',     'description' => 'Log in to the Learning Hub and complete all assigned mandatory courses.', 'sort_order' => 6, 'is_required' => true],
                 ['title' => 'Submit your profile photo to HR',             'description' => 'Upload a professional headshot through your profile settings.',         'sort_order' => 7, 'is_required' => false],
             ];
 

@@ -23,7 +23,7 @@ class ReassignRecurringTrainings extends Command
             ->get();
 
         $totalReassigned = 0;
-        $trainingCount   = 0;
+        $trainingCount = 0;
 
         foreach ($trainings as $training) {
             $cutoff = now()->subMonths($training->recurrence_months);
@@ -53,11 +53,11 @@ class ReassignRecurringTrainings extends Command
                 }
 
                 ComplianceTrainingAssignment::create([
-                    'training_id'    => $training->id,
-                    'user_id'        => $assignment->user_id,
+                    'training_id' => $training->id,
+                    'user_id' => $assignment->user_id,
                     'assigned_by_id' => null,
-                    'due_at'         => now()->addMonths($training->recurrence_months)->startOfMonth()->toDateString(),
-                    'status'         => 'pending',
+                    'due_at' => now()->addMonths($training->recurrence_months)->startOfMonth()->toDateString(),
+                    'status' => 'pending',
                 ]);
 
                 $reassignedForTraining++;

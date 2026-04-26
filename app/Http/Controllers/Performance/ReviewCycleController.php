@@ -34,7 +34,7 @@ class ReviewCycleController extends Controller
             // Staff/managers see active + closed cycles where they have reviews
             $myReviewCycleIds = PerformanceReview::where(function ($q) use ($user) {
                 $q->where('reviewee_id', $user->id)
-                  ->orWhere('reviewer_id', $user->id);
+                    ->orWhere('reviewer_id', $user->id);
             })->pluck('review_cycle_id');
 
             $cycles = ReviewCycle::whereIn('status', ['active', 'closed'])
@@ -46,8 +46,8 @@ class ReviewCycleController extends Controller
         }
 
         return Inertia::render('Performance/ReviewCyclesPage', [
-            'cycles'     => $cycles,
-            'canManage'  => $user->hasPermission('reviews.manage'),
+            'cycles' => $cycles,
+            'canManage' => $user->hasPermission('reviews.manage'),
         ]);
     }
 
@@ -64,13 +64,13 @@ class ReviewCycleController extends Controller
                 'reviewer:id,name,employee_id',
             ]);
 
-        if (!$canManage) {
+        if (! $canManage) {
             // Regular user sees only their own reviews; managers also see their direct reports
             $directReportIds = $user->directReports()->pluck('id')->toArray();
             $reviewsQuery->where(function ($q) use ($user, $directReportIds) {
                 $q->where('reviewee_id', $user->id)
-                  ->orWhere('reviewer_id', $user->id)
-                  ->orWhereIn('reviewee_id', $directReportIds);
+                    ->orWhere('reviewer_id', $user->id)
+                    ->orWhereIn('reviewee_id', $directReportIds);
             });
         }
 
@@ -82,22 +82,22 @@ class ReviewCycleController extends Controller
             ->orWhereIn('user_id', $reviews->pluck('reviewee_id'))
             ->with(['user:id,name,employee_id', 'initiatedBy:id,name']);
 
-        if (!$canManage) {
+        if (! $canManage) {
             $directReportIds = $user->directReports()->pluck('id')->toArray();
             $pipsQuery->where(function ($q) use ($user, $directReportIds) {
                 $q->where('user_id', $user->id)
-                  ->orWhereIn('user_id', $directReportIds);
+                    ->orWhereIn('user_id', $directReportIds);
             });
         }
 
         $pips = $pipsQuery->get();
 
         return Inertia::render('Performance/ReviewCyclePage', [
-            'cycle'     => $reviewCycle,
-            'reviews'   => $reviews,
-            'pips'      => $pips,
+            'cycle' => $reviewCycle,
+            'reviews' => $reviews,
+            'pips' => $pips,
             'canManage' => $canManage,
-            'authId'    => $user->id,
+            'authId' => $user->id,
         ]);
     }
 
@@ -106,11 +106,11 @@ class ReviewCycleController extends Controller
         $this->authoriseManage();
 
         $validated = $request->validate([
-            'name'         => ['required', 'string', 'max:150'],
-            'type'         => ['required', 'in:annual,quarterly,mid_year,probation'],
+            'name' => ['required', 'string', 'max:150'],
+            'type' => ['required', 'in:annual,quarterly,mid_year,probation'],
             'period_start' => ['required', 'date'],
-            'period_end'   => ['required', 'date', 'after:period_start'],
-            'description'  => ['nullable', 'string', 'max:2000'],
+            'period_end' => ['required', 'date', 'after:period_start'],
+            'description' => ['nullable', 'string', 'max:2000'],
         ]);
 
         /** @var User $user */
@@ -207,9 +207,9 @@ class ReviewCycleController extends Controller
             // Self review
             PerformanceReview::firstOrCreate([
                 'review_cycle_id' => $cycle->id,
-                'reviewee_id'     => $employee->id,
-                'reviewer_id'     => null,
-                'type'            => 'self',
+                'reviewee_id' => $employee->id,
+                'reviewer_id' => null,
+                'type' => 'self',
             ], [
                 'status' => 'pending',
             ]);
@@ -218,9 +218,9 @@ class ReviewCycleController extends Controller
             if ($employee->reports_to_id) {
                 PerformanceReview::firstOrCreate([
                     'review_cycle_id' => $cycle->id,
-                    'reviewee_id'     => $employee->id,
-                    'reviewer_id'     => $employee->reports_to_id,
-                    'type'            => 'manager',
+                    'reviewee_id' => $employee->id,
+                    'reviewer_id' => $employee->reports_to_id,
+                    'type' => 'manager',
                 ], [
                     'status' => 'pending',
                 ]);

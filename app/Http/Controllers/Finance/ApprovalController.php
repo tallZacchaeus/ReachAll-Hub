@@ -31,10 +31,10 @@ class ApprovalController extends Controller
         // Join first so all subsequent where() calls can qualify columns unambiguously.
         // Both approval_steps and requisitions have a status column.
         $query = ApprovalStep::with([
-                'requisition.requester:id,name,department',
-                'requisition.costCentre:id,code,name',
-                'requisition.vendor:id,name',
-            ])
+            'requisition.requester:id,name,department',
+            'requisition.costCentre:id,code,name',
+            'requisition.vendor:id,name',
+        ])
             ->join('requisitions', 'approval_steps.requisition_id', '=', 'requisitions.id')
             ->select('approval_steps.*')
             ->where('approval_steps.approver_id', $user->id)
@@ -68,9 +68,9 @@ class ApprovalController extends Controller
             ->count();
 
         return Inertia::render('Finance/ApprovalsPage', [
-            'steps'        => $steps,
+            'steps' => $steps,
             'overdueCount' => $overdueCount,
-            'filters'      => $request->only(['urgency', 'type', 'min_amount', 'max_amount']),
+            'filters' => $request->only(['urgency', 'type', 'min_amount', 'max_amount']),
         ]);
     }
 
@@ -104,47 +104,47 @@ class ApprovalController extends Controller
         }
 
         $steps = $requisition->approvalSteps->map(fn (ApprovalStep $s) => [
-            'id'           => $s->id,
-            'level'        => $s->level,
-            'role_label'   => $s->role_label,
-            'approver'     => ['id' => $s->approver->id, 'name' => $s->approver->name, 'role' => $s->approver->role],
-            'status'       => $s->status,
-            'comment'      => $s->comment,
-            'acted_at'     => $s->acted_at?->toISOString(),
+            'id' => $s->id,
+            'level' => $s->level,
+            'role_label' => $s->role_label,
+            'approver' => ['id' => $s->approver->id, 'name' => $s->approver->name, 'role' => $s->approver->role],
+            'status' => $s->status,
+            'comment' => $s->comment,
+            'acted_at' => $s->acted_at?->toISOString(),
             'sla_deadline' => $s->sla_deadline?->toISOString(),
-            'is_overdue'   => $s->isOverdue(),
+            'is_overdue' => $s->isOverdue(),
         ]);
 
         return Inertia::render('Finance/ApprovalDetailPage', [
             'requisition' => [
-                'id'           => $requisition->id,
-                'request_id'   => $requisition->request_id,
-                'type'         => $requisition->type,
-                'amount_kobo'  => $requisition->amount_kobo,
-                'amount_fmt'   => MoneyHelper::format($requisition->amount_kobo),
-                'tax_vat_fmt'  => MoneyHelper::format($requisition->tax_vat_kobo),
-                'tax_wht_fmt'  => MoneyHelper::format($requisition->tax_wht_kobo),
-                'total_fmt'    => MoneyHelper::format($requisition->total_kobo),
-                'currency'     => $requisition->currency,
-                'urgency'      => $requisition->urgency,
-                'description'  => $requisition->description,
-                'status'       => $requisition->status,
-                'requester'    => $requisition->requester ? ['id' => $requisition->requester->id, 'name' => $requisition->requester->name, 'department' => $requisition->requester->department] : null,
-                'cost_centre'  => $requisition->costCentre ? ['code' => $requisition->costCentre->code, 'name' => $requisition->costCentre->name, 'budget_kobo' => $requisition->costCentre->budget_kobo, 'budget_fmt' => MoneyHelper::format($requisition->costCentre->budget_kobo)] : null,
+                'id' => $requisition->id,
+                'request_id' => $requisition->request_id,
+                'type' => $requisition->type,
+                'amount_kobo' => $requisition->amount_kobo,
+                'amount_fmt' => MoneyHelper::format($requisition->amount_kobo),
+                'tax_vat_fmt' => MoneyHelper::format($requisition->tax_vat_kobo),
+                'tax_wht_fmt' => MoneyHelper::format($requisition->tax_wht_kobo),
+                'total_fmt' => MoneyHelper::format($requisition->total_kobo),
+                'currency' => $requisition->currency,
+                'urgency' => $requisition->urgency,
+                'description' => $requisition->description,
+                'status' => $requisition->status,
+                'requester' => $requisition->requester ? ['id' => $requisition->requester->id, 'name' => $requisition->requester->name, 'department' => $requisition->requester->department] : null,
+                'cost_centre' => $requisition->costCentre ? ['code' => $requisition->costCentre->code, 'name' => $requisition->costCentre->name, 'budget_kobo' => $requisition->costCentre->budget_kobo, 'budget_fmt' => MoneyHelper::format($requisition->costCentre->budget_kobo)] : null,
                 'account_code' => $requisition->accountCode ? ['code' => $requisition->accountCode->code, 'description' => $requisition->accountCode->description] : null,
-                'vendor'       => $requisition->vendor ? ['name' => $requisition->vendor->name, 'bank_name' => $requisition->vendor->bank_name, 'contact_email' => $requisition->vendor->contact_email] : null,
+                'vendor' => $requisition->vendor ? ['name' => $requisition->vendor->name, 'bank_name' => $requisition->vendor->bank_name, 'contact_email' => $requisition->vendor->contact_email] : null,
                 'supporting_docs' => $requisition->supporting_docs ?? [],
                 'submitted_at' => $requisition->submitted_at?->toISOString(),
             ],
-            'steps'        => $steps,
-            'myStep'       => $myStep ? [
-                'id'                 => $myStep->id,
-                'level'              => $myStep->level,
-                'status'             => $myStep->status,
+            'steps' => $steps,
+            'myStep' => $myStep ? [
+                'id' => $myStep->id,
+                'level' => $myStep->level,
+                'status' => $myStep->status,
                 'is_budget_override' => $myStep->is_budget_override,
             ] : null,
             'budgetOverrideRequired' => $requisition->budget_override_required,
-            'canDecide'    => $myStep !== null,
+            'canDecide' => $myStep !== null,
         ]);
     }
 
@@ -157,7 +157,7 @@ class ApprovalController extends Controller
         $this->authorize('decide', $step);
 
         $rules = [
-            'action'  => ['required', 'in:approve,reject,query'],
+            'action' => ['required', 'in:approve,reject,query'],
             'comment' => [
                 'nullable', 'string', 'max:1000',
                 $request->get('action') !== 'approve' ? 'required' : 'nullable',
@@ -175,12 +175,12 @@ class ApprovalController extends Controller
             $req = $step->requisition;
 
             $step->update([
-                'status'   => match ($validated['action']) {
+                'status' => match ($validated['action']) {
                     'approve' => 'approved',
-                    'reject'  => 'rejected',
-                    'query'   => 'rejected',
+                    'reject' => 'rejected',
+                    'query' => 'rejected',
                 },
-                'comment'  => $validated['comment'] ?? null,
+                'comment' => $validated['comment'] ?? null,
                 'acted_at' => now(),
             ]);
 
@@ -193,26 +193,26 @@ class ApprovalController extends Controller
 
                     $req->update([
                         'budget_override_required' => false,
-                        'budget_override_reason'   => $reason,
-                        'budget_override_by'       => $request->user()->id,
-                        'budget_override_at'       => now(),
-                        'status'                   => 'approved',
-                        'approved_at'              => now(),
+                        'budget_override_reason' => $reason,
+                        'budget_override_by' => $request->user()->id,
+                        'budget_override_at' => now(),
+                        'status' => 'approved',
+                        'approved_at' => now(),
                     ]);
 
                     // Permanent audit entry for the override
                     FinanceAuditLog::insert([
-                        'user_id'     => $request->user()->id,
-                        'model_type'  => Requisition::class,
-                        'model_id'    => $req->id,
-                        'action'      => 'budget_override',
+                        'user_id' => $request->user()->id,
+                        'model_type' => Requisition::class,
+                        'model_id' => $req->id,
+                        'action' => 'budget_override',
                         'before_json' => null,
-                        'after_json'  => json_encode([
+                        'after_json' => json_encode([
                             'override_reason' => $reason,
-                            'amount_kobo'     => $req->amount_kobo,
-                            'cost_centre_id'  => $req->cost_centre_id,
+                            'amount_kobo' => $req->amount_kobo,
+                            'cost_centre_id' => $req->cost_centre_id,
                         ]),
-                        'logged_at'   => now()->toDateTimeString(),
+                        'logged_at' => now()->toDateTimeString(),
                     ]);
 
                     event(new RequisitionStateChanged($req, $prev));
@@ -231,7 +231,7 @@ class ApprovalController extends Controller
             }
         });
 
-        return redirect("/finance/approvals")
+        return redirect('/finance/approvals')
             ->with('success', 'Decision recorded.');
     }
 
@@ -265,7 +265,7 @@ class ApprovalController extends Controller
     private function finalisApproval(Requisition $req, ApprovalStep $lastStep): void
     {
         $costCentre = $req->costCentre;
-        $budget     = $costCentre
+        $budget = $costCentre
             ? BudgetEnforcer::check($costCentre, $req->amount_kobo, $req->financial_period_id)
             : ['status' => 'allow', 'percentage' => 0.0];
 
@@ -278,12 +278,12 @@ class ApprovalController extends Controller
 
             if ($ceo) {
                 ApprovalStep::create([
-                    'requisition_id'     => $req->id,
-                    'approver_id'        => $ceo->id,
-                    'level'              => 99,
-                    'role_label'         => 'CEO Budget Override',
-                    'status'             => 'pending',
-                    'sla_deadline'       => now()->addHours(ApprovalRouter::SLA_HOURS),
+                    'requisition_id' => $req->id,
+                    'approver_id' => $ceo->id,
+                    'level' => 99,
+                    'role_label' => 'CEO Budget Override',
+                    'status' => 'pending',
+                    'sla_deadline' => now()->addHours(ApprovalRouter::SLA_HOURS),
                     'is_budget_override' => true,
                 ]);
 
@@ -297,16 +297,16 @@ class ApprovalController extends Controller
 
             // Log the block as a special audit entry
             FinanceAuditLog::insert([
-                'user_id'     => auth()->id(),
-                'model_type'  => Requisition::class,
-                'model_id'    => $req->id,
-                'action'      => 'budget_blocked',
+                'user_id' => auth()->id(),
+                'model_type' => Requisition::class,
+                'model_id' => $req->id,
+                'action' => 'budget_blocked',
                 'before_json' => null,
-                'after_json'  => json_encode([
+                'after_json' => json_encode([
                     'budget_status' => $budget,
-                    'amount_kobo'   => $req->amount_kobo,
+                    'amount_kobo' => $req->amount_kobo,
                 ]),
-                'logged_at'   => now()->toDateTimeString(),
+                'logged_at' => now()->toDateTimeString(),
             ]);
 
             $req->update(['status' => 'approving']); // stays in approving until CEO acts
@@ -327,7 +327,7 @@ class ApprovalController extends Controller
         // ── All clear: fully approve ────────────────────────────────────────
         $prev = $req->status;
         $req->update([
-            'status'      => 'approved',
+            'status' => 'approved',
             'approved_at' => now(),
         ]);
         event(new RequisitionStateChanged($req, $prev));
@@ -339,22 +339,22 @@ class ApprovalController extends Controller
         $req = $step->requisition;
 
         return [
-            'step_id'        => $step->id,
+            'step_id' => $step->id,
             'requisition_id' => $req->id,
-            'request_id'     => $req->request_id,
-            'type'           => $req->type,
-            'amount_kobo'    => $req->amount_kobo,
-            'amount_fmt'     => MoneyHelper::format($req->amount_kobo),
-            'urgency'        => $req->urgency,
-            'description'    => $req->description,
+            'request_id' => $req->request_id,
+            'type' => $req->type,
+            'amount_kobo' => $req->amount_kobo,
+            'amount_fmt' => MoneyHelper::format($req->amount_kobo),
+            'urgency' => $req->urgency,
+            'description' => $req->description,
             'requester_name' => $req->requester?->name,
-            'department'     => $req->requester?->department,
-            'cost_centre'    => $req->costCentre ? $req->costCentre->code . ' ' . $req->costCentre->name : null,
-            'vendor'         => $req->vendor?->name,
-            'role_label'     => $step->role_label,
-            'sla_deadline'   => $step->sla_deadline?->toISOString(),
-            'is_overdue'     => $step->isOverdue(),
-            'submitted_at'   => $req->submitted_at?->toDateString(),
+            'department' => $req->requester?->department,
+            'cost_centre' => $req->costCentre ? $req->costCentre->code.' '.$req->costCentre->name : null,
+            'vendor' => $req->vendor?->name,
+            'role_label' => $step->role_label,
+            'sla_deadline' => $step->sla_deadline?->toISOString(),
+            'is_overdue' => $step->isOverdue(),
+            'submitted_at' => $req->submitted_at?->toDateString(),
         ];
     }
 }

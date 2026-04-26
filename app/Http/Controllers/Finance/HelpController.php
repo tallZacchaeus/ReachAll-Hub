@@ -13,6 +13,7 @@ class HelpController extends Controller
     public function gettingStarted(Request $request): Response
     {
         abort_unless($request->user() !== null, 403);
+
         return Inertia::render('Finance/Help/GettingStartedPage');
     }
 
@@ -25,6 +26,7 @@ class HelpController extends Controller
             $user?->hasPermission('requests.review') || $user?->hasPermission('finance.admin'),
             403
         );
+
         return Inertia::render('Finance/Help/ApproversPage');
     }
 
@@ -38,6 +40,7 @@ class HelpController extends Controller
             $request->user()?->hasPermission('finance.admin'),
             403
         );
+
         return Inertia::render('Finance/Help/FinanceTeamPage');
     }
 }

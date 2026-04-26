@@ -25,31 +25,31 @@ class OfferLetterController extends Controller
 
         $data = $request->validate([
             'offered_salary_kobo' => 'required|integer|min:1',
-            'start_date'          => 'required|date|after:today',
-            'offer_date'          => 'required|date',
-            'expiry_date'         => 'nullable|date|after:offer_date',
-            'notes'               => 'nullable|string|max:3000',
-            'document'            => 'nullable|file|mimes:pdf|max:10240',
+            'start_date' => 'required|date|after:today',
+            'offer_date' => 'required|date',
+            'expiry_date' => 'nullable|date|after:offer_date',
+            'notes' => 'nullable|string|max:3000',
+            'document' => 'nullable|file|mimes:pdf|max:10240',
         ]);
 
         $docPath = null;
         if ($request->hasFile('document')) {
             $docPath = $request->file('document')->store(
-                'offers/' . $jobApplication->id, 'hr'
+                'offers/'.$jobApplication->id, 'hr'
             );
         }
 
         OfferLetter::create([
-            'job_application_id'  => $jobApplication->id,
+            'job_application_id' => $jobApplication->id,
             'offered_salary_kobo' => $data['offered_salary_kobo'],
-            'start_date'          => $data['start_date'],
-            'offer_date'          => $data['offer_date'],
-            'expiry_date'         => $data['expiry_date'] ?? null,
-            'notes'               => $data['notes'] ?? null,
-            'document_path'       => $docPath,
-            'document_disk'       => $docPath ? 'hr' : null,
-            'status'              => 'draft',
-            'created_by_id'       => $request->user()->id,
+            'start_date' => $data['start_date'],
+            'offer_date' => $data['offer_date'],
+            'expiry_date' => $data['expiry_date'] ?? null,
+            'notes' => $data['notes'] ?? null,
+            'document_path' => $docPath,
+            'document_disk' => $docPath ? 'hr' : null,
+            'status' => 'draft',
+            'created_by_id' => $request->user()->id,
         ]);
 
         // Advance application to offer stage
@@ -66,7 +66,7 @@ class OfferLetterController extends Controller
         abort_unless($offerLetter->status === 'draft', 422);
 
         $offerLetter->update([
-            'status'  => 'sent',
+            'status' => 'sent',
             'sent_at' => now(),
         ]);
 
@@ -83,7 +83,7 @@ class OfferLetterController extends Controller
         ]);
 
         $offerLetter->update([
-            'status'       => $data['response'],
+            'status' => $data['response'],
             'responded_at' => now(),
         ]);
 
@@ -91,11 +91,11 @@ class OfferLetterController extends Controller
         $stage = $data['response'] === 'accepted' ? 'hired' : 'rejected';
         $updates = ['stage' => $stage];
         if ($stage === 'hired') {
-            $updates['hired_at']   = now();
-            $updates['status']     = 'shortlisted';
+            $updates['hired_at'] = now();
+            $updates['status'] = 'shortlisted';
         } else {
             $updates['rejected_at'] = now();
-            $updates['status']      = 'rejected';
+            $updates['status'] = 'rejected';
         }
         $offerLetter->application->update($updates);
 
@@ -142,7 +142,7 @@ class OfferLetterController extends Controller
 
         return Storage::disk($disk)->download(
             $offerLetter->document_path,
-            'offer_letter_' . $offerLetter->id . '.pdf'
+            'offer_letter_'.$offerLetter->id.'.pdf'
         );
     }
 
@@ -162,17 +162,17 @@ class OfferLetterController extends Controller
             ['document_upload',  'Provide Recent Passport Photograph',                         5],
             ['policy_ack',       'Acknowledge Employee Handbook',                              5],
             ['it_access',        'IT Workstation & Access Setup',                              3],
-            ['equipment_request','Confirm Equipment Requirements',                             7],
+            ['equipment_request', 'Confirm Equipment Requirements',                             7],
         ];
 
         foreach ($defaults as [$type, $title, $daysToComplete]) {
             $offer->preboarding_tasks()->create([
                 'task_type' => $type,
-                'title'     => $title,
-                'due_date'  => $offer->start_date
+                'title' => $title,
+                'due_date' => $offer->start_date
                     ? Carbon::parse($offer->start_date)->subDays($daysToComplete)->toDateString()
                     : null,
-                'status'    => 'pending',
+                'status' => 'pending',
             ]);
         }
     }

@@ -32,14 +32,15 @@ class CompliancePolicyController extends Controller
         $user = $request->user();
         $policies->getCollection()->transform(function (CompliancePolicy $policy) use ($user) {
             $policy->acknowledged = $policy->isAcknowledgedBy($user);
+
             return $policy;
         });
 
         return Inertia::render('Compliance/CompliancePoliciesPage', [
-            'policies'   => $policies,
+            'policies' => $policies,
             'can_manage' => $canManage,
             'can_report' => $request->user()->hasPermission('compliance.report'),
-            'filters'    => $request->only('category'),
+            'filters' => $request->only('category'),
         ]);
     }
 
@@ -47,9 +48,9 @@ class CompliancePolicyController extends Controller
     {
         abort_unless($request->user()->hasPermission('compliance.report'), 403);
 
-        $activeUsers  = User::where('status', 'active')->get(['id', 'name', 'employee_id']);
-        $totalActive  = $activeUsers->count();
-        $activeIds    = $activeUsers->pluck('id')->all();
+        $activeUsers = User::where('status', 'active')->get(['id', 'name', 'employee_id']);
+        $totalActive = $activeUsers->count();
+        $activeIds = $activeUsers->pluck('id')->all();
 
         $activePolicies = CompliancePolicy::where('is_active', true)
             ->whereNotNull('current_version')
@@ -79,18 +80,18 @@ class CompliancePolicyController extends Controller
                 ->map(fn ($u) => ['id' => $u->id, 'name' => $u->name, 'employee_id' => $u->employee_id]);
 
             return [
-                'id'                  => $policy->id,
-                'title'               => $policy->title,
-                'category'            => $policy->category,
-                'current_version'     => $policy->current_version,
-                'published_at'        => $currentVersionRecord->published_at?->toISOString(),
-                'total_employees'     => $totalActive,
-                'acknowledged_count'  => count($acknowledgedIds),
-                'outstanding_count'   => $totalActive - count($acknowledgedIds),
+                'id' => $policy->id,
+                'title' => $policy->title,
+                'category' => $policy->category,
+                'current_version' => $policy->current_version,
+                'published_at' => $currentVersionRecord->published_at?->toISOString(),
+                'total_employees' => $totalActive,
+                'acknowledged_count' => count($acknowledgedIds),
+                'outstanding_count' => $totalActive - count($acknowledgedIds),
                 'acknowledgement_pct' => $totalActive > 0
                     ? round((count($acknowledgedIds) / $totalActive) * 100, 1)
                     : 0,
-                'outstanding_users'   => $outstandingUsers,
+                'outstanding_users' => $outstandingUsers,
             ];
         })->filter()->values();
 
@@ -104,17 +105,17 @@ class CompliancePolicyController extends Controller
         abort_unless($request->user()->hasPermission('compliance.manage'), 403);
 
         $data = $request->validate([
-            'title'                    => ['required', 'string', 'max:200'],
-            'category'                 => ['required', 'in:hr,it,finance,safety,ethics,general'],
-            'description'              => ['nullable', 'string'],
+            'title' => ['required', 'string', 'max:200'],
+            'category' => ['required', 'in:hr,it,finance,safety,ethics,general'],
+            'description' => ['nullable', 'string'],
             'requires_acknowledgement' => ['boolean'],
         ]);
 
         CompliancePolicy::create([
-            'title'                    => $data['title'],
-            'slug'                     => Str::slug($data['title']) . '-' . Str::random(6),
-            'category'                 => $data['category'],
-            'description'              => $data['description'] ?? null,
+            'title' => $data['title'],
+            'slug' => Str::slug($data['title']).'-'.Str::random(6),
+            'category' => $data['category'],
+            'description' => $data['description'] ?? null,
             'requires_acknowledgement' => $data['requires_acknowledgement'] ?? true,
         ]);
 
@@ -126,11 +127,11 @@ class CompliancePolicyController extends Controller
         abort_unless($request->user()->hasPermission('compliance.manage'), 403);
 
         $data = $request->validate([
-            'title'                    => ['required', 'string', 'max:200'],
-            'category'                 => ['required', 'in:hr,it,finance,safety,ethics,general'],
-            'description'              => ['nullable', 'string'],
+            'title' => ['required', 'string', 'max:200'],
+            'category' => ['required', 'in:hr,it,finance,safety,ethics,general'],
+            'description' => ['nullable', 'string'],
             'requires_acknowledgement' => ['boolean'],
-            'is_active'                => ['boolean'],
+            'is_active' => ['boolean'],
         ]);
 
         $policy->update($data);
@@ -150,16 +151,16 @@ class CompliancePolicyController extends Controller
         $version = CompliancePolicyVersion::firstOrCreate(
             ['policy_id' => $policy->id, 'version' => $data['version']],
             [
-                'content'         => $data['content'],
+                'content' => $data['content'],
                 'published_by_id' => $request->user()->id,
-                'published_at'    => now(),
+                'published_at' => now(),
             ]
         );
 
         $policy->update([
             'current_version' => $version->version,
-            'is_active'       => true,
-            'published_at'    => now(),
+            'is_active' => true,
+            'published_at' => now(),
         ]);
 
         return back()->with('success', "Version {$version->version} published.");
@@ -177,12 +178,12 @@ class CompliancePolicyController extends Controller
         CompliancePolicyAcknowledgement::firstOrCreate(
             [
                 'policy_version_id' => $versionRecord->id,
-                'user_id'           => $request->user()->id,
+                'user_id' => $request->user()->id,
             ],
             [
-                'policy_id'       => $policy->id,
+                'policy_id' => $policy->id,
                 'acknowledged_at' => now(),
-                'ip_address'      => $request->ip(),
+                'ip_address' => $request->ip(),
             ]
         );
 

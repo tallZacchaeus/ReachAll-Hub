@@ -28,29 +28,29 @@ class RequisitionDecision extends Notification
     public function toDatabase(object $notifiable): array
     {
         $amount = MoneyHelper::format($this->requisition->amount_kobo);
-        $id     = $this->requisition->request_id;
+        $id = $this->requisition->request_id;
 
         $title = match ($this->decision) {
             'approved' => "Request {$id} Approved",
             'rejected' => "Request {$id} Rejected",
-            'queried'  => "Request {$id} Queried — Action Required",
-            default    => "Update on {$id}",
+            'queried' => "Request {$id} Queried — Action Required",
+            default => "Update on {$id}",
         };
 
         $body = match ($this->decision) {
             'approved' => "Your request for {$amount} has been fully approved.",
-            'rejected' => "Your request for {$amount} was rejected." . ($this->comment ? " Reason: {$this->comment}" : ''),
-            'queried'  => "Your request for {$amount} requires clarification: {$this->comment}",
-            default    => "Your request {$id} has been updated.",
+            'rejected' => "Your request for {$amount} was rejected.".($this->comment ? " Reason: {$this->comment}" : ''),
+            'queried' => "Your request for {$amount} requires clarification: {$this->comment}",
+            default => "Your request {$id} has been updated.",
         };
 
         return [
-            'type'           => "requisition_{$this->decision}",
-            'title'          => $title,
-            'body'           => $body,
-            'request_id'     => $id,
+            'type' => "requisition_{$this->decision}",
+            'title' => $title,
+            'body' => $body,
+            'request_id' => $id,
             'requisition_id' => $this->requisition->id,
-            'url'            => "/finance/requisitions/{$this->requisition->id}",
+            'url' => "/finance/requisitions/{$this->requisition->id}",
         ];
     }
 }

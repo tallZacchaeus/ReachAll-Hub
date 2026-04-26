@@ -24,12 +24,12 @@ class PayrollLoan extends Model
     ];
 
     protected $casts = [
-        'principal_kobo'          => 'integer',
-        'remaining_kobo'          => 'integer',
+        'principal_kobo' => 'integer',
+        'remaining_kobo' => 'integer',
         'monthly_instalment_kobo' => 'integer',
-        'start_date'              => 'date',
-        'end_date'                => 'date',
-        'approved_at'             => 'datetime',
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'approved_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

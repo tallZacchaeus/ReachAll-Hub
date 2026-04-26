@@ -7,7 +7,6 @@ use App\Models\Finance\PettyCashFloat;
 use App\Models\Finance\PettyCashReconciliation;
 use App\Models\Finance\PettyCashTransaction;
 use App\Models\User;
-use App\Services\Finance\PettyCashEnforcer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Notification;
@@ -37,17 +36,17 @@ class PettyCashTest extends TestCase
     private function makeUsers(): array
     {
         $custodian = User::factory()->create([
-            'role'   => 'staff',
+            'role' => 'staff',
             'status' => 'active',
         ]);
 
         $finance = User::factory()->create([
-            'role'   => 'finance',
+            'role' => 'finance',
             'status' => 'active',
         ]);
 
         $admin = User::factory()->create([
-            'role'   => 'superadmin',
+            'role' => 'superadmin',
             'status' => 'active',
         ]);
 
@@ -57,38 +56,38 @@ class PettyCashTest extends TestCase
     private function makeFloat(User $custodian, User $admin, array $overrides = []): PettyCashFloat
     {
         return PettyCashFloat::create(array_merge([
-            'custodian_id'         => $custodian->id,
-            'float_limit_kobo'     => 20_000_000, // ₦200K
+            'custodian_id' => $custodian->id,
+            'float_limit_kobo' => 20_000_000, // ₦200K
             'current_balance_kobo' => 20_000_000,
-            'low_alert_threshold'  => 30,
-            'last_reconciled_at'   => now()->subDays(5),
-            'status'               => 'active',
-            'created_by'           => $admin->id,
+            'low_alert_threshold' => 30,
+            'last_reconciled_at' => now()->subDays(5),
+            'status' => 'active',
+            'created_by' => $admin->id,
         ], $overrides));
     }
 
     private function makeAccountCode(User $admin): AccountCode
     {
         return AccountCode::create([
-            'code'               => '6099',
-            'category'           => '6000',
-            'description'        => 'Petty Cash Test',
+            'code' => '6099',
+            'category' => '6000',
+            'description' => 'Petty Cash Test',
             'tax_vat_applicable' => false,
             'tax_wht_applicable' => false,
-            'wht_rate'           => null,
-            'status'             => 'active',
-            'created_by'         => $admin->id,
+            'wht_rate' => null,
+            'status' => 'active',
+            'created_by' => $admin->id,
         ]);
     }
 
     private function expensePayload(float $amountNaira = 5000): array
     {
         return [
-            'amount_naira'    => $amountNaira,
-            'description'     => 'Test expense',
-            'date'            => today()->toDateString(),
+            'amount_naira' => $amountNaira,
+            'description' => 'Test expense',
+            'date' => today()->toDateString(),
             'account_code_id' => '',
-            'receipt'         => UploadedFile::fake()->create('receipt.pdf', 50, 'application/pdf'),
+            'receipt' => UploadedFile::fake()->create('receipt.pdf', 50, 'application/pdf'),
         ];
     }
 
@@ -119,28 +118,28 @@ class PettyCashTest extends TestCase
         Storage::fake('public');
         ['custodian' => $custodian, 'admin' => $admin] = $this->makeUsers();
         $float = $this->makeFloat($custodian, $admin);
-        $ac    = $this->makeAccountCode($admin);
+        $ac = $this->makeAccountCode($admin);
 
         // Pre-seed ₦20K + ₦20K = ₦40K already today
         PettyCashTransaction::create([
-            'float_id'     => $float->id,
-            'amount_kobo'  => 2_000_000,
-            'type'         => 'expense',
-            'description'  => 'Earlier expense 1',
+            'float_id' => $float->id,
+            'amount_kobo' => 2_000_000,
+            'type' => 'expense',
+            'description' => 'Earlier expense 1',
             'receipt_path' => 'receipts/r1.pdf',
-            'date'         => today()->toDateString(),
-            'status'       => 'pending_recon',
-            'created_by'   => $custodian->id,
+            'date' => today()->toDateString(),
+            'status' => 'pending_recon',
+            'created_by' => $custodian->id,
         ]);
         PettyCashTransaction::create([
-            'float_id'     => $float->id,
-            'amount_kobo'  => 2_000_000,
-            'type'         => 'expense',
-            'description'  => 'Earlier expense 2',
+            'float_id' => $float->id,
+            'amount_kobo' => 2_000_000,
+            'type' => 'expense',
+            'description' => 'Earlier expense 2',
             'receipt_path' => 'receipts/r2.pdf',
-            'date'         => today()->toDateString(),
-            'status'       => 'pending_recon',
-            'created_by'   => $custodian->id,
+            'date' => today()->toDateString(),
+            'status' => 'pending_recon',
+            'created_by' => $custodian->id,
         ]);
 
         // Third expense of ₦15K → total = ₦55K → blocked
@@ -174,18 +173,18 @@ class PettyCashTest extends TestCase
         $weekStart = now()->startOfWeek();
         foreach (range(0, 9) as $i) {
             $dayOffset = (int) ($i / 2); // 0,0,1,1,2,2,3,3,4,4 → Mon/Mon/Tue/Tue/...
-            $dayTs     = $weekStart->copy()->addDays($dayOffset)->setHour(9)->toDateTimeString();
+            $dayTs = $weekStart->copy()->addDays($dayOffset)->setHour(9)->toDateTimeString();
             \DB::table('petty_cash_transactions')->insert([
-                'float_id'     => $float->id,
-                'amount_kobo'  => 1_900_000,
-                'type'         => 'expense',
-                'description'  => "Weekly expense {$i}",
+                'float_id' => $float->id,
+                'amount_kobo' => 1_900_000,
+                'type' => 'expense',
+                'description' => "Weekly expense {$i}",
                 'receipt_path' => "receipts/w{$i}.pdf",
-                'date'         => $weekStart->copy()->addDays($dayOffset)->toDateString(),
-                'status'       => 'pending_recon',
-                'created_by'   => $custodian->id,
-                'created_at'   => $dayTs, // spread Mon–Fri so daily cap is never hit
-                'updated_at'   => $dayTs,
+                'date' => $weekStart->copy()->addDays($dayOffset)->toDateString(),
+                'status' => 'pending_recon',
+                'created_by' => $custodian->id,
+                'created_at' => $dayTs, // spread Mon–Fri so daily cap is never hit
+                'updated_at' => $dayTs,
             ]);
         }
 
@@ -254,14 +253,14 @@ class PettyCashTest extends TestCase
         // Seed 3 pending transactions
         foreach (range(1, 3) as $i) {
             PettyCashTransaction::create([
-                'float_id'     => $float->id,
-                'amount_kobo'  => 500_000,
-                'type'         => 'expense',
-                'description'  => "Expense $i",
+                'float_id' => $float->id,
+                'amount_kobo' => 500_000,
+                'type' => 'expense',
+                'description' => "Expense $i",
                 'receipt_path' => "receipts/e{$i}.pdf",
-                'date'         => now()->subDays($i)->toDateString(),
-                'status'       => 'pending_recon',
-                'created_by'   => $custodian->id,
+                'date' => now()->subDays($i)->toDateString(),
+                'status' => 'pending_recon',
+                'created_by' => $custodian->id,
             ]);
         }
 
@@ -288,28 +287,28 @@ class PettyCashTest extends TestCase
         ['custodian' => $custodian, 'finance' => $finance, 'admin' => $admin] = $this->makeUsers();
         $float = $this->makeFloat($custodian, $admin, [
             'current_balance_kobo' => 18_000_000, // depleted somewhat
-            'last_reconciled_at'   => now()->subDays(10),
+            'last_reconciled_at' => now()->subDays(10),
         ]);
 
         $recon = PettyCashReconciliation::create([
-            'float_id'            => $float->id,
-            'period_start'        => now()->subDays(10)->toDateString(),
-            'period_end'          => today()->toDateString(),
-            'submitted_by'        => $custodian->id,
-            'status'              => 'submitted',
+            'float_id' => $float->id,
+            'period_start' => now()->subDays(10)->toDateString(),
+            'period_end' => today()->toDateString(),
+            'submitted_by' => $custodian->id,
+            'status' => 'submitted',
             'total_expenses_kobo' => 2_000_000,
         ]);
 
         PettyCashTransaction::create([
-            'float_id'           => $float->id,
-            'amount_kobo'        => 2_000_000,
-            'type'               => 'expense',
-            'description'        => 'Approved expense',
-            'receipt_path'       => 'receipts/ok.pdf',
-            'date'               => today()->toDateString(),
-            'status'             => 'pending_recon',
-            'reconciliation_id'  => $recon->id,
-            'created_by'         => $custodian->id,
+            'float_id' => $float->id,
+            'amount_kobo' => 2_000_000,
+            'type' => 'expense',
+            'description' => 'Approved expense',
+            'receipt_path' => 'receipts/ok.pdf',
+            'date' => today()->toDateString(),
+            'status' => 'pending_recon',
+            'reconciliation_id' => $recon->id,
+            'created_by' => $custodian->id,
         ]);
 
         // Seed Finance cost centre + account code for replenishment req
@@ -351,24 +350,24 @@ class PettyCashTest extends TestCase
         $float = $this->makeFloat($custodian, $admin);
 
         $recon = PettyCashReconciliation::create([
-            'float_id'            => $float->id,
-            'period_start'        => now()->subDays(5)->toDateString(),
-            'period_end'          => today()->toDateString(),
-            'submitted_by'        => $custodian->id,
-            'status'              => 'submitted',
+            'float_id' => $float->id,
+            'period_start' => now()->subDays(5)->toDateString(),
+            'period_end' => today()->toDateString(),
+            'submitted_by' => $custodian->id,
+            'status' => 'submitted',
             'total_expenses_kobo' => 500_000,
         ]);
 
         PettyCashTransaction::create([
-            'float_id'          => $float->id,
-            'amount_kobo'       => 500_000,
-            'type'              => 'expense',
-            'description'       => 'Expense with missing receipt',
-            'receipt_path'      => 'receipts/missing.pdf',
-            'date'              => today()->toDateString(),
-            'status'            => 'pending_recon',
+            'float_id' => $float->id,
+            'amount_kobo' => 500_000,
+            'type' => 'expense',
+            'description' => 'Expense with missing receipt',
+            'receipt_path' => 'receipts/missing.pdf',
+            'date' => today()->toDateString(),
+            'status' => 'pending_recon',
             'reconciliation_id' => $recon->id,
-            'created_by'        => $custodian->id,
+            'created_by' => $custodian->id,
         ]);
 
         $response = $this->actingAs($finance)

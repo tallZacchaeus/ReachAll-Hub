@@ -14,10 +14,10 @@ class ComplianceTrainingAssignment extends Model
     ];
 
     protected $casts = [
-        'due_at'           => 'date',
-        'completed_at'     => 'datetime',
+        'due_at' => 'date',
+        'completed_at' => 'datetime',
         'last_reminded_at' => 'datetime',
-        'reminder_count'   => 'integer',
+        'reminder_count' => 'integer',
     ];
 
     public function training(): BelongsTo

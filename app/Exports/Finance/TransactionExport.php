@@ -7,21 +7,21 @@ use App\Models\User;
 use App\Services\Finance\MoneyHelper;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 /**
  * Full transaction listing export — compatible with standard accounting software column structure.
  * Scope: restricted to cost centres the requesting user can see.
  */
-class TransactionExport implements FromCollection, WithHeadings, WithMapping, WithStyles, ShouldAutoSize
+class TransactionExport implements FromCollection, ShouldAutoSize, WithHeadings, WithMapping, WithStyles
 {
     public function __construct(
-        private readonly User    $user,
-        private readonly array   $filters = []
+        private readonly User $user,
+        private readonly array $filters = []
     ) {}
 
     public function collection(): Collection
@@ -52,7 +52,7 @@ class TransactionExport implements FromCollection, WithHeadings, WithMapping, Wi
             $query->where('submitted_at', '>=', $this->filters['from']);
         }
         if (! empty($this->filters['to'])) {
-            $query->where('submitted_at', '<=', $this->filters['to'] . ' 23:59:59');
+            $query->where('submitted_at', '<=', $this->filters['to'].' 23:59:59');
         }
         if (! empty($this->filters['cost_centre_id'])) {
             $query->where('cost_centre_id', $this->filters['cost_centre_id']);
@@ -125,7 +125,7 @@ class TransactionExport implements FromCollection, WithHeadings, WithMapping, Wi
         return [
             1 => ['font' => ['bold' => true], 'fill' => [
                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                'color'    => ['rgb' => 'D1FAE5'], // green-100
+                'color' => ['rgb' => 'D1FAE5'], // green-100
             ]],
         ];
     }

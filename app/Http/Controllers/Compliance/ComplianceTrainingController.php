@@ -8,9 +8,9 @@ use App\Models\ComplianceTrainingAssignment;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Support\Facades\DB;
 
 class ComplianceTrainingController extends Controller
 {
@@ -34,11 +34,11 @@ class ComplianceTrainingController extends Controller
             ->withQueryString();
 
         return Inertia::render('Compliance/ComplianceTrainingsPage', [
-            'trainings'   => $trainings,
+            'trainings' => $trainings,
             'assignments' => $assignments,
-            'staff_list'  => $staff,
-            'filters'     => $request->only('category', 'active_only', 'status'),
-            'can_report'  => $request->user()->hasPermission('compliance.report'),
+            'staff_list' => $staff,
+            'filters' => $request->only('category', 'active_only', 'status'),
+            'can_report' => $request->user()->hasPermission('compliance.report'),
         ]);
     }
 
@@ -47,13 +47,13 @@ class ComplianceTrainingController extends Controller
         abort_unless($request->user()->hasPermission('compliance.manage'), 403);
 
         $data = $request->validate([
-            'title'              => ['required', 'string', 'max:200'],
-            'description'        => ['nullable', 'string'],
-            'category'           => ['required', 'in:data_protection,health_safety,anti_bribery,code_of_conduct,cybersecurity,general'],
-            'is_mandatory'       => ['boolean'],
-            'duration_minutes'   => ['nullable', 'integer', 'min:1'],
-            'content_url'        => ['nullable', 'url', 'max:500'],
-            'recurrence_months'  => ['nullable', 'integer', 'min:1'],
+            'title' => ['required', 'string', 'max:200'],
+            'description' => ['nullable', 'string'],
+            'category' => ['required', 'in:data_protection,health_safety,anti_bribery,code_of_conduct,cybersecurity,general'],
+            'is_mandatory' => ['boolean'],
+            'duration_minutes' => ['nullable', 'integer', 'min:1'],
+            'content_url' => ['nullable', 'url', 'max:500'],
+            'recurrence_months' => ['nullable', 'integer', 'min:1'],
         ]);
 
         ComplianceTraining::create($data);
@@ -66,14 +66,14 @@ class ComplianceTrainingController extends Controller
         abort_unless($request->user()->hasPermission('compliance.manage'), 403);
 
         $data = $request->validate([
-            'title'              => ['required', 'string', 'max:200'],
-            'description'        => ['nullable', 'string'],
-            'category'           => ['required', 'in:data_protection,health_safety,anti_bribery,code_of_conduct,cybersecurity,general'],
-            'is_mandatory'       => ['boolean'],
-            'duration_minutes'   => ['nullable', 'integer', 'min:1'],
-            'content_url'        => ['nullable', 'url', 'max:500'],
-            'recurrence_months'  => ['nullable', 'integer', 'min:1'],
-            'is_active'          => ['boolean'],
+            'title' => ['required', 'string', 'max:200'],
+            'description' => ['nullable', 'string'],
+            'category' => ['required', 'in:data_protection,health_safety,anti_bribery,code_of_conduct,cybersecurity,general'],
+            'is_mandatory' => ['boolean'],
+            'duration_minutes' => ['nullable', 'integer', 'min:1'],
+            'content_url' => ['nullable', 'url', 'max:500'],
+            'recurrence_months' => ['nullable', 'integer', 'min:1'],
+            'is_active' => ['boolean'],
         ]);
 
         $training->update($data);
@@ -86,9 +86,9 @@ class ComplianceTrainingController extends Controller
         abort_unless($request->user()->hasPermission('compliance.manage'), 403);
 
         $data = $request->validate([
-            'user_ids'   => ['required', 'array', 'min:1'],
+            'user_ids' => ['required', 'array', 'min:1'],
             'user_ids.*' => ['exists:users,id'],
-            'due_at'     => ['required', 'date', 'after:today'],
+            'due_at' => ['required', 'date', 'after:today'],
         ]);
 
         $assigned = 0;
@@ -99,11 +99,11 @@ class ComplianceTrainingController extends Controller
 
             if (! $exists) {
                 ComplianceTrainingAssignment::create([
-                    'training_id'    => $training->id,
-                    'user_id'        => $userId,
+                    'training_id' => $training->id,
+                    'user_id' => $userId,
                     'assigned_by_id' => $request->user()->id,
-                    'due_at'         => $data['due_at'],
-                    'status'         => 'pending',
+                    'due_at' => $data['due_at'],
+                    'status' => 'pending',
                 ]);
                 $assigned++;
             }
@@ -116,7 +116,7 @@ class ComplianceTrainingController extends Controller
     {
         abort_unless($request->user()->hasPermission('compliance.report'), 403);
 
-        $statusFilter   = $request->get('status');
+        $statusFilter = $request->get('status');
         $trainingFilter = $request->get('training_id');
 
         $assignments = ComplianceTrainingAssignment::with(['training:id,title,category', 'user:id,name,employee_id'])
@@ -137,17 +137,17 @@ class ComplianceTrainingController extends Controller
             ->groupBy('status')
             ->pluck('count', 'status');
 
-        $totalAssigned  = (int) ComplianceTrainingAssignment::count();
-        $completed      = (int) ($allStats['completed'] ?? 0);
-        $overdue        = (int) ComplianceTrainingAssignment::where('status', 'pending')
+        $totalAssigned = (int) ComplianceTrainingAssignment::count();
+        $completed = (int) ($allStats['completed'] ?? 0);
+        $overdue = (int) ComplianceTrainingAssignment::where('status', 'pending')
             ->whereDate('due_at', '<', now())->count();
 
         $stats = [
             'total_employees' => (int) User::where('status', 'active')->count(),
-            'total_assigned'  => $totalAssigned,
-            'completed'       => $completed,
-            'overdue'         => $overdue,
-            'pending'         => (int) ($allStats['pending'] ?? 0),
+            'total_assigned' => $totalAssigned,
+            'completed' => $completed,
+            'overdue' => $overdue,
+            'pending' => (int) ($allStats['pending'] ?? 0),
         ];
 
         $trainings = ComplianceTraining::where('is_active', true)
@@ -156,9 +156,9 @@ class ComplianceTrainingController extends Controller
 
         return Inertia::render('Compliance/ComplianceReportPage', [
             'assignments' => $assignments,
-            'stats'       => $stats,
-            'trainings'   => $trainings,
-            'filters'     => $request->only('status', 'training_id'),
+            'stats' => $stats,
+            'trainings' => $trainings,
+            'filters' => $request->only('status', 'training_id'),
         ]);
     }
 
@@ -177,8 +177,8 @@ class ComplianceTrainingController extends Controller
         ]);
 
         $assignment->update([
-            'status'           => 'completed',
-            'completed_at'     => now(),
+            'status' => 'completed',
+            'completed_at' => now(),
             'completion_notes' => $data['completion_notes'] ?? null,
         ]);
 

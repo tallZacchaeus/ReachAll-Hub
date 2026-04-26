@@ -3,14 +3,15 @@
 namespace App\Console\Commands;
 
 use App\Models\Finance\PettyCashFloat;
+use App\Models\User;
 use App\Notifications\Finance\PettyCashLowFloat;
 use App\Notifications\Finance\ReconciliationDue;
-use App\Models\User;
 use Illuminate\Console\Command;
 
 class CheckPettyCashFloats extends Command
 {
-    protected $signature   = 'finance:check-petty-cash';
+    protected $signature = 'finance:check-petty-cash';
+
     protected $description = 'Check all petty cash floats for low balance and reconciliation due alerts.';
 
     public function handle(): int
@@ -23,6 +24,7 @@ class CheckPettyCashFloats extends Command
         }
 
         $this->info("Checked {$floats->count()} petty cash floats.");
+
         return self::SUCCESS;
     }
 

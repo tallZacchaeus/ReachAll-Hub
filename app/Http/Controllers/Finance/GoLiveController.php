@@ -12,7 +12,6 @@ use App\Models\Finance\Vendor;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -25,7 +24,7 @@ class GoLiveController extends Controller
         $checks = $this->runChecks();
 
         return Inertia::render('Finance/GoLiveChecklistPage', [
-            'checks'     => $checks,
+            'checks' => $checks,
             'all_passed' => collect($checks)->every(fn ($c) => $c['status'] === 'pass'),
         ]);
     }
@@ -36,11 +35,11 @@ class GoLiveController extends Controller
 
         // 1. Database migrations
         try {
-            DB::select("SELECT 1 FROM financial_periods LIMIT 1");
-            DB::select("SELECT 1 FROM requisitions LIMIT 1");
-            DB::select("SELECT 1 FROM payments LIMIT 1");
-            DB::select("SELECT 1 FROM ledger_entries LIMIT 1");
-            DB::select("SELECT 1 FROM period_close_waivers LIMIT 1");
+            DB::select('SELECT 1 FROM financial_periods LIMIT 1');
+            DB::select('SELECT 1 FROM requisitions LIMIT 1');
+            DB::select('SELECT 1 FROM payments LIMIT 1');
+            DB::select('SELECT 1 FROM ledger_entries LIMIT 1');
+            DB::select('SELECT 1 FROM period_close_waivers LIMIT 1');
             $checks[] = $this->pass('All finance migrations applied', 'financial_periods, requisitions, payments, ledger_entries, period_close_waivers tables exist');
         } catch (\Throwable $e) {
             $checks[] = $this->fail('Finance migrations incomplete', $e->getMessage());
@@ -84,7 +83,7 @@ class GoLiveController extends Controller
 
         // 8. Notifications table
         try {
-            DB::select("SELECT 1 FROM notifications LIMIT 1");
+            DB::select('SELECT 1 FROM notifications LIMIT 1');
             $checks[] = $this->pass('Notifications table ready', 'Database channel configured');
         } catch (\Throwable $e) {
             $checks[] = $this->fail('Notifications table missing', 'Run: php artisan notifications:table && php artisan migrate');

@@ -155,6 +155,7 @@ class NewsletterController extends Controller
 
         if ($newsletter->status === 'published') {
             $newsletter->update(['status' => 'draft', 'published_at' => null]);
+
             return back()->with('success', 'Newsletter unpublished.');
         }
 

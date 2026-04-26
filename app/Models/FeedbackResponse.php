@@ -19,7 +19,7 @@ class FeedbackResponse extends Model
     ];
 
     protected $casts = [
-        'ratings'      => 'array',
+        'ratings' => 'array',
         'submitted_at' => 'datetime',
         'is_anonymous' => 'boolean',
     ];

@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Settings;
 
-use App\Notifications\Auth\VerifyEmailWithCode;
 use App\Models\User;
+use App\Notifications\Auth\VerifyEmailWithCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;

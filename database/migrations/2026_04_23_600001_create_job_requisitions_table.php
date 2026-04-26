@@ -14,12 +14,12 @@ return new class extends Migration
             $table->string('department', 100)->nullable();
             $table->unsignedTinyInteger('headcount')->default(1);
             $table->string('employment_type', 50)->default('full_time')
-                  ->comment('full_time|part_time|contract|internship');
+                ->comment('full_time|part_time|contract|internship');
             $table->text('justification')->nullable();
             $table->string('priority', 20)->default('normal')
-                  ->comment('low|normal|high|urgent');
+                ->comment('low|normal|high|urgent');
             $table->string('status', 30)->default('draft')
-                  ->comment('draft|pending|approved|rejected|fulfilled|cancelled');
+                ->comment('draft|pending|approved|rejected|fulfilled|cancelled');
             $table->foreignId('requested_by_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('approved_by_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('approved_at')->nullable();

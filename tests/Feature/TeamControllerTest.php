@@ -13,9 +13,9 @@ class TeamControllerTest extends TestCase
     private function makeLeader(array $overrides = []): User
     {
         return User::factory()->create(array_merge([
-            'role'       => 'superadmin',
+            'role' => 'superadmin',
             'department' => 'Engineering',
-            'status'     => 'active',
+            'status' => 'active',
         ], $overrides));
     }
 
@@ -49,13 +49,13 @@ class TeamControllerTest extends TestCase
         // Two active teammates
         User::factory()->count(2)->create([
             'department' => 'Engineering',
-            'status'     => 'active',
+            'status' => 'active',
         ]);
 
         // One inactive teammate — must NOT be included
         User::factory()->create([
             'department' => 'Engineering',
-            'status'     => 'inactive',
+            'status' => 'inactive',
         ]);
 
         $this->actingAs($leader);
@@ -73,9 +73,9 @@ class TeamControllerTest extends TestCase
         $leader = $this->makeLeader();
 
         $inactive = User::factory()->create([
-            'name'       => 'Inactive Person',
+            'name' => 'Inactive Person',
             'department' => 'Engineering',
-            'status'     => 'inactive',
+            'status' => 'inactive',
         ]);
 
         $this->actingAs($leader);
@@ -83,7 +83,7 @@ class TeamControllerTest extends TestCase
         $response = $this->get(route('team'));
         $response->assertOk();
 
-        $props   = $response->original->getData()['page']['props'];
+        $props = $response->original->getData()['page']['props'];
         $memberIds = collect($props['members'])->pluck('id')->all();
 
         $this->assertNotContains($inactive->id, $memberIds);

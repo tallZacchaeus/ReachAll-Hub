@@ -11,8 +11,8 @@ return new class extends Migration
         Schema::create('expense_receipts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('expense_claim_id')
-                  ->constrained('expense_claims')
-                  ->cascadeOnDelete();
+                ->constrained('expense_claims')
+                ->cascadeOnDelete();
 
             $table->string('file_path', 500);
             $table->string('disk', 50)->default('hr');

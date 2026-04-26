@@ -32,11 +32,15 @@ use RuntimeException;
 class ApprovalRouter
 {
     // Thresholds in kobo
-    private const T_PETTY    =   10_000_00;  // ₦10K
-    private const T_MANAGER  =  100_000_00;  // ₦100K
-    private const T_FINANCE  =  500_000_00;  // ₦500K
-    private const T_GENMGMT  = 2_000_000_00; // ₦2M
-    private const T_CEO      = 10_000_000_00; // ₦10M
+    private const T_PETTY = 10_000_00;  // ₦10K
+
+    private const T_MANAGER = 100_000_00;  // ₦100K
+
+    private const T_FINANCE = 500_000_00;  // ₦500K
+
+    private const T_GENMGMT = 2_000_000_00; // ₦2M
+
+    private const T_CEO = 10_000_000_00; // ₦10M
 
     public const SLA_HOURS = 48;
 
@@ -51,7 +55,7 @@ class ApprovalRouter
     {
         $tiers = $this->resolveTiers($requisition);
 
-        $steps  = collect();
+        $steps = collect();
         $usedIds = [];
 
         foreach ($tiers as $index => ['role' => $role, 'label' => $label]) {
@@ -69,15 +73,15 @@ class ApprovalRouter
             }
 
             $usedIds[] = $approver->id;
-            $level     = $index + 1;
+            $level = $index + 1;
 
             $step = ApprovalStep::create([
                 'requisition_id' => $requisition->id,
-                'approver_id'    => $approver->id,
-                'level'          => $level,
-                'role_label'     => $label,
-                'status'         => $level === 1 ? 'pending' : 'pending', // all pending; first is "active"
-                'sla_deadline'   => $level === 1 ? $this->slaDeadline() : null,
+                'approver_id' => $approver->id,
+                'level' => $level,
+                'role_label' => $label,
+                'status' => $level === 1 ? 'pending' : 'pending', // all pending; first is "active"
+                'sla_deadline' => $level === 1 ? $this->slaDeadline() : null,
             ]);
 
             $steps->push($step);
@@ -107,7 +111,7 @@ class ApprovalRouter
     public function resolveTiers(Requisition $requisition): array
     {
         $amount = $requisition->amount_kobo;
-        $type   = strtoupper($requisition->type);
+        $type = strtoupper($requisition->type);
 
         // PETTY CASH — only petty cash custodian path (future: route to custodian)
         if ($type === 'PETTY' && $amount < self::T_PETTY) {
@@ -198,7 +202,7 @@ class ApprovalRouter
 
         // Merge OPEX tiers + one extra from the full chain not already present
         $existingRoles = array_column($opexTiers, 'role');
-        $added         = false;
+        $added = false;
 
         foreach ($extraTiers as $tier) {
             if (! in_array($tier['role'], $existingRoles, true)) {
@@ -270,7 +274,7 @@ class ApprovalRouter
 
         // Find current approver's role
         $currentRole = $step->approver?->role ?? 'management';
-        $currentPos  = array_search($currentRole, $ladder, true);
+        $currentPos = array_search($currentRole, $ladder, true);
 
         if ($currentPos === false) {
             $currentPos = 0;

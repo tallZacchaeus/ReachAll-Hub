@@ -28,10 +28,10 @@ class ReconciliationDue extends Notification
             : "Your petty cash float has not been reconciled in {$this->daysSince} days. Reconciliation must be submitted before day 30 to avoid expense blocking.";
 
         return [
-            'type'       => 'reconciliation_due',
-            'title'      => $this->isBlocked ? 'Petty Cash Blocked — Reconciliation Overdue' : 'Petty Cash Reconciliation Due',
-            'body'       => $message,
-            'float_id'   => $this->float->id,
+            'type' => 'reconciliation_due',
+            'title' => $this->isBlocked ? 'Petty Cash Blocked — Reconciliation Overdue' : 'Petty Cash Reconciliation Due',
+            'body' => $message,
+            'float_id' => $this->float->id,
             'days_since' => $this->daysSince,
             'is_blocked' => $this->isBlocked,
         ];

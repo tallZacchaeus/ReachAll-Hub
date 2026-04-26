@@ -27,27 +27,27 @@ class OneOnOneController extends Controller
             'employee:id,name,employee_id',
         ]);
 
-        if (!$isHr) {
+        if (! $isHr) {
             $query->where(function ($q) use ($user) {
                 $q->where('manager_id', $user->id)
-                  ->orWhere('employee_id', $user->id);
+                    ->orWhere('employee_id', $user->id);
             });
         }
 
         $oneOnOnes = $query->orderByDesc('scheduled_at')->get()->map(fn ($o) => [
-            'id'           => $o->id,
-            'manager'      => $o->manager ? ['id' => $o->manager->id, 'name' => $o->manager->name, 'employee_id' => $o->manager->employee_id] : null,
-            'employee'     => $o->employee ? ['id' => $o->employee->id, 'name' => $o->employee->name, 'employee_id' => $o->employee->employee_id] : null,
+            'id' => $o->id,
+            'manager' => $o->manager ? ['id' => $o->manager->id, 'name' => $o->manager->name, 'employee_id' => $o->manager->employee_id] : null,
+            'employee' => $o->employee ? ['id' => $o->employee->id, 'name' => $o->employee->name, 'employee_id' => $o->employee->employee_id] : null,
             'scheduled_at' => $o->scheduled_at->toIso8601String(),
-            'status'       => $o->status,
-            'agenda'       => $o->agenda,
-            'notes'        => $o->notes,
+            'status' => $o->status,
+            'agenda' => $o->agenda,
+            'notes' => $o->notes,
             'action_items' => $o->action_items,
         ]);
 
         // For scheduling: managers see their direct reports; HR sees all active employees
         $employees = User::where('status', 'active')
-            ->when(!$isHr, fn ($q) => $q->where('reports_to_id', $user->id))
+            ->when(! $isHr, fn ($q) => $q->where('reports_to_id', $user->id))
             ->select('id', 'name', 'employee_id', 'department', 'position')
             ->orderBy('name')
             ->get();
@@ -70,27 +70,27 @@ class OneOnOneController extends Controller
         $isHr = $user->hasPermission('feedback.manage');
 
         $validated = $request->validate([
-            'employee_id'  => ['required', 'integer', 'exists:users,id'],
+            'employee_id' => ['required', 'integer', 'exists:users,id'],
             'scheduled_at' => ['required', 'date', 'after:now'],
-            'agenda'       => ['nullable', 'string', 'max:3000'],
+            'agenda' => ['nullable', 'string', 'max:3000'],
         ]);
 
         $employeeId = (int) $validated['employee_id'];
 
         // Non-HR users must be the employee's manager
-        if (!$isHr) {
+        if (! $isHr) {
             $employee = User::find($employeeId);
-            if (!$employee || $employee->reports_to_id !== $user->id) {
+            if (! $employee || $employee->reports_to_id !== $user->id) {
                 abort(403, 'You can only schedule 1:1s with your direct reports.');
             }
         }
 
         $oneOnOne = OneOnOne::create([
-            'manager_id'   => $isHr ? $user->id : $user->id,
-            'employee_id'  => $employeeId,
+            'manager_id' => $isHr ? $user->id : $user->id,
+            'employee_id' => $employeeId,
             'scheduled_at' => $validated['scheduled_at'],
-            'agenda'       => $validated['agenda'] ?? null,
-            'status'       => 'scheduled',
+            'agenda' => $validated['agenda'] ?? null,
+            'status' => 'scheduled',
         ]);
 
         AuditLogger::record(
@@ -118,7 +118,7 @@ class OneOnOneController extends Controller
             || $oneOnOne->manager_id === $user->id
             || $oneOnOne->employee_id === $user->id;
 
-        if (!$canView) {
+        if (! $canView) {
             abort(403);
         }
 
@@ -126,24 +126,24 @@ class OneOnOneController extends Controller
 
         return Inertia::render('Feedback/OneOnOnePage', [
             'oneOnOne' => [
-                'id'           => $oneOnOne->id,
-                'manager'      => $oneOnOne->manager ? [
-                    'id'          => $oneOnOne->manager->id,
-                    'name'        => $oneOnOne->manager->name,
+                'id' => $oneOnOne->id,
+                'manager' => $oneOnOne->manager ? [
+                    'id' => $oneOnOne->manager->id,
+                    'name' => $oneOnOne->manager->name,
                     'employee_id' => $oneOnOne->manager->employee_id,
                 ] : null,
-                'employee'     => $oneOnOne->employee ? [
-                    'id'          => $oneOnOne->employee->id,
-                    'name'        => $oneOnOne->employee->name,
+                'employee' => $oneOnOne->employee ? [
+                    'id' => $oneOnOne->employee->id,
+                    'name' => $oneOnOne->employee->name,
                     'employee_id' => $oneOnOne->employee->employee_id,
                 ] : null,
                 'scheduled_at' => $oneOnOne->scheduled_at->toIso8601String(),
-                'status'       => $oneOnOne->status,
-                'agenda'       => $oneOnOne->agenda,
-                'notes'        => $oneOnOne->notes,
+                'status' => $oneOnOne->status,
+                'agenda' => $oneOnOne->agenda,
+                'notes' => $oneOnOne->notes,
                 'action_items' => $oneOnOne->action_items ?? [],
             ],
-            'canEdit'  => $isHr || $oneOnOne->manager_id === $user->id,
+            'canEdit' => $isHr || $oneOnOne->manager_id === $user->id,
             'authUserId' => $user->id,
         ]);
     }
@@ -157,7 +157,7 @@ class OneOnOneController extends Controller
         $user = $request->user();
         $canEdit = $user->hasPermission('feedback.manage') || $oneOnOne->manager_id === $user->id;
 
-        if (!$canEdit) {
+        if (! $canEdit) {
             abort(403);
         }
 
@@ -169,13 +169,13 @@ class OneOnOneController extends Controller
         }
 
         $validated = $request->validate([
-            'agenda'       => ['nullable', 'string', 'max:3000'],
-            'notes'        => ['nullable', 'string', 'max:5000'],
+            'agenda' => ['nullable', 'string', 'max:3000'],
+            'notes' => ['nullable', 'string', 'max:5000'],
             'action_items' => ['nullable', 'array'],
-            'action_items.*.text'     => ['required', 'string', 'max:500'],
-            'action_items.*.done'     => ['boolean'],
+            'action_items.*.text' => ['required', 'string', 'max:500'],
+            'action_items.*.done' => ['boolean'],
             'action_items.*.due_date' => ['nullable', 'date'],
-            'status'       => ['nullable', 'in:scheduled,completed,cancelled'],
+            'status' => ['nullable', 'in:scheduled,completed,cancelled'],
             'scheduled_at' => ['nullable', 'date'],
         ]);
 

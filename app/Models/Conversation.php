@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Conversation extends Model
 {
@@ -43,14 +43,14 @@ class Conversation extends Model
     public function getUnreadCountForUser($userId)
     {
         $participant = $this->participants()->where('user_id', $userId)->first();
-        
-        if (!$participant) {
+
+        if (! $participant) {
             return 0;
         }
 
         $lastReadAt = $participant->pivot->last_read_at;
 
-        if (!$lastReadAt) {
+        if (! $lastReadAt) {
             return $this->messages()->count();
         }
 

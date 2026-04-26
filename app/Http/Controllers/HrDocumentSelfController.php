@@ -27,17 +27,17 @@ class HrDocumentSelfController extends Controller
                     ->first();
 
                 return [
-                    'id'                  => $doc->id,
-                    'title'               => $doc->title,
-                    'category'            => $doc->category?->name,
-                    'category_code'       => $doc->category?->code,
-                    'version'             => $doc->version,
-                    'effective_date'      => $doc->effective_date?->toDateString(),
-                    'expires_at'          => $doc->expires_at?->toDateString(),
-                    'requires_signature'  => $doc->requires_signature,
-                    'signature_status'    => $sig?->status,
-                    'signed_at'           => $sig?->signed_at?->toDateTimeString(),
-                    'download_url'        => route('my.documents.download', $doc->id),
+                    'id' => $doc->id,
+                    'title' => $doc->title,
+                    'category' => $doc->category?->name,
+                    'category_code' => $doc->category?->code,
+                    'version' => $doc->version,
+                    'effective_date' => $doc->effective_date?->toDateString(),
+                    'expires_at' => $doc->expires_at?->toDateString(),
+                    'requires_signature' => $doc->requires_signature,
+                    'signature_status' => $sig?->status,
+                    'signed_at' => $sig?->signed_at?->toDateTimeString(),
+                    'download_url' => route('my.documents.download', $doc->id),
                 ];
             });
 

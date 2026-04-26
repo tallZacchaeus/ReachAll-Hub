@@ -34,7 +34,7 @@ class PipController extends Controller
             $directReportIds = $user->directReports()->pluck('id')->toArray();
             $query->where(function ($q) use ($user, $directReportIds) {
                 $q->where('user_id', $user->id)
-                  ->orWhereIn('user_id', $directReportIds);
+                    ->orWhereIn('user_id', $directReportIds);
             });
         } else {
             // Staff see own
@@ -48,10 +48,10 @@ class PipController extends Controller
             : collect();
 
         return Inertia::render('Performance/PipsPage', [
-            'pips'      => $pips,
+            'pips' => $pips,
             'employees' => $employees,
             'canManage' => $canManage,
-            'authId'    => $user->id,
+            'authId' => $user->id,
         ]);
     }
 
@@ -66,23 +66,23 @@ class PipController extends Controller
         abort_unless($canCreate, 403);
 
         $validated = $request->validate([
-            'user_id'               => ['required', 'exists:users,id'],
+            'user_id' => ['required', 'exists:users,id'],
             'performance_review_id' => ['nullable', 'exists:performance_reviews,id'],
-            'title'                 => ['required', 'string', 'max:200'],
-            'description'           => ['nullable', 'string', 'max:3000'],
-            'start_date'            => ['required', 'date'],
-            'end_date'              => ['required', 'date', 'after:start_date'],
+            'title' => ['required', 'string', 'max:200'],
+            'description' => ['nullable', 'string', 'max:3000'],
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date', 'after:start_date'],
         ]);
 
         // Managers can only create PIPs for direct reports
-        if (!$user->hasPermission('reviews.manage')) {
+        if (! $user->hasPermission('reviews.manage')) {
             $directReportIds = $user->directReports()->pluck('id')->toArray();
             abort_unless(in_array((int) $validated['user_id'], $directReportIds, true), 403);
         }
 
         $pip = PipPlan::create(array_merge($validated, [
             'initiated_by_id' => $user->id,
-            'status'          => 'draft',
+            'status' => 'draft',
         ]));
 
         AuditLogger::record(
@@ -113,9 +113,9 @@ class PipController extends Controller
         ]);
 
         return Inertia::render('Performance/PipDetailPage', [
-            'pip'       => $pipPlan,
+            'pip' => $pipPlan,
             'canManage' => $user->hasPermission('reviews.manage') || $user->directReports()->where('id', $pipPlan->user_id)->exists(),
-            'authId'    => $user->id,
+            'authId' => $user->id,
         ]);
     }
 
@@ -130,12 +130,12 @@ class PipController extends Controller
         abort_unless($canEdit, 403);
 
         $validated = $request->validate([
-            'title'        => ['sometimes', 'string', 'max:200'],
-            'description'  => ['nullable', 'string', 'max:3000'],
-            'start_date'   => ['sometimes', 'date'],
-            'end_date'     => ['sometimes', 'date'],
-            'status'       => ['sometimes', 'in:draft,active,completed,failed,cancelled'],
-            'outcome'      => ['nullable', 'string', 'max:3000'],
+            'title' => ['sometimes', 'string', 'max:200'],
+            'description' => ['nullable', 'string', 'max:3000'],
+            'start_date' => ['sometimes', 'date'],
+            'end_date' => ['sometimes', 'date'],
+            'status' => ['sometimes', 'in:draft,active,completed,failed,cancelled'],
+            'outcome' => ['nullable', 'string', 'max:3000'],
             'outcome_date' => ['nullable', 'date'],
         ]);
 
@@ -167,10 +167,10 @@ class PipController extends Controller
         abort_unless($canEdit, 403);
 
         $validated = $request->validate([
-            'title'       => ['required', 'string', 'max:200'],
+            'title' => ['required', 'string', 'max:200'],
             'description' => ['nullable', 'string', 'max:2000'],
-            'due_date'    => ['required', 'date'],
-            'notes'       => ['nullable', 'string', 'max:2000'],
+            'due_date' => ['required', 'date'],
+            'notes' => ['nullable', 'string', 'max:2000'],
         ]);
 
         $pipPlan->milestones()->create(array_merge($validated, [
@@ -194,7 +194,7 @@ class PipController extends Controller
 
         $validated = $request->validate([
             'status' => ['required', 'in:pending,completed,missed'],
-            'notes'  => ['nullable', 'string', 'max:2000'],
+            'notes' => ['nullable', 'string', 'max:2000'],
         ]);
 
         $extra = [];
