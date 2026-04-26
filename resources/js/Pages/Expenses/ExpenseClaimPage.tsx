@@ -125,7 +125,7 @@ export default function ExpenseClaimPage({ claim, canApprove, canFinance, isOwne
         fd.append("receipt",     receiptForm.data.receipt);
         fd.append("description", receiptForm.data.description);
 
-        router.post(route("expenses.receipts.store", claim.id), fd as unknown as Record<string, unknown>, {
+        router.post(route("expenses.receipts.store", claim.id), fd, {
             forceFormData: true,
             onSuccess: () => {
                 receiptForm.reset();
