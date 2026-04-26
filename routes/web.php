@@ -55,8 +55,30 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('notifications', [PageController::class, 'notifications'])->name('notifications');
     Route::get('announcements', [PageController::class, 'announcements'])->name('announcements');
-    Route::get('performance-review', [PageController::class, 'performanceReview'])->name('performance-review');
-    Route::get('peer-review', [PageController::class, 'peerReview'])->name('peer-review');
+    Route::get('performance-review', fn () => redirect()->route('performance.cycles.index'))->name('performance-review');
+    Route::get('peer-review', fn () => redirect()->route('performance.cycles.index'))->name('peer-review');
+
+    // Performance Review Cycles, Reviews, and PIPs (Phase 6)
+    Route::prefix('performance')->name('performance.')->group(function () {
+        Route::get('/cycles', [\App\Http\Controllers\Performance\ReviewCycleController::class, 'index'])->name('cycles.index');
+        Route::post('/cycles', [\App\Http\Controllers\Performance\ReviewCycleController::class, 'store'])->name('cycles.store');
+        Route::get('/cycles/{reviewCycle}', [\App\Http\Controllers\Performance\ReviewCycleController::class, 'show'])->name('cycles.show');
+        Route::post('/cycles/{reviewCycle}/activate', [\App\Http\Controllers\Performance\ReviewCycleController::class, 'activate'])->name('cycles.activate');
+        Route::post('/cycles/{reviewCycle}/close', [\App\Http\Controllers\Performance\ReviewCycleController::class, 'close'])->name('cycles.close');
+        Route::delete('/cycles/{reviewCycle}', [\App\Http\Controllers\Performance\ReviewCycleController::class, 'destroy'])->name('cycles.destroy');
+
+        Route::get('/reviews/{performanceReview}', [\App\Http\Controllers\Performance\PerformanceReviewController::class, 'show'])->name('reviews.show');
+        Route::put('/reviews/{performanceReview}', [\App\Http\Controllers\Performance\PerformanceReviewController::class, 'update'])->name('reviews.update');
+        Route::post('/reviews/{performanceReview}/submit', [\App\Http\Controllers\Performance\PerformanceReviewController::class, 'submit'])->name('reviews.submit');
+        Route::post('/reviews/{performanceReview}/acknowledge', [\App\Http\Controllers\Performance\PerformanceReviewController::class, 'acknowledge'])->name('reviews.acknowledge');
+
+        Route::get('/pips', [\App\Http\Controllers\Performance\PipController::class, 'index'])->name('pips.index');
+        Route::post('/pips', [\App\Http\Controllers\Performance\PipController::class, 'store'])->name('pips.store');
+        Route::get('/pips/{pipPlan}', [\App\Http\Controllers\Performance\PipController::class, 'show'])->name('pips.show');
+        Route::put('/pips/{pipPlan}', [\App\Http\Controllers\Performance\PipController::class, 'update'])->name('pips.update');
+        Route::post('/pips/{pipPlan}/milestones', [\App\Http\Controllers\Performance\PipController::class, 'storeMilestone'])->name('pips.milestones.store');
+        Route::put('/pips/{pipPlan}/milestones/{pipMilestone}', [\App\Http\Controllers\Performance\PipController::class, 'updateMilestone'])->name('pips.milestones.update');
+    });
     Route::get('reports', [ReportController::class, 'index'])->name('reports');
     Route::get('department-analytics', [PageController::class, 'departmentAnalytics'])->name('department-analytics');
     Route::get('staff-overview', [PageController::class, 'staffOverview'])->name('staff-overview');

@@ -129,6 +129,7 @@ class DatabaseSeeder extends Seeder
         );
 
         $this->call(RolesAndPermissionsSeeder::class);
+        $this->call(ReviewCompetencySeeder::class);
         $this->call(LeaveTypeSeeder::class);
         $this->call(OrgStructureSeeder::class);
         $this->call(DocumentCategorySeeder::class);

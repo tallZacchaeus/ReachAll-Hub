@@ -436,4 +436,26 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(CompliancePolicyAcknowledgement::class);
     }
+
+    // ── Performance Review relationships ───────────────────────────────────
+
+    public function reviewsAsReviewee(): HasMany
+    {
+        return $this->hasMany(PerformanceReview::class, 'reviewee_id');
+    }
+
+    public function reviewsAsReviewer(): HasMany
+    {
+        return $this->hasMany(PerformanceReview::class, 'reviewer_id');
+    }
+
+    public function pipPlans(): HasMany
+    {
+        return $this->hasMany(PipPlan::class, 'user_id');
+    }
+
+    public function initiatedPipPlans(): HasMany
+    {
+        return $this->hasMany(PipPlan::class, 'initiated_by_id');
+    }
 }
