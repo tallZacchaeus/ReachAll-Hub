@@ -11,7 +11,7 @@ interface VerifyEmailProps {
     status?: string;
 }
 
-export default function VerifyEmail({ status }: VerifyEmailProps) {
+function VerifyEmail({ status }: VerifyEmailProps) {
     const { auth } = usePage<SharedData>().props;
     const resendForm = useForm({});
     const codeForm = useForm({
@@ -33,6 +33,7 @@ export default function VerifyEmail({ status }: VerifyEmailProps) {
 
     const verificationLinkSent = status === "verification-link-sent";
     const email = auth.user?.email;
+
 
     return (
         <div className="min-h-screen bg-muted flex items-center justify-center p-4">
@@ -143,3 +144,9 @@ export default function VerifyEmail({ status }: VerifyEmailProps) {
         </div>
     );
 }
+
+// Explicit layout prevents this page from inheriting MainLayout when reached
+// via the `verified` middleware redirect during an Inertia SPA navigation.
+VerifyEmail.layout = (page: React.ReactNode) => <>{page}</>;
+
+export default VerifyEmail;
