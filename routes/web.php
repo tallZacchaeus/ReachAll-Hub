@@ -446,6 +446,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Employee self-service payslips
         Route::get('/my-payslips', [\App\Http\Controllers\Payroll\PayslipController::class, 'index'])->name('my-payslips');
         Route::get('/payslip/{payrollEntry}/download', [\App\Http\Controllers\Payroll\PayslipController::class, 'download'])->name('payslip.download');
+
+        // Year-end PAYE tax report
+        Route::get('/year-end-report', [\App\Http\Controllers\Payroll\PayrollRunController::class, 'yearEndReport'])->name('year-end-report');
+
+        // Loans and advances management
+        Route::get('/loans', [\App\Http\Controllers\Payroll\LoanController::class, 'index'])->name('loans.index');
+        Route::post('/loans', [\App\Http\Controllers\Payroll\LoanController::class, 'store'])->name('loans.store');
+        Route::post('/loans/{payrollLoan}/approve', [\App\Http\Controllers\Payroll\LoanController::class, 'approve'])->name('loans.approve');
+        Route::post('/loans/{payrollLoan}/cancel', [\App\Http\Controllers\Payroll\LoanController::class, 'cancel'])->name('loans.cancel');
+        Route::get('/my-loans', [\App\Http\Controllers\Payroll\LoanController::class, 'myLoans'])->name('my-loans');
     });
 
     // ── Compensation Management ───────────────────────────────────────────

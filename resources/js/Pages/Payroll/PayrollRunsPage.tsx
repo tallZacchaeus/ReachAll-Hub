@@ -22,7 +22,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
-import { Plus, Eye, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, Eye, Download } from "lucide-react";
 import type { PayrollRun } from "@/types/payroll";
 
 interface PaginatedRuns {
@@ -32,6 +32,7 @@ interface PaginatedRuns {
 
 interface Props {
     runs: PaginatedRuns;
+    can_manage?: boolean;
 }
 
 const STATUS_COLOURS: Record<string, string> = {
@@ -41,8 +42,10 @@ const STATUS_COLOURS: Record<string, string> = {
     cancelled: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
 };
 
-export default function PayrollRunsPage({ runs }: Props) {
+export default function PayrollRunsPage({ runs, can_manage = false }: Props) {
     const [createOpen, setCreateOpen] = useState(false);
+    const [yearReportOpen, setYearReportOpen] = useState(false);
+    const [reportYear, setReportYear] = useState(String(new Date().getFullYear() - 1));
 
     const form = useForm<{
         period_start: string;
@@ -78,6 +81,58 @@ export default function PayrollRunsPage({ runs }: Props) {
                             Manage monthly and off-cycle payroll runs
                         </p>
                     </div>
+
+                    <div className="flex items-center gap-2">
+                    {can_manage && (
+                        <Dialog open={yearReportOpen} onOpenChange={setYearReportOpen}>
+                            <DialogTrigger asChild>
+                                <Button variant="outline" className="gap-2">
+                                    <Download className="h-4 w-4" />
+                                    Year-End Tax Report
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-sm">
+                                <DialogHeader>
+                                    <DialogTitle>Download Year-End PAYE Report</DialogTitle>
+                                </DialogHeader>
+                                <div className="space-y-4 pt-2">
+                                    <div className="space-y-1.5">
+                                        <Label htmlFor="report-year">Calendar Year</Label>
+                                        <Input
+                                            id="report-year"
+                                            type="number"
+                                            min={2020}
+                                            max={new Date().getFullYear()}
+                                            value={reportYear}
+                                            onChange={(e) => setReportYear(e.target.value)}
+                                        />
+                                        <p className="text-xs text-muted-foreground">
+                                            Exports a CSV with per-employee PAYE, pension, NHF, NSITF, and net pay totals.
+                                        </p>
+                                    </div>
+                                    <div className="flex justify-end gap-2">
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={() => setYearReportOpen(false)}
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            type="button"
+                                            onClick={() => {
+                                                window.location.href = `/payroll/year-end-report?year=${reportYear}`;
+                                                setYearReportOpen(false);
+                                            }}
+                                        >
+                                            <Download className="h-4 w-4 mr-1.5" />
+                                            Download CSV
+                                        </Button>
+                                    </div>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                    )}
 
                     <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                         <DialogTrigger asChild>
@@ -146,6 +201,7 @@ export default function PayrollRunsPage({ runs }: Props) {
                             </form>
                         </DialogContent>
                     </Dialog>
+                    </div>
                 </div>
 
                 <Card>

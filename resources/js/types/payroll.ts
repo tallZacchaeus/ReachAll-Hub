@@ -66,6 +66,22 @@ export interface PayrollEntryRow {
     payslip_generated: boolean;
 }
 
+export interface PayrollLoan {
+    id: number;
+    user: { id: number; name: string; employee_id: string };
+    type: 'loan' | 'advance';
+    description: string | null;
+    principal_kobo: number;
+    remaining_kobo: number;
+    monthly_instalment_kobo: number;
+    start_date: string;
+    end_date: string | null;
+    status: 'pending' | 'active' | 'completed' | 'cancelled';
+    approved_by: { id: number; name: string } | null;
+    approved_at: string | null;
+    notes: string | null;
+}
+
 export interface MyPayslip {
     id: number;
     period_label: string;

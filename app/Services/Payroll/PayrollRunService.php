@@ -5,6 +5,7 @@ namespace App\Services\Payroll;
 use App\Models\EmployeeSalary;
 use App\Models\PayrollDeduction;
 use App\Models\PayrollEntry;
+use App\Models\PayrollLoan;
 use App\Models\PayrollRun;
 use App\Models\User;
 use Illuminate\Support\Carbon;
@@ -91,10 +92,11 @@ class PayrollRunService
         }
 
         DB::transaction(function () use ($run) {
-            // Recover loan/advance instalments for each entry
+            // Recover PayrollDeduction and PayrollLoan instalments for each entry
             foreach ($run->entries as $entry) {
                 if ($entry->other_deductions_kobo > 0) {
                     $this->applyDeductionRecoveries($entry->user_id, $entry->other_deductions_kobo);
+                    $this->applyLoanRecoveries($entry->user_id, $run->period_end);
                 }
             }
 
@@ -135,6 +137,13 @@ class PayrollRunService
             ->get()
             ->groupBy('user_id');
 
+        // Active loan/advance instalments for this period
+        $loans = PayrollLoan::whereIn('user_id', $employeeIds)
+            ->where('status', 'active')
+            ->where('start_date', '<=', $asOf)
+            ->get()
+            ->groupBy('user_id');
+
         $totals = [
             'total_gross_kobo'            => 0,
             'total_paye_kobo'             => 0,
@@ -157,6 +166,12 @@ class PayrollRunService
             $deductionTotal = $deductions->get($employee->id, collect())
                 ->sum(fn ($d) => $d->instalment());
 
+            // Add active loan/advance instalments
+            $loanTotal = $loans->get($employee->id, collect())
+                ->sum(fn (PayrollLoan $l) => min($l->monthly_instalment_kobo, $l->remaining_kobo));
+
+            $deductionTotal += $loanTotal;
+
             $computed = PayrollCalculator::compute($salary, $deductionTotal);
 
             PayrollEntry::create(array_merge($computed, [
@@ -176,6 +191,29 @@ class PayrollRunService
         }
 
         $run->update($totals);
+    }
+
+    private function applyLoanRecoveries(int $userId, \DateTimeInterface $periodEnd): void
+    {
+        $periodEndDate = $periodEnd instanceof Carbon
+            ? $periodEnd->toDateString()
+            : Carbon::instance($periodEnd)->toDateString();
+
+        $activeLoans = PayrollLoan::where('user_id', $userId)
+            ->where('status', 'active')
+            ->where('start_date', '<=', $periodEndDate)
+            ->orderBy('id')
+            ->get();
+
+        foreach ($activeLoans as $loan) {
+            $instalment   = min($loan->monthly_instalment_kobo, $loan->remaining_kobo);
+            $newRemaining = $loan->remaining_kobo - $instalment;
+
+            $loan->update([
+                'remaining_kobo' => $newRemaining,
+                'status'         => $newRemaining <= 0 ? 'completed' : 'active',
+            ]);
+        }
     }
 
     private function applyDeductionRecoveries(int $userId, int $totalRecoveredKobo): void

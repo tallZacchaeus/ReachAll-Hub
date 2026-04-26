@@ -8,6 +8,7 @@ use App\Models\PayrollDeduction;
 use App\Models\PayrollEntry;
 use App\Models\PayrollRun;
 use App\Models\User;
+use App\Services\AuditLogger;
 use App\Services\Finance\MoneyHelper;
 use App\Services\Payroll\PayrollRunService;
 use App\Services\Payroll\PayslipGenerator;
@@ -15,6 +16,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -45,7 +47,8 @@ class PayrollRunController extends Controller
             ->paginate(20);
 
         return Inertia::render('Payroll/PayrollRunsPage', [
-            'runs' => $runs,
+            'runs'       => $runs,
+            'can_manage' => Auth::user()?->hasPermission('payroll.manage'),
         ]);
     }
 
@@ -148,6 +151,109 @@ class PayrollRunController extends Controller
         $count = PayslipGenerator::generateAll($payrollRun->id);
 
         return back()->with('success', "{$count} payslip(s) generated.");
+    }
+
+    /** Stream a year-end PAYE tax report CSV for the given calendar year. */
+    public function yearEndReport(Request $request)
+    {
+        $this->authoriseManage();
+
+        $year = (int) $request->input('year', now()->subYear()->year);
+
+        $rows = DB::table('payroll_entries')
+            ->join('payroll_runs', 'payroll_runs.id', '=', 'payroll_entries.payroll_run_id')
+            ->join('users', 'users.id', '=', 'payroll_entries.user_id')
+            ->where('payroll_runs.status', 'paid')
+            ->whereYear('payroll_runs.run_date', $year)
+            ->select([
+                'users.employee_id',
+                'users.name',
+                'users.email',
+                DB::raw('SUM(payroll_entries.gross_kobo)            AS total_gross_kobo'),
+                DB::raw('SUM(payroll_entries.paye_kobo)             AS total_paye_kobo'),
+                DB::raw('SUM(payroll_entries.pension_employee_kobo) AS total_pension_employee_kobo'),
+                DB::raw('SUM(payroll_entries.nhf_kobo)              AS total_nhf_kobo'),
+                DB::raw('SUM(payroll_entries.nsitf_kobo)            AS total_nsitf_kobo'),
+                DB::raw('SUM(payroll_entries.net_kobo)              AS total_net_kobo'),
+                DB::raw('COUNT(payroll_entries.id)                  AS months_paid'),
+            ])
+            ->groupBy('users.id', 'users.employee_id', 'users.name', 'users.email')
+            ->orderBy('users.name')
+            ->get();
+
+        // Fall back to period_start year if run_date column does not exist
+        if ($rows->isEmpty()) {
+            $rows = DB::table('payroll_entries')
+                ->join('payroll_runs', 'payroll_runs.id', '=', 'payroll_entries.payroll_run_id')
+                ->join('users', 'users.id', '=', 'payroll_entries.user_id')
+                ->where('payroll_runs.status', 'paid')
+                ->whereYear('payroll_runs.period_start', $year)
+                ->select([
+                    'users.employee_id',
+                    'users.name',
+                    'users.email',
+                    DB::raw('SUM(payroll_entries.gross_kobo)            AS total_gross_kobo'),
+                    DB::raw('SUM(payroll_entries.paye_kobo)             AS total_paye_kobo'),
+                    DB::raw('SUM(payroll_entries.pension_employee_kobo) AS total_pension_employee_kobo'),
+                    DB::raw('SUM(payroll_entries.nhf_kobo)              AS total_nhf_kobo'),
+                    DB::raw('SUM(payroll_entries.nsitf_kobo)            AS total_nsitf_kobo'),
+                    DB::raw('SUM(payroll_entries.net_kobo)              AS total_net_kobo'),
+                    DB::raw('COUNT(payroll_entries.id)                  AS months_paid'),
+                ])
+                ->groupBy('users.id', 'users.employee_id', 'users.name', 'users.email')
+                ->orderBy('users.name')
+                ->get();
+        }
+
+        AuditLogger::record(
+            module: 'payroll',
+            action: 'year_end_report_downloaded',
+            newData: ['year' => $year, 'row_count' => $rows->count()],
+            request: $request,
+        );
+
+        $filename = "year-end-paye-{$year}.csv";
+
+        $headers = [
+            'Content-Type'        => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ];
+
+        $callback = function () use ($rows) {
+            $handle = fopen('php://output', 'w');
+
+            fputcsv($handle, [
+                'Employee ID',
+                'Name',
+                'Email',
+                'Gross Earnings (NGN)',
+                'PAYE (NGN)',
+                'Pension Employee (NGN)',
+                'NHF (NGN)',
+                'NSITF (NGN)',
+                'Net Pay (NGN)',
+                'Months Paid',
+            ]);
+
+            foreach ($rows as $row) {
+                fputcsv($handle, [
+                    $row->employee_id ?? '',
+                    $row->name,
+                    $row->email,
+                    number_format($row->total_gross_kobo / 100, 2, '.', ''),
+                    number_format($row->total_paye_kobo / 100, 2, '.', ''),
+                    number_format($row->total_pension_employee_kobo / 100, 2, '.', ''),
+                    number_format($row->total_nhf_kobo / 100, 2, '.', ''),
+                    number_format($row->total_nsitf_kobo / 100, 2, '.', ''),
+                    number_format($row->total_net_kobo / 100, 2, '.', ''),
+                    (int) $row->months_paid,
+                ]);
+            }
+
+            fclose($handle);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     /** Export the bank payment file (CSV) for this run. */
