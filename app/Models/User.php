@@ -499,6 +499,13 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(OneOnOne::class, 'employee_id');
     }
 
+    // ── Expense claim relationships ─────────────────────────────────────────
+
+    public function expenseClaims(): HasMany
+    {
+        return $this->hasMany(ExpenseClaim::class, 'user_id');
+    }
+
     // ── Pre-boarding relationships ──────────────────────────────────────────
 
     public function preboarding_tasks(): HasMany

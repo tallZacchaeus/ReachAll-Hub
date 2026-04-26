@@ -532,6 +532,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/preboarding/tasks/{preboardingTask}/waive', [\App\Http\Controllers\Recruitment\PreboardingController::class, 'waive'])->name('preboarding.tasks.waive');
     });
 
+    // ── Expense Claims (Phase 9) ─────────────────────────────────────────
+    Route::prefix('expenses')->name('expenses.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Expenses\ExpenseController::class, 'index'])->name('index');
+        Route::get('/my', [\App\Http\Controllers\Expenses\ExpenseController::class, 'myExpenses'])->name('my');
+        Route::post('/', [\App\Http\Controllers\Expenses\ExpenseController::class, 'store'])->name('store');
+        Route::get('/receipts/{expenseReceipt}/download', [\App\Http\Controllers\Expenses\ExpenseController::class, 'downloadReceipt'])->name('receipts.download');
+        Route::get('/{expenseClaim}', [\App\Http\Controllers\Expenses\ExpenseController::class, 'show'])->name('show');
+        Route::post('/{expenseClaim}/submit', [\App\Http\Controllers\Expenses\ExpenseController::class, 'submit'])->name('submit');
+        Route::post('/{expenseClaim}/approve', [\App\Http\Controllers\Expenses\ExpenseController::class, 'approve'])->name('approve');
+        Route::post('/{expenseClaim}/reject', [\App\Http\Controllers\Expenses\ExpenseController::class, 'reject'])->name('reject');
+        Route::post('/{expenseClaim}/mark-paid', [\App\Http\Controllers\Expenses\ExpenseController::class, 'markPaid'])->name('mark-paid');
+        Route::post('/{expenseClaim}/receipts', [\App\Http\Controllers\Expenses\ExpenseController::class, 'addReceipt'])->name('receipts.store');
+    });
+
     // ── Feedback & 1:1s (Phase 8) ────────────────────────────────────────
     Route::prefix('feedback')->name('feedback.')->group(function () {
         Route::get('/requests', [\App\Http\Controllers\Feedback\FeedbackRequestController::class, 'index'])->name('requests.index');
