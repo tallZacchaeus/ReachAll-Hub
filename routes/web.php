@@ -40,6 +40,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('leave', [LeaveRequestController::class, 'index'])->name('leave');
     Route::post('leave', [LeaveRequestController::class, 'store'])->name('leave.store');
     Route::patch('leave/{leaveRequest}/status', [LeaveRequestController::class, 'updateStatus'])->name('leave.status');
+
+    // Leave type and holiday management (HR only — leave.manage permission)
+    Route::prefix('leave')->name('leave.')->group(function () {
+        Route::get('/types', [LeaveRequestController::class, 'types'])->name('types');
+        Route::post('/types', [LeaveRequestController::class, 'storeType'])->name('types.store');
+        Route::put('/types/{leaveType}', [LeaveRequestController::class, 'updateType'])->name('types.update');
+        Route::delete('/types/{leaveType}', [LeaveRequestController::class, 'destroyType'])->name('types.destroy');
+        Route::get('/holidays', [LeaveRequestController::class, 'holidays'])->name('holidays');
+        Route::post('/holidays', [LeaveRequestController::class, 'storeHoliday'])->name('holidays.store');
+        Route::put('/holidays/{publicHoliday}', [LeaveRequestController::class, 'updateHoliday'])->name('holidays.update');
+        Route::delete('/holidays/{publicHoliday}', [LeaveRequestController::class, 'destroyHoliday'])->name('holidays.destroy');
+    });
+
     Route::get('notifications', [PageController::class, 'notifications'])->name('notifications');
     Route::get('announcements', [PageController::class, 'announcements'])->name('announcements');
     Route::get('performance-review', [PageController::class, 'performanceReview'])->name('performance-review');

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+// LeaveType and coverUser relationships added in Phase 4
 
 class LeaveRequest extends Model
 {
@@ -14,9 +15,12 @@ class LeaveRequest extends Model
         'user_id',
         'reviewed_by_user_id',
         'type',
+        'leave_type_id',
+        'cover_user_id',
         'start_date',
         'end_date',
         'days',
+        'working_days',
         'reason',
         'status',
         'hr_comment',
@@ -26,9 +30,10 @@ class LeaveRequest extends Model
     protected function casts(): array
     {
         return [
-            'start_date' => 'date',
-            'end_date' => 'date',
-            'reviewed_at' => 'datetime',
+            'start_date'   => 'date',
+            'end_date'     => 'date',
+            'reviewed_at'  => 'datetime',
+            'working_days' => 'decimal:1',
         ];
     }
 
@@ -40,5 +45,15 @@ class LeaveRequest extends Model
     public function reviewer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'reviewed_by_user_id');
+    }
+
+    public function leaveType(): BelongsTo
+    {
+        return $this->belongsTo(LeaveType::class);
+    }
+
+    public function coverUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'cover_user_id');
     }
 }
