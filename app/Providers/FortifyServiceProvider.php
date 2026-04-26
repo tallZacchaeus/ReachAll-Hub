@@ -70,7 +70,11 @@ class FortifyServiceProvider extends ServiceProvider
      */
     private function configureViews(): void
     {
-        Fortify::loginView(fn (Request $request) => view('auth.login', [
+        // Render via Inertia so an Inertia XHR visit hitting /login (e.g. on session
+        // expiry) returns an Inertia response. A plain Blade view returns full HTML,
+        // which Inertia treats as a non-Inertia response and renders inside an iframe
+        // modal — that's what produced the "login page loads in an iframe" effect.
+        Fortify::loginView(fn (Request $request) => Inertia::render('LoginPage', [
             'canResetPassword' => Features::enabled(Features::resetPasswords()),
             'canRegister' => Features::enabled(Features::registration()),
             'status' => $request->session()->get('status'),
