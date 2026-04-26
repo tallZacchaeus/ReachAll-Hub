@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChecklistTemplate;
+use App\Models\EmployeeLifecycleEvent;
+use App\Models\OffboardingChecklist;
 use App\Models\User;
 use App\Models\UserChecklist;
+use App\Services\AuditLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -174,6 +177,61 @@ class StaffEnrollmentController extends Controller
 
         $nextStatus = $user->status === 'active' ? 'inactive' : 'active';
         $user->update(['status' => $nextStatus]);
+
+        // When deactivating: initiate offboarding checklist + record lifecycle event
+        if ($nextStatus === 'inactive') {
+            $checklist = OffboardingChecklist::firstOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'initiated_by_id' => $request->user()->id,
+                    'termination_date' => now()->toDateString(),
+                    'status' => 'initiated',
+                ]
+            );
+
+            if ($checklist->wasRecentlyCreated) {
+                $defaults = [
+                    ['exit_interview',    'Conduct Exit Interview',                                       'hr',      1],
+                    ['access_revocation', 'Revoke System & Building Access',                             'it',      2],
+                    ['equipment_return',  'Return Company Equipment',                                    'hr',      3],
+                    ['document_handover', 'Complete Document Handover',                                  'hr',      4],
+                    ['hr_clearance',      'HR Department Clearance',                                     'hr',      5],
+                    ['finance_clearance', 'Finance Department Clearance (Outstanding Advances/Loans)',   'finance', 6],
+                    ['final_payroll',     'Process Final Payroll Settlement',                            'payroll', 7],
+                    ['clearance_form',    'Issue Clearance Certificate',                                 'hr',      8],
+                ];
+
+                foreach ($defaults as [$type, $title, $dept, $order]) {
+                    $checklist->tasks()->create([
+                        'task_type'  => $type,
+                        'title'      => $title,
+                        'status'     => 'pending',
+                        'sort_order' => $order,
+                    ]);
+                }
+
+                AuditLogger::record(
+                    'offboarding',
+                    'checklist_initiated',
+                    'App\Models\User',
+                    $user->id,
+                    null,
+                    ['user_name' => $user->name],
+                    $request
+                );
+            }
+
+            // Record lifecycle termination event
+            EmployeeLifecycleEvent::record(
+                userId: $user->id,
+                eventType: 'termination',
+                effectiveDate: now()->toDateString(),
+                oldValues: ['status' => 'active'],
+                newValues: ['status' => 'inactive'],
+                notes: 'Status set to inactive via staff enrollment.',
+                recordedById: $request->user()->id,
+            );
+        }
 
         return back()->with('success', 'Status updated successfully.');
     }

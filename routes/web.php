@@ -532,6 +532,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/preboarding/tasks/{preboardingTask}/waive', [\App\Http\Controllers\Recruitment\PreboardingController::class, 'waive'])->name('preboarding.tasks.waive');
     });
 
+    // ── Offboarding (Phase 7) ────────────────────────────────────────────
+    Route::prefix('admin/offboarding')->name('admin.offboarding.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\OffboardingController::class, 'index'])->name('index');
+        Route::get('/{offboardingChecklist}', [\App\Http\Controllers\Admin\OffboardingController::class, 'show'])->name('show');
+        Route::post('/tasks/{offboardingTask}/complete', [\App\Http\Controllers\Admin\OffboardingController::class, 'completeTask'])->name('tasks.complete');
+        Route::post('/tasks/{offboardingTask}/waive', [\App\Http\Controllers\Admin\OffboardingController::class, 'waiveTask'])->name('tasks.waive');
+        Route::post('/{offboardingChecklist}/complete', [\App\Http\Controllers\Admin\OffboardingController::class, 'completeChecklist'])->name('complete');
+        Route::post('/{offboardingChecklist}/exit-interview', [\App\Http\Controllers\Admin\OffboardingController::class, 'updateExitInterview'])->name('exit-interview');
+    });
+
     // ── Employee Relations / Case Management ──────────────────────────────
     Route::prefix('employee-relations')->name('er.')->group(function () {
         // HR admin + investigator: case list and detail

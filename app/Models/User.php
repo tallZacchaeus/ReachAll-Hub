@@ -483,4 +483,11 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(PreboardingTask::class, 'user_id');
     }
+
+    // ── Offboarding relationships ───────────────────────────────────────────
+
+    public function offboardingChecklist(): HasOne
+    {
+        return $this->hasOne(OffboardingChecklist::class, 'user_id');
+    }
 }
