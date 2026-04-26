@@ -327,6 +327,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/admin/roles/{role}', [\App\Http\Controllers\Admin\RoleController::class, 'update'])->name('admin.roles.update');
     Route::delete('/admin/roles/{role}', [\App\Http\Controllers\Admin\RoleController::class, 'destroy'])->name('admin.roles.destroy');
 
+    // Unified Audit Log (audit.view permission required)
+    Route::get('/admin/audit-logs', [\App\Http\Controllers\Admin\AuditLogController::class, 'index'])->name('admin.audit-logs');
+
     // Org Structure Management (hr + superadmin)
     Route::get('/admin/org/departments', [\App\Http\Controllers\Admin\DepartmentController::class, 'index'])->name('admin.org.departments');
     Route::post('/admin/org/departments', [\App\Http\Controllers\Admin\DepartmentController::class, 'store'])->name('admin.org.departments.store');

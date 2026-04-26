@@ -243,6 +243,7 @@ export function Sidebar({ activePage, userRole, employeeStage = "performer", has
   const canManageER            = can('er.manage');
   const canViewER              = canAny(['er.manage', 'er.investigate']);
   const canManageCompliance    = can('compliance.manage');
+  const canViewAuditLogs       = can('audit.view');
 
   const sections: NavSection[] = [];
 
@@ -260,7 +261,7 @@ export function Sidebar({ activePage, userRole, employeeStage = "performer", has
     const canManageRoles = can('roles.manage');
     const canManageOrg = can('org.manage');
     const canManageDocs = can('documents.manage');
-    if (canManageStaff || canManageRoles || canManageOrg || canManageDocs || canManageBenefits) {
+    if (canManageStaff || canManageRoles || canManageOrg || canManageDocs || canManageBenefits || canViewAuditLogs) {
       const manageItems = [...ADMIN_MANAGE_SECTION.items];
       if (canManageDocs) {
         manageItems.push({ id: "document-vault", label: "Document Vault", icon: FolderOpen, href: "/admin/hr/documents" });
@@ -273,6 +274,9 @@ export function Sidebar({ activePage, userRole, employeeStage = "performer", has
       }
       if (canManageRoles) {
         manageItems.push({ id: "roles", label: "Roles & Permissions", icon: ShieldCheck, href: "/admin/roles" });
+      }
+      if (canViewAuditLogs) {
+        manageItems.push({ id: "audit-logs", label: "Audit Logs", icon: ClipboardList, href: "/admin/audit-logs" });
       }
       sections.push({ ...ADMIN_MANAGE_SECTION, items: manageItems });
     }

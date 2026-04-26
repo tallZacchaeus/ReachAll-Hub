@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
-    protected $fillable = ['name', 'label', 'description', 'is_system'];
+    protected $fillable = ['name', 'label', 'description', 'is_system', 'feature_flags'];
 
-    protected $casts = ['is_system' => 'boolean'];
+    protected $casts = [
+        'is_system'     => 'boolean',
+        'feature_flags' => 'array',
+    ];
 
     /** Permissions assigned to this role via role_permissions (joined on role slug). */
     public function permissions(): Collection

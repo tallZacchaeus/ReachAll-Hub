@@ -34,6 +34,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'department',
         'position',
         'role',
+        'role_id',
         'status',
         'employee_stage',
         'password',
@@ -76,7 +77,15 @@ class User extends Authenticatable implements MustVerifyEmail
             'hire_date'            => 'date',
             'date_of_birth'        => 'date',
             'probation_end_date'   => 'date',
+            'role_id'              => 'integer',
         ];
+    }
+
+    // ── Role relationship ───────────────────────────────────────────────────
+
+    public function roleModel(): BelongsTo
+    {
+        return $this->belongsTo(Role::class, 'role_id');
     }
 
     // ── Org structure relationships ─────────────────────────────────────────

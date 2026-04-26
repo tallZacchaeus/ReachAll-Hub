@@ -56,7 +56,26 @@ export type Permission =
     | 'finance.exec'
     | 'finance.reports'
     | 'finance.period-close'
-    | 'finance.go-live';
+    | 'finance.go-live'
+    // Leave & lifecycle management
+    | 'leave.manage'
+    | 'onboarding.manage'
+    | 'offboarding.manage'
+    // Performance & feedback
+    | 'reviews.manage'
+    | 'reviews.submit'
+    | 'feedback.manage'
+    | 'feedback.submit'
+    // Expenses
+    | 'expenses.submit'
+    | 'expenses.approve'
+    | 'expenses.finance'
+    // Audit
+    | 'audit.view'
+    // Payroll loans
+    | 'payroll.loans'
+    // Compliance reporting
+    | 'compliance.report';
 
 /** Check whether a permissions array contains a given permission. */
 export function can(permissions: string[], permission: Permission): boolean {

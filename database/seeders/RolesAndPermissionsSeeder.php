@@ -67,6 +67,25 @@ class RolesAndPermissionsSeeder extends Seeder
         'finance.reports'        => ['Finance Reports',            'finance', 'View and export finance reports'],
         'finance.period-close'   => ['Finance Period Close',       'finance', 'Initiate and manage accounting period close'],
         'finance.go-live'        => ['Finance Go-Live',            'finance', 'Access the finance go-live checklist (superadmin only)'],
+        // Leave & lifecycle management
+        'leave.manage'           => ['Manage Leave Types & Balances', 'hr',         'Create leave types, set balances, and manage public holidays'],
+        'onboarding.manage'      => ['Manage Onboarding',             'hr',         'Create and manage pre-boarding and onboarding tasks'],
+        'offboarding.manage'     => ['Manage Offboarding',            'hr',         'Create and manage offboarding checklists and tasks'],
+        // Performance & feedback
+        'reviews.manage'         => ['Manage Performance Reviews',    'hr',         'Create review cycles, manage PIPs and peer reviews'],
+        'reviews.submit'         => ['Submit Performance Reviews',    'core',       'Submit self-assessments and peer reviews'],
+        'feedback.manage'        => ['Manage Feedback',               'hr',         'Manage 360 feedback requests and view aggregated results'],
+        'feedback.submit'        => ['Submit Feedback',               'core',       'Respond to feedback requests'],
+        // Expenses
+        'expenses.submit'        => ['Submit Expense Claims',         'core',       'Create and submit expense claims with receipts'],
+        'expenses.approve'       => ['Approve Expense Claims',        'hr',         'Review and approve expense claims'],
+        'expenses.finance'       => ['Process Expense Payments',      'finance',    'Mark expense claims as paid and manage finance export'],
+        // Audit
+        'audit.view'             => ['View Audit Logs',               'core',       'Read-only access to the unified cross-module audit log'],
+        // Payroll loans
+        'payroll.loans'          => ['Manage Payroll Loans',          'payroll',    'Create and approve employee loans and salary advances'],
+        // Compliance reporting
+        'compliance.report'      => ['Compliance Reports',            'compliance', 'View org-wide compliance training and policy status reports'],
     ];
 
     // ── Role registry ──────────────────────────────────────────────────────
@@ -84,6 +103,9 @@ class RolesAndPermissionsSeeder extends Seeder
                 'compensation.self',
                 'er.self',
                 'compliance.self',
+                'reviews.submit',
+                'feedback.submit',
+                'expenses.submit',
             ],
         ],
         'management' => [
@@ -105,6 +127,10 @@ class RolesAndPermissionsSeeder extends Seeder
                 'er.investigate', 'er.self',
                 'compliance.self',
                 'finance.access', 'finance.reports',
+                'reviews.submit',
+                'feedback.submit',
+                'expenses.submit',
+                'feedback.manage',
             ],
         ],
         'hr' => [
@@ -128,6 +154,15 @@ class RolesAndPermissionsSeeder extends Seeder
                 'er.manage', 'er.investigate', 'er.self',
                 'compliance.manage', 'compliance.self',
                 'finance.access', 'finance.reports',
+                'leave.manage',
+                'onboarding.manage',
+                'offboarding.manage',
+                'reviews.manage',
+                'feedback.manage',
+                'expenses.approve',
+                'audit.view',
+                'payroll.loans',
+                'compliance.report',
             ],
         ],
         'finance' => [
@@ -141,6 +176,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'compensation.view', 'compensation.self',
                 'recruitment.interview',
                 'compliance.self',
+                'expenses.finance',
+                'payroll.loans',
             ],
         ],
         'general_management' => [
@@ -192,6 +229,20 @@ class RolesAndPermissionsSeeder extends Seeder
                 'compliance.manage', 'compliance.self',
                 'finance.access', 'finance.admin', 'finance.exec',
                 'finance.reports', 'finance.period-close', 'finance.go-live',
+                // New Phase 1-2 permissions
+                'leave.manage',
+                'onboarding.manage',
+                'offboarding.manage',
+                'reviews.manage',
+                'reviews.submit',
+                'feedback.manage',
+                'feedback.submit',
+                'expenses.submit',
+                'expenses.approve',
+                'expenses.finance',
+                'audit.view',
+                'payroll.loans',
+                'compliance.report',
             ],
         ],
     ];
