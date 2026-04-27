@@ -15,7 +15,11 @@ return new class extends Migration
             $table->longText('body');
             $table->unsignedBigInteger('category_id');
             $table->foreign('category_id')->references('id')->on('content_categories');
-            $table->json('stage_visibility')->default('["joiner","performer","leader"]');
+            // PROD-01: MySQL 8 disallows DEFAULT on JSON columns (MariaDB and
+            // SQLite tolerate it). The application sets this default in
+            // ContentPage::booted() / wherever rows are created — see
+            // ContentSeeder + admin/content controllers.
+            $table->json('stage_visibility')->nullable();
             $table->boolean('is_published')->default(false);
             $table->unsignedBigInteger('author_id');
             $table->foreign('author_id')->references('id')->on('users');

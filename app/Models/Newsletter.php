@@ -22,6 +22,16 @@ class Newsletter extends Model
         'published_at' => 'datetime',
     ];
 
+    /**
+     * PROD-01: MySQL 8 disallows DEFAULT on JSON columns. Provide the
+     * default at the model layer instead.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'target_audience' => '{"type":"all","value":"all"}',
+    ];
+
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author_id');

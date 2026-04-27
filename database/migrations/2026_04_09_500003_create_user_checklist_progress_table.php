@@ -18,7 +18,13 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            $table->unique(['user_checklist_id', 'checklist_item_id']);
+            // PROD-01: explicit name — Laravel's auto-generated
+            // user_checklist_progress_user_checklist_id_checklist_item_id_unique is
+            // 70 chars and exceeds MySQL/MariaDB's 64-char identifier limit.
+            $table->unique(
+                ['user_checklist_id', 'checklist_item_id'],
+                'user_checklist_progress_uc_ci_unique',
+            );
         });
     }
 

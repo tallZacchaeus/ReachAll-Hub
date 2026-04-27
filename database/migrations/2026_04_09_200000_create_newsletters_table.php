@@ -15,7 +15,9 @@ return new class extends Migration
             $table->string('featured_image')->nullable();
             $table->unsignedBigInteger('author_id');
             $table->foreign('author_id')->references('id')->on('users');
-            $table->json('target_audience')->default('{"type":"all","value":"all"}');
+            // PROD-01: MySQL 8 disallows DEFAULT on JSON columns. Default
+            // is set at the model layer (Newsletter::$attributes).
+            $table->json('target_audience')->nullable();
             $table->string('status')->default('draft');
             $table->timestamp('published_at')->nullable();
             $table->timestamps();

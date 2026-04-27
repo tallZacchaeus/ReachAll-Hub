@@ -24,6 +24,16 @@ class Course extends Model
         'duration_minutes' => 'integer',
     ];
 
+    /**
+     * PROD-01: MySQL 8 disallows DEFAULT on JSON columns. Provide the
+     * default at the model layer instead.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'stage_visibility' => '["joiner","performer","leader"]',
+    ];
+
     public function enrollments(): HasMany
     {
         return $this->hasMany(CourseEnrollment::class);

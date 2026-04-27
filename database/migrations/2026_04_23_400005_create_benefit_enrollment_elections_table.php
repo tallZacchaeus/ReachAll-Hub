@@ -23,8 +23,12 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            // One election per employee per plan per window
-            $table->unique(['enrollment_window_id', 'user_id', 'benefit_plan_id']);
+            // One election per employee per plan per window.
+            // PROD-01: explicit name — auto-generated id exceeds 64 chars.
+            $table->unique(
+                ['enrollment_window_id', 'user_id', 'benefit_plan_id'],
+                'bee_window_user_plan_unique',
+            );
             $table->index(['user_id', 'status']);
             $table->index(['enrollment_window_id', 'status']);
         });
