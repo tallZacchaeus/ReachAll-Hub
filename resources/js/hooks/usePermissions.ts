@@ -1,4 +1,5 @@
 import { usePage } from '@inertiajs/react';
+
 import type { SharedData } from '@/types';
 import { can, canAll, canAny, type Permission } from '@/types/permissions';
 

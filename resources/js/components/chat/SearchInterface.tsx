@@ -1,7 +1,8 @@
-import { useState } from "react";
 import { Search, X } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface SearchResult {

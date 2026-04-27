@@ -1,21 +1,22 @@
-import { useState } from "react";
 import { Head, router, useForm } from "@inertiajs/react";
-import MainLayout from "@/layouts/MainLayout";
+import { Plus, CheckCircle2, DollarSign, Trash2 } from "lucide-react";
+import { useState } from "react";
+
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
     Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import {
     Tabs, TabsContent, TabsList, TabsTrigger,
 } from "@/components/ui/tabs";
-import { Plus, CheckCircle2, DollarSign, Trash2 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import MainLayout from "@/layouts/MainLayout";
 import type { BonusPlanRow, BonusType } from "@/types/compensation";
 
 interface Employee {

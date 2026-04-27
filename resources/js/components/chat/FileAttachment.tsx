@@ -1,5 +1,6 @@
-import { useState, useRef } from "react";
 import { Paperclip, X, File, Image, Video, Music, FileText } from "lucide-react";
+import { useState, useRef } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
     Tooltip,

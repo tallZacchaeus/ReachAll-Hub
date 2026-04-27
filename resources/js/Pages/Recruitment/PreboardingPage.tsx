@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
-import MainLayout from '@/layouts/MainLayout';
+
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     Table,
@@ -9,7 +10,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
+import MainLayout from '@/layouts/MainLayout';
 import type { PreboardingOffer } from '@/types/onboarding';
 
 interface Props {

@@ -1,8 +1,9 @@
-import MainLayout from "@/layouts/MainLayout";
 import { router } from "@inertiajs/react";
+import { Newspaper, Calendar, User } from "lucide-react";
+
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Newspaper, Calendar, User } from "lucide-react";
+import MainLayout from "@/layouts/MainLayout";
 import { sanitizeHtml } from "@/lib/sanitize";
 
 interface NewsletterCard {

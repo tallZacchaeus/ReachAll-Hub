@@ -1,15 +1,17 @@
-import MainLayout from "@/layouts/MainLayout";
+import { useForm, usePage } from "@inertiajs/react";
+import { Check, X, User as UserIcon, Calendar, ArrowRight, AlertCircle, Phone, MapPin, Mail } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Check, X, User as UserIcon, Calendar, ArrowRight, AlertCircle, Phone, MapPin, Mail } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
-import { useForm, usePage } from "@inertiajs/react";
+import MainLayout from "@/layouts/MainLayout";
+
 
 interface User {
     id: number;

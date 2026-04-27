@@ -1,17 +1,18 @@
-import { useState } from "react";
 import { useForm, router } from "@inertiajs/react";
 import {
   CheckCircle2, XCircle, MessageSquare, AlertTriangle, User, Building2,
   Hash, Package, FileText, Download, Clock,
 } from "lucide-react";
-import MainLayout from "@/layouts/MainLayout";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import { useState } from "react";
+
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import MainLayout from "@/layouts/MainLayout";
 
 interface Requisition {
   id: number;

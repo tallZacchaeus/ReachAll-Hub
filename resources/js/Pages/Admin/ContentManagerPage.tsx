@@ -1,10 +1,14 @@
-import MainLayout from "@/layouts/MainLayout";
 import { router } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
+import { Plus, Search, Edit, Trash2, Eye, FileText } from "lucide-react";
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useEffect } from "react";
+import { toast } from "sonner";
+
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -21,10 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Search, Edit, Trash2, Eye, FileText } from "lucide-react";
-import { toast } from "sonner";
-import { usePage } from "@inertiajs/react";
-import { useEffect } from "react";
+import MainLayout from "@/layouts/MainLayout";
 import { sanitizeHtml } from "@/lib/sanitize";
 
 interface Category {

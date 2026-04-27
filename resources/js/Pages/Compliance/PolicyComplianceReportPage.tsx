@@ -1,8 +1,9 @@
-import { useState } from 'react';
 import { router } from '@inertiajs/react';
-import MainLayout from '@/layouts/MainLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState } from 'react';
+
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import MainLayout from '@/layouts/MainLayout';
 import type { PolicyCategory } from '@/types/compliance';
 
 interface OutstandingUser {

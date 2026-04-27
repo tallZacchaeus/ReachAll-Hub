@@ -1,17 +1,6 @@
-import MainLayout from "@/layouts/MainLayout";
+import { Calendar, TrendingUp, Award, CheckSquare, Users, Download, FileText } from "lucide-react";
+import { motion } from "motion/react";
 import { useState } from "react";
-import { useChartColors } from "@/lib/useChartColors";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   LineChart,
   Line,
@@ -26,8 +15,21 @@ import {
   Area,
   AreaChart,
 } from "recharts";
-import { Calendar, TrendingUp, Award, CheckSquare, Users, Download, FileText } from "lucide-react";
-import { motion } from "motion/react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import MainLayout from "@/layouts/MainLayout";
+import { useChartColors } from "@/lib/useChartColors";
+
 
 interface ProgressReportPageProps {
   userRole: string;

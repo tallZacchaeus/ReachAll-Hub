@@ -1,11 +1,9 @@
-import { useState } from "react";
 import { Head, router, useForm } from "@inertiajs/react";
-import MainLayout from "@/layouts/MainLayout";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Plus, Eye, Target } from "lucide-react";
+import { useState } from "react";
+
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     Dialog,
@@ -14,6 +12,8 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
     Select,
     SelectContent,
@@ -29,7 +29,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Plus, Eye, Target } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import MainLayout from "@/layouts/MainLayout";
 import type { PipPlan, PipStatus } from "@/types/performance";
 
 interface Employee {

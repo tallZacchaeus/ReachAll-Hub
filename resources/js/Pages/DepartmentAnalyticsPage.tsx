@@ -1,17 +1,6 @@
-import MainLayout from "@/layouts/MainLayout";
+import { Users, TrendingUp, Calendar, Award, Building2 } from "lucide-react";
+import { motion } from "motion/react";
 import { useState } from "react";
-import { useChartColors } from "@/lib/useChartColors";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   BarChart,
   Bar,
@@ -28,9 +17,24 @@ import {
   PolarRadiusAxis,
   Radar,
 } from "recharts";
-import { Users, TrendingUp, Calendar, Award, Building2 } from "lucide-react";
+
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { motion } from "motion/react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import MainLayout from "@/layouts/MainLayout";
+import { useChartColors } from "@/lib/useChartColors";
+
+
+
 
 export default function DepartmentAnalyticsPage() {
   const { colors } = useChartColors();

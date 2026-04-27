@@ -1,8 +1,7 @@
-import { useState } from "react";
 import { router } from "@inertiajs/react";
 import { Search, ChevronDown, HelpCircle } from "lucide-react";
-import MainLayout from "@/layouts/MainLayout";
-import { Input } from "@/components/ui/input";
+import { useState } from "react";
+
 import {
   Accordion,
   AccordionContent,
@@ -10,6 +9,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import MainLayout from "@/layouts/MainLayout";
 
 interface FaqEntry {
   id: number;

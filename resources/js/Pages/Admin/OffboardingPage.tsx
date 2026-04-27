@@ -1,8 +1,9 @@
 import { Link, router } from '@inertiajs/react';
-import MainLayout from '@/layouts/MainLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ClipboardList, UserMinus } from 'lucide-react';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     Select,
     SelectContent,
@@ -18,7 +19,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { ClipboardList, UserMinus } from 'lucide-react';
+import MainLayout from '@/layouts/MainLayout';
 import type { OffboardingChecklistSummary, OffboardingStatus } from '@/types/offboarding';
 
 // ─── Types ────────────────────────────────────────────────────────────────────

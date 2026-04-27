@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SettingsPage } from "@/components/SettingsPage";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface OtherPagesProps {
   page: string;

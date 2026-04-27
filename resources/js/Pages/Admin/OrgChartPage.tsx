@@ -1,10 +1,11 @@
-import MainLayout from "@/layouts/MainLayout";
-import { useState, useMemo } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { GitBranch, ChevronDown, ChevronRight, Search, Users } from "lucide-react";
+import { useState, useMemo } from "react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import MainLayout from "@/layouts/MainLayout";
 import type { OrgChartEmployee } from "@/types/org";
 
 // ─── Tree node type ───────────────────────────────────────────────────────────

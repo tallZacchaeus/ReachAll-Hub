@@ -1,11 +1,17 @@
-import { useState } from "react";
 import { router } from "@inertiajs/react";
 import { Search, ChevronLeft, ChevronRight, Clock, User, FileText } from "lucide-react";
-import MainLayout from "@/layouts/MainLayout";
+import { useState } from "react";
+
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -21,12 +27,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import MainLayout from "@/layouts/MainLayout";
 
 interface AuditLogEntry {
   id: number;

@@ -1,18 +1,19 @@
-import { useState } from "react";
 import { router, Link } from "@inertiajs/react";
 import {
   CheckSquare, Clock, AlertTriangle, Search, Filter,
 } from "lucide-react";
-import MainLayout from "@/layouts/MainLayout";
+import { useState } from "react";
+
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
+import MainLayout from "@/layouts/MainLayout";
 
 interface QueueItem {
   step_id: number;

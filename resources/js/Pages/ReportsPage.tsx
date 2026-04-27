@@ -1,25 +1,14 @@
-import MainLayout from "@/layouts/MainLayout";
 import { router } from "@inertiajs/react";
+import {
+  FileDown,
+  FileSpreadsheet,
+  Users,
+  CheckSquare,
+  AlertCircle,
+  MessageSquare,
+} from "lucide-react";
+import { motion } from "motion/react";
 import { useState } from "react";
-import { KpiCardSkeleton, ChartSkeleton } from "@/components/ui/page-skeleton";
-import { useChartColors } from "@/lib/useChartColors";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   BarChart,
   Bar,
@@ -35,15 +24,27 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
-  FileDown,
-  FileSpreadsheet,
-  Users,
-  CheckSquare,
-  AlertCircle,
-  MessageSquare,
-} from "lucide-react";
-import { motion } from "motion/react";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { KpiCardSkeleton, ChartSkeleton } from "@/components/ui/page-skeleton";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import MainLayout from "@/layouts/MainLayout";
+import { useChartColors } from "@/lib/useChartColors";
 
 interface SummaryCard {
   label: string;

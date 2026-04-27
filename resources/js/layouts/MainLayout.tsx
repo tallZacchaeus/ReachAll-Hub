@@ -1,9 +1,10 @@
+import { usePage } from "@inertiajs/react";
 import { ReactNode, useState } from "react";
+
 import { Sidebar } from "@/components/Sidebar";
 import { TopBar } from "@/components/TopBar";
-import { Toaster } from "@/components/ui/sonner";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import { usePage } from "@inertiajs/react";
+import { Toaster } from "@/components/ui/sonner";
 
 interface MainLayoutProps {
     children: ReactNode;

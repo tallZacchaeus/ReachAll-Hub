@@ -1,3 +1,4 @@
+import { Link } from "@inertiajs/react";
 import {
   LayoutDashboard,
   Vote,
@@ -48,7 +49,7 @@ import {
   Heart,
   Award,
 } from "lucide-react";
-import { Link } from "@inertiajs/react";
+
 import { usePermissions } from "@/hooks/usePermissions";
 
 interface NavItem {

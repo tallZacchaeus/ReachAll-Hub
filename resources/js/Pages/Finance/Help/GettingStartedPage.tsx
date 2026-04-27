@@ -1,8 +1,9 @@
-import MainLayout from "@/layouts/MainLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "@inertiajs/react";
 import { FileText, CheckCircle2, Clock, ArrowRight, HelpCircle } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import MainLayout from "@/layouts/MainLayout";
 
 const STEPS = [
   {

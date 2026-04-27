@@ -2,12 +2,12 @@
 
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
+import type { LegendPayload } from "recharts/types/component/DefaultLegendContent";
 import type {
   NameType,
   Payload,
   ValueType,
 } from "recharts/types/component/DefaultTooltipContent";
-import type { LegendPayload } from "recharts/types/component/DefaultLegendContent";
 
 import { cn } from "@/components/ui/utils";
 
