@@ -101,7 +101,8 @@ interface ReportsPageProps {
   };
 }
 
-const COLORS = ["#1F6E4A", "#d97706", "#4ade80", "#f59e0b", "#60a5fa", "#dc2626"];
+// UX-01: chart palette comes from useChartColors() at runtime so wedges
+// re-tint correctly on theme toggle.
 
 const summaryCardStyles = [
   { icon: Users, colorClass: "bg-brand/10", iconClass: "text-brand" },
@@ -171,7 +172,7 @@ export default function ReportsPage({
   reportData,
 }: ReportsPageProps) {
   const [loading, setLoading] = useState(false);
-  const { colors } = useChartColors();
+  const { colors, colorArray } = useChartColors();
   const mode = reportModeConfig[reportType] ?? reportModeConfig.comprehensive;
   const activeSummaryCards = mode.summaryIndexes
     .map((index) => {
@@ -364,7 +365,7 @@ export default function ReportsPage({
           </CardContent>
         </Card>
 
-        <Card className="bg-[#0f172a] text-white shadow-sm border-0">
+        <Card className="bg-slate-900 text-white shadow-sm border-0">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between gap-3">
               <div>
@@ -513,13 +514,13 @@ export default function ReportsPage({
                       `${name} ${((percent ?? 0) * 100).toFixed(0)}%`
                     }
                     outerRadius={100}
-                    fill="#8884d8"
+                    fill={colors.primary}
                     dataKey="value"
                   >
                     {reportData.departmentData.map((entry, index) => (
                       <Cell
                         key={`department-${entry.name}`}
-                        fill={COLORS[index % COLORS.length]}
+                        fill={colorArray[index % colorArray.length]}
                       />
                     ))}
                   </Pie>

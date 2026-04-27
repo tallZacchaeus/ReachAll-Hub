@@ -2,8 +2,11 @@
 // stage styles, and role mappings used across multiple pages/components.
 
 // ─── Brand colour values (hex) for SVG / chart attributes ────────────────────
-// CSS classes use the token system (bg-brand, text-brand-yellow, etc.).
-// Recharts fill/stroke attributes need actual colour strings — use these.
+// brand exception: CSS classes use the token system (bg-brand,
+// text-brand-yellow, etc.). Recharts fill/stroke attributes and React inline
+// style={{}} props need raw colour strings, not CSS variables. These
+// constants are the single source of truth for those callers and MUST stay
+// in sync with --brand and --brand-yellow in resources/css/app.css.
 export const BRAND_GREEN = "#1F6E4A";
 export const BRAND_YELLOW = "#FFD400";
 

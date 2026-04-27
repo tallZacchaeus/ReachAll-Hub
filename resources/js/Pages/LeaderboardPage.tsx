@@ -337,6 +337,7 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
       {/* 3D Podium Section */}
       <div className="relative">
         {/* Background with gradient */}
+        {/* brand exception: podium card uses a deliberate near-white slate gradient distinct from app surfaces */}
         <div className="absolute inset-0 bg-gradient-to-br from-white via-[#F8F9FA] to-[#E8E9EB] rounded-[32px] overflow-hidden border-4 border-white shadow-2xl">
           {/* Confetti particles */}
           {[...Array(30)].map((_, i) => (
@@ -344,6 +345,7 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
               key={i}
               className="absolute w-2 h-2 rounded-full"
               style={{
+                // brand exception: confetti palette is a deliberate gold / brand-green / mint mix
                 background: ["#FFD43B", "#1F6E4A", "#95E1D3"][i % 3],
                 left: `${Math.random() * 100}%`,
                 top: `-10%`,
@@ -402,6 +404,7 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
                 transition={{ delay: 0.3, type: "spring" }}
                 className="flex-1 max-w-xs"
               >
+                {/* brand exception: silver podium uses literal silver hex gradient stops, intentionally outside the brand-token palette */}
                 <Card className="rounded-3xl border-4 border-white shadow-2xl bg-gradient-to-b from-[#F2F2F2] to-[#C0C0C0] relative overflow-hidden group hover:scale-105 transition-transform">
                   {/* Top glow */}
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-20 bg-white/40 blur-3xl" />
@@ -465,6 +468,7 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
                 transition={{ delay: 0.2, type: "spring" }}
                 className="flex-1 max-w-xs scale-110"
               >
+                {/* brand exception: gold podium uses literal pale-gold + amber gradient stops, intentionally outside the brand-token palette */}
                 <Card className="rounded-3xl border-4 border-white shadow-2xl bg-gradient-to-b from-[#FFF3B0] to-brand-yellow relative overflow-hidden group hover:scale-105 transition-transform">
                   {/* Pulsing glow */}
                   <motion.div
@@ -547,6 +551,7 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
                 transition={{ delay: 0.4, type: "spring" }}
                 className="flex-1 max-w-xs"
               >
+                {/* brand exception: bronze podium uses literal bronze hex gradient stops, intentionally outside the brand-token palette */}
                 <Card className="rounded-3xl border-4 border-white shadow-2xl bg-gradient-to-b from-[#E9CBB2] to-[#CD7F32] relative overflow-hidden group hover:scale-105 transition-transform">
                   {/* Top glow */}
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-20 bg-white/30 blur-3xl" />
@@ -637,6 +642,7 @@ export default function LeaderboardPage({ userRole }: LeaderboardPageProps) {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
                   >
+                    {/* brand exception: top-10 row uses gold-leaf accent + dark-green gradient distinct from the brand token */}
                     <Card
                       className={`rounded-2xl border-2 transition-all cursor-pointer hover:shadow-xl hover:scale-[1.02] group ${
                         isEven ? "bg-card" : "bg-card"

@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import MainLayout from "@/layouts/MainLayout";
+import { BRAND_GREEN, BRAND_YELLOW } from "@/lib/constants";
 
 
 interface User {
@@ -70,11 +71,14 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
     { title: "Rising Star", month: "October 2024", icon: "⭐" },
   ];
 
+  // UX-01: stats use BRAND_GREEN/BRAND_YELLOW from lib/constants because the
+  // values are passed to inline style={{ borderColor / backgroundColor / color }}
+  // — inline styles need raw color strings, not Tailwind classes or CSS vars.
   const stats = [
-    { label: "Awards Won", value: "4", color: "#1F6E4A" },
-    { label: "Nominations", value: "12", color: "#FFD400" },
-    { label: "Attendance", value: "98%", color: "#1F6E4A" },
-    { label: "Punctuality", value: "96%", color: "#FFD400" },
+    { label: "Awards Won", value: "4", color: BRAND_GREEN },
+    { label: "Nominations", value: "12", color: BRAND_YELLOW },
+    { label: "Attendance", value: "98%", color: BRAND_GREEN },
+    { label: "Punctuality", value: "96%", color: BRAND_YELLOW },
   ];
 
   const recentActivity = [
@@ -227,7 +231,7 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
 
                 <Dialog open={showBadgesModal} onOpenChange={setShowBadgesModal}>
                   <DialogTrigger asChild>
-                    <Button className="w-full bg-brand-yellow hover:bg-[#e6c000] text-foreground">
+                    <Button className="w-full bg-brand-yellow hover:bg-brand-yellow/90 text-foreground">
                       <Sparkles className="w-4 h-4 mr-2" />
                       View Badges
                     </Button>
@@ -308,7 +312,7 @@ export default function ProfilePage({ user, pendingRequest }: ProfilePageProps) 
                     transition={{ delay: index * 0.1 }}
                     className="flex items-center gap-4 p-4 border-2 border-border rounded-lg hover:shadow-md hover:border-brand-yellow transition-all"
                   >
-                    <div className="w-12 h-12 bg-gradient-to-br from-brand-yellow to-[#f59e0b] rounded-lg flex items-center justify-center text-2xl shadow-md">
+                    <div className="w-12 h-12 bg-gradient-to-br from-brand-yellow to-amber-500 rounded-lg flex items-center justify-center text-2xl shadow-md">
                       {achievement.icon}
                     </div>
                     <div className="flex-1">

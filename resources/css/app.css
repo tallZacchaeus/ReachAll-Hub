@@ -65,6 +65,17 @@
     --color-brand-subtle: var(--brand-subtle);
     --color-brand-yellow: var(--brand-yellow);
     --color-brand-yellow-foreground: var(--brand-yellow-foreground);
+
+    /*
+     * UX-01: semantic aliases. Use bg-brand-primary / text-brand-accent in
+     * pages instead of #1F6E4A / #FFD400. The aliases resolve to --brand /
+     * --brand-yellow respectively in light mode and to the dark-scope
+     * equivalents below in dark mode.
+     */
+    --color-brand-primary: var(--brand-primary);
+    --color-brand-primary-foreground: var(--brand-primary-foreground);
+    --color-brand-accent: var(--brand-accent);
+    --color-brand-accent-foreground: var(--brand-accent-foreground);
 }
 
 :root {
@@ -98,6 +109,11 @@
     --brand-subtle: oklch(0.98 0.02 152);
     --brand-yellow: oklch(0.88 0.18 95);
     --brand-yellow-foreground: oklch(0.205 0 0);
+    /* UX-01: semantic aliases for --brand and --brand-yellow. */
+    --brand-primary: var(--brand);
+    --brand-primary-foreground: var(--brand-foreground);
+    --brand-accent: var(--brand-yellow);
+    --brand-accent-foreground: var(--brand-yellow-foreground);
     --destructive-foreground: oklch(0.985 0 0);
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
