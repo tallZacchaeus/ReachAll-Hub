@@ -13,7 +13,9 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->string('type')->default('optional'); // mandatory | optional | certification
-            $table->json('stage_visibility')->default('["joiner","performer","leader"]');
+            // PROD-01: MySQL 8 disallows DEFAULT on JSON columns. Default
+            // is set at the model layer (Course::$attributes).
+            $table->json('stage_visibility')->nullable();
             $table->string('category');
             $table->longText('content'); // TipTap HTML
             $table->integer('duration_minutes')->nullable();

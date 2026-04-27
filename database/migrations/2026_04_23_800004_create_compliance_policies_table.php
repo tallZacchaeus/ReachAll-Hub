@@ -39,7 +39,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->timestamp('acknowledged_at');
             $table->string('ip_address', 45)->nullable();
-            $table->unique(['policy_version_id', 'user_id']);
+            // PROD-01: explicit name — auto-generated id exceeds 64 chars.
+            $table->unique(['policy_version_id', 'user_id'], 'cpa_version_user_unique');
             $table->timestamps();
         });
     }

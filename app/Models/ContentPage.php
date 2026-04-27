@@ -35,6 +35,17 @@ class ContentPage extends Model
         'published_at' => 'datetime',
     ];
 
+    /**
+     * PROD-01: MySQL 8 disallows DEFAULT on JSON columns. Provide the
+     * default at the model layer instead so newly-created rows still get
+     * the all-stages visibility unless overridden.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'stage_visibility' => '["joiner","performer","leader"]',
+    ];
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(ContentCategory::class, 'category_id');

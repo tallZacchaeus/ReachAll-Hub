@@ -12,6 +12,11 @@ return new class extends Migration
         // recurring trainings can produce multiple assignment rows (one per cycle)
         // for the same training+user pair.
         Schema::table('compliance_training_assignments', function (Blueprint $table) {
+            // PROD-01: MySQL/MariaDB refuse to drop the composite unique
+            // (training_id, user_id) because the FK on training_id depends on
+            // having an index that starts with that column. Add a plain
+            // non-unique index first, then drop the composite unique.
+            $table->index('training_id', 'cta_training_id_index');
             $table->dropUnique(['training_id', 'user_id']);
             $table->timestamp('last_reminded_at')->nullable()->after('status');
             $table->unsignedSmallInteger('reminder_count')->default(0)->after('last_reminded_at');
@@ -34,6 +39,7 @@ return new class extends Migration
         Schema::table('compliance_training_assignments', function (Blueprint $table) {
             $table->dropColumn(['last_reminded_at', 'reminder_count']);
             $table->unique(['training_id', 'user_id']);
+            $table->dropIndex('cta_training_id_index');
         });
     }
 };

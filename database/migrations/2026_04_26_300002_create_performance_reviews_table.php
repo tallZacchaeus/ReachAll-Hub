@@ -24,7 +24,11 @@ return new class extends Migration
             $table->text('comments')->nullable();
             $table->timestamps();
 
-            $table->unique(['review_cycle_id', 'reviewee_id', 'reviewer_id', 'type']);
+            // PROD-01: explicit name — auto-generated id exceeds 64 chars.
+            $table->unique(
+                ['review_cycle_id', 'reviewee_id', 'reviewer_id', 'type'],
+                'pr_cycle_reviewee_reviewer_type_unique',
+            );
         });
     }
 

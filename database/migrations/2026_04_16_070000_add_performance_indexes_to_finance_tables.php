@@ -43,8 +43,10 @@ return new class extends Migration
         Schema::table('payments', function (Blueprint $table) {
             // Lookup by requisition (one-to-one guard)
             $table->index('requisition_id', 'idx_payments_requisition');
-            // Period reporting
-            $table->index(['financial_period_id', 'paid_at'], 'idx_payments_period_paid');
+            // PROD-01: payments doesn't carry financial_period_id; period is
+            // tracked on requisitions and joined via requisition_id. Index
+            // paid_at alone for time-based payment reports.
+            $table->index('paid_at', 'idx_payments_paid_at');
         });
 
         Schema::table('finance_audit_logs', function (Blueprint $table) {
@@ -72,7 +74,7 @@ return new class extends Migration
 
         Schema::table('payments', function (Blueprint $table) {
             $table->dropIndex('idx_payments_requisition');
-            $table->dropIndex('idx_payments_period_paid');
+            $table->dropIndex('idx_payments_paid_at');
         });
 
         Schema::table('finance_audit_logs', function (Blueprint $table) {

@@ -25,7 +25,12 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            $table->unique(['user_id', 'benefit_plan_id', 'effective_date']);
+            // PROD-01: explicit names — auto-generated identifiers exceed
+            // MySQL/MariaDB's 64-char limit.
+            $table->unique(
+                ['user_id', 'benefit_plan_id', 'effective_date'],
+                'ebe_user_plan_effective_unique',
+            );
             $table->index(['user_id', 'status']);
             $table->index(['benefit_plan_id', 'status']);
         });
