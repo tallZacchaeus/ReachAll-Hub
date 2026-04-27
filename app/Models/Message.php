@@ -16,6 +16,7 @@ class Message extends Model
         'user_id',
         'content',
         'attachment_path',
+        'attachment_disk',
         'attachment_name',
         'attachment_type',
         'attachment_size',

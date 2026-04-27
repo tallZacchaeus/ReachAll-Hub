@@ -97,6 +97,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('staff-enrollment/{user}', [StaffEnrollmentController::class, 'destroy'])->name('staff-enrollment.destroy');
     Route::get('settings-overview', [PageController::class, 'settings'])->name('settings-overview');
 
+    // SEC-02: Chat attachments — authenticated streaming, private disk.
+    // Replaces direct /storage/chat-attachments/<hash> public URLs.
+    Route::get(
+        'chat/attachments/{message}',
+        [\App\Http\Controllers\ChatAttachmentDownloadController::class, 'show'],
+    )->name('chat.attachments.show');
+
     // Chat API routes
     Route::prefix('api/chat')->group(function () {
         Route::get('conversations', [\App\Http\Controllers\ChatController::class, 'getConversations']);
