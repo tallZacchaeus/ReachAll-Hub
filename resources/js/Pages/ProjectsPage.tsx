@@ -429,7 +429,7 @@ export default function ProjectsPage({ userRole }: ProjectsPageProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <Card className="border-l-4 border-l-[#1F6E4A]">
+                <Card className="border-l-4 border-l-brand">
                   <CardContent className="pt-6">
                     <div className="space-y-4">
                       {/* Project Header */}

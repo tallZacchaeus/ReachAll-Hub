@@ -36,19 +36,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import MainLayout from "@/layouts/MainLayout";
-import { BRAND_GREEN } from "@/lib/constants";
+import { useChartColors } from "@/lib/useChartColors";
 
 
 export default function AdminDashboardPage() {
+  const { colorArray } = useChartColors();
   const onNavigate = (page: string) => {
     router.visit(`/${page}`);
   };
-  // Mock data for charts
+  // UX-01: Mock data for charts uses theme-aware palette via useChartColors().
+  // colorArray reactively resolves to CHART_COLOR_ARRAY_LIGHT/DARK so the
+  // wedges keep contrast in both modes.
   const voteDistribution = [
-    { name: "Staff of Year", value: 45, color: BRAND_GREEN },
-    { name: "Culture Champion", value: 38, color: "#d97706" },
-    { name: "Most Punctual", value: 42, color: "#4ade80" },
-    { name: "Innovation", value: 35, color: "#fbbf24" },
+    { name: "Staff of Year", value: 45, color: colorArray[0] },
+    { name: "Culture Champion", value: 38, color: colorArray[1] },
+    { name: "Most Punctual", value: 42, color: colorArray[5] },
+    { name: "Innovation", value: 35, color: colorArray[3] },
   ];
 
   const topNominees = [
@@ -67,9 +70,9 @@ export default function AdminDashboardPage() {
   ];
 
   const pendingApprovals = [
-    { type: "Leave Request", count: 5, color: "#d97706" },
-    { type: "Task Reviews", count: 3, color: BRAND_GREEN },
-    { type: "Evaluations", count: 2, color: "#fbbf24" },
+    { type: "Leave Request", count: 5, color: colorArray[1] },
+    { type: "Task Reviews", count: 3, color: colorArray[0] },
+    { type: "Evaluations", count: 2, color: colorArray[3] },
   ];
 
   return (
@@ -149,17 +152,17 @@ export default function AdminDashboardPage() {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-          <Card className="bg-card border-2 border-[#ef4444] shadow-sm">
+          <Card className="bg-card border-2 border-destructive shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-2">
                 <div className="w-12 h-12 rounded-lg bg-destructive/10 flex items-center justify-center">
-                  <AlertCircle className="w-6 h-6 text-[#ef4444]" />
+                  <AlertCircle className="w-6 h-6 text-destructive" />
                 </div>
-                <Badge variant="outline" className="border-[#ef4444] text-[#ef4444]">5</Badge>
+                <Badge variant="outline" className="border-destructive text-destructive">5</Badge>
               </div>
               <p className="text-sm text-muted-foreground mb-1">Overdue Tasks</p>
-              <p className="text-3xl text-[#ef4444] mb-2">Urgent</p>
-              <p className="text-xs text-[#ef4444] mt-4">Requires immediate attention</p>
+              <p className="text-3xl text-destructive mb-2">Urgent</p>
+              <p className="text-xs text-destructive mt-4">Requires immediate attention</p>
             </CardContent>
           </Card>
         </motion.div>
@@ -371,8 +374,8 @@ export default function AdminDashboardPage() {
                 <div key={activity.id} className="flex items-start gap-3">
                   <div className={`w-2 h-2 rounded-full mt-2 ${activity.type === 'leave' ? 'bg-brand-yellow' :
                       activity.type === 'vote' ? 'bg-brand' :
-                        activity.type === 'task' ? 'bg-[#4ade80]' :
-                          'bg-[#fbbf24]'
+                        activity.type === 'task' ? 'bg-emerald-400' :
+                          'bg-amber-400'
                     }`} />
                   <div className="flex-1">
                     <p className="text-sm text-foreground">
@@ -406,7 +409,7 @@ export default function AdminDashboardPage() {
                 <p className="text-2xl text-foreground">31</p>
                 <p className="text-xs text-muted-foreground mt-1">Completed</p>
               </div>
-              <div className="p-4 bg-[#fff9e6] rounded-lg border-2 border-brand-yellow">
+              <div className="p-4 bg-brand-yellow/10 rounded-lg border-2 border-brand-yellow">
                 <p className="text-2xl text-foreground">6</p>
                 <p className="text-xs text-muted-foreground mt-1">In Progress</p>
               </div>
@@ -415,7 +418,7 @@ export default function AdminDashboardPage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">High Priority</span>
-                <span className="text-[#ef4444]">8 tasks</span>
+                <span className="text-destructive">8 tasks</span>
               </div>
               <Progress value={65} className="h-2" />
             </div>
