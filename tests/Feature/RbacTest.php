@@ -291,4 +291,34 @@ class RbacTest extends TestCase
             'target_id' => 'deleted_role',
         ]);
     }
+
+    // ── SEC-01: dynamic Finance permissions ──────────────────────────────────
+
+    public function test_custom_finance_role_can_be_granted_finance_admin_via_role_manager(): void
+    {
+        // Create a brand-new role outside the seeded ['finance', 'ceo',
+        // 'superadmin'] set, grant it 'finance.admin', and verify
+        // hasPermission() reflects that. Pre-SEC-01 the call sites in
+        // PettyCashPolicy / DashboardController / PeriodCloser would have
+        // returned false because the inline role arrays had no notion of
+        // this new role.
+        $role = Role::create([
+            'name' => 'finance_lite',
+            'label' => 'Finance (read & approve only)',
+            'is_system' => false,
+        ]);
+
+        $this->actingAs(User::factory()->create(['role' => 'superadmin']))
+            ->put("/admin/roles/{$role->id}", [
+                'label' => $role->label,
+                'permissions' => ['finance.access', 'finance.admin'],
+            ])->assertRedirect();
+
+        PermissionService::clearCache();
+
+        $user = User::factory()->create(['role' => 'finance_lite']);
+        $this->assertTrue($user->hasPermission('finance.admin'));
+        $this->assertTrue($user->hasPermission('finance.access'));
+        $this->assertFalse($user->hasPermission('finance.exec'));
+    }
 }
