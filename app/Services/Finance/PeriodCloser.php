@@ -136,10 +136,10 @@ class PeriodCloser
     public static function initiate(FinancialPeriod $period, User $initiator): void
     {
         abort_unless($period->isOpen(), 422, 'Period is not open.');
-        abort_unless(
-            \in_array($initiator->role, ['finance', 'ceo', 'superadmin'], true),
-            403
-        );
+        // SEC-01: gate on the dynamic permission. finance / ceo / superadmin
+        // all carry 'finance.admin' in the seeded role map; new roles can
+        // be granted the same permission via /admin/roles.
+        abort_unless($initiator->hasPermission('finance.admin'), 403);
 
         $period->update([
             'status' => 'closing',
@@ -181,10 +181,13 @@ class PeriodCloser
     public static function coAuthorize(FinancialPeriod $period, User $authorizer): void
     {
         abort_unless($period->isClosing(), 422, 'Period is not in closing state.');
+        // SEC-01: gate on 'finance.exec' (executive authority — co-authorise
+        // close, accept variances). ceo / general_management / superadmin
+        // all carry it in the seeded role map.
         abort_unless(
-            \in_array($authorizer->role, ['ceo', 'superadmin'], true),
+            $authorizer->hasPermission('finance.exec'),
             403,
-            'Only CEO or Superadmin can co-authorise a period close.'
+            'Only an executive Finance authority can co-authorise a period close.'
         );
         abort_unless($authorizer->id !== $period->close_initiated_by, 422,
             'The co-authoriser must be a different person from the initiator.'
@@ -262,10 +265,9 @@ class PeriodCloser
         }
 
         abort_unless($period->isClosed(), 422, 'Period is not closed.');
-        abort_unless(
-            \in_array($user->role, ['ceo', 'superadmin'], true),
-            403
-        );
+        // SEC-01: gate on 'finance.exec' — reopening a closed period is an
+        // executive-only action.
+        abort_unless($user->hasPermission('finance.exec'), 403);
 
         $cacheKey = "period_reopen_{$period->id}";
         $first = Cache::get($cacheKey);

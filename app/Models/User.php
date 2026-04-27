@@ -174,18 +174,18 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     // ── Finance role helpers ────────────────────────────────────────────────
-    // A1-02: Delegates to FinanceRoleHelper — single source of truth.
+    // SEC-01: Delegates to FinanceRoleHelper, which now resolves through
+    // the dynamic permission system. Passing $this (not $this->role) lets
+    // FinanceRoleHelper take the User-aware path → hasPermission().
 
     public function isFinance(): bool
     {
-        // A1-02: Maps to FINANCE_ADMIN_ROLES (the authoritative 4-role set).
-        // Previously User::FINANCE_ROLES = ['finance','general_management','ceo','superadmin'].
-        return FinanceRoleHelper::isAdmin($this->role);
+        return FinanceRoleHelper::isAdmin($this);
     }
 
     public function isFinanceAdmin(): bool
     {
-        return FinanceRoleHelper::isAdmin($this->role);
+        return FinanceRoleHelper::isAdmin($this);
     }
 
     public function isCeo(): bool

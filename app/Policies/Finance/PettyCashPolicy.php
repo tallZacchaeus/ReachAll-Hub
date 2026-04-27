@@ -20,10 +20,13 @@ class PettyCashPolicy
         return $float->custodian_id === $user->id;
     }
 
-    /** Finance / CEO / Superadmin can review reconciliation submissions. */
+    /** Finance admins can review reconciliation submissions. */
     public function reviewReconciliation(User $user, PettyCashReconciliation $recon): bool
     {
-        return in_array($user->role, ['finance', 'ceo', 'superadmin'], true)
+        // SEC-01: route through the dynamic permission system instead of
+        // a hardcoded role-string array. New roles can be granted
+        // 'finance.admin' via /admin/roles to gain reviewer access.
+        return $user->hasPermission('finance.admin')
             && $recon->status === 'submitted';
     }
 }

@@ -28,17 +28,19 @@ class DashboardController extends Controller
             ->where('month', now()->month)
             ->first();
 
-        // Note: these in_array checks are display-personalization, not auth gates.
-        // The route is already guarded by finance.access. Widget selection
-        // reflects role "persona", not permission enforcement.
+        // SEC-01: widget selection is display-personalization, not an auth
+        // gate (the route is already guarded by finance.access). Resolve
+        // through the dynamic permission system so a custom role with
+        // 'finance.exec' or 'finance.admin' gets the right persona.
         $widgets = match (true) {
-            \in_array($role, ['ceo', 'general_management', 'management'], true) => $this->execWidgets($user, $period),
-            \in_array($role, ['finance', 'superadmin', 'hr'], true) => $this->financeWidgets($user, $period),
+            $user->hasPermission('finance.exec') => $this->execWidgets($user, $period),
+            $user->hasPermission('finance.admin') => $this->financeWidgets($user, $period),
             default => $this->staffWidgets($user, $period),
         };
 
-        // Dept heads also get a budget meter
-        if ($user->department && \in_array($role, ['staff', 'management', 'hr'], true)) {
+        // Dept heads also get a budget meter (anyone who is the head of a
+        // cost centre, regardless of role).
+        if ($user->department) {
             $cc = CostCentre::where('head_user_id', $user->id)->first();
             if ($cc) {
                 $widgets['budget_meter'] = $this->buildBudgetMeter($cc, $period);
