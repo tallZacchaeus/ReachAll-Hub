@@ -1,9 +1,13 @@
-import MainLayout from "@/layouts/MainLayout";
 import { router, usePage } from "@inertiajs/react";
+import { ArrowLeft, Target, Save, ChevronDown, ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
+
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -11,11 +15,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Target, Save, ChevronDown, ChevronRight } from "lucide-react";
-import { useState, useEffect } from "react";
-import { toast } from "sonner";
+import MainLayout from "@/layouts/MainLayout";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

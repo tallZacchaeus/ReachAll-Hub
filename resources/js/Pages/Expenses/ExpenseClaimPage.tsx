@@ -1,12 +1,4 @@
-import { useState, useRef } from "react";
 import { Head, router, useForm } from "@inertiajs/react";
-import MainLayout from "@/layouts/MainLayout";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import {
     CheckCircle,
     XCircle,
@@ -18,6 +10,15 @@ import {
     Clock,
     User,
 } from "lucide-react";
+import { useState, useRef } from "react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import MainLayout from "@/layouts/MainLayout";
 import type { ExpenseClaim, ExpenseStatus, ExpenseCategory } from "@/types/expenses";
 
 interface Props {

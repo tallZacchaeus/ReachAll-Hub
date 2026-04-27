@@ -1,8 +1,4 @@
 import { Head, router } from "@inertiajs/react";
-import MainLayout from "@/layouts/MainLayout";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, BarChart2, MessageSquare, User, Calendar } from "lucide-react";
 import {
     BarChart,
@@ -13,6 +9,11 @@ import {
     Tooltip,
     ResponsiveContainer,
 } from "recharts";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import MainLayout from "@/layouts/MainLayout";
 import type { FeedbackResponse, AggregatedFeedback, FeedbackType, FeedbackStatus } from "@/types/feedback";
 
 interface FeedbackRequestDetail {

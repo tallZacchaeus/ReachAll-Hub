@@ -1,7 +1,11 @@
-import MainLayout from "@/layouts/MainLayout";
 import { router } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
+import { usePage } from "@inertiajs/react";
+import { Newspaper, Plus, Pencil, Trash2, Send } from "lucide-react";
+import { useEffect } from "react";
+import { toast } from "sonner";
+
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -10,10 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Newspaper, Plus, Pencil, Trash2, Send } from "lucide-react";
-import { useEffect } from "react";
-import { toast } from "sonner";
-import { usePage } from "@inertiajs/react";
+import MainLayout from "@/layouts/MainLayout";
 import { sanitizeHtml } from "@/lib/sanitize";
 
 interface NewsletterRow {

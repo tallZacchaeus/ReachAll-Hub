@@ -1,24 +1,3 @@
-import MainLayout from "@/layouts/MainLayout";
-import { useState } from "react";
-import { useChartColors } from "@/lib/useChartColors";
-import { BRAND_GREEN, BRAND_YELLOW } from "@/lib/constants";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
-} from "recharts";
 import {
   Activity,
   TrendingUp,
@@ -32,6 +11,25 @@ import {
   Eye,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { useState } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+} from "recharts";
+
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -40,6 +38,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import MainLayout from "@/layouts/MainLayout";
+import { BRAND_GREEN, BRAND_YELLOW } from "@/lib/constants";
+import { useChartColors } from "@/lib/useChartColors";
 
 interface Voter {
   id: string;

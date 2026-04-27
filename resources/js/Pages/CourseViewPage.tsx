@@ -1,11 +1,4 @@
-import MainLayout from "@/layouts/MainLayout";
 import { router, useForm, usePage } from "@inertiajs/react";
-import { ContentRenderer } from "@/components/ContentRenderer";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import {
   ArrowLeft,
   Clock,
@@ -16,6 +9,14 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+
+import { ContentRenderer } from "@/components/ContentRenderer";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import MainLayout from "@/layouts/MainLayout";
 
 interface Enrollment {
   id: number;

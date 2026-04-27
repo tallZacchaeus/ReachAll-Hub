@@ -1,9 +1,4 @@
-import MainLayout from "@/layouts/MainLayout";
 import { router } from "@inertiajs/react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
-import { ContentRenderer } from "@/components/ContentRenderer";
 import {
   ListChecks,
   ScrollText,
@@ -15,6 +10,12 @@ import {
   CheckCircle,
   MessageSquare,
 } from "lucide-react";
+
+import { ContentRenderer } from "@/components/ContentRenderer";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import MainLayout from "@/layouts/MainLayout";
 
 interface OnboardingHubPageProps {
   userName: string;

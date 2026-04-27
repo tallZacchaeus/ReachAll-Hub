@@ -1,6 +1,6 @@
+import axios, { AxiosHeaders } from "axios";
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
-import axios, { AxiosHeaders } from "axios";
 
 type AppEcho = Echo<"pusher">;
 let echoInstance: AppEcho | null | undefined;

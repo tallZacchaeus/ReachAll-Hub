@@ -1,10 +1,15 @@
-import MainLayout from "@/layouts/MainLayout";
 import { router, useForm } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
+import { ArrowLeft, Save, Send, X, Upload, ImageIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+
 import { TipTapEditor } from "@/components/TipTapEditor";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -12,12 +17,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Save, Send, X, Upload, ImageIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
-import { usePage } from "@inertiajs/react";
+import MainLayout from "@/layouts/MainLayout";
 
 interface Newsletter {
   id: number;

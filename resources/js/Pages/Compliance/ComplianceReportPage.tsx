@@ -1,7 +1,7 @@
 import { router } from '@inertiajs/react';
-import MainLayout from '@/layouts/MainLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     Select,
     SelectContent,
@@ -9,6 +9,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import MainLayout from '@/layouts/MainLayout';
 import type { TrainingAssignmentRow, AssignmentStatus } from '@/types/compliance';
 
 interface TrainingOption {

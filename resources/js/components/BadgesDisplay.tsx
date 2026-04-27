@@ -1,7 +1,8 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { Award, Calendar, MessageSquare, Star, Trophy, Zap, Target, Heart, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 
 export interface BadgeData {
   id: string;

@@ -1,7 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+import { router } from "@inertiajs/react";
 import {
   Award,
   Calendar,
@@ -21,12 +18,17 @@ import {
   BarChart3,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { DepartmentSpotlight } from "@/components/DepartmentSpotlight";
+
 import { BulletinWidget, BulletinItem } from "@/components/BulletinWidget";
+import { DepartmentSpotlight } from "@/components/DepartmentSpotlight";
 import { PendingAcknowledgementsWidget } from "@/components/PendingAcknowledgementsWidget";
 import { RecognitionWidget, RecentRecognition } from "@/components/RecognitionWidget";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import MainLayout from "@/layouts/MainLayout";
-import { router } from "@inertiajs/react";
+
 
 interface EnrolledCourse {
   title: string;

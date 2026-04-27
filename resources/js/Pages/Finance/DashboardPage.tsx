@@ -1,15 +1,17 @@
-import MainLayout from "@/layouts/MainLayout";
-import { useChartColors } from "@/lib/useChartColors";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "@inertiajs/react";
-import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell
-} from "recharts";
 import {
   TrendingUp, AlertTriangle, CheckCircle2, Clock, Wallet,
   BarChart3, FileText, ChevronRight,
 } from "lucide-react";
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell
+} from "recharts";
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import MainLayout from "@/layouts/MainLayout";
+import { useChartColors } from "@/lib/useChartColors";
+
 
 interface SummaryCard {
   label: string;

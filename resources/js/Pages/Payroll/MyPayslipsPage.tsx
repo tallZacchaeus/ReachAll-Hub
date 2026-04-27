@@ -1,8 +1,9 @@
 import { Head } from "@inertiajs/react";
-import MainLayout from "@/layouts/MainLayout";
+import { Download, FileText, Receipt } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Download, FileText, Receipt } from "lucide-react";
+import MainLayout from "@/layouts/MainLayout";
 import type { MyPayslip } from "@/types/payroll";
 
 interface Props {

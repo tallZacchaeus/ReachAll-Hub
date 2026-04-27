@@ -1,8 +1,9 @@
-import MainLayout from "@/layouts/MainLayout";
 import { router } from "@inertiajs/react";
+import { Newspaper, Pin, Calendar, User } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Newspaper, Pin, Calendar, User } from "lucide-react";
+import MainLayout from "@/layouts/MainLayout";
 import { sanitizeHtml } from "@/lib/sanitize";
 
 interface BulletinItem {

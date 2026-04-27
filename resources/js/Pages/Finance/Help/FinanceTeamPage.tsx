@@ -1,11 +1,12 @@
-import MainLayout from "@/layouts/MainLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "@inertiajs/react";
 import {
   CheckCircle2, AlertTriangle, FileText, GitBranch,
   Wallet, Lock, BarChart3, HelpCircle, ArrowRight,
 } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import MainLayout from "@/layouts/MainLayout";
 
 const WORKFLOW_STEPS = [
   {

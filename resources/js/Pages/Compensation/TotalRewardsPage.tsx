@@ -1,10 +1,11 @@
 import { Head } from "@inertiajs/react";
-import MainLayout from "@/layouts/MainLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
     ShieldCheck, Banknote, Award, TrendingUp, Users,
 } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import MainLayout from "@/layouts/MainLayout";
 import type {
     SalarySummary, BenefitSummaryRow, BonusSummaryRow, BandSummary,
 } from "@/types/compensation";

@@ -1,9 +1,10 @@
-import MainLayout from "@/layouts/MainLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Link, router } from "@inertiajs/react";
 import { CheckCircle2, AlertTriangle, XCircle, RefreshCw } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import MainLayout from "@/layouts/MainLayout";
 
 interface Check {
   status: "pass" | "warn" | "fail";

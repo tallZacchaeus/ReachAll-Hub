@@ -1,8 +1,9 @@
-import MainLayout from "@/layouts/MainLayout";
 import { router } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { CheckCircle, AlertTriangle, Calendar, ArrowRight, FileText } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import MainLayout from "@/layouts/MainLayout";
 
 interface PendingPolicy {
   id: number;

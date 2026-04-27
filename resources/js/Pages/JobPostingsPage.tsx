@@ -1,8 +1,9 @@
-import MainLayout from "@/layouts/MainLayout";
 import { router } from "@inertiajs/react";
+import { Briefcase, Calendar, ArrowRight } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Briefcase, Calendar, ArrowRight } from "lucide-react";
+import MainLayout from "@/layouts/MainLayout";
 import { sanitizeHtml } from "@/lib/sanitize";
 
 interface JobCard {

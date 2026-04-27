@@ -1,17 +1,17 @@
-import { useState } from "react";
 import { router, useForm } from "@inertiajs/react";
 import { Plus, Pencil, Search, Building2, Save, X, CheckCircle2, XCircle } from "lucide-react";
-import MainLayout from "@/layouts/MainLayout";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useState } from "react";
+
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -27,6 +27,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import MainLayout from "@/layouts/MainLayout";
 
 interface Vendor {
   id: number;

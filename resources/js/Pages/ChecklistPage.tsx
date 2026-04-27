@@ -1,9 +1,10 @@
-import MainLayout from "@/layouts/MainLayout";
 import { router } from "@inertiajs/react";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
 import { ListChecks, CheckCircle, Circle, ChevronDown, ChevronRight, Star } from "lucide-react";
 import { useState } from "react";
+
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import MainLayout from "@/layouts/MainLayout";
 
 interface ChecklistItemData {
   id: number;

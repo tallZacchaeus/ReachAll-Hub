@@ -1,15 +1,20 @@
-import MainLayout from "@/layouts/MainLayout";
-import { useState, useEffect, useRef, useCallback } from "react";
 import { usePage } from "@inertiajs/react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import axios from "axios";
+import { Send, Search as SearchIcon, Lock, Users, Bell, MessageCircle, PlusCircle, Shield, MessageSquare, Loader2 } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
+
+import { AttachmentDisplay } from "@/components/chat/AttachmentDisplay";
+import { DeleteConfirmation } from "@/components/chat/DeleteConfirmation";
+import { EditMessageModal } from "@/components/chat/EditMessageModal";
+import { FileAttachmentButton, FilePreview } from "@/components/chat/FileAttachment";
+import { MessageActions } from "@/components/chat/MessageActions";
+import { ReactionDisplay } from "@/components/chat/ReactionDisplay";
+import { ReactionPicker } from "@/components/chat/ReactionPicker";
+import { TypingIndicator } from "@/components/chat/TypingIndicator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Send, Search as SearchIcon, Lock, Users, Bell, MessageCircle, PlusCircle, Shield, MessageSquare, Loader2 } from "lucide-react";
-import axios from "axios";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -17,16 +22,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { ReactionPicker } from "@/components/chat/ReactionPicker";
-import { ReactionDisplay } from "@/components/chat/ReactionDisplay";
-import { MessageActions } from "@/components/chat/MessageActions";
-import { EditMessageModal } from "@/components/chat/EditMessageModal";
-import { DeleteConfirmation } from "@/components/chat/DeleteConfirmation";
-import { TypingIndicator } from "@/components/chat/TypingIndicator";
-import { FileAttachmentButton, FilePreview } from "@/components/chat/FileAttachment";
-import { AttachmentDisplay } from "@/components/chat/AttachmentDisplay";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import MainLayout from "@/layouts/MainLayout";
 import { getEcho } from "@/lib/echo";
 import type { SharedData } from "@/types";
 

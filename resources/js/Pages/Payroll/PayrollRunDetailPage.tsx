@@ -1,6 +1,8 @@
 import { Head, router } from "@inertiajs/react";
-import MainLayout from "@/layouts/MainLayout";
+import { ArrowLeft, CheckCircle, Download, FileText, DollarSign } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     Table,
     TableBody,
@@ -9,8 +11,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, CheckCircle, Download, FileText, DollarSign } from "lucide-react";
+import MainLayout from "@/layouts/MainLayout";
 import type { PayrollRun, PayrollEntryRow } from "@/types/payroll";
 
 interface Props {

@@ -1,10 +1,14 @@
-import MainLayout from "@/layouts/MainLayout";
 import { router, useForm } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
+import { Newspaper, Plus, Pencil, Trash2, Pin, PinOff, Save } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -12,6 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import {
   Table,
   TableBody,
@@ -20,12 +26,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Newspaper, Plus, Pencil, Trash2, Pin, PinOff, Save } from "lucide-react";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import { usePage } from "@inertiajs/react";
+import MainLayout from "@/layouts/MainLayout";
 
 interface BulletinRow {
   id: number;

@@ -1,16 +1,9 @@
-import { useState } from "react";
 import { Head, router, useForm } from "@inertiajs/react";
-import MainLayout from "@/layouts/MainLayout";
-import { Button } from "@/components/ui/button";
+import { Download, FileText, PenLine, X, CheckCircle2, Clock, XCircle } from "lucide-react";
+import { useState } from "react";
+
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
@@ -18,7 +11,15 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { Download, FileText, PenLine, X, CheckCircle2, Clock, XCircle } from "lucide-react";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import MainLayout from "@/layouts/MainLayout";
 import type { MyDocument } from "@/types/documents";
 
 interface Props {

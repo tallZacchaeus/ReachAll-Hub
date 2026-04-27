@@ -1,9 +1,10 @@
-import MainLayout from "@/layouts/MainLayout";
 import { router } from "@inertiajs/react";
+import { ArrowLeft, Calendar, User } from "lucide-react";
+
+import { ContentRenderer } from "@/components/ContentRenderer";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { ContentRenderer } from "@/components/ContentRenderer";
-import { ArrowLeft, Calendar, User } from "lucide-react";
+import MainLayout from "@/layouts/MainLayout";
 
 interface Newsletter {
   id: number;

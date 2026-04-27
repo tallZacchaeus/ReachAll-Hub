@@ -1,7 +1,8 @@
 import { Head } from "@inertiajs/react";
-import MainLayout from "@/layouts/MainLayout";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import MainLayout from "@/layouts/MainLayout";
 import type { PayrollLoan } from "@/types/payroll";
 
 interface Props {

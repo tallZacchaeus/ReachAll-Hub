@@ -1,25 +1,26 @@
-import { useState, useEffect } from "react";
-import { Bell, Shield, Search, Menu } from "lucide-react";
 import { usePage } from "@inertiajs/react";
-import { SharedData } from "@/types";
+import { router } from "@inertiajs/react";
+import { Bell, Shield, Search, Menu } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { useState, useEffect } from "react";
+
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { motion, AnimatePresence } from "motion/react";
-import { router } from "@inertiajs/react";
 import { STATUS_COLORS } from "@/lib/constants";
+import { SharedData } from "@/types";
 
 interface Notification {
   id: string;

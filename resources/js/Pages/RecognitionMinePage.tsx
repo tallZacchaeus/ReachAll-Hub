@@ -1,10 +1,11 @@
-import MainLayout from "@/layouts/MainLayout";
 import { router } from "@inertiajs/react";
+import { Star, Users, Lightbulb, Crown, Megaphone, ArrowLeft, ArrowRight } from "lucide-react";
+
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Star, Users, Lightbulb, Crown, Megaphone, ArrowLeft, ArrowRight } from "lucide-react";
+import MainLayout from "@/layouts/MainLayout";
 
 interface RecognitionEntry {
   id: number;

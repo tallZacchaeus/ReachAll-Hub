@@ -1,7 +1,8 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Trophy, TrendingUp, Users } from "lucide-react";
 import { motion } from "motion/react";
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 
 export function DepartmentSpotlight() {
   const spotlights = [

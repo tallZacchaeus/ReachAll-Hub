@@ -1,10 +1,13 @@
-import MainLayout from "@/layouts/MainLayout";
 import { router } from "@inertiajs/react";
+import { Search, LayoutGrid, List, Globe, Mail, Briefcase, Building2, Calendar, IdCard } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DirectoryGridSkeleton, TableRowSkeleton } from "@/components/ui/page-skeleton";
 import {
   Select,
   SelectContent,
@@ -26,11 +29,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Search, LayoutGrid, List, Globe, Mail, Briefcase, Building2, Calendar, IdCard } from "lucide-react";
-import { sanitizeHtml } from "@/lib/sanitize";
+import MainLayout from "@/layouts/MainLayout";
 import { DEPT_COLORS, STAGE_STYLES } from "@/lib/constants";
-import { DirectoryGridSkeleton, TableRowSkeleton } from "@/components/ui/page-skeleton";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 interface DirectoryUser {
   id: number;

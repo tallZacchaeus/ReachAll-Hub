@@ -1,13 +1,14 @@
-import MainLayout from "@/layouts/MainLayout";
 import { router } from "@inertiajs/react";
-import { ContentRenderer } from "@/components/ContentRenderer";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, Calendar, Download, AlertCircle, CheckCircle, FileText, ImageIcon, File } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+
+import { ContentRenderer } from "@/components/ContentRenderer";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import MainLayout from "@/layouts/MainLayout";
 
 interface Attachment {
   path: string;

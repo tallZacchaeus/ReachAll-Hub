@@ -114,5 +114,11 @@
         "jsx": "react-jsx"
     },
     "include": ["resources/js/**/*.ts", "resources/js/**/*.d.ts", "resources/js/**/*.tsx"],
-    "exclude": ["resources/js/Pages_starter"]
+    "exclude": [
+        "resources/js/Pages_starter",
+        "resources/js/routes",
+        "resources/js/wayfinder",
+        "resources/js/actions",
+        "resources/js/ziggy.js"
+    ]
 }

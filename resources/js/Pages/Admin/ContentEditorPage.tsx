@@ -1,11 +1,15 @@
-import MainLayout from "@/layouts/MainLayout";
 import { router, useForm } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
+import { ArrowLeft, Save, Eye } from "lucide-react";
+import { useEffect } from "react";
+import { toast } from "sonner";
+
 import { TipTapEditor } from "@/components/TipTapEditor";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -13,12 +17,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Save, Eye } from "lucide-react";
-import { useEffect } from "react";
-import { toast } from "sonner";
-import { usePage } from "@inertiajs/react";
+import { Switch } from "@/components/ui/switch";
+import MainLayout from "@/layouts/MainLayout";
 
 interface Category {
   id: number;
