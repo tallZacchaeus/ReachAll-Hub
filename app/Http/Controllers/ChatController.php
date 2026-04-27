@@ -9,7 +9,6 @@ use App\Models\Message;
 use App\Models\MessageReaction;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ChatController extends Controller
 {
@@ -397,8 +396,18 @@ class ChatController extends Controller
     // File Upload
     public function uploadFile(Request $request, $conversationId)
     {
+        // SEC-02: Restrict accepted MIME types and extensions to mirror the
+        // HR / expense / compliance allow-list. Blocks executable / scriptable
+        // payloads (.php, .html, .js, .htaccess). Files are written to the
+        // private 'chat' disk and served only via the authenticated
+        // ChatAttachmentDownloadController.
         $request->validate([
-            'file' => 'required|file|max:10240', // 10MB max
+            'file' => [
+                'required',
+                'file',
+                'max:10240', // 10MB max
+                'mimes:pdf,jpg,jpeg,png,webp,doc,docx,xls,xlsx,csv,txt',
+            ],
             'content' => 'nullable|string|max:5000',
         ]);
 
@@ -418,10 +427,9 @@ class ChatController extends Controller
         // Store the file
         $file = $request->file('file');
         $originalName = $file->getClientOriginalName();
-        $extension = $file->getClientOriginalExtension();
         $size = $file->getSize();
 
-        // Determine file type
+        // Determine file type for FE rendering hint.
         $mimeType = $file->getMimeType();
         $fileType = 'document';
         if (str_starts_with($mimeType, 'image/')) {
@@ -432,8 +440,10 @@ class ChatController extends Controller
             $fileType = 'audio';
         }
 
-        // Store in public/storage/chat-attachments
-        $path = $file->store('chat-attachments', 'public');
+        // SEC-02: Store on the private 'chat' disk under a per-conversation
+        // prefix. Never publicly accessible — only ChatAttachmentDownloadController
+        // streams the bytes after participant verification.
+        $path = $file->store("conversations/{$conversation->id}", 'chat');
 
         // Create message with attachment
         $message = Message::create([
@@ -441,6 +451,7 @@ class ChatController extends Controller
             'user_id' => $user->id,
             'content' => $request->input('content') ?? "Sent a file: {$originalName}",
             'attachment_path' => $path,
+            'attachment_disk' => 'chat',
             'attachment_name' => $originalName,
             'attachment_type' => $fileType,
             'attachment_size' => $size,
@@ -522,8 +533,13 @@ class ChatController extends Controller
             'is_edited' => $message->is_edited,
             'edited_at' => $message->edited_at?->toISOString(),
             'reactions' => $this->serializeReactions($message, $viewer),
+            // SEC-02: Always emit the authenticated streaming URL — never a
+            // public-disk URL — even for legacy rows still pointing at the
+            // 'public' disk. The chat:migrate-attachments command moves them
+            // forward; until then ChatAttachmentDownloadController falls back
+            // to attachment_disk='public' so existing chats still render.
             'attachment' => $message->attachment_path ? [
-                'path' => Storage::disk('public')->url($message->attachment_path),
+                'path' => route('chat.attachments.show', ['message' => $message->id]),
                 'name' => $message->attachment_name,
                 'type' => $message->attachment_type,
                 'size' => $message->attachment_size,

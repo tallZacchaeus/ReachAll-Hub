@@ -84,6 +84,25 @@ return [
             'url' => env('AWS_URL'),
         ],
 
+        // SEC-02: Chat attachments — private disk. Authenticated streaming only,
+        // scoped to active conversation participants. Confidential conversations
+        // (Conversation::is_confidential) inherit the same path; ex-participants
+        // are revoked immediately when removed from the conversation.
+        // Set CHAT_DISK=s3 in production for persistent backed-up storage.
+        'chat' => [
+            'driver' => env('CHAT_DISK', 'local'),
+            'root' => storage_path('app/chat'),
+            'visibility' => 'private',
+            'throw' => false,
+            'report' => false,
+            // S3 passthrough keys (ignored when driver=local)
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_CHAT_BUCKET', env('AWS_BUCKET')),
+            'url' => env('AWS_URL'),
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
