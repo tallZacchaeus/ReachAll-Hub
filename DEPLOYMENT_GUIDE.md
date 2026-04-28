@@ -1,6 +1,11 @@
-# Deployment Guide - Tech Staff Evaluation Platform
+# Deployment Guide — ReachAll Hub
 
 This guide covers deploying your Laravel + React (Inertia.js) application to production.
+
+> **Note:** for the current Hostinger VPS runbook (with `chat:migrate-attachments`,
+> SEC-03 audit-log grants, and SEC-02 chat disk migration steps) see
+> `docs/audits/now-deploy-checklist-2026-04-26.md`. This file is the older
+> generic guide retained for shared-hosting / Forge users.
 
 ## Table of Contents
 1. [Pre-Deployment Checklist](#pre-deployment-checklist)

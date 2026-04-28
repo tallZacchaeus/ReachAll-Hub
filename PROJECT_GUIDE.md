@@ -26,6 +26,7 @@
    - [Reports & Analytics](#810-reports--analytics)
    - [Notifications & Announcements](#811-notifications--announcements)
    - [Settings](#812-settings)
+   - [Phase 3–10 modules (compact reference)](#813-phase-310-modules-compact-reference)
 9. [Real-Time Broadcasting](#9-real-time-broadcasting)
 10. [All Routes Reference](#10-all-routes-reference)
 11. [All Models Reference](#11-all-models-reference)
@@ -687,6 +688,111 @@ Charts are built with **Recharts**. Export functionality is handled server-side 
 - **Password**: Change password (rate-limited, requires `verified` middleware).
 - **Appearance**: Light/dark mode toggle (uses `next-themes`).
 - **Two-Factor Auth**: Enable/disable TOTP 2FA, view recovery codes. Handled by Fortify.
+
+---
+
+### 8.13 Phase 3–10 modules (compact reference)
+
+Sections 8.1–8.12 above predate the platform's HR-tier expansion. The modules below were added in Phases 3 through 10 and follow the same patterns (Inertia-first, permission-gated, audit-logged, private-disk for sensitive files). Routes are grouped under prefixes; full route names appear in `php artisan route:list`.
+
+#### 8.13.1 Dynamic RBAC + Audit Log (Phases 1–2)
+- **Routes:** `/admin/roles`, `/admin/audit-logs` (`routes/web.php:360-366`)
+- **Controllers:** `Admin/RoleController`, `Admin/AuditLogController`
+- **Models:** `Role`, `Permission`, `RbacAuditLog`, `AuditLog`
+- **Service:** `App\Services\PermissionService` (cached role→permission map)
+- **Frontend:** `Admin/RoleManagementPage.tsx`, `Admin/AuditLogsPage.tsx`, `resources/js/hooks/usePermissions.ts`
+- **Tests:** `tests/Feature/RbacTest.php` (22+ cases)
+- **SEC-01/SEC-03:** call sites use `$user->hasPermission(...)`; `audit_logs` is application-immutable (`AuditLog::boot()` guards) and DB-immutable on MySQL/MariaDB (BEFORE UPDATE/DELETE triggers — see migration `2026_04_27_170636`).
+
+#### 8.13.2 Org structure & employee master data (Phase 2)
+- **Routes:** `/admin/org/{departments,positions,locations,chart}` (`routes/web.php:369-385`)
+- **Controllers:** `Admin/{DepartmentController, JobPositionController, OfficeLocationController, OrgChartController}`
+- **Models:** `Department`, `JobPosition`, `JobLevel`, `OfficeLocation`, `EmployeeLifecycleEvent`; `User` carries `department_id`, `job_position_id`, `office_location_id`, `reports_to_id`.
+- **Frontend:** `Admin/OrgStructurePage.tsx`, `Admin/OrgChartPage.tsx`
+
+#### 8.13.3 HR Document Vault & E-Signatures (Phase 2)
+- **Routes:** `/admin/hr/documents`, `/my-documents` (`routes/web.php:388-400`)
+- **Controllers:** `Admin/HrDocumentController`, `Admin/HrDocumentDownloadController`, `HrDocumentSelfController`, `DocumentSignatureController`
+- **Models:** `HrDocument`, `DocumentCategory`, `DocumentSignature`
+- **Storage:** files always written to the private `hr` disk (`config/filesystems.php:73-85`); served only through authenticated `HrDocumentDownloadController`.
+
+#### 8.13.4 Payroll engine (Phase 3)
+- **Routes:** `/payroll/{runs,salaries,my-payslips,year-end-report,loans}` (`routes/web.php:431-459`)
+- **Controllers:** `Payroll/{PayrollRunController, SalaryController, PayslipController, LoanController}`
+- **Models:** `PayrollRun`, `PayrollEntry`, `EmployeeSalary`, `PayrollDeduction`, `PayrollLoan`, `PayGrade`
+- **Services:** `Services/Payroll/{PayrollCalculator, PayrollRunService, PayslipGenerator}` — Nigerian gross-to-net (PAYE, pension 8 %, NHF 2.5 %, NSITF 1 %, CRA), draft/approve/mark-paid lifecycle, DomPDF payslips.
+- **Bank file export:** `PayrollRunController@exportBankFile` (CSV)
+- **Year-end PAYE report:** `PayrollRunController@yearEndReport`
+- **Tests:** `tests/Feature/PayrollTest.php` (25 cases)
+
+#### 8.13.5 Leave depth (Phase 4)
+- **Routes:** `/leave`, `/leave/{types,holidays}` (`routes/web.php:40-54`)
+- **Controller:** `LeaveRequestController`
+- **Models:** `LeaveType`, `LeaveBalance`, `PublicHoliday`, `LeaveRequest` (with `cover_user_id`)
+- **Service:** `App\Services\LeaveService` (working-day calculator, NG holiday calendar)
+- **Tests:** `tests/Feature/LeaveRequestsTest.php`
+
+#### 8.13.6 Benefits administration (Phase 4)
+- **Routes:** `/benefits/{plans,enrollments,windows,my-benefits}` (`routes/web.php:403-428`)
+- **Controllers:** `Benefits/{BenefitPlanController, BenefitEnrollmentController, EnrollmentWindowController, BenefitSelfController}`
+- **Models:** `BenefitPlan`, `EmployeeBenefitEnrollment`, `BenefitEnrollmentWindow`, `BenefitEnrollmentElection`, `EmployeeDependent`
+- **Tests:** `tests/Feature/BenefitsTest.php`
+
+#### 8.13.7 Compensation management (Phase 4)
+- **Routes:** `/compensation/{bands,reviews,bonus,my-rewards}` (`routes/web.php:462-491`)
+- **Controllers:** `Compensation/{CompensationBandController, CompensationReviewController, BonusPlanController, TotalRewardsController}`
+- **Models:** `CompensationBand`, `CompensationReviewCycle`, `CompensationReviewEntry`, `BonusPlan`, `BonusAward`, `PayGrade`
+- **Tests:** `tests/Feature/CompensationTest.php`
+
+#### 8.13.8 Recruitment / ATS + Pre-boarding (Phases 5–6)
+- **Routes:** `/recruitment/{requisitions,candidates,pipeline,interviews,offers,preboarding}` (`routes/web.php:494-533`)
+- **Controllers:** `Recruitment/{JobRequisitionController, CandidateController, ApplicationPipelineController, InterviewController, OfferLetterController, PreboardingController}`
+- **Models:** `JobRequisition`, `Candidate`, `JobApplication`, `InterviewSchedule`, `InterviewScorecard`, `OfferLetter`, `PreboardingTask`
+- **Auto-task creation:** offer acceptance triggers preboarding task scaffolding.
+- **Tests:** `tests/Feature/RecruitmentTest.php`
+
+#### 8.13.9 Performance reviews + PIPs (Phase 6)
+- **Routes:** `/performance/{cycles,reviews,pips}` (`routes/web.php:62-81`)
+- **Controllers:** `Performance/{ReviewCycleController, PerformanceReviewController, PipController}`
+- **Models:** `ReviewCycle`, `PerformanceReview`, `ReviewCompetency`, `PipPlan`, `PipMilestone`
+
+#### 8.13.10 Offboarding (Phase 7)
+- **Routes:** `/admin/offboarding` (`routes/web.php:565-572`)
+- **Controller:** `Admin/OffboardingController`
+- **Models:** `OffboardingChecklist`, `OffboardingTask`
+- **Lifecycle integration:** Offboarding completion writes a `terminated` lifecycle event (Phase 7 commit `1735f35`).
+
+#### 8.13.11 360-Feedback + 1:1s (Phase 8)
+- **Routes:** `/feedback/{requests,my,1on1s}` (`routes/web.php:550-562`)
+- **Controllers:** `Feedback/{FeedbackRequestController, OneOnOneController}`
+- **Models:** `FeedbackRequest`, `FeedbackResponse`, `OneOnOne`
+
+#### 8.13.12 Expense claims (Phase 9)
+- **Routes:** `/expenses` (`routes/web.php:536-547`)
+- **Controller:** `Expenses/ExpenseController`
+- **Models:** `ExpenseClaim`, `ExpenseReceipt`
+- **Multi-currency:** `currency` + `exchange_rate` fields, kobo conversion at `ExpenseController.php:151-156`
+- **Storage:** receipts go to the private `hr` disk; MIME-restricted to pdf/jpg/png/webp.
+
+#### 8.13.13 Employee Relations / HR Cases (Phase 7)
+- **Routes:** `/employee-relations/{cases,my-cases}` (`routes/web.php:575-593`)
+- **Controllers:** `EmployeeRelations/{HrCaseController, HrCaseSelfController, HrCaseNoteController}`
+- **Models:** `HrCase`, `HrCaseParty`, `HrCaseNote`
+- **Anonymous reporting:** whistleblower / grievance flow via `HrCase::is_anonymous`.
+
+#### 8.13.14 Compliance (Phase 10)
+- **Routes:** `/compliance/{documents,dsr,trainings,policies,my,*-report}` (`routes/web.php:597-635`)
+- **Controllers:** `Compliance/{ComplianceDocumentController, DataSubjectRequestController, ComplianceTrainingController, CompliancePolicyController, MyComplianceController}`
+- **Models:** `ComplianceDocument`, `DataSubjectRequest`, `ComplianceTraining`, `ComplianceTrainingAssignment`, `CompliancePolicy`, `CompliancePolicyVersion`, `CompliancePolicyAcknowledgement`
+- **Scheduled jobs (`routes/console.php`):**
+  - `compliance:check-expiring-documents` daily 09:00
+  - `compliance:reassign-recurring-trainings` monthly 1st @ 02:00
+  - `compliance:send-policy-reminders` daily 08:00
+- **Tests:** `tests/Feature/ComplianceTest.php`
+
+#### 8.13.15 Onboarding hub (Phase 5)
+- **Route:** `/onboarding` (`PageController@onboarding`, joiners only)
+- **Stage-aware dashboard:** joiner sees checklist + mandatory courses; performer/leader auto-redirect.
 
 ---
 
