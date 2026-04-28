@@ -23,7 +23,7 @@ class EmailVerificationCodeController extends Controller
         }
 
         if ($user->hasVerifiedEmail()) {
-            return redirect()->intended(route('dashboard', absolute: false));
+            return redirect()->intended(route('my-reachall', absolute: false));
         }
 
         $result = $codes->verify($user, $validated['code']);
@@ -38,7 +38,7 @@ class EmailVerificationCodeController extends Controller
             event(new Verified($user));
         }
 
-        return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
+        return redirect()->intended(route('my-reachall', absolute: false).'?verified=1');
     }
 
     private function messageFor(string $result): string

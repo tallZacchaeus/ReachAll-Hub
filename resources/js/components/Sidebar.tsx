@@ -48,6 +48,7 @@ import {
   Calculator,
   Heart,
   Award,
+  Sparkles,
 } from "lucide-react";
 
 import { usePermissions } from "@/hooks/usePermissions";
@@ -75,6 +76,7 @@ interface SidebarProps {
 const CROSS_LIFECYCLE: NavSection = {
   label: "General",
   items: [
+    { id: "my-reachall", label: "My ReachAll", icon: Sparkles, href: "/my-reachall" },
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
     { id: "chat", label: "Chat", icon: MessageSquare, href: "/chat" },
     { id: "announcements", label: "Announcements", icon: Megaphone, href: "/announcements" },

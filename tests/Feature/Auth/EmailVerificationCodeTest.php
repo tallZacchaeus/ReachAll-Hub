@@ -24,7 +24,7 @@ class EmailVerificationCodeTest extends TestCase
             ->post(route('verification.code.store'), [
                 'code' => $code,
             ])
-            ->assertRedirect(route('dashboard', absolute: false).'?verified=1');
+            ->assertRedirect(route('my-reachall', absolute: false).'?verified=1');
 
         $this->assertTrue($user->fresh()->hasVerifiedEmail());
         $this->assertDatabaseMissing('email_verification_codes', [

@@ -184,6 +184,108 @@ class PageController extends Controller
         return Inertia::render('DashboardPage', $sharedData);
     }
 
+    /**
+     * "My ReachAll" — first page after login. Welcoming, scannable surface
+     * with company announcements, quick-policy entry points, and (in future)
+     * a CEO message. Real data only — no fake counters.
+     */
+    public function myReachAll(Request $request)
+    {
+        $user = $request->user();
+        $employeeStage = $user?->employee_stage ?? 'performer';
+
+        // Announcements: pull active bulletins (highest priority first), shaped
+        // for the redesigned UI. `type` maps bulletin priority → urgent/info/update.
+        $announcements = Bulletin::with('author:id,name')
+            ->active()
+            ->ordered()
+            ->limit(5)
+            ->get()
+            ->map(fn (Bulletin $b) => [
+                'id' => (string) $b->id,
+                'title' => $b->title,
+                'preview' => str(strip_tags($b->body))->limit(140)->toString(),
+                'fullContent' => strip_tags($b->body),
+                'timestamp' => $b->published_at?->diffForHumans() ?? $b->created_at->diffForHumans(),
+                'type' => match ($b->priority) {
+                    'high', 'urgent' => 'urgent',
+                    'low' => 'update',
+                    default => 'info',
+                },
+            ])
+            ->values()
+            ->all();
+
+        // Pending mandatory acknowledgements for this user/stage — same logic
+        // as `dashboard()`, exposed so the My ReachAll page can surface a
+        // gentle prompt without re-querying.
+        $acknowledgedIds = $user
+            ? PolicyAcknowledgement::where('user_id', $user->id)->pluck('content_page_id')
+            : collect();
+
+        $pendingAckCount = $user
+            ? ContentPage::where('is_published', true)
+                ->where('requires_acknowledgement', true)
+                ->whereJsonContains('stage_visibility', $employeeStage)
+                ->whereNotIn('id', $acknowledgedIds)
+                ->count()
+            : 0;
+
+        // Quick Policies — pull published, ack-required content visible to the
+        // user's stage. Tag with "Updated"/"New" based on recency. If no real
+        // policies exist yet, the page falls back to a static safe set on the
+        // client side.
+        $policies = ContentPage::where('is_published', true)
+            ->where('requires_acknowledgement', true)
+            ->whereJsonContains('stage_visibility', $employeeStage)
+            ->orderByDesc('published_at')
+            ->limit(4)
+            ->get()
+            ->map(function (ContentPage $page) {
+                $publishedAt = $page->published_at ?? $page->created_at;
+                $tag = null;
+                if ($publishedAt && $publishedAt->gte(now()->subDays(14))) {
+                    $tag = 'New';
+                } elseif ($page->updated_at->gte(now()->subDays(30))) {
+                    $tag = 'Updated';
+                }
+
+                return [
+                    'id' => (string) $page->id,
+                    'name' => $page->title,
+                    'slug' => $page->slug,
+                    'tag' => $tag,
+                    'href' => '/content/'.$page->slug,
+                ];
+            })
+            ->values()
+            ->all();
+
+        // CEO Message — first published ContentPage with slug=ceo-welcome.
+        // If absent, the page renders the design's fallback copy.
+        $ceoPage = ContentPage::with('author:id,name,position')
+            ->where('is_published', true)
+            ->where('slug', 'ceo-welcome')
+            ->first();
+
+        $ceoMessage = $ceoPage ? [
+            'body' => strip_tags($ceoPage->body),
+            'authorName' => $ceoPage->author?->name ?? 'Leadership',
+            'authorTitle' => $ceoPage->author?->position ?? 'Chief Executive Officer',
+            'imageUrl' => $ceoPage->featured_image,
+        ] : null;
+
+        return Inertia::render('MyReachAllPage', [
+            'userName' => $user?->name ?? '',
+            'employeeStage' => $employeeStage,
+            'currentDate' => now()->format('l, F j, Y'),
+            'announcements' => $announcements,
+            'pendingAckCount' => $pendingAckCount,
+            'policies' => $policies,
+            'ceoMessage' => $ceoMessage,
+        ]);
+    }
+
     public function onboarding(Request $request)
     {
         $user = $request->user();

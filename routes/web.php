@@ -12,18 +12,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+// Public landing page for guests; authenticated users go straight to My ReachAll.
 Route::get('/', function () {
     if (Auth::check()) {
-        return redirect()->route('dashboard');
+        return redirect()->route('my-reachall');
     }
 
-    return redirect()->route('login');
+    return \Inertia\Inertia::render('LandingPage');
 })->name('home');
 
 Route::middleware(['auth', 'throttle:6,1'])->post('email/verify-code', [EmailVerificationCodeController::class, 'store'])
     ->name('verification.code.store');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('my-reachall', [PageController::class, 'myReachAll'])->name('my-reachall');
     Route::get('dashboard', [PageController::class, 'dashboard'])->name('dashboard');
     Route::get('evaluation', [PageController::class, 'evaluation'])->name('evaluation');
     Route::get('tasks', [TaskController::class, 'index'])->name('tasks');
