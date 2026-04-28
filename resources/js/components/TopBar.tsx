@@ -4,6 +4,7 @@ import { Bell, Shield, Search, Menu } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useState, useEffect } from "react";
 
+import AppearanceToggleDropdown from "@/components/appearance-dropdown";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -200,6 +201,9 @@ export function TopBar({
             </form>
           </DialogContent>
         </Dialog>
+
+        {/* Appearance toggle (light / dark / system) */}
+        <AppearanceToggleDropdown />
 
         {/* Notifications */}
         <Popover>
